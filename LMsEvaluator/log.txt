@@ -1,0 +1,64 @@
+Iteration: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 217/217 [04:26<00:00,  1.23s/it]
+[[032m2024-04-12 13:35:29,326[0m INFO] trainer Epoch: 1, avg loss: 0.6178113529759068
+[[032m2024-04-12 13:35:29,326[0m INFO] eval ***** Running evaluation on dev-clean *****
+Evaluating: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 28/28 [00:08<00:00,  3.46it/s]
+[[032m2024-04-12 13:35:37,422[0m INFO] eval   Num examples = 872
+[[032m2024-04-12 13:35:37,427[0m INFO] eval   accuracy on dev-clean: 0.8669724770642202
+[[032m2024-04-12 13:35:37,427[0m INFO] eval ***** Running evaluation on dev-poison *****
+Evaluating: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 14/14 [00:04<00:00,  3.38it/s]
+[[032m2024-04-12 13:35:41,574[0m INFO] eval   Num examples = 444
+[[032m2024-04-12 13:35:41,575[0m INFO] eval   accuracy on dev-poison: 0.15990990990990991
+[[032m2024-04-12 13:35:42,234[0m INFO] trainer Training finished.
+[[032m2024-04-12 13:35:42,376[0m INFO] __init__ sst-2 dataset loaded, train: 6920, dev: 872, test: 1821
+[[032m2024-04-12 13:35:42,378[0m INFO] eval ***** Running evaluation on test-clean *****
+Evaluating: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 57/57 [00:17<00:00,  3.25it/s]
+[[032m2024-04-12 13:35:59,922[0m INFO] eval   Num examples = 1821
+[[032m2024-04-12 13:35:59,923[0m INFO] eval   accuracy on test-clean: 0.8813838550247117
+[[032m2024-04-12 13:35:59,924[0m INFO] eval ***** Running evaluation on test-poison *****
+Evaluating: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 29/29 [00:08<00:00,  3.27it/s]
+[[032m2024-04-12 13:36:08,788[0m INFO] eval   Num examples = 909
+[[032m2024-04-12 13:36:08,789[0m INFO] eval   accuracy on test-poison: 0.16501650165016502
+[[032m2024-04-12 13:36:08,844[0m INFO] TaskForSingleSentenceClassification 攻击结束
+[[032m2024-04-12 13:36:08,844[0m INFO] TaskForSingleSentenceClassification ==========================================================
+[[032m2024-04-12 13:36:08,845[0m INFO] attack_helper Checking the config of PoisoningAttack
+[[032m2024-04-12 13:36:08,845[0m INFO] main 生在生成投毒数据
+[[032m2024-04-12 13:36:08,845[0m INFO] main 原始数据集路径: /Users/zkzhu/Project/PycharmProject/LMsEvaluation/datasets/imdb/train.txt
+[[032m2024-04-12 13:36:08,846[0m INFO] main 投毒数据集路径: /Users/zkzhu/Project/PycharmProject/LMsEvaluation/datasets/imdb/poisoning_train.txt
+[[032m2024-04-12 13:36:09,913[0m INFO] main 投毒数据生成完毕
+[[032m2024-04-12 13:36:09,921[0m INFO] TaskForSingleSentenceClassification ==========================================================
+[[032m2024-04-12 13:36:09,922[0m INFO] TaskForSingleSentenceClassification 攻击开始
+[[032m2024-04-12 13:36:09,926[0m INFO] data_helpers  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[[032m2024-04-12 13:36:09,927[0m INFO] data_helpers 缓存文件 /Users/zkzhu/Project/PycharmProject/LMsEvaluation/datasets/imdb/cache_test_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[[032m2024-04-12 13:36:09,931[0m INFO] data_helpers 数据预处理一共耗时0.004s
+[[032m2024-04-12 13:36:09,931[0m INFO] data_helpers  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[[032m2024-04-12 13:36:09,931[0m INFO] data_helpers 缓存文件 /Users/zkzhu/Project/PycharmProject/LMsEvaluation/datasets/imdb/cache_poisoning_train_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[[032m2024-04-12 13:36:11,254[0m INFO] data_helpers 数据预处理一共耗时1.323s
+[[032m2024-04-12 13:36:11,254[0m INFO] data_helpers  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[[032m2024-04-12 13:36:11,255[0m INFO] data_helpers 缓存文件 /Users/zkzhu/Project/PycharmProject/LMsEvaluation/datasets/imdb/cache_val_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[[032m2024-04-12 13:36:12,338[0m INFO] data_helpers 数据预处理一共耗时1.083s
+[[032m2024-04-12 13:36:16,570[0m INFO] main Epoch: 0, Batch[0/25000], Train loss :3.162, Train acc: 0.000
+[[032m2024-04-12 13:36:16,573[0m INFO] main Epoch: 0, Train loss: 0.000, Epoch time = 4.231s
+[[032m2024-04-12 13:36:18,733[0m INFO] Bert ## 注意，正在使用本地MyTransformer中的MyMultiHeadAttention实现，如需使用torch框架中的MultiHeadAttention模块可通过config.__dict__['use_torch_multi_head'] = True实现
+[[032m2024-04-12 13:36:19,997[0m INFO] data_helpers  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[[032m2024-04-12 13:36:19,998[0m INFO] data_helpers 缓存文件 /Users/zkzhu/Project/PycharmProject/LMsEvaluation/datasets/imdb/cache_test_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[[032m2024-04-12 13:36:20,003[0m INFO] data_helpers 数据预处理一共耗时0.005s
+[[032m2024-04-12 13:36:20,004[0m INFO] data_helpers  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[[032m2024-04-12 13:36:20,004[0m INFO] data_helpers 缓存文件 /Users/zkzhu/Project/PycharmProject/LMsEvaluation/datasets/imdb/cache_poisoning_train_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[[032m2024-04-12 13:36:21,121[0m INFO] data_helpers 数据预处理一共耗时1.117s
+[[032m2024-04-12 13:36:21,121[0m INFO] data_helpers  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[[032m2024-04-12 13:36:21,122[0m INFO] data_helpers 缓存文件 /Users/zkzhu/Project/PycharmProject/LMsEvaluation/datasets/imdb/cache_val_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[[032m2024-04-12 13:36:22,225[0m INFO] data_helpers 数据预处理一共耗时1.104s
+[[032m2024-04-12 13:36:32,058[0m INFO] main Acc on test:0.000
+[[032m2024-04-12 13:36:32,230[0m INFO] TaskForSingleSentenceClassification 攻击结束
+[[032m2024-04-12 13:36:32,230[0m INFO] TaskForSingleSentenceClassification ==========================================================
+[[032m2024-04-12 13:36:34,358[0m INFO] Bert ## 注意，正在使用本地MyTransformer中的MyMultiHeadAttention实现，如需使用torch框架中的MultiHeadAttention模块可通过config.__dict__['use_torch_multi_head'] = True实现
+[[032m2024-04-12 13:36:35,211[0m INFO] data_helpers  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[[032m2024-04-12 13:36:35,211[0m INFO] data_helpers 缓存文件 /Users/zkzhu/Project/PycharmProject/LMsEvaluation/datasets/imdb/cache_test_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[[032m2024-04-12 13:36:35,216[0m INFO] data_helpers 数据预处理一共耗时0.005s
+[[032m2024-04-12 13:36:35,216[0m INFO] data_helpers  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[[032m2024-04-12 13:36:35,217[0m INFO] data_helpers 缓存文件 /Users/zkzhu/Project/PycharmProject/LMsEvaluation/datasets/imdb/cache_poisoning_train_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[[032m2024-04-12 13:36:35,946[0m INFO] data_helpers 数据预处理一共耗时0.729s
+[[032m2024-04-12 13:36:35,947[0m INFO] data_helpers  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[[032m2024-04-12 13:36:35,947[0m INFO] data_helpers 缓存文件 /Users/zkzhu/Project/PycharmProject/LMsEvaluation/datasets/imdb/cache_val_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[[032m2024-04-12 13:36:37,364[0m INFO] data_helpers 数据预处理一共耗时1.417s
+[[032m2024-04-12 13:36:41,891[0m INFO] TaskForSingleSentenceClassification Acc on test:0.000

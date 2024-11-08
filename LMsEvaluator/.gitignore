@@ -1,0 +1,91 @@
+# ~/.gitignore_global
+
+# Symlinked into ~/ as .gitignore
+
+# Compiled source
+
+*.dll
+*.exe
+
+# Packages/ Archives
+
+*.7z
+*.dmg
+*.gz
+*.iso
+*.tar
+*.zip
+*.pkg
+
+# Databases
+
+*.sql
+*.sqlite
+
+# Logs
+
+*.log
+
+# project files
+
+.idea/
+.vscode/
+*.pyc
+
+# OS generated files
+
+**/*.app
+
+**/CmakeCache.txt
+**/build/*
+
+**/CmakeFiles/*
+**/.DS_Store
+.DS_Store
+
+**/.Spotlight-V100
+**/.Trashes
+
+**/Thumbs.db
+
+# specific files
+
+/datasets/ChineseNER/*
+/datasets/MultipleChoice/*
+/datasets/PairSentenceClassification/*
+/datasets/SingleSentenceClassification/*
+/datasets/SongCi/*
+/datasets/SQuAD/*
+/datasets/WikiText/*
+/datasets/GLUE/*
+/datasets/imdb/*
+/datasets/Tomatoes/*
+!/datasets/GLUE/.gitkeep
+
+!README.md
+
+/attack/AdvAttack/checkpoints
+/attack/AdvAttack/log.csv
+
+/LMs/bert_base_chinese/*
+/LMs/bert_base_uncased_english/*
+!/LMs/.gitkeep
+/LMs/internlm2-chat-7b
+*.bin
+*.h5
+*.ot
+*.safetensors
+*.onnx
+/LMs/bert_base_uncased_english/coreml/*
+
+
+/logs
+/runs
+/cache
+/evaluate
+/checkpoints
+/outputs
+/models
+
+/.ipynb_checkpoints
+/.virtual_documents
