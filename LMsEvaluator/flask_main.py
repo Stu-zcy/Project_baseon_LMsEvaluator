@@ -179,7 +179,7 @@ def login():
 def receive_attack_List():
     data = request.json
     attack_list = data.get('attack_list', [])
-    username = data.get('username', None)
+    username = data.get('username', None).strip('"')
 
     if username:
         print(f"Received data from user: {username}")
@@ -196,7 +196,7 @@ def receive_attack_List():
 def execute_attack():
     try:
         data = request.json
-        username = data.get('username', None)  # 获取用户名
+        username = data.get('username', None).strip('"') # 获取用户名
 
         if not username:
             return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
@@ -205,7 +205,7 @@ def execute_attack():
 
         # 下游任务执行代码
         project_path = os.path.dirname(os.path.abspath(__file__))
-        model_class = parse_config(project_path,username)
+        model_class = parse_config(project_path,str(username))
         model_class.run()
 
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
@@ -218,7 +218,7 @@ def execute_attack():
 def receive_defense_list():
     data = request.json
     attack_list = data.get('attack_list', [])
-    username = data.get('username', None)
+    username = data.get('username', None).strip('"')
 
     if username:
         print(f"Received data from user: {username}")
@@ -235,7 +235,7 @@ def receive_defense_list():
 def execute_defense():
     try:
         data = request.json
-        username = data.get('username', None)  # 获取用户名
+        username = data.get('username', None).strip('"')  # 获取用户名
 
         if not username:
             return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
@@ -244,7 +244,7 @@ def execute_defense():
 
         # 下游任务执行代码
         project_path = os.path.dirname(os.path.abspath(__file__))
-        model_class = parse_config(project_path,username)
+        model_class = parse_config(project_path,str(username))
         model_class.run()
 
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
