@@ -6,11 +6,11 @@ import os
 import json
 from utils.config_parser import parse_config
 from werkzeug.security import generate_password_hash, check_password_hash
-import random
+import random,time
 import string
 from datetime import datetime, timedelta
 import extract
-
+from jwt_token import sign
 
 app = Flask(__name__)
 CORS(app)
@@ -109,7 +109,7 @@ def register():
     data = request.json
     username = data['username']
     password = data['password']
-    age = data['age']
+    age = 0
     gender = 1  # 如果没有前端提供性别，默认为1（男）
     verification_code = data.get('verificationCode')
     email = data.get('email')  # 前端传递邮箱地址
@@ -139,7 +139,6 @@ def register():
     return jsonify({"message": "注册成功"}), 201
 
 
-
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.json
@@ -156,25 +155,100 @@ def login():
             'gender': user.gender,
             'permissions': user.permissions.split(',') if user.permissions else []
         }
-        return jsonify({"message": "登录成功", "accountInfo": account_info, "expiresIn": 24 * 60 * 60 * 1000}), 200
+        expires_in = 60 * 60 * 1000  # 设置过期时间为1小时
+        jwt_token = sign({"username": username, "role": user.role}, 'secret key', expires_in)
 
-    return jsonify({"message": "用户名或密码错误"}), 401
+        # 返回数据与前端 Mock 格式保持一致
+        return jsonify({
+            "code": 0,
+            "message": "success",
+            "data": {
+                "token": jwt_token,
+                "expires": expires_in + int(time.time() * 1000)  # 当前时间 + 过期时间
+            },
+            "accountInfo": account_info
+        }), 200
+
+    return jsonify({
+        "code": 401,
+        "message": "用户名或密码错误"
+    }), 401
 
 
-@app.route('/api/data', methods=['POST'])
-def receive_data():
+@app.route('/api/attack_List', methods=['POST'])
+def receive_attack_List():
     data = request.json
-    print("Received attack list:", data['attack_list'])  # 输出接收到的数据
-    return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': data['attack_list']})
+    attack_list = data.get('attack_list', [])
+    username = data.get('username', None)
+
+    if username:
+        print(f"Received data from user: {username}")
+    else:
+        return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
+
+    print("Received attack list:", attack_list)  # 输出接收到的数据
+
+
+    return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': attack_list})
+
 
 @app.route('/api/execute_attack', methods=['POST'])
 def execute_attack():
     try:
+        data = request.json
+        username = data.get('username', None)  # 获取用户名
+
+        if not username:
+            return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
+
+        print(f"Executing attack for user: {username}")
+
         # 下游任务执行代码
         project_path = os.path.dirname(os.path.abspath(__file__))
         model_class = parse_config(project_path)
         model_class.run()
+
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
+
+    except Exception as e:
+        print("Error executing attack:", e)
+        return jsonify({'status': 'error', 'message': 'Failed to execute attack'}), 500
+
+@app.route('/api/defense_list', methods=['POST'])
+def receive_defense_list():
+    data = request.json
+    attack_list = data.get('attack_list', [])
+    username = data.get('username', None)
+
+    if username:
+        print(f"Received data from user: {username}")
+    else:
+        return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
+
+    print("Received attack list:", attack_list)  # 输出接收到的数据
+
+
+    return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': attack_list})
+
+
+@app.route('/api/execute_defense', methods=['POST'])
+def execute_defense():
+    try:
+        data = request.json
+        username = data.get('username', None)  # 获取用户名
+
+        if not username:
+            return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
+
+        print(f"Executing attack for user: {username}")
+
+        # 下游任务执行代码
+        project_path = os.path.dirname(os.path.abspath(__file__))
+        model_class = parse_config(project_path)
+        model_class.run()
+
+        return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
+
     except Exception as e:
         print("Error executing attack:", e)
         return jsonify({'status': 'error', 'message': 'Failed to execute attack'}), 500
@@ -182,7 +256,7 @@ def execute_attack():
 @app.route('/api/submit_log', methods=['POST'])
 def submit_log():
     try:
-        path = "./logs/single_2024-11-05.txt"  # 日志文件路径,之后改成自动获取
+        path = "./logs/single_2024-04-25.txt"  # 日志文件路径,之后改成自动获取
         res = json.dumps(extract.extractResult(path), indent=2)  # 提取日志内容
         return jsonify(res)  # 返回 JSON 格式的日志内容
     except Exception as e:
