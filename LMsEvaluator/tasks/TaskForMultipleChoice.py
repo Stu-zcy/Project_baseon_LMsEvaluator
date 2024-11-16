@@ -16,9 +16,9 @@ sys.path.append('../')
 
 
 class TaskForMultipleChoice(BaseTask):
-    def __init__(self, dataset_dir, model_dir, dataset_type=".csv", use_gpu=True, config_parser=None):
+    def __init__(self, dataset_dir, model_dir, dataset_type=".csv", use_gpu=True, config_parser=None,username='default'):
         self.config = ModelTaskForMultipleChoice(dataset_dir, model_dir, dataset_type,
-                                                 use_gpu, config_parser)
+                                                 use_gpu, config_parser,username=username)
 
     def train(self):
         model = BertForMultipleChoice(self.config,

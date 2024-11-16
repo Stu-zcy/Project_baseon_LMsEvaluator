@@ -18,9 +18,9 @@ sys.path.append('..')
 
 class TaskForSingleSentenceClassification(BaseTask):
     def __init__(self, dataset_dir, model_dir, dataset_type=".txt", use_gpu=True, split_sep='_!_',
-                 config_parser=None):
+                 config_parser=None,username='default'):
         self.config = ModelTaskForSingleSentenceClassification(dataset_dir, model_dir, dataset_type,
-                                                               use_gpu, split_sep, config_parser)
+                                                               use_gpu, split_sep, config_parser,username=username)
         self.model = None
         self.data_loader = None
         self.train_iter = None

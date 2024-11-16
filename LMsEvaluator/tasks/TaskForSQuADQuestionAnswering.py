@@ -18,9 +18,9 @@ sys.path.append('../')
 
 
 class TaskForSQuADQuestionAnswering(BaseTask):
-    def __init__(self, dataset_dir, model_dir, dataset_type=".json", use_gpu=True, config_parser=None):
+    def __init__(self, dataset_dir, model_dir, dataset_type=".json", use_gpu=True, config_parser=None,username='default'):
         self.config = ModelTaskForSQuADQuestionAnswering(dataset_dir, model_dir, dataset_type, use_gpu,
-                                                         config_parser)
+                                                         config_parser,username=username)
 
     def train(self):
         model = BertForQuestionAnswering(self.config,

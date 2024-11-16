@@ -205,7 +205,7 @@ def execute_attack():
 
         # 下游任务执行代码
         project_path = os.path.dirname(os.path.abspath(__file__))
-        model_class = parse_config(project_path)
+        model_class = parse_config(project_path,username)
         model_class.run()
 
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
@@ -244,7 +244,7 @@ def execute_defense():
 
         # 下游任务执行代码
         project_path = os.path.dirname(os.path.abspath(__file__))
-        model_class = parse_config(project_path)
+        model_class = parse_config(project_path,username)
         model_class.run()
 
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
