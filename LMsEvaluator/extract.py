@@ -2,7 +2,8 @@ import re
 import json
 
 def extractResult(path):
-	f = open(path, "r", encoding='utf-8')p	content = iter(f.readlines())
+	f = open(path, "r", encoding='utf-8')
+	content = iter(f.readlines())
 	f.close()
 	result = {k: [] for k in ['AdvAttack', 'BackDoorAttack', 'PoisoningAttack', 'SWAT']}
 	# def GetPair(s: str):

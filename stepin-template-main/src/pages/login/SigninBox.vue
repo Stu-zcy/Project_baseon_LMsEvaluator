@@ -19,7 +19,7 @@
         </a-form-item>
 
         <!-- 邮箱输入框 -->
-        <a-form-item :required="true" name="email">
+        <a-form-item :required="true" name="email" :rules="[{ type: 'email', message: '请输入正确的邮箱格式' }]">
           <a-input
             v-model:value="form.email"
             placeholder="请输入邮箱"
@@ -34,21 +34,22 @@
             placeholder="请输入密码"
             class="signin-input h-[40px]"
             type="password"
+            @input="checkPasswordStrength"
           />
         </a-form-item>
 
-        <!-- 性别输入框 -->
-        <a-form-item label="性别" name="gender">
-          <a-radio-group v-model:value="form.gender" class="signin-radio-group">
-            <a-radio value="0">男</a-radio>
-            <a-radio value="1">女</a-radio>
-            <a-radio value="2">其他</a-radio>
-          </a-radio-group>
-        </a-form-item>
-
-        <!-- 年龄输入框 -->
-        <a-form-item label="年龄" name="age">
-          <a-input-number v-model:value="form.age" class="signin-input-number" min="0" placeholder="请输入年龄" />
+        <!-- 确认密码输入框 -->
+        <a-form-item :required="true" name="confirmPassword" :rules="[{ validator: validateConfirmPassword, message: '两次密码输入不一致' }]">
+          <a-input
+            v-model:value="form.confirmPassword"
+            placeholder="请再次输入密码"
+            class="signin-input h-[40px]"
+            type="password"
+          />
+          <div class="password-strength-bar">
+            <div :class="['strength-bar', passwordStrengthClass]"></div>
+          </div>
+          <div class="password-strength-text">{{ passwordStrengthText }}</div>
         </a-form-item>
 
         <!-- 验证码输入框 -->
@@ -68,24 +69,29 @@
         <!-- 注册按钮 -->
         <a-button htmlType="submit" class="submit-button" type="primary" :loading="loading"> 注册 </a-button>
       </a-form>
+      <!-- 返回按钮 -->
+      <a-button @click="goBack" class="return-button" type="default"> 返回 </a-button>
     </div>
   </ThemeProvider>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, defineEmits } from 'vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios';
 
+const emit = defineEmits(['success', 'goBack']);
 const loading = ref(false);
 const form = reactive({
   username: '',
   email: '',
   password: '',
-  age: null,
-  gender: undefined, // 确保初始化为 undefined
+  confirmPassword: '',
   verificationCode: '',
 });
+
+const passwordStrengthText = ref('');
+const passwordStrengthClass = ref('');
 
 async function requestMailcode() {
   try {
@@ -101,11 +107,43 @@ async function requestSignin() {
   try {
     const response = await axios.post('http://localhost:5000/api/register', form);
     message.success('注册成功！');
+    emit('success');
+    goBack(); // 注册成功后返回登录页面
   } catch (error) {
     throw new Error(error.response?.data?.message || '注册失败');
   } finally {
     loading.value = false;
   }
+}
+
+function checkPasswordStrength() {
+  const lengthScore = form.password.length >= 8 ? 1 : 0;
+  const hasNumbers = /\d/.test(form.password) ? 1 : 0;
+  const hasUppercase = /[A-Z]/.test(form.password) ? 1 : 0;
+  const hasSpecialChars = /[!@#$%^&*]/.test(form.password) ? 1 : 0;
+  const score = lengthScore + hasNumbers + hasUppercase + hasSpecialChars;
+
+  if (score === 4) {
+    passwordStrengthText.value = '强';
+    passwordStrengthClass.value = 'strength-strong';
+  } else if (score >= 2) {
+    passwordStrengthText.value = '一般';
+    passwordStrengthClass.value = 'strength-medium';
+  } else {
+    passwordStrengthText.value = '弱';
+    passwordStrengthClass.value = 'strength-weak';
+  }
+}
+
+function validateConfirmPassword(_, value) {
+  if (value !== form.password) {
+    return Promise.reject('两次密码输入不一致');
+  }
+  return Promise.resolve();
+}
+
+function goBack() {
+  emit('goBack');
 }
 </script>
 
@@ -126,20 +164,12 @@ async function requestSignin() {
   color: #333;
 }
 
-.signin-input,
-.signin-select,
-.signin-radio-group,
-.signin-input-number {
+.signin-input {
   margin-bottom: 16px;
   border-radius: 8px;
   padding-left: 12px;
   font-size: 14px;
   height: 40px;
-}
-
-.signin-radio-group {
-  display: flex;
-  gap: 20px;
 }
 
 .verification-container {
@@ -156,20 +186,46 @@ async function requestSignin() {
   margin-top: 20px;
 }
 
-/* 使性别和年龄输入框分为两行 */
-a-form-item {
+.return-button {
   width: 100%;
+  height: 45px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 10px;
 }
 
-@media (max-width: 768px) {
-  .signin-box {
-    width: 100%;
-    padding: 20px;
-  }
+.password-strength-bar {
+  height: 6px;
+  border-radius: 5px;
+  margin-top: 8px;
+  background-color: #e0e0e0;
+}
 
-  .verification-container {
-    flex-direction: column;
-    gap: 10px;
-  }
+.strength-bar {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+.strength-weak {
+  width: 33%;
+  background-color: #ff4d4f;
+}
+
+.strength-medium {
+  width: 66%;
+  background-color: #faad14;
+}
+
+.strength-strong {
+  width: 100%;
+  background-color: #52c41a;
+}
+
+.password-strength-text {
+  font-size: 14px;
+  margin-top: 5px;
+  color: #1896ff;
 }
 </style>

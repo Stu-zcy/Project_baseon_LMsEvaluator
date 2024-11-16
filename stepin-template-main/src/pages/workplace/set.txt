@@ -1,0 +1,70 @@
+将attack_type、attack_recipe级联选择，其中关系如下所示，要求选择对应attack_type时出现对应attack_recipe
+
+<template>
+  <a-space>
+    <a-select
+      v-model:value="attack_type"
+      style="width: 120px"
+      :options="attack_type_Data.map(pro => ({ value: pro }))"
+    ></a-select>
+    <a-select
+      v-model:value="secondCity"
+      style="width: 120px"
+      :options="cities.map(city => ({ value: city }))"
+    ></a-select>
+  </a-space>
+</template>
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue';
+const attack_type_Data = ['GIAforNLP', 'SWAT','AdvAttack','BackDoorAttack',PoisoningAttack];
+const attack_recipe_Data = {
+  GIAforNLP: ['default'],
+  SWAT: ['default'],
+  AdvAttack:['A2TYoo2021','BAEGarg2019','BERTAttackLi2020','GeneticAlgorithmAlzantot2018',
+  			 'FasterGeneticAlgorithmJia2019,','DeepWordBugGao2018','HotFlipEbrahimi2017','InputReductionFeng2018',
+  			 'Kuleshov2017','MorpheusTan2020','Seq2SickCheng2018BlackBox','TextBuggerLi2018',
+  			 'TextFoolerJin2019','PWWSRen2019','IGAWang2019','Pruthi2019',
+  			 'PSOZang2020','CheckList2020','CLARE2020','FrenchRecipe',
+  			 'SpanishRecipe','ChineseRecipe'],
+  BackDoorAttack:['default'],
+  PoisoningAttack:['default']
+};
+const attack_type = ref(attack_type_Data[0]);
+const secondCity = ref(attack_recipe_Data[attack_type.value][0]);
+const cities = computed(() => {
+  return attack_recipe_Data[attack_type.value];
+});
+
+watch(attack_type, val => {
+  secondCity.value = attack_recipe_Data[val][0];
+});
+</script>
+
+
+
+attack_type：
+	GIAforNLP
+		attack_recipe：
+		- default
+	SWAT：
+		attack_recipe：
+		- default
+	AdvAttack：
+		attack_recipe：
+		- 
+		- 
+		- 
+		- 
+		- 
+		- 
+		- 
+		- 
+		- 
+		- 
+	BackDoorAttack：
+		attack_recipe：
+		- default	
+	PoisoningAttack：
+		attack_recipe：
+		- default
+		

@@ -32,18 +32,29 @@ export const useAccountStore = defineStore('account', {
   actions: {
     async login(username: string, password: string) {
       return http
-        .request<TokenResult, Response<TokenResult>>('/login', 'post_json', { username, password })
+        .request<TokenResult, Response<TokenResult>>('http://localhost:5000/api/login', 'post_json', { username, password })
         .then(async (response) => {
           if (response.code === 0) {
+            // 登录成功，更新登录状态
             this.logged = true;
-            http.setAuthorization(`Bearer ${response.data.token}`, new Date(response.data.expires));
+            const { token, expires } = response.data;
+            http.setAuthorization(`Bearer ${token}`, new Date(expires));
+    
+            // 从响应中提取账户信息并存储到 localStorage
+            const { accountInfo } = response;
+            this.account = accountInfo.account;
+            this.permissions = accountInfo.permissions;
+            this.role = accountInfo.role;
+            localStorage.setItem('Global_username', JSON.stringify(username));  // 存储用户名
+            // 获取菜单
             await useMenuStore().getMenuList();
+    
             return response.data;
           } else {
             return Promise.reject(response);
           }
         });
-    },
+    },    
     async logout() {
       return new Promise<boolean>((resolve) => {
         localStorage.removeItem('stepin-menu');
