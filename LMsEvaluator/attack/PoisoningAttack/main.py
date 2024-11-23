@@ -27,9 +27,9 @@ class PoisoningAttack(BaseAttack):
 
     def attack(self):
         if self.config_parser['task_config']['task'] == "TaskForSingleSentenceClassification":
-            self.attack_single_sentence_classification()
+            return self.attack_single_sentence_classification()
         elif self.config_parser['task_config']['task'] == "TaskForPairSentenceClassification":
-            self.attack_pair_sentence_classification()
+            return self.attack_pair_sentence_classification()
 
     def attack_single_sentence_classification(self):
         model_save_path = os.path.join(self.config.model_save_dir, 'poisoning_model.pt')
@@ -123,6 +123,7 @@ class PoisoningAttack(BaseAttack):
         ori_acc = self.evaluate_single_sentence_classification(test_iter, self.model, device=self.config.device,
                                                                PAD_IDX=data_loader.PAD_IDX)
         self.__table_show(acc, ori_acc)
+        return [ori_acc, acc]
 
     def attack_pair_sentence_classification(self):
         # model_save_path = os.path.join(self.config.model_save_dir, 'model.pt')
@@ -226,6 +227,7 @@ class PoisoningAttack(BaseAttack):
         self.model = self.model.to(self.config.device)
         ori_acc = self.evaluate(test_iter, self.model, device=self.config.device, PAD_IDX=data_loader.PAD_IDX)
         self.__table_show(acc, ori_acc)
+        return [ori_acc, acc]
 
     def evaluate_single_sentence_classification(self, data_iter, model, device, PAD_IDX):
         model.eval()
@@ -267,7 +269,10 @@ class PoisoningAttack(BaseAttack):
         self.config.train_file_path = poisoning_train_path
 
     def __deal_path(self, ori_path):
-        base_path, file_name = ori_path.rsplit('/', 1)
+        try:
+            base_path, file_name = ori_path.rsplit('/', 1)
+        except:
+            base_path, file_name = ori_path.rsplit('\\', 1)
         file_name = "poisoning_" + file_name
         result = base_path + "/" + file_name
         return result, "." + file_name.split('.')[-1]

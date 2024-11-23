@@ -31,6 +31,7 @@ class TaskForSingleSentenceClassification(BaseTask):
         self.attack_data_loader = None
         self.attack_optimizer = None
         self.attack_bert_tokenize = None
+        self.result = {}
 
     def train(self):
         model = BertForSentenceClassification(self.config, self.config.pretrained_model_dir)
@@ -219,7 +220,9 @@ class TaskForSingleSentenceClassification(BaseTask):
                     print_red("UNKNOWN ATTACK TYPE CONFIG.")
                     print_red("Please check the attackArgs.attackType config in config.yaml.")
                 logging.info(attack_type + " 攻击开始")
-                attack_model.attack()
+                res = attack_model.attack()
+                attackList = self.result.setdefault(attack_model.attack_type, [])
+                attackList.append(res)
                 logging.info(attack_type + "攻击结束")
                 logging.info("=" * 50)
 
