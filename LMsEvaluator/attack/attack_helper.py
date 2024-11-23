@@ -83,7 +83,7 @@ class AttackHelper:
             )
 
     def attack(self):
-        self.attack_model.attack()
+        return self.attack_model.attack()
 
     def __config_check(self):
         GIAforNLP_config = [

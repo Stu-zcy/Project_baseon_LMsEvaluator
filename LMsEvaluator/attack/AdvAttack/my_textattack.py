@@ -129,7 +129,7 @@ class MyTextAttack(BaseAttack):
             logging.getLogger().handlers = self.my_handlers
 
         attacker.attack_dataset()
-        self.__result_show()
+        return self.__result_show()
 
         # train_dataset = self.dataset
         # eval_dataset = self.dataset
@@ -201,6 +201,8 @@ class MyTextAttack(BaseAttack):
             table.set_align('', 'l')
             table.print_table()
             table.logging_table()
+            
+            return [[successful_num, failed_num, skipped_num, f"{ori_acc:.1f}%", f"{acc_under_attack:.1f}%", f"{attack_acc:.1f}%"]] + list(csv_reader)
 
     def get_local_dataset(self):
         """

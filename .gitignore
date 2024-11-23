@@ -1,0 +1,12 @@
+#DIR
+.vscode/
+LMsEvaluator/LMs/
+LMsEvaluator/datasets/
+LMsEvaluator/logs/
+stepin-template/node_modules/
+#FILE
+*.db
+components.d.ts
+yarn.lock
+main.py
+test.vue
