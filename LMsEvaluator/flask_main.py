@@ -233,7 +233,7 @@ def execute_attack():
     try:
         data = request.json
         username = data.get('username', None).strip('"')
-        token = data.get('token', None)
+        token = data.get('token', None).strip('"')
 
         # 验证用户名和 token
         if not username or not token:
@@ -262,7 +262,7 @@ def receive_defense_list():
     data = request.json
     defense_list = data.get('defense_list', [])
     username = data.get('username', None).strip('"')
-    token = data.get('token', None)
+    token = data.get('token', None).strip('"')
 
     # 验证用户名和 token
     if not username or not token:
@@ -283,7 +283,7 @@ def execute_defense():
     try:
         data = request.json
         username = data.get('username', None).strip('"')
-        token = data.get('token', None)
+        token = data.get('token', None).strip('"')
 
         # 验证用户名和 token
         if not username or not token:
