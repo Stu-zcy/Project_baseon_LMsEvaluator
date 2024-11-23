@@ -46,6 +46,7 @@ export const useAccountStore = defineStore('account', {
             this.permissions = accountInfo.permissions;
             this.role = accountInfo.role;
             localStorage.setItem('Global_username', JSON.stringify(username));  // 存储用户名
+            localStorage.setItem('Global_token', JSON.stringify(token)); 
             // 获取菜单
             await useMenuStore().getMenuList();
     

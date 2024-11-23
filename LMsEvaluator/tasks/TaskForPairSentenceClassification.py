@@ -18,9 +18,9 @@ sys.path.append('../')
 
 class TaskForPairSentenceClassification(BaseTask):
     def __init__(self, dataset_dir, model_dir, dataset_type=".txt", use_gpu=True, split_sep='_!_',
-                 config_parser=None):
+                 config_parser=None,username='default'):
         self.config = ModelTaskForPairSentenceClassification(dataset_dir, model_dir, dataset_type,
-                                                             use_gpu, split_sep, config_parser)
+                                                             use_gpu, split_sep, config_parser,username=username)
 
     def train(self):
         model = BertForSentenceClassification(self.config,

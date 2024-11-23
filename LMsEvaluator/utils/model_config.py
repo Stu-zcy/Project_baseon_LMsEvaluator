@@ -58,7 +58,7 @@ class ModelConfig:
 
 class ModelTaskForChineseNER(ModelConfig):
     def __init__(self, dataset_dir, model_dir, dataset_type='.txt', use_gpu=True, split_sep=' ',
-                 config_parser=None):
+                 config_parser=None,username='default'):
         super().__init__(dataset_dir, model_dir, dataset_type, use_gpu, config_parser)
         self.model_save_name = "ner_model.pt"
         self.writer = SummaryWriter("runs")
@@ -73,13 +73,13 @@ class ModelTaskForChineseNER(ModelConfig):
         self.num_labels = len(self.entities)
         self.ignore_idx = -100
         self.log_level = logging.DEBUG
-        self.log_init(log_file_name='ner')
+        self.log_init(log_file_name=username+'_ner')
         self.bert_import()
         self.log_config()
 
 
 class ModelTaskForMultipleChoice(ModelConfig):
-    def __init__(self, dataset_dir, model_dir, dataset_type='.csv', use_gpu=True, config_parser=None):
+    def __init__(self, dataset_dir, model_dir, dataset_type='.csv', use_gpu=True, config_parser=None,username='default'):
         super().__init__(dataset_dir, model_dir, dataset_type, use_gpu, config_parser)
         self.is_sample_shuffle = True
         self.batch_size = 16
@@ -89,14 +89,14 @@ class ModelTaskForMultipleChoice(ModelConfig):
         self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 10
         self.model_val_per_epoch = 2
         self.log_level = logging.INFO
-        self.log_init(log_file_name='choice')
+        self.log_init(log_file_name=username+'_choice')
         self.bert_import()
         self.log_config()
 
 
 class ModelTaskForPairSentenceClassification(ModelConfig):
     def __init__(self, dataset_dir, model_dir, dataset_type='.txt', use_gpu=True, split_sep='_!_',
-                 config_parser=None):
+                 config_parser=None,username='default'):
         super().__init__(dataset_dir, model_dir, dataset_type, use_gpu, config_parser)
         self.split_sep = split_sep
         self.is_sample_shuffle = True
@@ -107,14 +107,14 @@ class ModelTaskForPairSentenceClassification(ModelConfig):
         self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 2
         self.model_val_per_epoch = 2
         self.log_level = logging.INFO
-        self.log_init(log_file_name='pair')
+        self.log_init(log_file_name=username+'_pair')
         self.bert_import()
         self.log_config()
 
 
 class ModelTaskForPretraining(ModelConfig):
     def __init__(self, dataset_dir, model_dir, dataset_type='.txt', use_gpu=True,
-                 data_name="songci", config_parser=None):
+                 data_name="songci", config_parser=None,username='default'):
         super().__init__(dataset_dir, model_dir, dataset_type, use_gpu, config_parser)
         self.data_name = data_name
         self.model_save_path = os.path.join(self.model_save_dir, f'model_{data_name}.bin')
@@ -134,14 +134,14 @@ class ModelTaskForPretraining(ModelConfig):
         self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 200
         self.model_val_per_epoch = 1
         self.log_level = logging.DEBUG
-        self.log_init(log_file_name=data_name)
+        self.log_init(log_file_name=username+'_'+data_name)
         self.bert_import()
         self.log_config()
 
 
 class ModelTaskForSingleSentenceClassification(ModelConfig):
     def __init__(self, dataset_dir, model_dir, dataset_type='.txt', use_gpu=True, split_sep='_!_',
-                 config_parser=None):
+                 config_parser=None,username='default'):
         # super(ModelTest, self).__init__(dataset_dir, model_dir, dataset, use_gpu, config_parser)
         super().__init__(dataset_dir, model_dir, dataset_type, use_gpu, config_parser)
         self.split_sep = split_sep
@@ -152,13 +152,13 @@ class ModelTaskForSingleSentenceClassification(ModelConfig):
         self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 10
         self.model_val_per_epoch = 2
         self.log_level = logging.INFO
-        self.log_init(log_file_name='single')
+        self.log_init(log_file_name=username+'_single')
         self.bert_import()
         self.log_config()
 
 
 class ModelTaskForSQuADQuestionAnswering(ModelConfig):
-    def __init__(self, dataset_dir, model_dir, dataset_type='.json', use_gpu=True, config_parser=None):
+    def __init__(self, dataset_dir, model_dir, dataset_type='.json', use_gpu=True, config_parser=None,username='default'):
         # super(ModelTest, self).__init__(dataset_dir, model_dir, dataset, use_gpu)
         super().__init__(dataset_dir, model_dir, dataset_type, use_gpu, config_parser)
         self.train_file_path = os.path.join(str(self.dataset_dir), "train" + dataset_type)

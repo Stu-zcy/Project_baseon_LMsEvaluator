@@ -5,7 +5,7 @@ from tasks import TaskForSingleSentenceClassification, TaskForSQuADQuestionAnswe
     TaskForMultipleChoice, TaskForPairSentenceClassification, TaskForPretraining
 
 
-def parse_config(projectPath):
+def parse_config(projectPath,username='default'):
     """
     配置文件检查 + 配置解析器生成 + 下游任务初始化 + 攻击模块初始化
     :param projectPath: 项目根目录
@@ -58,28 +58,28 @@ def parse_config(projectPath):
     # 下游任务检查与初始化
     if taskConfig['task'] == "TaskForSingleSentenceClassification":
         modelClass = TaskForSingleSentenceClassification.TaskForSingleSentenceClassification(
-            dataset, model, datasetType, generalConfig['use_gpu'], splitSep, configParser)
+            dataset, model, datasetType, generalConfig['use_gpu'], splitSep, configParser,username=username)
     elif taskConfig['task'] == "TaskForSQuADQuestionAnswering":
         modelClass = TaskForSQuADQuestionAnswering.TaskForSQuADQuestionAnswering(
-            dataset, model, datasetType, generalConfig['use_gpu'], configParser)
+            dataset, model, datasetType, generalConfig['use_gpu'], configParser,username=username)
     elif taskConfig['task'] == "TaskForChineseNER":
         modelClass = TaskForChineseNER.TaskForChineseNER(dataset, model, datasetType,
-                                                         generalConfig['use_gpu'], splitSep, configParser)
+                                                         generalConfig['use_gpu'], splitSep, configParser,username=username)
     elif taskConfig['task'] == "TaskForMultipleChoice":
         modelClass = TaskForMultipleChoice.TaskForMultipleChoice(dataset, model,
-                                                                 datasetType, generalConfig['use_gpu'], configParser)
+                                                                 datasetType, generalConfig['use_gpu'], configParser,username=username)
     elif taskConfig['task'] == "TaskForPairSentenceClassification":
         modelClass = TaskForPairSentenceClassification.TaskForPairSentenceClassification(dataset,
                                                                                          model, datasetType,
                                                                                          generalConfig['use_gpu'],
-                                                                                         splitSep, configParser)
+                                                                                         splitSep, configParser,username=username)
     elif taskConfig['task'] == "TaskForPretraining":
         if dataset == "SongCi":
             modelClass = TaskForPretraining.TaskForPretraining(dataset, model, datasetType, generalConfig['use_gpu'],
-                                                               "songci", configParser)
+                                                               "songci", configParser,username=username)
         elif dataset == "WikiText":
             modelClass = TaskForPretraining.TaskForPretraining(dataset, model, datasetType, generalConfig['use_gpu'],
-                                                               "wiki2", configParser)
+                                                               "wiki2", configParser,username=username)
         else:
             print_red("Please check the 'task_config.dataset' config in config.yaml.")
             print_red("P.S. If the task is TaskForPretraining, then the dataset must be songci or wiki.")
