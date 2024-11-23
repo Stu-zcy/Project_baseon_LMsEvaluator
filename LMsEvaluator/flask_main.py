@@ -28,8 +28,7 @@ app.config['MAIL_DEFAULT_SENDER'] = '2544073891@qq.com'
 mail = Mail(app)
 
 # 数据库配置
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
 db = SQLAlchemy(app)
 
 # 用户模型
@@ -48,12 +47,6 @@ class VerificationCode(db.Model):
     email = db.Column(db.String(120), nullable=False)
     code = db.Column(db.String(6), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
-class AttackRecord(db.Model):
-    attackID = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    createUserID = db.Column(db.Integer, db.ForeignKey(User.id))
-    createTime = db.Column(db.DateTime, default=datetime.now)
-    attackResult = db.Column(db.JSON, nullable=False)
 
 @app.before_request
 def create_tables():
@@ -163,7 +156,7 @@ def login():
             'permissions': user.permissions.split(',') if user.permissions else []
         }
         expires_in = 60 * 60 * 1000  # 设置过期时间为1小时
-        jwt_token = sign({"id": user.id, "username": username, "role": user.role}, 'secret key', expires_in)
+        jwt_token = sign({"username": username, "role": user.role}, 'secret key', expires_in)
 
         # 返回数据与前端 Mock 格式保持一致
         return jsonify({
@@ -186,10 +179,9 @@ def login():
 def receive_attack_List():
     data = request.json
     attack_list = data.get('attack_list', [])
-    id = data.get('id', None)
     username = data.get('username', None)
 
-    if id and username:
+    if username:
         print(f"Received data from user: {username}")
     else:
         return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
@@ -204,7 +196,6 @@ def receive_attack_List():
 def execute_attack():
     try:
         data = request.json
-        id = data.get('id', None)
         username = data.get('username', None)  # 获取用户名
 
         if not username:
@@ -216,9 +207,7 @@ def execute_attack():
         project_path = os.path.dirname(os.path.abspath(__file__))
         model_class = parse_config(project_path)
         model_class.run()
-        attack = AttackRecord(createUserID=id, attackResult=json.dumps(model_class.result))
-        db.session.add(attack)
-        db.session.commit()
+
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
 
     except Exception as e:
@@ -246,7 +235,6 @@ def receive_defense_list():
 def execute_defense():
     try:
         data = request.json
-        id = data.get('id', None)
         username = data.get('username', None)  # 获取用户名
 
         if not username:
@@ -258,9 +246,7 @@ def execute_defense():
         project_path = os.path.dirname(os.path.abspath(__file__))
         model_class = parse_config(project_path)
         model_class.run()
-        attack = AttackRecord(createUserID=id, attackResult=json.dumps(model_class.result))
-        db.session.add(attack)
-        db.session.commit()
+
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
 
     except Exception as e:
@@ -268,24 +254,11 @@ def execute_defense():
         return jsonify({'status': 'error', 'message': 'Failed to execute attack'}), 500
 
 @app.route('/api/submit_log', methods=['POST'])
-@app.route('/api/submit_log/<int:attackID>', methods=['POST'])
-def submit_log(attackID=None):
+def submit_log():
     try:
-        data = request.json
-        id = data.get(id, None)
-        username = data.get(username, None)
-        # id = 5
-        # username = "u1h"
-        if not (id and username):
-            return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
-        print(f"getting attackResult for user: {username}")
-
-        if attackID is None:
-            attackRecord = AttackRecord.query.filter_by(createUserID=id).order_by(AttackRecord.createTime.desc()).first()
-        else:
-            attackRecord = AttackRecord.query.filter_by(attackID=attackID, createUserID=id).first()
-        result = json.loads(attackRecord.attackResult)
-        return jsonify(result), 200
+        path = "./logs/single_2024-04-25.txt"  # 日志文件路径,之后改成自动获取
+        res = json.dumps(extract.extractResult(path), indent=2)  # 提取日志内容
+        return jsonify(res)  # 返回 JSON 格式的日志内容
     except Exception as e:
         print(f"Error fetching log: {e}")
         return jsonify({"error": "Failed to fetch log", "details": str(e)}), 500

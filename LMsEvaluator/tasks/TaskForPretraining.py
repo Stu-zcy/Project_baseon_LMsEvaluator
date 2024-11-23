@@ -19,9 +19,9 @@ sys.path.append('../')
 
 class TaskForPretraining(BaseTask):
     def __init__(self, dataset_dir, model_dir, dataset_type=".txt", use_gpu=True,
-                 data_name="songci", config_parser=None):
+                 data_name="songci", config_parser=None,username='default'):
         self.config = ModelTaskForPretraining(dataset_dir, model_dir, dataset_type,
-                                              use_gpu, data_name, config_parser)
+                                              use_gpu, data_name, config_parser,username=username)
 
     def get_model(self):
         model = BertForPretrainingModel(self.config,
