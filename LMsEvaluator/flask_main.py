@@ -24,11 +24,12 @@ app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = '2544073891@qq.com'
 app.config['MAIL_PASSWORD'] = 'jblpfwtrutloecai'  # 授权码
 app.config['MAIL_DEFAULT_SENDER'] = '2544073891@qq.com'
-
+expires_in = 60 * 60 * 1000
 mail = Mail(app)
 
 # 数据库配置
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
 db = SQLAlchemy(app)
 
 # 用户模型
@@ -40,6 +41,9 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=False)
     gender = db.Column(db.Integer, nullable=False)
     permissions = db.Column(db.String(200), nullable=True)
+    token = db.Column(db.String(500), nullable=True)  # 存储登录生成的Token
+    login_time = db.Column(db.DateTime, nullable=True)  # 上次登录时间
+
 
 # 验证码模型
 class VerificationCode(db.Model):
@@ -47,6 +51,12 @@ class VerificationCode(db.Model):
     email = db.Column(db.String(120), nullable=False)
     code = db.Column(db.String(6), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+class AttackRecord(db.Model):
+    attackID = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    createUserID = db.Column(db.Integer, db.ForeignKey(User.id))
+    createTime = db.Column(db.DateTime, default=datetime.now)
+    attackResult = db.Column(db.JSON, nullable=False)
 
 @app.before_request
 def create_tables():
@@ -145,26 +155,28 @@ def login():
     username = data['username']
     password = data['password']
 
-    print(f"Trying to login with username: {username}")
-
     user = User.query.filter_by(username=username).first()
     if user and check_password_hash(user.password, password):
         account_info = {
             'role': user.role,
             'age': user.age,
             'gender': user.gender,
-            'permissions': user.permissions.split(',') if user.permissions else []
+            'permissions': user.permissions.strip(',') if user.permissions else []
         }
-        expires_in = 60 * 60 * 1000  # 设置过期时间为1小时
-        jwt_token = sign({"username": username, "role": user.role}, 'secret key', expires_in)
 
-        # 返回数据与前端 Mock 格式保持一致
+        jwt_token = sign({"id": user.id, "username": username, "role": user.role}, 'secret key', expires_in)
+
+        # 更新数据库中的 token 和 login_time
+        user.token = jwt_token
+        user.login_time = datetime.utcnow()
+        db.session.commit()
+
         return jsonify({
             "code": 0,
             "message": "success",
             "data": {
                 "token": jwt_token,
-                "expires": expires_in + int(time.time() * 1000)  # 当前时间 + 过期时间
+                "expires": expires_in * 1000 + int(time.time() * 1000)  # 当前时间 + 过期时间
             },
             "accountInfo": account_info
         }), 200
@@ -175,19 +187,43 @@ def login():
     }), 401
 
 
-@app.route('/api/attack_List', methods=['POST'])
-def receive_attack_List():
+def verify_token(token, username):
+    try:
+        # 解码 token
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return False, "User does not exist."
+        # 检查 token 是否匹配
+        if user.token != token:
+            return False, "Invalid token."
+
+        # 检查 token 是否过期
+        login_time = user.login_time
+        if not login_time or datetime.utcnow() > login_time + timedelta(hours=1):
+            return False, "Token has expired."
+
+        return True, "Token is valid."
+    except Exception as e:
+        return False, f"Token verification failed: {str(e)}"
+
+
+@app.route('/api/attack_list', methods=['POST'])
+def receive_attack_list():
     data = request.json
     attack_list = data.get('attack_list', [])
-    username = data.get('username', None)
+    username = data.get('username', None).strip('"')
+    token = data.get('token', None).strip('"')
 
-    if username:
-        print(f"Received data from user: {username}")
-    else:
-        return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
+    # 验证用户名和 token
+    if not username or not token:
+        return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
 
+    is_valid, message = verify_token(token, username)
+    if not is_valid:
+        return jsonify({'status': 'error', 'message': message}), 401
+
+    print(f"Received data from user: {username}")
     print("Received attack list:", attack_list)  # 输出接收到的数据
-
 
     return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': attack_list})
 
@@ -196,16 +232,22 @@ def receive_attack_List():
 def execute_attack():
     try:
         data = request.json
-        username = data.get('username', None)  # 获取用户名
+        username = data.get('username', None).strip('"')
+        token = data.get('token', None).strip('"')
 
-        if not username:
-            return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
+        # 验证用户名和 token
+        if not username or not token:
+            return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
+
+        is_valid, message = verify_token(token, username)
+        if not is_valid:
+            return jsonify({'status': 'error', 'message': message}), 401
 
         print(f"Executing attack for user: {username}")
 
         # 下游任务执行代码
         project_path = os.path.dirname(os.path.abspath(__file__))
-        model_class = parse_config(project_path)
+        model_class = parse_config(project_path, str(username))
         model_class.run()
 
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
@@ -214,51 +256,77 @@ def execute_attack():
         print("Error executing attack:", e)
         return jsonify({'status': 'error', 'message': 'Failed to execute attack'}), 500
 
+
 @app.route('/api/defense_list', methods=['POST'])
 def receive_defense_list():
     data = request.json
-    attack_list = data.get('attack_list', [])
-    username = data.get('username', None)
+    defense_list = data.get('defense_list', [])
+    username = data.get('username', None).strip('"')
+    token = data.get('token', None).strip('"')
 
-    if username:
-        print(f"Received data from user: {username}")
-    else:
-        return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
+    # 验证用户名和 token
+    if not username or not token:
+        return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
 
-    print("Received attack list:", attack_list)  # 输出接收到的数据
+    is_valid, message = verify_token(token, username)
+    if not is_valid:
+        return jsonify({'status': 'error', 'message': message}), 401
 
+    print(f"Received data from user: {username}")
+    print("Received defense list:", defense_list)  # 输出接收到的数据
 
-    return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': attack_list})
+    return jsonify({'status': 'success', 'message': 'Defense list received!', 'received_data': defense_list})
 
 
 @app.route('/api/execute_defense', methods=['POST'])
 def execute_defense():
     try:
         data = request.json
-        username = data.get('username', None)  # 获取用户名
+        username = data.get('username', None).strip('"')
+        token = data.get('token', None).strip('"')
 
-        if not username:
-            return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
+        # 验证用户名和 token
+        if not username or not token:
+            return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
 
-        print(f"Executing attack for user: {username}")
+        is_valid, message = verify_token(token, username)
+        if not is_valid:
+            return jsonify({'status': 'error', 'message': message}), 401
+
+        print(f"Executing defense for user: {username}")
 
         # 下游任务执行代码
         project_path = os.path.dirname(os.path.abspath(__file__))
-        model_class = parse_config(project_path)
+        model_class = parse_config(project_path, str(username))
         model_class.run()
 
-        return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
+        return jsonify({'status': 'success', 'message': 'Defense executed successfully!'})
 
     except Exception as e:
-        print("Error executing attack:", e)
-        return jsonify({'status': 'error', 'message': 'Failed to execute attack'}), 500
+        print("Error executing defense:", e)
+        return jsonify({'status': 'error', 'message': 'Failed to execute defense'}), 500
+
+
 
 @app.route('/api/submit_log', methods=['POST'])
-def submit_log():
+@app.route('/api/submit_log/<int:attackID>', methods=['POST'])
+def submit_log(attackID=None):
     try:
-        path = "./logs/single_2024-04-25.txt"  # 日志文件路径,之后改成自动获取
-        res = json.dumps(extract.extractResult(path), indent=2)  # 提取日志内容
-        return jsonify(res)  # 返回 JSON 格式的日志内容
+        data = request.json
+        id = data.get(id, None)
+        username = data.get(username, None)
+        # id = 5
+        # username = "u1h"
+        if not (id and username):
+            return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
+        print(f"getting attackResult for user: {username}")
+
+        if attackID is None:
+            attackRecord = AttackRecord.query.filter_by(createUserID=id).order_by(AttackRecord.createTime.desc()).first()
+        else:
+            attackRecord = AttackRecord.query.filter_by(attackID=attackID, createUserID=id).first()
+        result = json.loads(attackRecord.attackResult)
+        return jsonify(result), 200
     except Exception as e:
         print(f"Error fetching log: {e}")
         return jsonify({"error": "Failed to fetch log", "details": str(e)}), 500
