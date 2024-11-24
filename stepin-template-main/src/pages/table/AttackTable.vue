@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, customRef } from 'vue';
 import axios from "axios"
+import { number } from 'echarts';
 
 const AdvColumns = [
 	{
@@ -48,9 +49,19 @@ const responseData = ref({
 
 const BackDoorAttack = ref([])
 // const SWATAttack = ref([])
+
+const username = localStorage.getItem('Global_username');  // 从 localStorage 获取用户名
+const token = localStorage.getItem('Global_token');
+const props = defineProps({
+	targetAttackID: Number
+})
 onMounted(async () => {
 	try {
-		const response = await axios.post('http://localhost:5000/api/submit_log');
+		const response = await axios.post('http://localhost:5000/api/getRecord', {
+			username: username,
+			token: token,
+			attackID: props.targetAttackID
+		});
 		responseData.value = response.data;
 	} catch (error) {
 		console.error("请求出错", error);

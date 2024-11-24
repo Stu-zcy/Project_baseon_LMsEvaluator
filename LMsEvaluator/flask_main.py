@@ -54,9 +54,19 @@ class VerificationCode(db.Model):
     
 class AttackRecord(db.Model):
     attackID = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    createUserID = db.Column(db.Integer, db.ForeignKey(User.id))
+    createUserName = db.Column(db.Integer, db.ForeignKey(User.username))
     createTime = db.Column(db.DateTime, default=datetime.now)
     attackResult = db.Column(db.JSON, nullable=False)
+
+    def toDict(self):
+        ret = {}
+        ret["attackID"] = self.attackID
+        ret["createUserName"] = self.createUserName
+        ret["createTime"] = self.createTime
+        ret["attackResult"] = self.attackResult
+        return ret
+    
+# def afterInsertListener_AttackRecord
 
 @app.before_request
 def create_tables():
@@ -246,10 +256,14 @@ def execute_attack():
         print(f"Executing attack for user: {username}")
 
         # 下游任务执行代码
+        attack = AttackRecord(createUserName=username, attackResult=json.dumps("RUNNING"))
+        db.session.add(attack)
+        db.session.commit()
         project_path = os.path.dirname(os.path.abspath(__file__))
         model_class = parse_config(project_path, str(username))
         model_class.run()
-
+        AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update({AttackRecord.attackResult: json.dumps(model_class.result)})
+        db.session.commit()
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
 
     except Exception as e:
@@ -308,28 +322,56 @@ def execute_defense():
 
 
 
-@app.route('/api/submit_log', methods=['POST'])
-@app.route('/api/submit_log/<int:attackID>', methods=['POST'])
-def submit_log(attackID=None):
+@app.route('/api/getRecord', methods=['POST'])
+def getRecord():
     try:
         data = request.json
-        id = data.get(id, None)
-        username = data.get(username, None)
-        # id = 5
-        # username = "u1h"
-        if not (id and username):
-            return jsonify({'status': 'error', 'message': 'Username is missing!'}), 400
-        print(f"getting attackResult for user: {username}")
+        username = data.get('username', None).strip('"')
+        token = data.get('token', None).strip('"')
+        attackID = data.get('attackID', None)
+        # 验证用户名和 token
+        if not username or not token:
+            return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
+        is_valid, message = verify_token(token, username)
+        if not is_valid:
+            return jsonify({'status': 'error', 'message': message}), 401
 
         if attackID is None:
-            attackRecord = AttackRecord.query.filter_by(createUserID=id).order_by(AttackRecord.createTime.desc()).first()
+            attackRecord = AttackRecord.query.filter_by(createUserName=username).order_by(AttackRecord.createTime.desc()).first()
         else:
-            attackRecord = AttackRecord.query.filter_by(attackID=attackID, createUserID=id).first()
+            attackRecord = AttackRecord.query.filter_by(attackID=attackID, createUserName=username).first()
         result = json.loads(attackRecord.attackResult)
         return jsonify(result), 200
     except Exception as e:
         print(f"Error fetching log: {e}")
         return jsonify({"error": "Failed to fetch log", "details": str(e)}), 500
+    
+@app.route('/api/attackRecords', methods=['POST'])
+def attackRecords():
+    data = request.json
+    username = data.get('username', None).strip('"')
+    currentPageSize = data.get('currentPageSize') #可调
+    token = data.get('token', None).strip('"')
+    currentPage = data.get('currentPage', None)
+    # 验证用户名和 token
+    if not username or not token:
+        return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
+    is_valid, message = verify_token(token, username)
+    if not is_valid:
+        return jsonify({'status': 'error', 'message': message}), 401
 
+    try:
+        totalPagesNum = AttackRecord.query.filter_by(createUserName=username).count()
+        records = (AttackRecord.query.filter_by(createUserName=username).
+            order_by(AttackRecord.createTime.desc()).offset((currentPage - 1) * currentPageSize).limit(currentPageSize).all())
+        records = list(map(lambda r: r.toDict(), records))
+        for r in records:
+            r['attackResult'] = "COMPLETED" if json.dumps("RUNNING") != r['attackResult'] else "RUNNING"
+        retData = {'records': records, 'pagination': {'totalPagesNum': totalPagesNum}}
+        return jsonify(retData), 200
+    except Exception as e:
+        print(f"Error fetching log: {e}")
+        return jsonify({"error": "Failed to fetch records", "details": str(e)}), 500
+    
 if __name__ == '__main__':
     app.run(port=5000,debug=True)
