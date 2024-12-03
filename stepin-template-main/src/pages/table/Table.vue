@@ -42,6 +42,16 @@ function handleOK(e: MouseEvent) {
 	OPEN.value = false;
 }
 
+async function del(id: number) {
+	const response = await axios.post('http://localhost:5000/api/deleteRecord', {
+		username: username,
+		token: token,
+		attackID: id
+	});
+
+	fetchData();
+}
+
 fetchData();
 </script>
 <template>
@@ -53,7 +63,10 @@ fetchData();
 			<div class="hcard" v-for="item, index in responseData">
 				<div>{{ item.createTime }}</div>
 				<div>{{ item.attackResult }}</div>
-				<div><a-button type="primary" @click="showModal(item.attackID)">查看详情</a-button></div>
+				<div style="display: flex; justify-content: space-between;width: 180px;">
+					<div><a-button type="primary" @click="showModal(item.attackID)">查看详情</a-button></div>
+					<div><a-button danger @click="del(item.attackID)">删除</a-button></div>
+				</div>
 			</div>
 		</div>
 		<a-pagination v-model:current="currentPage" :total="totalPagesNum" v-model:pageSize="currentPageSize"

@@ -28,8 +28,8 @@ expires_in = 60 * 60 * 1000
 mail = Mail(app)
 
 # 数据库配置
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
 db = SQLAlchemy(app)
 
 # 用户模型
@@ -373,5 +373,32 @@ def attackRecords():
         print(f"Error fetching log: {e}")
         return jsonify({"error": "Failed to fetch records", "details": str(e)}), 500
     
+@app.route('/api/deleteRecord', methods=['POST'])
+def deleteRecord():
+    try:
+        data = request.json
+        username = data.get('username', None).strip('"')
+        token = data.get('token', None).strip('"')
+        attackID = data.get('attackID', None)
+        # 验证用户名和 token
+        if not username or not token:
+            return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
+        is_valid, message = verify_token(token, username)
+        if not is_valid:
+            return jsonify({'status': 'error', 'message': message}), 401
+        if attackID is None:
+            return jsonify({'status': 'error', 'message': 'attackID is missing!'}), 400
+            
+        count = AttackRecord.query.filter_by(attackID=attackID, createUserName=username).delete()
+        db.session.commit()
+        if count > 0:
+            return jsonify('delete suscess'), 200
+        else:
+            return jsonify('error'), 500
+    except Exception as e:
+        print(f"Error fetching log: {e}")
+        return jsonify({"error": "Failed to fetch log", "details": str(e)}), 500
+ 
+
 if __name__ == '__main__':
     app.run(port=5000,debug=True)

@@ -49,7 +49,7 @@ attack_list:
       dataset_name_or_path: "cola"
       display_full_info: True
   - attack_args:
-      attack: False
+      attack: True
       attack_type: BackDoorAttack
       use_local_model: True
       model: "bert"
@@ -60,10 +60,10 @@ attack_list:
         "name": "badnets"
       train:
         "name": "base"
-        "batch_size": 4
+        "batch_size": 16
         "epochs": 1
       defender: "None"
-      sample_metrics: ['ppl', 'use']
+      sample_metrics: []
       display_full_info: True
   - attack_args:
       attack: False

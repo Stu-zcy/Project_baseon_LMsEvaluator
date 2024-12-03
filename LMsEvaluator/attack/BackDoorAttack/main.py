@@ -99,6 +99,8 @@ class MyBackDoorAttack(BaseAttack):
         table.set_align('', 'l')
         table.print_table()
         table.logging_table()
+        return [self.poison_dataset, self.poisoner['name'], f"{result['test-clean']['accuracy']:.3f}%", 
+                f"{result['test-poison']['accuracy']:.3f}%", table_ppl, table_use, table_grammar]
 
 
 if __name__ == '__main__':

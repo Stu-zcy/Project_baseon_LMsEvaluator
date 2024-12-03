@@ -10,3 +10,4 @@ components.d.ts
 yarn.lock
 main.py
 test.vue
+.DS_Store
