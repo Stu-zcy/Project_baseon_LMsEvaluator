@@ -63,6 +63,7 @@ attack_list:
         "batch_size": 4
         "epochs": 1
       defender: "None"
+      sample_metrics: ['ppl', 'use']
       display_full_info: True
   - attack_args:
       attack: False

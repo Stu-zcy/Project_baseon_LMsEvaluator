@@ -67,6 +67,7 @@ class AttackHelper:
                 train=self.attack_config['train'],
                 defender=self.attack_config['defender'],
                 display_full_info=self.attack_config['display_full_info'],
+                sample_metrics=self.attack_config['sample_metrics'],
             )
         elif self.attack_type == "PoisoningAttack":
             logging.info("Checking the config of PoisoningAttack")
@@ -123,6 +124,7 @@ class AttackHelper:
             'train',
             'defender',
             'display_full_info',
+            'sample_metrics',
         ]
         PoisoningAttack_config = [
             'poisoning_rate',

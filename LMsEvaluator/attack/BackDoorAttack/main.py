@@ -1,13 +1,15 @@
-import logging
 import os
+import logging
+import numpy as np
 from utils.my_exception import print_red
 from attack.base_attack import BaseAttack
+from utils.my_prettytable import MyPrettyTable
 
 
 class MyBackDoorAttack(BaseAttack):
     def __init__(self, config_parser, attack_config, use_local_model=False,
                  model="bert", model_name_or_path=None, poison_dataset=None, target_dataset=None,
-                 poisoner=None, train=None, defender=None, display_full_info=False):
+                 poisoner=None, train=None, defender=None, display_full_info=False, sample_metrics=[]):
         super().__init__(config_parser, attack_config)
         self.model = model
         self.use_local_model = use_local_model
@@ -18,6 +20,7 @@ class MyBackDoorAttack(BaseAttack):
         self.defender = defender
         self.display_full_info = display_full_info
         self.my_handlers = logging.getLogger().handlers
+        self.sample_metrics = sample_metrics
 
         # 项目路径获取 + 检查
         self.project_path = "/".join(os.path.dirname(os.path.abspath(__file__)).split("/")[:-2])
@@ -46,7 +49,8 @@ class MyBackDoorAttack(BaseAttack):
         # choose BERT as victim model
         victim = ob.PLMVictim(model=self.model, path=self.model_name_or_path)
         # choose BadNet attacker
-        attacker = ob.Attacker(poisoner=self.poisoner, train=self.train)
+        attacker = ob.Attacker(poisoner=self.poisoner, train=self.train, sample_metrics=self.sample_metrics)
+        # attacker = ob.Attacker(poisoner=self.poisoner, train=self.train, sample_metrics=['grammar'])
         # choose SST-2 as the poison data
         poison_dataset = load_dataset(name=self.poison_dataset)
 
@@ -72,6 +76,29 @@ class MyBackDoorAttack(BaseAttack):
         # evaluate attack results
         result = attacker.eval(victim, target_dataset, defender)
         print(result)
+        print(result['ppl'])
+        print(result['grammar'])
+        table_ppl, table_use, table_grammar = "nan", "nan", "nan"
+        if result['ppl'] is not np.nan:
+            table_ppl = "{:.3f}".format(result['ppl'])
+        if result['use'] is not np.nan:
+            table_use = "{:.3f}".format(result['use'])
+        if result['grammar'] is not np.nan:
+            table_grammar = "{:.3f}".format(result['grammar'])
+
+        table = MyPrettyTable()
+        table.add_field_names(['BackDoorAttack Attack Results', ''])
+        table.add_row(['Poison Dataset:', self.poison_dataset])
+        table.add_row(['Poisoner:', self.poisoner['name']])
+        table.add_row(['Test Clean Accuracy:', f"{result['test-clean']['accuracy']:.3f}%"])
+        table.add_row(['Test Poison Accuracy:', f"{result['test-poison']['accuracy']:.3f}%"])
+        table.add_row(['PPL:', table_ppl])
+        table.add_row(['USE:', table_use])
+        table.add_row(['GRAMMAR:', table_grammar])
+        table.set_align('BackDoorAttack Attack Results', 'l')
+        table.set_align('', 'l')
+        table.print_table()
+        table.logging_table()
 
 
 if __name__ == '__main__':
