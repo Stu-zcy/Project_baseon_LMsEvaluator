@@ -95,7 +95,8 @@
         <a-button type="default" @click="executeAttack">执行攻击</a-button>
       </div>
     </div>
-
+    <!-- 添加进度条 -->
+    <a-progress :percent="progressPercent" status="active" />
     <!-- 防御配置部分 -->
     <div class="defense-configuration">
       <div class="header">
@@ -190,8 +191,8 @@ const attack_recipe_Data = {
 const defaultAttackArgs = () => ({
   index: 0,
   attack: false,
-  attack_type: 'AdvAttack',
-  attack_recipe: 'BAEGarg2019',
+  attack_type: 'GIAforNLP',
+  attack_recipe: 'default',
   use_local_model: true,
   use_local_tokenizer: true,
   use_local_dataset: true,
@@ -272,16 +273,33 @@ async function sendAttackList() {
     message.error('攻击配置发送失败');
   }
 }
+// 进度状态
+const progressPercent = ref(0);
+
+// 监听进度更新（假设使用服务器推送的事件）
+function listenToProgress() {
+  const eventSource = new EventSource('http://localhost:5000/progress'); // 假设服务器发送进度更新
+
+  eventSource.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    progressPercent.value = data.progress;  // 更新进度状态
+  };
+
+  eventSource.onerror = function() {
+    message.error('无法接收进度更新');
+  };
+}
 
 // 执行攻击
 async function executeAttack() {
   const username = localStorage.getItem('Global_username');  // 从 localStorage 获取用户名
   const token=localStorage.getItem('Global_token'); 
+  
   if (!username) {
     message.error('未找到用户名，请重新登录');
     return;
   }
-  
+  listenToProgress();
   try {
     const response = await axios.post('http://localhost:5000/api/execute_attack', { 
       username: username,

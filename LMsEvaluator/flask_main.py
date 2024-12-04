@@ -11,7 +11,7 @@ import string
 from datetime import datetime, timedelta
 import extract
 from jwt_token import sign
-
+from user_config.config_gen import generate_config
 app = Flask(__name__)
 CORS(app)
 
@@ -28,8 +28,8 @@ expires_in = 60 * 60 * 1000
 mail = Mail(app)
 
 # 数据库配置
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
 db = SQLAlchemy(app)
 
 # 用户模型
@@ -234,7 +234,7 @@ def receive_attack_list():
 
     print(f"Received data from user: {username}")
     print("Received attack list:", attack_list)  # 输出接收到的数据
-
+    generate_config(username,attack_list)
     return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': attack_list})
 
 
@@ -256,14 +256,14 @@ def execute_attack():
         print(f"Executing attack for user: {username}")
 
         # 下游任务执行代码
-        attack = AttackRecord(createUserName=username, attackResult=json.dumps("RUNNING"))
-        db.session.add(attack)
-        db.session.commit()
+        #attack = AttackRecord(createUserName=username, attackResult=json.dumps("RUNNING"))
+        #db.session.add(attack)
+        #db.session.commit()
         project_path = os.path.dirname(os.path.abspath(__file__))
         model_class = parse_config(project_path, str(username))
         model_class.run()
-        AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update({AttackRecord.attackResult: json.dumps(model_class.result)})
-        db.session.commit()
+        #AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update({AttackRecord.attackResult: json.dumps(model_class.result)})
+        #db.session.commit()
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
 
     except Exception as e:

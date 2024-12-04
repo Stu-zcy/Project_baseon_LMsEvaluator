@@ -12,9 +12,13 @@ def parse_config(projectPath,username='default'):
     :return: modelClass: 下游任务模块
     """
     # 读取配置文件
-    with open('config.yaml', 'r', encoding='utf-8') as configFile:
-        configParser = yaml.load(configFile, Loader=yaml.FullLoader)
-
+    if username =='default':
+        with open('config.yaml', 'r', encoding='utf-8') as configFile:
+            configParser = yaml.load(configFile, Loader=yaml.FullLoader)
+    else:
+        file_name = os.path.join("user_config", f"{username}_config.yaml")
+        with open(file_name, 'r', encoding='utf-8') as configFile:
+            configParser = yaml.load(configFile, Loader=yaml.FullLoader)
     # 配置信息测试 + 项目路径测试
     # print(configParser)
     # modelOutputPath = configParser['output']['basePath'] + "/" + configParser['output']['modelOutput']
