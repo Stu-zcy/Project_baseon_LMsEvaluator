@@ -256,14 +256,14 @@ def execute_attack():
         print(f"Executing attack for user: {username}")
 
         # 下游任务执行代码
-        #attack = AttackRecord(createUserName=username, attackResult=json.dumps("RUNNING"))
-        #db.session.add(attack)
-        #db.session.commit()
+        attack = AttackRecord(createUserName=username, attackResult=json.dumps("RUNNING"))
+        db.session.add(attack)
+        db.session.commit()
         project_path = os.path.dirname(os.path.abspath(__file__))
         model_class = parse_config(project_path, str(username))
         model_class.run()
-        #AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update({AttackRecord.attackResult: json.dumps(model_class.result)})
-        #db.session.commit()
+        AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update({AttackRecord.attackResult: json.dumps(model_class.result)})
+        db.session.commit()
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
 
     except Exception as e:

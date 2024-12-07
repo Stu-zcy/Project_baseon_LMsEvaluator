@@ -17,10 +17,11 @@
 
       <a-modal v-model:visible="showAddModal" title="添加攻击配置" @ok="addAttackArgs" @cancel="cancelAddModal" width="600px">
         <div class="input-section">
-          <label class="input-label">
+          <!-- 移除攻击选项 -->
+          <!-- <label class="input-label">
             攻击:
             <a-switch v-model:checked="currentAttackArgs.attack" />
-          </label>
+          </label> -->
 
           <!-- 攻击类型选择框和攻击策略选择框 -->
           <label class="input-label">
@@ -29,6 +30,7 @@
               v-model:value="currentAttackArgs.attack_type"
               style="width: 200px"
               :options="attack_type_Data.map(type => ({ value: type, label: type }))"
+              placeholder="请选择攻击类型"
             />
           </label>
 
@@ -38,6 +40,7 @@
               v-model:value="currentAttackArgs.attack_recipe"
               style="width: 200px"
               :options="attack_recipes.map(recipe => ({ value: recipe, label: recipe }))"
+              placeholder="请选择攻击策略"
             />
           </label>
 
@@ -95,7 +98,7 @@
         <a-button type="default" @click="executeAttack">执行攻击</a-button>
       </div>
     </div>
-    <!-- 添加进度条 -->
+    <!-- 进度条 -->
     <a-progress :percent="progressPercent" status="active" />
     <!-- 防御配置部分 -->
     <div class="defense-configuration">
@@ -187,12 +190,12 @@ const attack_recipe_Data = {
   PoisoningAttack: ['default']
 };
 
-// 默认攻击配置模板
+// 默认攻击配置模板，将attack默认设为true，type和recipe设为空字符串
 const defaultAttackArgs = () => ({
   index: 0,
-  attack: false,
-  attack_type: 'GIAforNLP',
-  attack_recipe: 'default',
+  attack: true,
+  attack_type: '',
+  attack_recipe: '',
   use_local_model: true,
   use_local_tokenizer: true,
   use_local_dataset: true,
@@ -203,12 +206,19 @@ const defaultAttackArgs = () => ({
   display_full_info: true,
 });
 
+// 当前攻击配置
+const currentAttackArgs = reactive(defaultAttackArgs());
+
 // 计算属性：根据选择的攻击类型动态更新攻击策略选项
-const attack_recipes = computed(() => attack_recipe_Data[currentAttackArgs.attack_type]);
+const attack_recipes = computed(() => currentAttackArgs.attack_type ? attack_recipe_Data[currentAttackArgs.attack_type] : []);
 
 // 监听攻击类型变化，自动更新攻击策略
 watch(() => currentAttackArgs.attack_type, (newAttackType) => {
-  currentAttackArgs.attack_recipe = attack_recipe_Data[newAttackType][0];
+  if (newAttackType) {
+    currentAttackArgs.attack_recipe = attack_recipe_Data[newAttackType][0];
+  } else {
+    currentAttackArgs.attack_recipe = '';
+  }
 });
 
 // 表格列配置
@@ -219,9 +229,6 @@ const columns = [
   { title: 'Model Name or Path', dataIndex: 'model_name_or_path' },
   { title: '操作', dataIndex: 'operation' },
 ];
-
-// 当前攻击配置
-const currentAttackArgs = reactive(defaultAttackArgs());
 
 // 攻击配置列表
 const attackList = ref([]);
@@ -264,7 +271,7 @@ async function sendAttackList() {
     const response = await axios.post('http://localhost:5000/api/attack_list', { 
       attack_list: attackList.value, 
       username: username,
-      token:token  // 将用户名发送到后端
+      token: token
     });
     message.success('攻击配置发送成功！');
     console.log('Response:', response.data);
@@ -273,18 +280,17 @@ async function sendAttackList() {
     message.error('攻击配置发送失败');
   }
 }
+
 // 进度状态
 const progressPercent = ref(0);
 
-// 监听进度更新（假设使用服务器推送的事件）
+// 监听进度更新
 function listenToProgress() {
-  const eventSource = new EventSource('http://localhost:5000/progress'); // 假设服务器发送进度更新
-
+  const eventSource = new EventSource('http://localhost:5000/progress'); 
   eventSource.onmessage = function(event) {
     const data = JSON.parse(event.data);
-    progressPercent.value = data.progress;  // 更新进度状态
+    progressPercent.value = data.progress; 
   };
-
   eventSource.onerror = function() {
     message.error('无法接收进度更新');
   };
@@ -292,8 +298,8 @@ function listenToProgress() {
 
 // 执行攻击
 async function executeAttack() {
-  const username = localStorage.getItem('Global_username');  // 从 localStorage 获取用户名
-  const token=localStorage.getItem('Global_token'); 
+  const username = localStorage.getItem('Global_username');  
+  const token = localStorage.getItem('Global_token');
   
   if (!username) {
     message.error('未找到用户名，请重新登录');
@@ -303,7 +309,7 @@ async function executeAttack() {
   try {
     const response = await axios.post('http://localhost:5000/api/execute_attack', { 
       username: username,
-      token:token  // 将用户名发送到后端
+      token: token
     });
     message.success('攻击执行成功！');
     console.log('Attack execution response:', response.data);

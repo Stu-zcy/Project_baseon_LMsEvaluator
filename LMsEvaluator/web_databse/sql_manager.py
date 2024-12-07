@@ -37,10 +37,10 @@ def create_database():
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS attack_record (
         attackID INTEGER PRIMARY KEY AUTOINCREMENT,
-        createUserID INTEGER,
+        createUserName INTEGER,
         createTime DATETIME DEFAULT CURRENT_TIMESTAMP,
         attackResult TEXT,
-        FOREIGN KEY (createUserID) REFERENCES user (id)
+        FOREIGN KEY (createUserName) REFERENCES user (id)
     )
     ''')
 
@@ -126,13 +126,13 @@ def print_verification_codes():
 
 
 # 添加攻击记录
-def add_attack_record(createUserID, attackResult):
+def add_attack_record(createUserName, attackResult):
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO attack_record (createUserID, attackResult) VALUES (?, ?)',
-                   (createUserID, str(attackResult)))
+    cursor.execute('INSERT INTO attack_record (createUserName, attackResult) VALUES (?, ?)',
+                   (createUserName, str(attackResult)))
     conn.commit()
-    print(f"Attack record added for user ID '{createUserID}'.")
+    print(f"Attack record added for user ID '{createUserName}'.")
     conn.close()
 
 
@@ -143,7 +143,7 @@ def print_attack_records():
     cursor.execute('SELECT * FROM attack_record')
     records = cursor.fetchall()
     for record in records:
-        print(f"AttackID: {record[0]}, CreateUserID: {record[1]}, CreateTime: {record[2]}, AttackResult: {record[3]}")
+        print(f"AttackID: {record[0]}, createUserName: {record[1]}, CreateTime: {record[2]}, AttackResult: {record[3]}")
     conn.close()
 
 
