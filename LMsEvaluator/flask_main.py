@@ -28,8 +28,9 @@ expires_in = 60 * 60 * 1000
 mail = Mail(app)
 
 # 数据库配置
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_databse\\users.db'
 db = SQLAlchemy(app)
 
 # 用户模型
@@ -401,4 +402,4 @@ def deleteRecord():
  
 
 if __name__ == '__main__':
-    app.run(port=5000,debug=True)
+    app.run(port=5000, debug=True)
