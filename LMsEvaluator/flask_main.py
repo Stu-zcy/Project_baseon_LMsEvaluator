@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 import os
+import re
 import json
 from utils.config_parser import parse_config
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -257,14 +258,10 @@ def execute_attack():
         print(f"Executing attack for user: {username}")
 
         # 下游任务执行代码
-        attack = AttackRecord(createUserName=username, attackResult=json.dumps("RUNNING"))
-        db.session.add(attack)
-        db.session.commit()
         project_path = os.path.dirname(os.path.abspath(__file__))
         model_class = parse_config(project_path, str(username))
         model_class.run()
-        AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update({AttackRecord.attackResult: json.dumps(model_class.result)})
-        db.session.commit()
+        
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
 
     except Exception as e:
@@ -329,7 +326,8 @@ def getRecord():
         data = request.json
         username = data.get('username', None).strip('"')
         token = data.get('token', None).strip('"')
-        attackID = data.get('attackID', None)
+        fileName = data.get('fileName', None)
+        # attackID = data.get('attackID', None)
         # 验证用户名和 token
         if not username or not token:
             return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
@@ -337,11 +335,12 @@ def getRecord():
         if not is_valid:
             return jsonify({'status': 'error', 'message': message}), 401
 
-        if attackID is None:
-            attackRecord = AttackRecord.query.filter_by(createUserName=username).order_by(AttackRecord.createTime.desc()).first()
-        else:
-            attackRecord = AttackRecord.query.filter_by(attackID=attackID, createUserName=username).first()
-        result = json.loads(attackRecord.attackResult)
+        # if attackID is None:
+        #     attackRecord = AttackRecord.query.filter_by(createUserName=username).order_by(AttackRecord.createTime.desc()).first()
+        # else:
+        #     attackRecord = AttackRecord.query.filter_by(attackID=attackID, createUserName=username).first()
+        # result = json.loads(attackRecord.attackResult)
+        result = extract.extractResult('./logs/' + fileName)
         return jsonify(result), 200
     except Exception as e:
         print(f"Error fetching log: {e}")
@@ -362,13 +361,26 @@ def attackRecords():
         return jsonify({'status': 'error', 'message': message}), 401
 
     try:
-        totalPagesNum = AttackRecord.query.filter_by(createUserName=username).count()
-        records = (AttackRecord.query.filter_by(createUserName=username).
-            order_by(AttackRecord.createTime.desc()).offset((currentPage - 1) * currentPageSize).limit(currentPageSize).all())
-        records = list(map(lambda r: r.toDict(), records))
-        for r in records:
-            r['attackResult'] = "COMPLETED" if json.dumps("RUNNING") != r['attackResult'] else "RUNNING"
-        retData = {'records': records, 'pagination': {'totalPagesNum': totalPagesNum}}
+        # totalPagesNum = AttackRecord.query.filter_by(createUserName=username).count()
+        # records = (AttackRecord.query.filter_by(createUserName=username).
+        #     order_by(AttackRecord.createTime.desc()).offset((currentPage - 1) * currentPageSize).limit(currentPageSize).all())
+        direct = "./logs"
+        fileList = []
+        timeStampList = []
+        for fileName in os.listdir(direct):
+            match = re.match(username + r'_([A-Za-z]*_)?(\d+)_\d{4}-\d{2}-\d{2}', fileName);
+            if match:
+                fileList.append(fileName)
+                timeStampList.append(eval(match.group(2)))
+        totalRecordsNum = len(fileList)
+        if totalRecordsNum == 0:
+            print("不存在合法记录")
+            return jsonify({'records': [], 'pagination': {'totalRecordsNum': totalRecordsNum}}), 200
+        records = sorted(zip(timeStampList, fileList), reverse=True)[(currentPage - 1) * currentPageSize:currentPage * currentPageSize]
+        # records = list(map(lambda r: r.toDict(), records))
+        # for r in records:
+        #     r['attackResult'] = "COMPLETED" if json.dumps("RUNNING") != r['attackResult'] else "RUNNING"
+        retData = {'records': records, 'pagination': {'totalRecordsNum': totalRecordsNum}}
         return jsonify(retData), 200
     except Exception as e:
         print(f"Error fetching log: {e}")
@@ -380,26 +392,27 @@ def deleteRecord():
         data = request.json
         username = data.get('username', None).strip('"')
         token = data.get('token', None).strip('"')
-        attackID = data.get('attackID', None)
+        fileName = data.get('fileName', None)
+        # attackID = data.get('attackID', None)
         # 验证用户名和 token
         if not username or not token:
             return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
         is_valid, message = verify_token(token, username)
         if not is_valid:
             return jsonify({'status': 'error', 'message': message}), 401
-        if attackID is None:
-            return jsonify({'status': 'error', 'message': 'attackID is missing!'}), 400
-            
-        count = AttackRecord.query.filter_by(attackID=attackID, createUserName=username).delete()
-        db.session.commit()
-        if count > 0:
-            return jsonify('delete suscess'), 200
-        else:
-            return jsonify('error'), 500
+        if not os.path.exists('./logs/' + fileName):
+            raise FileNotFoundError("不存在合法记录") 
+        # if attackID is None:
+        #     return jsonify({'status': 'error', 'message': 'attackID is missing!'}), 400
+
+        os.remove('./logs/'+fileName)  
+        # count = AttackRecord.query.filter_by(attackID=attackID, createUserName=username).delete()
+        # db.session.commit()
+        return jsonify('delete success'), 200
     except Exception as e:
         print(f"Error fetching log: {e}")
         return jsonify({"error": "Failed to fetch log", "details": str(e)}), 500
  
-
+    
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

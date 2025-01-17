@@ -4,6 +4,7 @@ LMsEvaluator/LMs/
 LMsEvaluator/datasets/
 LMsEvaluator/logs/
 stepin-template/node_modules/
+user_config/
 #FILE
 *.db
 components.d.ts

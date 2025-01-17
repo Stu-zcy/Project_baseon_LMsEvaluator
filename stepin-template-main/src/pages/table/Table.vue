@@ -13,7 +13,7 @@ const currentPage = ref(1);
 const currentPageSize = ref(5);
 const totalPagesNum = ref(1);
 const OPEN = ref<boolean>(false);
-const targetAttackID = ref<number>(null);
+const targetFileName = ref<string>(null);
 
 async function fetchData() {
 	const response = await axios.post('http://localhost:5000/api/attackRecords', {
@@ -23,6 +23,11 @@ async function fetchData() {
 		currentPageSize: currentPageSize.value
 	});
 	responseData.value = response.data.records;
+	if (responseData.value.length != 0) {
+		responseData.value = responseData.value.map((element, index) => {
+			return [Date(element[0]).toLocaleString(), element[1]]
+		})
+	}
 	console.log(response.data)
 	totalPagesNum.value = response.data.pagination.totalPagesNum;
 }
@@ -31,8 +36,8 @@ function onPageChange(page: number, pageSize: number) {
 	fetchData();
 }
 
-function showModal(id: number) {
-	targetAttackID.value = id;
+function showModal(fileName: string) {
+	targetFileName.value = fileName
 	OPEN.value = true;
 	console.log("展示对话框");
 }
@@ -42,11 +47,11 @@ function handleOK(e: MouseEvent) {
 	OPEN.value = false;
 }
 
-async function del(id: number) {
+async function del(fileName: string) {
 	const response = await axios.post('http://localhost:5000/api/deleteRecord', {
 		username: username,
 		token: token,
-		attackID: id
+		fileName: fileName
 	});
 
 	fetchData();
@@ -58,14 +63,14 @@ fetchData();
 	<!-- <div class="table w-full">-->
 	<!-- <AttackTable /> -->
 	<!--</div> -->
-	<div class="history">
+	<div class="history" v-if="responseData.length>0">
 		<div class="records">
 			<div class="hcard" v-for="item, index in responseData">
-				<div>{{ item.createTime }}</div>
-				<div>{{ item.attackResult }}</div>
+				<div>{{ item[0] }}</div>
+				<!-- <div>{{ item[1] }}</div> -->
 				<div style="display: flex; justify-content: space-between;width: 180px;">
-					<div><a-button type="primary" @click="showModal(item.attackID)">查看详情</a-button></div>
-					<div><a-button danger @click="del(item.attackID)">删除</a-button></div>
+					<div><a-button type="primary" @click="showModal(item[1])">查看详情</a-button></div>
+					<div><a-button danger @click="del(item[1])">删除</a-button></div>
 				</div>
 			</div>
 		</div>
@@ -73,7 +78,7 @@ fetchData();
 			:showSizeChanger="false" @change="onPageChange" style="text-align: center;"/>
 		<a-modal v-if="OPEN" visible="true" title="hello" width = 80% wrap-class-name="full-modal" 
 		:footer="null" destroyOnClose="true" @cancel="handleOK">
-			<AttackTable :targetAttackID="targetAttackID"/>
+			<AttackTable :targetFileName="targetFileName"/>
 		</a-modal>
 	</div>
 

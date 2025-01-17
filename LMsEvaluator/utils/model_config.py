@@ -1,4 +1,5 @@
 import os
+import time
 import torch
 import logging
 from model.BasicBert import BertConfig
@@ -89,7 +90,7 @@ class ModelTaskForMultipleChoice(ModelConfig):
         self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 10
         self.model_val_per_epoch = 2
         self.log_level = logging.INFO
-        self.log_init(log_file_name=username+'_choice')
+        self.log_init(log_file_name=username+'_choice'+'_'+str(int(time.time())))
         self.bert_import()
         self.log_config()
 
@@ -152,7 +153,7 @@ class ModelTaskForSingleSentenceClassification(ModelConfig):
         self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 10
         self.model_val_per_epoch = 2
         self.log_level = logging.INFO
-        self.log_init(log_file_name=username+'_single')
+        self.log_init(log_file_name=username+'_single'+'_'+str(int(time.time())))
         self.bert_import()
         self.log_config()
 

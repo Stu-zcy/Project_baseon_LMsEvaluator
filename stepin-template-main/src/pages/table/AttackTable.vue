@@ -35,19 +35,23 @@ const BackDoorColumns = [
 	{ title: 'GRAMMAR', dataIndex: 'GRAMMAR' },
 ];
 const SWATAttackColumns = [
-	{
-		title: '索引',
-		dataIndex: 'index',
-	},
-	{ title: 'Reference', dataIndex: 'refer' },
-	{ title: 'prediction', dataIndex: 'pred' },
+	{ title: '轮', dataIndex: 'index'},
+	{ title: 'average rouge1', dataIndex: 'rouge1' },
+	{ title: 'average rouge2', dataIndex: 'rouge2' },
+	{ title: 'average rougeL', dataIndex: 'rougeL' },
+	{ title: 'average Word recovery rate', dataIndex: 'wrr' },
+	{ title: 'average Edit distance', dataIndex: 'distance' },
+	{ title: 'full recovery rate', dataIndex: 'fr' },
+];
+
+const SWATInnoColumns = [
 	{ title: 'rouge1', dataIndex: 'rouge1' },
 	{ title: 'rouge2', dataIndex: 'rouge2' },
-	{ title: 'rouge3', dataIndex: 'rouge3' },
-	{ title: 'Word recovery rate', dataIndex: 'rate' },
+	{ title: 'rougeL', dataIndex: 'rougeL' },
+	{ title: 'Word recovery rate', dataIndex: 'wrr' },
 	{ title: 'Edit distance', dataIndex: 'distance' },
-	{ title: 'If full recovery', dataIndex: 'ifFull' },
-];
+	{ title: 'if full recovery', dataIndex: 'fr' },
+]
 
 const responseData = ref({
 	AdvAttack: [],
@@ -57,19 +61,25 @@ const responseData = ref({
 });
 
 const BackDoorAttack = ref([])
-// const SWATAttack = ref([])
+const SWATInnerData = ref([])
 
 const username = localStorage.getItem('Global_username');  // 从 localStorage 获取用户名
 const token = localStorage.getItem('Global_token');
 const props = defineProps({
-	targetAttackID: Number
+	targetFileName: String
 })
+function getInnerData(expanded, record) {
+      if (expanded) { 
+        SWATInnerData.value = record.slice(0, record.length-1);
+				console.log(record.slice(0, record.length-1))
+      }
+    }
 onMounted(async () => {
 	try {
 		const response = await axios.post('http://localhost:5000/api/getRecord', {
 			username: username,
 			token: token,
-			attackID: props.targetAttackID
+			fileName: props.targetFileName
 		});
 		responseData.value = response.data;
 		console.log(responseData.value);
@@ -79,7 +89,7 @@ onMounted(async () => {
 
 	if (responseData.value.AdvAttack) {
 		responseData.value.AdvAttack = responseData.value.AdvAttack.map((item, index) => {
-			return [[index + 1, ...(item[0])]].concat(item.slice(1));
+			return [[index + 1, ...item]];
 		});
 	}
 	if (responseData.value.PoisoningAttack) {
@@ -93,17 +103,17 @@ onMounted(async () => {
 		});
 	}
 	if (responseData.value.SWAT) {
-		responseData.value.SWAT.forEach((item, index) => {
-			let count = 0
-			item = item.map((element) => {
-				if (Array.isArray(element)) {
-					return [++count, ...element]
+		responseData.value.SWAT = responseData.value.SWAT.map((item, index) => {
+			return item.map((element) => {
+				if (element.length == 6) {
+					return [index+1, ...element]
 				} else {
 					return element
 				}
 			})
 		})
 	}
+	console.log(responseData.value.SWAT)
 
 	//后门攻击的输出改为pretty table
 	// BackDoorColumns = [
@@ -265,7 +275,7 @@ onMounted(async () => {
 		</template>
 	</a-table>
 
-	<!-- <a-table v-for="(items, index) in responseData.SWAT" v-bind="$attrs" :columns="SWATAttackColumns" :dataSource="items.filter((item) => Array.isArray(item))" :pagination="false">
+	<a-table v-bind="$attrs" :columns="SWATAttackColumns" :dataSource="responseData.SWAT" :pagination="false" @expand="getInnerData">
 		<template #title>
 			<div class="flex justify-between pr-4">
 				<h4>SWAT_Attack Results</h4>
@@ -274,52 +284,75 @@ onMounted(async () => {
 		<template #bodyCell="{ column, text, record }">
 			<div class="" v-if="column.dataIndex === 'index'">
 				<div class="text-subtext">
-					{{ record[0] }}
-				</div>
-			</div>
-			<div class="" v-else-if="column.dataIndex === 'refer'">
-				<div class="text-subtext">
-					{{ record[1] }}
-				</div>
-			</div>
-			<div class="" v-else-if="column.dataIndex === 'pred'">
-				<div class="text-subtext">
-					{{ record[2] }}
+					{{ record.at(-1)[0] }}
 				</div>
 			</div>
 			<div class="" v-else-if="column.dataIndex === 'rouge1'">
 				<div class="text-subtext">
-					{{ record[3] }}
+					{{ record.at(-1)[1] }}
 				</div>
 			</div>
 			<div class="" v-else-if="column.dataIndex === 'rouge2'">
 				<div class="text-subtext">
-					{{ record[4] }}
+					{{ record.at(-1)[2] }}
 				</div>
 			</div>
-			<div class="" v-else-if="column.dataIndex === 'rouge3'">
+			<div class="" v-else-if="column.dataIndex === 'rougeL'">
 				<div class="text-subtext">
-					{{ record[5] }}
+					{{ record.at(-1)[3] }}
 				</div>
 			</div>
-			<div class="" v-else-if="column.dataIndex === 'rate'">
+			<div class="" v-else-if="column.dataIndex === 'wrr'">
 				<div class="text-subtext">
-					{{ record[6] }}
+					{{ record.at(-1)[4] }}
 				</div>
 			</div>
 			<div class="" v-else-if="column.dataIndex === 'distance'">
 				<div class="text-subtext">
+					{{ record.at(-1)[5] }}
+				</div>
+			</div>
+			<div class="" v-else-if="column.dataIndex === 'fr'">
+				<div class="text-subtext">
+					{{ record.at(-1)[6] }}
+				</div>
+			</div>
+		</template>
+		<template #expandedRowRender>
+			<a-table :columns="SWATInnoColumns" :data-source="SWATInnerData" :pagination="false">
+				<template #bodyCell="{ column, text, record }">
+					<div class="" v-if="column.dataIndex === 'rouge1'">
+				<div class="text-subtext">
+					{{ record[2] }}
+				</div>
+			</div>
+			<div class="" v-else-if="column.dataIndex === 'rouge2'">
+				<div class="text-subtext">
+					{{ record[3] }}
+				</div>
+			</div>
+			<div class="" v-else-if="column.dataIndex === 'rougeL'">
+				<div class="text-subtext">
+					{{ record[4] }}
+				</div>
+			</div>
+			<div class="" v-else-if="column.dataIndex === 'wrr'">
+				<div class="text-subtext">
+					{{ record[5] }}
+				</div>
+			</div>
+			<div class="" v-else-if="column.dataIndex === 'distance'">
+				<div class="text-subtext">
+					{{ record[6] }}
+				</div>
+			</div>
+			<div class="" v-else-if="column.dataIndex === 'fr'">
+				<div class="text-subtext">
 					{{ record[7] }}
 				</div>
 			</div>
-			<div class="" v-else-if="column.dataIndex === 'ifFull'">
-				<div class="text-subtext">
-					{{ record[8] }}
-				</div>
-			</div>
-			<div v-else class="text-subtext">
-				{{ text }}
-			</div>
+				</template>
+			</a-table>
 		</template>
-	</a-table> -->
+	</a-table>
 </template>
