@@ -1,24 +1,6 @@
 LM_config:
   model: bert_base_uncased_english
-attack_list:
-- attack_args:
-    attack: true
-    attack_type: PoisoningAttack
-    display_full_info: true
-    epochs: 10
-    poisoning_rate: 0.1
-- attack_args:
-    attack: true
-    attack_nums: 2
-    attack_recipe: A2TYoo2021
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased_english
-    tokenizer_name_or_path: LMs/bert_base_uncased_english
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
+attack_list: []
 general:
   random_seed: 0
   use_gpu: true

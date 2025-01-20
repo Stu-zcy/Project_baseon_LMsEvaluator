@@ -2,7 +2,7 @@
   <a-config-provider :getPopupContainer="getPopupContainer">
     <ThemeProvider is-root v-bind="themeConfig" :apply-style="false">
       <stepin-view
-        system-name="Stepin"
+        system-name="LMsEvaluator"
         logo-src="@/assets/vite.svg"
         :class="`${contentClass}`"
         :user="user"
@@ -14,7 +14,7 @@
         @themeSelect="configTheme"
       >
         <template #headerActions>
-          <HeaderActions @showSetting="showSetting = true" />
+          <HeaderActions />
         </template>
         <template #pageFooter>
           <PageFooter />
@@ -48,7 +48,8 @@
   profile().then((response) => {
     const { account } = response;
     user.name = account.username;
-    // user.avatar = account.avatar;
+    user.name= localStorage.getItem('Global_username');  // 从 localStorage 获取用户名
+   
   });
 
   const showSetting = ref(false);

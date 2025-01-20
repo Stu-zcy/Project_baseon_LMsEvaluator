@@ -17,11 +17,6 @@
 
       <a-modal v-model:visible="showAddModal" title="添加攻击配置" @ok="addAttackArgs" @cancel="cancelAddModal" width="600px">
         <div class="input-section">
-          <!-- 移除攻击选项 -->
-          <!-- <label class="input-label">
-            攻击:
-            <a-switch v-model:checked="currentAttackArgs.attack" />
-          </label> -->
 
           <!-- 攻击类型选择框和攻击策略选择框 -->
           <label class="input-label">
@@ -96,10 +91,19 @@
       <div class="action-buttons">
         <a-button type="primary" @click="sendAttackList">发送攻击配置</a-button>
         <a-button type="default" @click="executeAttack">执行攻击</a-button>
+        <!-- 运行中弹框 -->
+        <a-modal
+          v-model:visible="isModalVisible"
+          title="攻击执行中"
+          :footer="null" <!-- 修正为 Vue 风格的绑定 -->
+          <div class="modal-content">
+            <a-spin size="large" tip="攻击执行中..."></a-spin>
+            <p class="loading-text">正在处理中，请稍候...</p>
+          </div>
+        </a-modal>
+
       </div>
     </div>
-    <!-- 进度条 -->
-    <a-progress :percent="progressPercent" status="active" />
     <!-- 防御配置部分 -->
     <div class="defense-configuration">
       <div class="header">
@@ -160,7 +164,6 @@
           </a-collapse>
         </div>
       </a-modal>
-
       <div class="action-buttons">
         <a-button type="primary" @click="sendDefenseList">发送防御配置</a-button>
         <a-button type="default" @click="executeDefense">执行防御</a-button>
@@ -170,12 +173,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch, reactive } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import axios from 'axios';
 import { message } from 'ant-design-vue';
 
 // 攻击类型数据和对应的攻击策略数据
-const attack_type_Data = ['GIAforNLP', 'SWAT', 'AdvAttack', 'BackDoorAttack', 'PoisoningAttack'];
+const attack_type_Data = ['GIAforNLP', 'SWAT', 'AdvAttack', 'BackDoorAttack', 'PoisoningAttack','FET'];
 const attack_recipe_Data = {
   GIAforNLP: ['default'],
   SWAT: ['default'],
@@ -186,8 +189,9 @@ const attack_recipe_Data = {
     'TextBuggerLi2018', 'TextFoolerJin2019', 'PWWSRen2019', 'IGAWang2019', 'Pruthi2019',
     'PSOZang2020', 'CheckList2020', 'CLARE2020', 'FrenchRecipe', 'SpanishRecipe', 'ChineseRecipe'
   ],
-  BackDoorAttack: ['default'],
-  PoisoningAttack: ['default']
+  BackDoorAttack: ['BadNets','AddSent','SynBkd','StyleBkd','POR','TrojanLM','SOS','LWP','EP','NeuBA','LWS','RIPPLES'],
+  PoisoningAttack: ['default'],
+  FET:['default']
 };
 
 // 默认攻击配置模板，将attack默认设为true，type和recipe设为空字符串
@@ -205,6 +209,8 @@ const defaultAttackArgs = () => ({
   attack_nums: 2,
   display_full_info: true,
 });
+// 控制运行中弹框的显示状态
+const isModalVisible = ref(false);
 
 // 当前攻击配置
 const currentAttackArgs = reactive(defaultAttackArgs());
@@ -281,50 +287,40 @@ async function sendAttackList() {
   }
 }
 
-// 进度状态
-const progressPercent = ref(0);
-
-// 监听进度更新
-function listenToProgress() {
-  const eventSource = new EventSource('http://localhost:5000/progress'); 
-  eventSource.onmessage = function(event) {
-    const data = JSON.parse(event.data);
-    progressPercent.value = data.progress; 
-  };
-  eventSource.onerror = function() {
-    message.error('无法接收进度更新');
-  };
-}
-
-// 执行攻击
+// 执行攻击时显示加载中的弹框
 async function executeAttack() {
-  const username = localStorage.getItem('Global_username');  
+  const username = localStorage.getItem('Global_username');
   const token = localStorage.getItem('Global_token');
   
   if (!username) {
     message.error('未找到用户名，请重新登录');
     return;
   }
-  listenToProgress();
+
+  // 显示运行中弹框
+  isModalVisible.value = true;
+
   try {
     const response = await axios.post('http://localhost:5000/api/execute_attack', { 
       username: username,
       token: token
     });
+    
     message.success('攻击执行成功！');
     console.log('Attack execution response:', response.data);
   } catch (error) {
     console.error('Failed to execute attack:', error);
     message.error('攻击执行失败');
+  } finally {
+    // 关闭运行中弹框
+    isModalVisible.value = false;
   }
 }
 
 // 防御类型数据和对应的防御策略数据
-const defense_type_Data = ['DefenseType1', 'DefenseType2', 'DefenseType3'];
+const defense_type_Data = ['BackDoor'];
 const defense_recipe_Data = {
-  DefenseType1: ['Recipe1', 'Recipe2'],
-  DefenseType2: ['Recipe3', 'Recipe4'],
-  DefenseType3: ['Recipe5', 'Recipe6'],
+  BackDoor: ['onion', 'bki','cube','rap','strip'],
 };
 
 // 默认防御配置模板
@@ -524,4 +520,41 @@ function handleFolderUpload(event: Event, type: string) {
   border-color: #40a9ff;
   outline: none;
 }
+
+/* 美化loading-modal */
+.loading-modal .ant-modal-content {
+  background-color: rgba(0, 0, 0, 0.9);  /* 深色背景，增加模糊效果 */
+  border-radius: 16px;  /* 弹框圆角 */
+  padding: 24px;  /* 弹框内边距 */
+}
+
+.loading-modal .ant-modal-header {
+  background-color: #001529;  /* 设置头部颜色 */
+  border-radius: 16px 16px 0 0;  /* 弹框头部圆角 */
+}
+
+.loading-modal .ant-modal-title {
+  color: #fff;  /* 设置标题文字为白色 */
+  font-weight: bold;  /* 设置字体加粗 */
+  text-align: center;  /* 标题居中 */
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-modal .ant-spin {
+  margin-bottom: 16px;  /* 加载指示器底部留白 */
+}
+
+.loading-text {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+}
+
 </style>

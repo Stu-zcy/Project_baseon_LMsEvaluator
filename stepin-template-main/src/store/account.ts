@@ -42,6 +42,8 @@ export const useAccountStore = defineStore('account', {
     
             // 从响应中提取账户信息并存储到 localStorage
             const { accountInfo } = response;
+            
+            console.log('accountInfo', accountInfo);
             this.account = accountInfo.account;
             this.permissions = accountInfo.permissions;
             this.role = accountInfo.role;

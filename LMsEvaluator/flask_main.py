@@ -29,9 +29,9 @@ expires_in = 60 * 60 * 1000
 mail = Mail(app)
 
 # 数据库配置
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_databse\\users.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_databse\\users.db'
 db = SQLAlchemy(app)
 
 # 用户模型
@@ -239,6 +239,8 @@ def receive_attack_list():
     generate_config(username,attack_list)
     return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': attack_list})
 
+# 用于存储当前正在运行的算法实例（如果有）
+current_task = None
 
 @app.route('/api/execute_attack', methods=['POST'])
 def execute_attack():
@@ -261,12 +263,23 @@ def execute_attack():
         project_path = os.path.dirname(os.path.abspath(__file__))
         model_class = parse_config(project_path, str(username))
         model_class.run()
-        
+
         return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
 
     except Exception as e:
         print("Error executing attack:", e)
         return jsonify({'status': 'error', 'message': 'Failed to execute attack'}), 500
+
+@app.route("/get_progress", methods=["GET"])
+def get_progress():
+    """
+    获取当前进度
+    """
+    global current_task
+    if current_task is None:
+        return jsonify({"status": "idle", "message": "No training started"}), 200
+    else:
+        return jsonify(current_task.get_progress()), 200
 
 
 @app.route('/api/defense_list', methods=['POST'])

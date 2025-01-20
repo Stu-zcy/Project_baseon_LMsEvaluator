@@ -44,19 +44,19 @@ def create_database():
     )
     ''')
 
+    # 创建日志记录表
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS log_record (
+        logID INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        log_filename TEXT NOT NULL,
+        log_status TEXT NOT NULL,
+        log_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (username) REFERENCES user (username)
+    )
+    ''')
+
     conn.commit()
-    conn.close()
-
-
-# 打印用户数据
-def print_users():
-    conn = sqlite3.connect('users.db')
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM user')
-    users = cursor.fetchall()
-    for user in users:
-        print(f"ID: {user[0]}, Username: {user[1]}, Role: {user[3]}, Age: {user[4]}, Gender: {user[5]}, "
-              f"Permissions: {user[6]}, Token: {user[7]}, Login Time: {user[8]}")
     conn.close()
 
 
@@ -114,6 +114,18 @@ def add_verification_code(email, code):
     conn.close()
 
 
+# 打印用户数据
+def print_users():
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM user')
+    users = cursor.fetchall()
+    for user in users:
+        print(f"ID: {user[0]}, Username: {user[1]}, Role: {user[3]}, Age: {user[4]}, Gender: {user[5]}, "
+              f"Permissions: {user[6]}, Token: {user[7]}, Login Time: {user[8]}")
+    conn.close()
+
+
 # 打印验证码
 def print_verification_codes():
     conn = sqlite3.connect('users.db')
@@ -147,6 +159,28 @@ def print_attack_records():
     conn.close()
 
 
+# 添加日志记录
+def add_log_record(username, log_filename, log_status):
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO log_record (username, log_filename, log_status) VALUES (?, ?, ?)',
+                   (username, log_filename, log_status))
+    conn.commit()
+    print(f"Log record for user '{username}' added successfully.")
+    conn.close()
+
+
+# 打印日志记录
+def print_log_records():
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM log_record')
+    logs = cursor.fetchall()
+    for log in logs:
+        print(f"LogID: {log[0]}, Username: {log[1]}, Log Filename: {log[2]}, Status: {log[3]}, Log Time: {log[4]}")
+    conn.close()
+
+
 # 运行示例
 if __name__ == '__main__':
     create_database()
@@ -164,3 +198,7 @@ if __name__ == '__main__':
     # 示例攻击记录操作
     add_attack_record(1, {"result": "success"})
     print_attack_records()
+
+    # 示例日志操作
+    add_log_record('zcy', 'admin_single_1737092485_2024-12-04.txt', 'FINISHED')
+    print_log_records()
