@@ -41,15 +41,17 @@
   import { configTheme, themeList } from '@/theme';
   import { ThemeProvider } from 'stepin';
   import { computed } from 'vue';
+import { use } from 'echarts';
 
   const { logout, profile } = useAccountStore();
 
   // 获取个人信息
   profile().then((response) => {
-    const { account } = response;
+    const { account } = response.data;
+    console.log(account);
     user.name = account.username;
-    user.name= localStorage.getItem('Global_username');  // 从 localStorage 获取用户名
-   
+    user.avatar = account.avatar;
+    
   });
 
   const showSetting = ref(false);
@@ -61,7 +63,7 @@
   const themeConfig = computed(() => themeList.find((item) => item.key === theme.value)?.config ?? {});
 
   const user = reactive({
-    name: 'admin',
+    name: '',
     avatar: avatar,
     menuList: [
       { title: '个人中心', key: 'personal', icon: 'UserOutlined', onClick: () => router.push('/profile') },

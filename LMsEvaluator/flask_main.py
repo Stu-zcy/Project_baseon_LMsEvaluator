@@ -34,7 +34,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEval
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_databse\\users.db'
 db = SQLAlchemy(app)
 
-# 用户模型
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -45,6 +45,8 @@ class User(db.Model):
     permissions = db.Column(db.String(200), nullable=True)
     token = db.Column(db.String(500), nullable=True)  # 存储登录生成的Token
     login_time = db.Column(db.DateTime, nullable=True)  # 上次登录时间
+    avatar_url = db.Column(db.String(500), nullable=True)  # 存储头像链接，最大500个字符
+    email = db.Column(db.String(120), unique=True, nullable=False)  # 新增邮箱字段，唯一且不能为空
 
 
 # 验证码模型
@@ -131,10 +133,11 @@ def register():
     data = request.json
     username = data['username']
     password = data['password']
+    avatar_url = data['avatar']
+    verification_code=data['verificationCode']
+    email=data['email']
     age = 0
     gender = 1  # 如果没有前端提供性别，默认为1（男）
-    verification_code = data.get('verificationCode')
-    email = data.get('email')  # 前端传递邮箱地址
 
     # 验证验证码逻辑
     if not verification_code:
@@ -150,7 +153,9 @@ def register():
 
     # 添加用户
     hashed_password = generate_password_hash(password)
-    new_user = User(username=username, password=hashed_password, role='user', age=age, gender=gender,permissions="'edit', 'delete', 'add'")
+    new_user = User(username=username, password=hashed_password, role='user', age=age, gender=gender,permissions="'edit', 'delete', 'add'",avatar_url=avatar_url,email=email)
+
+
     db.session.add(new_user)
     db.session.commit()
 
@@ -173,7 +178,8 @@ def login():
             'role': user.role,
             'age': user.age,
             'gender': user.gender,
-            'permissions': user.permissions.strip(',') if user.permissions else []
+            'permissions': user.permissions.strip(',') if user.permissions else [],
+            'avatar_url': user.avatar_url,
         }
 
         jwt_token = sign({"id": user.id, "username": username, "role": user.role}, 'secret key', expires_in)
@@ -197,7 +203,167 @@ def login():
         "code": 401,
         "message": "用户名或密码错误"
     }), 401
+#存储在account.ts的profile函数中：
+@app.route('/api/profile', methods=['POST'])
+def profile():
+    try:
+        data = request.json
+        username = data.get('username', None).strip('"')
+        token = data.get('token', None).strip('"')
 
+        # 验证用户名和 token
+        if not username or not token:
+            return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
+
+        is_valid, message = verify_token(token, username)
+        if not is_valid:
+            return jsonify({'status': 'error', 'message': message}), 401
+        user = User.query.filter_by(username=username).first()
+        if user:
+
+            account = {'username': user.username,'avatar': user.avatar_url,'gender': user.gender}
+            data={'account':account,'permissions': user.permissions.strip(',') if user.permissions else [],'role': user.role}
+            print(data)
+            return jsonify({
+                'status': 'success',
+                'message': 'Profile fetched successfully!',
+                'data':{'account':account,'permissions': user.permissions.strip(',') if user.permissions else [],'role': user.role}
+            }),200
+
+        return jsonify({
+            'status': 'error',
+            'message': 'User not found'
+        }), 404
+
+    except Exception as e:
+        print("Error executing attack:", e)
+        return jsonify({'status': 'error', 'message': 'Failed to fetch profile'}), 500
+
+
+# 验证用户身份
+# 验证用户身份
+@app.route('/api/auth', methods=['POST'])
+def auth():
+    try:
+        data = request.json
+        username = data.get('username', None).strip('"')
+        token = data.get('token', None).strip('"')
+
+        # 验证用户名和 token
+        if not username or not token:
+            return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
+
+        # 验证token的有效性
+        is_valid, message = verify_token(token, username)
+        if not is_valid:
+            return jsonify({'status': 'error', 'message': message}), 402
+        print("token successfully verified")
+        # 获取用户信息
+        user = User.query.filter_by(username=username).first()
+        print(user)
+        if not user:
+            return jsonify({'status': 'error', 'message': 'User not found'}), 404
+
+        # 验证是否为admin
+        if user.role != 'admin':
+            return jsonify({'status': 'error', 'message': 'Not admin'}), 401
+
+        return jsonify({'status': 'success', 'message': 'Authenticated'}), 200
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': 'Failed to fetch auth', 'error': str(e)}), 500
+
+
+
+# 获取用户列表，只返回role为'user'的用户
+@app.route('/api/users', methods=['POST'])
+def get_users():
+    try:
+        data = request.json
+        username = data.get('username', None).strip('"')
+        token = data.get('token', None).strip('"')
+
+        # 验证用户名和 token
+        if not username or not token:
+            return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
+
+        # 验证token的有效性
+        is_valid, message = verify_token(token, username)
+        if not is_valid:
+            return jsonify({'status': 'error', 'message': message}), 402
+        # 获取用户信息
+        user = User.query.filter_by(username=username).first()
+        print(user)
+        if not user:
+            return jsonify({'status': 'error', 'message': 'User not found'}), 404
+
+        # 验证是否为admin
+        if user.role != 'admin':
+            return jsonify({'status': 'error', 'message': 'Not admin'}), 401
+
+        # 获取所有role为'user'的用户
+        users = User.query.filter_by(role='user').all()
+        user_data = []
+        for user in users:
+            user_info={
+                'username': user.username,
+                'avatar_url': user.avatar_url,
+                'age': user.age,
+                'gender': user.gender,
+                'email': user.email,
+
+            }
+            user_data.append(user_info)
+            print(user_data)
+
+        return jsonify({'status': 'success', 'users': user_data}), 200
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+# 删除用户
+@app.route('/api/delete_users', methods=['POST'])
+def delete_user():
+    try:
+        data = request.json
+        username = data.get('username', None).strip('"')
+        token = data.get('token', None).strip('"')
+        delete_username = data.get('delete_username', None).strip('"')
+
+        # 验证用户名和 token
+        if not username or not token:
+            return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
+
+        # 验证token的有效性
+        is_valid, message = verify_token(token, username)
+        if not is_valid:
+            return jsonify({'status': 'error', 'message': message}), 402
+
+        # 获取请求用户信息
+        user = User.query.filter_by(username=username).first()
+
+        if not user:
+            return jsonify({'status': 'error', 'message': 'User not found'}), 404
+
+        # 验证是否为admin
+        if user.role != 'admin':
+            return jsonify({'status': 'error', 'message': 'Not admin'}), 401
+
+        # 获取要删除的用户
+        delete_user = User.query.filter_by(username=delete_username).first()
+
+        if not delete_user:
+            return jsonify({'status': 'error', 'message': 'User to delete not found'}), 404
+
+        # 删除用户
+        db.session.delete(delete_user)
+        db.session.commit()
+
+        return jsonify({'status': 'success', 'message': 'User deleted successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 def verify_token(token, username):
     try:
@@ -239,8 +405,6 @@ def receive_attack_list():
     generate_config(username,attack_list)
     return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': attack_list})
 
-# 用于存储当前正在运行的算法实例（如果有）
-current_task = None
 
 @app.route('/api/execute_attack', methods=['POST'])
 def execute_attack():
@@ -270,16 +434,7 @@ def execute_attack():
         print("Error executing attack:", e)
         return jsonify({'status': 'error', 'message': 'Failed to execute attack'}), 500
 
-@app.route("/get_progress", methods=["GET"])
-def get_progress():
-    """
-    获取当前进度
-    """
-    global current_task
-    if current_task is None:
-        return jsonify({"status": "idle", "message": "No training started"}), 200
-    else:
-        return jsonify(current_task.get_progress()), 200
+
 
 
 @app.route('/api/defense_list', methods=['POST'])

@@ -19,7 +19,7 @@
         class="profile flex items-center justify-between p-base bg-container rounded-2xl absolute -bottom-16 left-6 shadow-lg"
       >
         <div class="info flex items-center">
-          <img class="w-20 rounded-lg" src="@/assets/avatar/face-1.jpg" />
+          <img class="w-20 rounded-lg" src="https://gitee.com/topiza/image/raw/master/file_1.png" />
           <div class="flex flex-col justify-around ml-4">
             <span class="text-title text-xl font-bold">Sarah Jacob</span>
             <span class="text-subtext font-semibold">CEO / Co-Founder</span>

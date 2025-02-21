@@ -69,12 +69,24 @@ export const useAccountStore = defineStore('account', {
     async profile() {
       const { setAuthLoading } = useLoadingStore();
       setAuthLoading(true);
+      // 从 localStorage 获取用户名和 token
+      const username = localStorage.getItem('Global_username');
+      const token = localStorage.getItem('Global_token');
+      if (!username || !token) {
+        // 如果没有用户名或 token，返回失败
+        return Promise.reject({
+          code: 401,
+          message: '用户名或 token 丢失'
+        });
+      }
+
       return http
-        .request<Account, Response<Profile>>('/account', 'get')
+        .request<Account, Response<Profile>>('http://localhost:5000/api/profile', 'post_json', { username, token })
         .then((response) => {
-          if (response.code === 0) {
+          if (response.code === 200) {
             const { setAuthorities } = useAuthStore();
-            const { account, permissions, role } = response.data;
+            const { account, permissions, role } = response.data.data;
+            console.log(account);
             this.account = account;
             this.permissions = permissions;
             this.role = role;

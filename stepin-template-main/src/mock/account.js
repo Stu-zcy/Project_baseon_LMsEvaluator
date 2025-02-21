@@ -36,7 +36,7 @@ Mock.mock('api/account', 'get', ({}) => {
         username: 'iczer',
         age: 18,
         gender: 0,
-        avatar: 'http://portrait.gitee.com/uploads/avatars/user/691/2073535_iczer_1578965604.png!avatar30',
+        avatar: 'https://gitee.com/topiza/image/raw/master/file_1.png',
       },
       role: 'admin',
       permissions: ['edit', 'delete', 'add'],

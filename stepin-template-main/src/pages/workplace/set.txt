@@ -1,70 +1,72 @@
 将attack_type、attack_recipe级联选择，其中关系如下所示，要求选择对应attack_type时出现对应attack_recipe
 
-<template>
-  <a-space>
-    <a-select
-      v-model:value="attack_type"
-      style="width: 120px"
-      :options="attack_type_Data.map(pro => ({ value: pro }))"
-    ></a-select>
-    <a-select
-      v-model:value="secondCity"
-      style="width: 120px"
-      :options="cities.map(city => ({ value: city }))"
-    ></a-select>
-  </a-space>
-</template>
-<script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
-const attack_type_Data = ['GIAforNLP', 'SWAT','AdvAttack','BackDoorAttack',PoisoningAttack];
-const attack_recipe_Data = {
-  GIAforNLP: ['default'],
-  SWAT: ['default'],
-  AdvAttack:['A2TYoo2021','BAEGarg2019','BERTAttackLi2020','GeneticAlgorithmAlzantot2018',
-  			 'FasterGeneticAlgorithmJia2019,','DeepWordBugGao2018','HotFlipEbrahimi2017','InputReductionFeng2018',
-  			 'Kuleshov2017','MorpheusTan2020','Seq2SickCheng2018BlackBox','TextBuggerLi2018',
-  			 'TextFoolerJin2019','PWWSRen2019','IGAWang2019','Pruthi2019',
-  			 'PSOZang2020','CheckList2020','CLARE2020','FrenchRecipe',
-  			 'SpanishRecipe','ChineseRecipe'],
-  BackDoorAttack:['default'],
-  PoisoningAttack:['default']
-};
-const attack_type = ref(attack_type_Data[0]);
-const secondCity = ref(attack_recipe_Data[attack_type.value][0]);
-const cities = computed(() => {
-  return attack_recipe_Data[attack_type.value];
-});
+每个攻击类型拥有不同的高级设置，并且以下为各个攻击类型的默认配置：
 
-watch(attack_type, val => {
-  secondCity.value = attack_recipe_Data[val][0];
-});
-</script>
+GIAforNLP:
+  attack_data: None               # 选项: 攻击方法所使用的数据集路径 
+  optimizer: Adam                 # 选项: 攻击方法所使用的优化器
+  attack_batch: 2                 # int: 一次攻击中数据的Batch size
+  attack_nums: 1                  # int: 攻击次数
+  distance_func: l2               # 选项: 攻击方法中的距离函数，'l2' or 'cos'
+  attack_lr: 0.01                 # float: 攻击方法中的学习率
+  attack_iters: 10                # int: 一次攻击中的迭代轮次
+  display_full_info: True         # boolean: 是否显示全部过程信息
+
+FET:
+  seed: 42                        # int: 攻击方法使用的随机数种子
+  attack_batch: 2                 # int: 一次攻击中数据的Batch size
+  attack_nums: 1                  # int: 攻击次数
+  distance_func: l2               # 选项: 攻击方法中的距离函数, 'l2' or 'cos'
+  population_size: 300            # int: population_size
+  tournsize: 10                   # int: tournsize
+  crossover_rate: 0.9             # float: crossover_rate
+  mutation_rate: 0.1              # float: mutation_rate
+  max_generations: 100            # int: max_generations
+  halloffame_size: 30             # int: halloffame_size
+  use_local_model: True           # boolean: 是否使用本地model
+  use_local_tokenizer: True       # boolean: 是否使用本地tokenizer
+  
+  以下为默认信息，无需进行文件上传：
+  model_name_or_path: "LMs/bert_base_uncased_english"      # str: 攻击所用model在Huggingface的名称或本地路径
+  tokenizer_name_or_path: "LMs/bert_base_uncased_english"  # str: 攻击所用tokenizer在Huggingface的名称或本地路径
+  dataset_name_or_path: "cola"                             # str: 攻击所用dataset在Huggingface的名称或本地路径
+  display_full_info: True         # boolean: 是否显示全部过程信息
 
 
+AdvAttack:
+  attack: False                   # boolean: 是否开启攻击
+  attack_type: AdvAttack          # str: 攻击方法, ‘AdvAttack’代表对抗攻击
+  attack_recipe: BAEGarg2019      # str: 具体攻击策略
+  use_local_model: True           # boolean: 是否使用本地model
+  use_local_tokenizer: True       # boolean: 是否使用本地tokenizer
+  use_local_dataset: True         # boolean: 是否使用本地dataset
+  
+  以下为默认信息，无需进行文件上传：
+  model_name_or_path: "LMs/bert_base_uncased_english"      # str: 攻击所用model在Huggingface的名称或本地路径
+  tokenizer_name_or_path: "LMs/bert_base_uncased_english"  # str: 攻击所用tokenizer在Huggingface的名称或本地路径
+  dataset_name_or_path: "data/imdb/test.txt"               # str: 攻击所用dataset在Huggingface的名称或本地路径
+  attack_nums: 2                  # int: 攻击次数
+  display_full_info: True         # boolean: 是否显示全部过程信息
 
-attack_type：
-	GIAforNLP
-		attack_recipe：
-		- default
-	SWAT：
-		attack_recipe：
-		- default
-	AdvAttack：
-		attack_recipe：
-		- 
-		- 
-		- 
-		- 
-		- 
-		- 
-		- 
-		- 
-		- 
-		- 
-	BackDoorAttack：
-		attack_recipe：
-		- default	
-	PoisoningAttack：
-		attack_recipe：
-		- default
-		
+BackdoorAttack:
+attack_args:
+
+  use_local_model: True           # boolean: 是否使用本地model
+  model: "bert"                   # str: 攻击目标model的名称
+  model_name_or_path: "LMs/bert_base_uncased_english"       # str: 攻击目标model在Huggingface的名称或本地路径
+  poison_dataset: "sst-2"         # str: 投毒数据集
+  target_dataset: "sst-2"         # str: 目标数据集
+  poisoner:                       # dict: 后门攻击中攻击者设置
+    "name": "badnets"             # str: 攻击者所用模型
+  train:                          # dict: 后门攻击中攻击者所用训练设置
+    "name": "base"                # str: 攻击者训练方法
+    "batch_size": 32              # int: 攻击者训练数据batch_size大小
+    "epochs": 1                   # int: 攻击者训练轮数
+  defender: "None"                # str: 所选择的防御方法
+  display_full_info: True         # boolean: 是否显示全部过程信息
+  sample_metrics: []              # list: 评估分数, ['ppl', 'use', 'grammar']
+
+PoisoningAttack:
+  poisoning_rate: 0.1             # float: 投毒数据比例
+  epochs: 10                      # int: 投毒攻击训练轮数
+  display_full_info: True         # boolean: 是否显示全部过程信息

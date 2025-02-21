@@ -8,8 +8,8 @@ def create_database():
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
 
-    # 创建用户表
-    cursor.execute('''
+    # 创建用户表，添加 email 字段
+    cursor.execute(''' 
     CREATE TABLE IF NOT EXISTS user (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
@@ -19,12 +19,14 @@ def create_database():
         gender INTEGER NOT NULL,
         permissions TEXT,
         token TEXT,
-        login_time DATETIME
+        login_time DATETIME,
+        avatar_url TEXT,
+        email TEXT UNIQUE NOT NULL  -- 新增邮箱字段
     )
     ''')
 
     # 创建验证码表
-    cursor.execute('''
+    cursor.execute(''' 
     CREATE TABLE IF NOT EXISTS verification_code (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT NOT NULL,
@@ -34,7 +36,7 @@ def create_database():
     ''')
 
     # 创建攻击记录表
-    cursor.execute('''
+    cursor.execute(''' 
     CREATE TABLE IF NOT EXISTS attack_record (
         attackID INTEGER PRIMARY KEY AUTOINCREMENT,
         createUserName INTEGER,
@@ -45,7 +47,7 @@ def create_database():
     ''')
 
     # 创建日志记录表
-    cursor.execute('''
+    cursor.execute(''' 
     CREATE TABLE IF NOT EXISTS log_record (
         logID INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL,
@@ -61,14 +63,14 @@ def create_database():
 
 
 # 添加用户
-def add_user(username, password, role, age, gender, permissions):
+def add_user(username, password, role, age, gender, permissions, email, avatar_url=None):
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
     hashed_password = generate_password_hash(password)  # 哈希密码
     try:
         cursor.execute(
-            'INSERT INTO user (username, password, role, age, gender, permissions) VALUES (?, ?, ?, ?, ?, ?)',
-            (username, hashed_password, role, age, gender, permissions))
+            'INSERT INTO user (username, password, role, age, gender, permissions, email, avatar_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            (username, hashed_password, role, age, gender, permissions, email, avatar_url))
         conn.commit()
         print(f"User '{username}' added successfully.")
     except sqlite3.IntegrityError:
@@ -122,7 +124,7 @@ def print_users():
     users = cursor.fetchall()
     for user in users:
         print(f"ID: {user[0]}, Username: {user[1]}, Role: {user[3]}, Age: {user[4]}, Gender: {user[5]}, "
-              f"Permissions: {user[6]}, Token: {user[7]}, Login Time: {user[8]}")
+              f"Permissions: {user[6]}, Token: {user[7]}, Login Time: {user[8]}, Avatar URL: {user[9]}, Email: {user[10]}")
     conn.close()
 
 
@@ -185,9 +187,9 @@ def print_log_records():
 if __name__ == '__main__':
     create_database()
 
-    # 示例用户操作
-    add_user('zcy', '123', 'user', 25, 0, "'edit', 'delete', 'add'")
-    add_user('admin', '888888', 'admin', 30, 1, "'edit', 'delete', 'add'")
+    # 示例用户操作，带邮箱
+    add_user('zcy', '123', 'user', 25, 0, "'edit', 'delete', 'add'", 'zcy@example.com', 'https://gitee.com/topiza/image/raw/master/file_1.png')
+    add_user('admin', '888888', 'admin', 30, 1, "'edit', 'delete', 'add'", 'admin@example.com', 'https://gitee.com/topiza/image/raw/master/file_3.png')
     update_user_token('zcy', 'sample_token')
     print_users()
 

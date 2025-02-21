@@ -66,6 +66,21 @@
           </div>
         </a-form-item>
 
+        <!-- 头像选择 -->
+        <a-form-item label="选择头像" name="avatar">
+          <div class="avatar-container">
+            <div
+              v-for="(avatar, index) in avatarList"
+              :key="index"
+              class="avatar-item"
+              :class="{ selected: form.avatar === avatar }"
+              @click="selectAvatar(avatar)"
+            >
+              <img :src="avatar" alt="Avatar" class="avatar-img" />
+            </div>
+          </div>
+        </a-form-item>
+
         <!-- 注册按钮 -->
         <a-button htmlType="submit" class="submit-button" type="primary" :loading="loading"> 注册 </a-button>
       </a-form>
@@ -79,7 +94,8 @@
 import { reactive, ref, defineEmits } from 'vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios';
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const emit = defineEmits(['success', 'goBack']);
 const loading = ref(false);
 const form = reactive({
@@ -88,10 +104,14 @@ const form = reactive({
   password: '',
   confirmPassword: '',
   verificationCode: '',
+  avatar: '', // 新增字段用于存储头像
 });
 
 const passwordStrengthText = ref('');
 const passwordStrengthClass = ref('');
+
+// 头像列表
+const avatarList = Array.from({ length: 20 }, (_, index) => `https://gitee.com/topiza/image/raw/master/file_${index + 1}.png`);
 
 async function requestMailcode() {
   try {
@@ -105,16 +125,30 @@ async function requestMailcode() {
 async function requestSignin() {
   loading.value = true;
   try {
+    // 向后端发送请求
     const response = await axios.post('http://localhost:5000/api/register', form);
-    message.success('注册成功！');
-    emit('success');
-    goBack(); // 注册成功后返回登录页面
+
+    // 根据后端返回的消息处理
+    if (response.status === 201) {
+      message.success('注册成功！');
+      emit('success');
+      goBack(); // 注册成功后返回登录页面
+    }
   } catch (error) {
-    throw new Error(error.response?.data?.message || '注册失败');
+    // 根据不同的错误信息展示不同的提示
+    if (error.response) {
+      // 错误响应包含后端返回的消息
+      const messageContent = error.response?.data?.message || '注册失败';
+      message.error(messageContent);
+    } else {
+      // 没有响应，可能是网络问题
+      message.error('请求失败，请检查网络连接');
+    }
   } finally {
     loading.value = false;
   }
 }
+
 
 function checkPasswordStrength() {
   const lengthScore = form.password.length >= 8 ? 1 : 0;
@@ -142,8 +176,12 @@ function validateConfirmPassword(_, value) {
   return Promise.resolve();
 }
 
+function selectAvatar(avatar: string) {
+  form.avatar = avatar;
+}
+
 function goBack() {
-  emit('goBack');
+  router.push('/home');
 }
 </script>
 
@@ -227,5 +265,29 @@ function goBack() {
   font-size: 14px;
   margin-top: 5px;
   color: #1896ff;
+}
+
+.avatar-container {
+  display: flex;
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.avatar-item {
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.avatar-item.selected {
+  border: 2px solid #1896ff;
+  transform: scale(1.1);
+}
+
+.avatar-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
 }
 </style>
