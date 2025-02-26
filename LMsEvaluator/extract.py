@@ -116,16 +116,10 @@ def extractResult(path):
 	return result
 
 
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
-	path="./LMsEvaluator/logs/u1h_single_2024-12-04.txt"
+	import os
+	lmsDir = os.path.dirname(os.path.abspath(__file__))
+	path = lmsDir + "\\logs\\u1h_single_1737727113_2025-01-24.txt"
 	res = extractResult(path)
 	j = json.dumps(res, indent=2)
 	print(j)

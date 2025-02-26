@@ -17,10 +17,11 @@ sys.path.append('../')
 
 
 class TaskForChineseNER(BaseTask):
-    def __init__(self, dataset_dir, model_dir, dataset_type=".txt", use_gpu=True, split_sep=' ',
+    def __init__(self, initTime, dataset_dir, model_dir,  dataset_type=".txt", use_gpu=True, split_sep=' ',
                  config_parser=None,username='default'):
-        self.config = ModelTaskForChineseNER(dataset_dir, model_dir, dataset_type, use_gpu,
-                                             split_sep, config_parser,username=username)
+        self.config = ModelTaskForChineseNER(initTime, dataset_dir, model_dir, dataset_type, use_gpu,
+                                             split_sep, config_parser,
+                                             username=username)
 
     def accuracy(self, logits, y_true, ignore_idx=-100):
         """

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { ref, onMounted, customRef } from 'vue';
+import { ref, onMounted, withDefaults } from 'vue';
 import axios from "axios"
-import { number } from 'echarts';
 
 const AdvColumns = [
 	{
@@ -66,7 +65,7 @@ const SWATInnerData = ref([])
 const username = localStorage.getItem('Global_username');  // 从 localStorage 获取用户名
 const token = localStorage.getItem('Global_token');
 const props = defineProps({
-	targetFileName: String
+	targetCreateTime: Number
 })
 function getInnerData(expanded, record) {
       if (expanded) { 
@@ -79,7 +78,7 @@ onMounted(async () => {
 		const response = await axios.post('http://localhost:5000/api/getRecord', {
 			username: username,
 			token: token,
-			fileName: props.targetFileName
+			createTime: props.targetCreateTime
 		});
 		responseData.value = response.data;
 		console.log(responseData.value);

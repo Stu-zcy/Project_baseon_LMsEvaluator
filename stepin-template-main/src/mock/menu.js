@@ -18,7 +18,7 @@ const presetList = [
   {
     id: 2,
     name: 'table',
-    title: '表格',
+    title: '运行结果',
     icon: 'TableOutlined',
     badge: '',
     target: '_self',

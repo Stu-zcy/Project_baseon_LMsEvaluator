@@ -60,7 +60,7 @@
               placeholder="请输入验证码"
               class="signin-input h-[40px]"
             />
-            <a-button @click="requestMailcode" type="primary" class="ml-2">
+            <a-button @click="requestMailcode" type="primary" class="ml-2 mb-4">
               发送验证码
             </a-button>
           </div>
