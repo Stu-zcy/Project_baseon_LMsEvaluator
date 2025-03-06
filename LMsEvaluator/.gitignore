@@ -16,9 +16,9 @@
 *.tar
 *.zip
 *.pkg
-
+*.csv
 # Databases
-
+*.db
 *.sql
 *.sqlite
 
@@ -60,12 +60,15 @@
 /datasets/GLUE/*
 /datasets/imdb/*
 /datasets/Tomatoes/*
+/datasets/emotion/*
+
 !/datasets/GLUE/.gitkeep
 
 !README.md
 
 /attack/AdvAttack/checkpoints
 /attack/AdvAttack/log.csv
+/attack/*
 
 /LMs/bert_base_chinese/*
 /LMs/bert_base_uncased_english/*
