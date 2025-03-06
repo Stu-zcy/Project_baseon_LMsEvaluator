@@ -35,18 +35,18 @@ if __name__ == "__main__":
     test_device = torch.device(
         'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
 
-    get_ori_dataset(dataset_name=args.dataset_name, seed=args.seed)
+    #get_ori_dataset(dataset_name=args.dataset_name, seed=args.seed)
 
-    get_target_model(model_name=args.model_name, dataset_name=args.dataset_name, device=test_device)
+    #get_target_model(model_name=args.model_name, dataset_name=args.dataset_name, device=test_device)
 
-    train_attack_model(seed=args.seed, model_name=args.model_name, dataset_name=args.dataset_name,
-                       ppo_config=args.ppo_config, seq_length=args.seq_length, target_label=args.target_label,
-                       max_iterations=args.max_iterations, min_input_length=args.min_input_length,
-                       max_input_length=args.max_input_length, device=test_device)
+    #train_attack_model(seed=args.seed, model_name=args.model_name, dataset_name=args.dataset_name,
+    #                   ppo_config=args.ppo_config, seq_length=args.seq_length, target_label=args.target_label,
+    #                   max_iterations=args.max_iterations, min_input_length=args.min_input_length,
+    #                   max_input_length=args.max_input_length, device=test_device)
 
-    infer_attack_model(seed=args.seed, model_name=args.model_name, dataset_name=args.dataset_name,
-                       seq_length=args.seq_length, target_label=args.target_label, num_generation=args.num_generation,
-                       min_input_length=args.min_input_length, max_input_length=args.max_input_length,
-                       device=test_device)
+    #infer_attack_model(seed=args.seed, model_name=args.model_name, dataset_name=args.dataset_name,
+    #                   seq_length=args.seq_length, target_label=args.target_label, num_generation=args.num_generation,
+    #                   min_input_length=args.min_input_length, max_input_length=args.max_input_length,
+    #                   device=test_device)
 
     evaluate_result()
