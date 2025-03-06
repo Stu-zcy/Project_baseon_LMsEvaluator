@@ -4,7 +4,7 @@ import time
 import torch
 import logging
 from copy import deepcopy
-from attack import attack_helper
+from attack import attack_factory
 from torch.optim.adamw import AdamW
 from tasks.BaseTask import BaseTask
 from transformers import BertTokenizer

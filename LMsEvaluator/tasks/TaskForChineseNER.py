@@ -4,7 +4,7 @@ import time
 import torch
 import logging
 from copy import deepcopy
-from attack import attack_helper
+from attack import attack_factory
 from tasks.BaseTask import BaseTask
 from transformers import BertTokenizer
 from utils import LoadChineseNERDataset
@@ -14,6 +14,7 @@ from model.DownstreamTasks import BertForTokenClassification
 from sklearn.metrics import accuracy_score, classification_report
 
 sys.path.append('../')
+
 
 
 class TaskForChineseNER(BaseTask):
@@ -287,6 +288,8 @@ class TaskForChineseNER(BaseTask):
                      '当乔峰问及带头大哥时，却发现智光大师已圆寂。',
                      '乔峰、阿朱相约找最后知情人康敏问完此事后，就到塞外骑马牧羊，再不回来。']
         self.inference(sentences)
+
+
 
 
 if __name__ == '__main__':

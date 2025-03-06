@@ -465,55 +465,6 @@ def execute_attack():
 
 
 
-@app.route('/api/defense_list', methods=['POST'])
-def receive_defense_list():
-    data = request.json
-    defense_list = data.get('defense_list', [])
-    username = data.get('username', None).strip('"')
-    token = data.get('token', None).strip('"')
-
-    # 验证用户名和 token
-    if not username or not token:
-        return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
-
-    is_valid, message = verify_token(token, username)
-    if not is_valid:
-        return jsonify({'status': 'error', 'message': message}), 401
-
-    print(f"Received data from user: {username}")
-    print("Received defense list:", defense_list)  # 输出接收到的数据
-
-    return jsonify({'status': 'success', 'message': 'Defense list received!', 'received_data': defense_list})
-
-
-@app.route('/api/execute_defense', methods=['POST'])
-def execute_defense():
-    try:
-        data = request.json
-        username = data.get('username', None).strip('"')
-        token = data.get('token', None).strip('"')
-
-        # 验证用户名和 token
-        if not username or not token:
-            return jsonify({'status': 'error', 'message': 'Username or token is missing!'}), 400
-
-        is_valid, message = verify_token(token, username)
-        if not is_valid:
-            return jsonify({'status': 'error', 'message': message}), 401
-
-        print(f"Executing defense for user: {username}")
-
-        # 下游任务执行代码
-        model_class = parse_config(project_path, str(username))
-        model_class.run()
-
-        return jsonify({'status': 'success', 'message': 'Defense executed successfully!'})
-
-    except Exception as e:
-        print("Error executing defense:", e)
-        return jsonify({'status': 'error', 'message': 'Failed to execute defense'}), 500
-
-
 
 @app.route('/api/getRecord', methods=['POST'])
 def getRecord():

@@ -27,9 +27,9 @@ class PoisoningAttack(BaseAttack):
 
     def attack(self):
         if self.config_parser['task_config']['task'] == "TaskForSingleSentenceClassification":
-            return self.attack_single_sentence_classification()
+            self.attack_single_sentence_classification()
         elif self.config_parser['task_config']['task'] == "TaskForPairSentenceClassification":
-            return self.attack_pair_sentence_classification()
+            self.attack_pair_sentence_classification()
 
     def attack_single_sentence_classification(self):
         model_save_path = os.path.join(self.config.model_save_dir, 'poisoning_model.pt')
@@ -123,7 +123,6 @@ class PoisoningAttack(BaseAttack):
         ori_acc = self.evaluate_single_sentence_classification(test_iter, self.model, device=self.config.device,
                                                                PAD_IDX=data_loader.PAD_IDX)
         self.__table_show(acc, ori_acc)
-        return [ori_acc, acc]
 
     def attack_pair_sentence_classification(self):
         # model_save_path = os.path.join(self.config.model_save_dir, 'model.pt')
@@ -227,7 +226,6 @@ class PoisoningAttack(BaseAttack):
         self.model = self.model.to(self.config.device)
         ori_acc = self.evaluate(test_iter, self.model, device=self.config.device, PAD_IDX=data_loader.PAD_IDX)
         self.__table_show(acc, ori_acc)
-        return [ori_acc, acc]
 
     def evaluate_single_sentence_classification(self, data_iter, model, device, PAD_IDX):
         model.eval()
@@ -269,10 +267,7 @@ class PoisoningAttack(BaseAttack):
         self.config.train_file_path = poisoning_train_path
 
     def __deal_path(self, ori_path):
-        try:
-            base_path, file_name = ori_path.rsplit('/', 1)
-        except:
-            base_path, file_name = ori_path.rsplit('\\', 1)
+        base_path, file_name = ori_path.rsplit('/', 1)
         file_name = "poisoning_" + file_name
         result = base_path + "/" + file_name
         return result, "." + file_name.split('.')[-1]
@@ -306,14 +301,11 @@ class PoisoningAttack(BaseAttack):
         logging.info("投毒数据生成完毕")
 
 
+# 本地测试
 if __name__ == "__main__":
-    # import random
-
-    # temp = random.sample([1, 2, 3, 4, 5, 6, 7, 8, 9], k=8)
-    # print(temp)
-    # temp = random.randint(1, 1)
-    # print(temp)
-
+    """
+    PoisoningAttack模块功能测试
+    """
     poisoning_rate = 0.1
     with open("../../datasets/imdb/train.txt", "r", encoding="utf-8") as file:
         str_list = file.readlines()

@@ -15,73 +15,85 @@
         </template>
       </a-table>
 
-      <a-modal v-model:visible="showAddModal" title="添加攻击配置" @ok="addAttackArgs" @cancel="cancelAddModal" width="600px">
+      <a-modal v-model:visible="showAddModal" title="添加攻击配置" @ok="addAttackArgs" @cancel="cancelAddModal" width="650px">
         <div class="input-section">
 
-          <!-- 攻击类型选择框和攻击策略选择框 -->
+          <!-- 攻击类型选择框 -->
           <label class="input-label">
             攻击类型:
             <a-select
               v-model:value="currentAttackArgs.attack_type"
-              style="width: 200px"
+              class="select-input"
               :options="attack_type_Data.map(type => ({ value: type, label: type }))"
               placeholder="请选择攻击类型"
             />
           </label>
 
+          <!-- 攻击策略选择框 -->
           <label class="input-label">
             攻击策略:
             <a-select
               v-model:value="currentAttackArgs.attack_recipe"
-              style="width: 200px"
+              class="select-input"
               :options="attack_recipes.map(recipe => ({ value: recipe, label: recipe }))"
               placeholder="请选择攻击策略"
             />
           </label>
 
-          <!-- 高级设置 -->
-          <a-collapse>
+          <!-- 高级设置折叠面板 -->
+          <a-collapse v-if="currentAttackArgs.attack_type" defaultActiveKey="1">
             <a-collapse-panel header="高级设置" key="1">
-              <div class="advanced-settings">
-                <div class="setting-item">
-                  <label class="input-label">使用本地模型:</label>
-                  <a-switch v-model:checked="currentAttackArgs.use_local_model" />
-                </div>
-                <div class="setting-item">
-                  <label class="input-label">使用本地Tokenizer:</label>
-                  <a-switch v-model:checked="currentAttackArgs.use_local_tokenizer" />
-                </div>
-                <div class="setting-item">
-                  <label class="input-label">使用本地数据集:</label>
-                  <a-switch v-model:checked="currentAttackArgs.use_local_dataset" />
-                </div>
+              <div v-if="currentAttackArgs.attack_type === 'AdvAttack'">
+                使用本地模型 <a-switch v-model:checked="currentAttackArgs.use_local_model" /> 
+                使用本地分词器<a-switch v-model:checked="currentAttackArgs.use_local_tokenizer" />
+                使用本地数据集<a-switch v-model:checked="currentAttackArgs.use_local_dataset" /> 
+                攻击次数<a-input-number v-model:value="currentAttackArgs.attack_nums" class="rounded-input" :min="1" /> 
+              </div>
 
-                <div class="setting-item">
-                  <label class="input-label">模型名称或路径:</label>
-                  <input type="file" webkitdirectory @change="(event) => handleFolderUpload(event, 'model')" class="file-input" />
-                  <span v-if="currentAttackArgs.model_name_or_path" class="upload-success">上传成功: {{ currentAttackArgs.model_name_or_path }}</span>
-                </div>
+              <div v-if="currentAttackArgs.attack_type === 'FET'">
+                随机种子<a-input-number v-model:value="currentAttackArgs.seed" class="rounded-input" /> 
+                攻击批次<a-input-number v-model:value="currentAttackArgs.attack_batch" class="rounded-input" :min="1" />
+                攻击次数<a-input-number v-model:value="currentAttackArgs.attack_nums" class="rounded-input" :min="1" />
+                <a-select v-model:value="currentAttackArgs.distance_func" class="select-input" :options="['l2', 'cos'].map(func => ({ value: func, label: func }))" placeholder="选择距离函数" />
+                种群大小<a-input-number v-model:value="currentAttackArgs.population_size" class="rounded-input" /> 
+                选择批次<a-input-number v-model:value="currentAttackArgs.tournsize" class="rounded-input" /> 
+                交叉率<a-input-number v-model:value="currentAttackArgs.crossover_rate" class="rounded-input" :step="0.1" :min="0" :max="1" /> 
+                突变率<a-input-number v-model:value="currentAttackArgs.mutation_rate" class="rounded-input" :step="0.1" :min="0" :max="1" /> 
+                最大代数<a-input-number v-model:value="currentAttackArgs.max_generations" class="rounded-input" /> 
+                精英个体大小<a-input-number v-model:value="currentAttackArgs.halloffame_size" class="rounded-input" />
+              </div>
 
-                <div class="setting-item">
-                  <label class="input-label">Tokenizer 名称或路径:</label>
-                  <input type="file" webkitdirectory @change="(event) => handleFolderUpload(event, 'tokenizer')" class="file-input" />
-                  <span v-if="currentAttackArgs.tokenizer_name_or_path" class="upload-success">上传成功: {{ currentAttackArgs.tokenizer_name_or_path }}</span>
-                </div>
+              <div v-if="currentAttackArgs.attack_type === 'BackDoorAttack'">
+                <a-checkbox-group v-model:value="currentAttackArgs.sample_metrics">
+                  <a-checkbox value="ppl">PPL</a-checkbox>
+                  <a-checkbox value="use">USE</a-checkbox>
+                  <a-checkbox value="grammar">Grammar</a-checkbox>
+                </a-checkbox-group>
+                <a-select v-model:value="currentAttackArgs.defender" class="select-input" :options="['BKI', 'ONION', 'STRIP', 'RAP', 'CUBE'].map(defender => ({ value: defender, label: defender }))" placeholder="选择防御方法" />
+              </div>
 
-                <div class="setting-item">
-                  <label class="input-label">数据集名称或路径:</label>
-                  <input type="file" webkitdirectory @change="(event) => handleFolderUpload(event, 'dataset')" class="file-input" />
-                  <span v-if="currentAttackArgs.dataset_name_or_path" class="upload-success">上传成功: {{ currentAttackArgs.dataset_name_or_path }}</span>
-                </div>
+              <div v-if="currentAttackArgs.attack_type === 'PoisoningAttack'">
+                投毒率<a-input-number v-model:value="currentAttackArgs.poisoning_rate" class="rounded-input" :min="0" :max="1" step="0.01" /> 
+                训练周期<a-input-number v-model:value="currentAttackArgs.epochs" class="rounded-input" /> 
+              </div>
 
-                <div class="setting-item">
-                  <label class="input-label">攻击次数:</label>
-                  <input type="number" v-model.number="currentAttackArgs.attack_nums" placeholder="攻击次数" class="rounded-input" />
-                </div>
-                <div class="setting-item">
-                  <label class="input-label">显示完整信息:</label>
-                  <a-switch v-model:checked="currentAttackArgs.display_full_info" />
-                </div>
+              <div v-if="currentAttackArgs.attack_type === 'RLMI'">
+                随机种子<a-input-number v-model:value="currentAttackArgs.seed" class="rounded-input" /> 
+                序列长度<a-input-number v-model:value="currentAttackArgs.seq_length" class="rounded-input" /> 
+                目标标签<a-input-number v-model:value="currentAttackArgs.target_label" class="rounded-input" /> 
+                最大迭代次数<a-input-number v-model:value="currentAttackArgs.max_iterations" class="rounded-input" /> 
+                最小输入长度<a-input-number v-model:value="currentAttackArgs.min_input_length" class="rounded-input" />
+                最大输入长度<a-input-number v-model:value="currentAttackArgs.max_input_length" class="rounded-input" />
+                生成数量<a-input-number v-model:value="currentAttackArgs.num_generation" class="rounded-input" /> 
+              </div>
+
+              <div v-if="currentAttackArgs.attack_type === 'GIAforNLP'">
+                <a-input v-model:value="currentAttackArgs.optimizer" class="rounded-input" placeholder="优化器" />
+                攻击批次<a-input-number v-model:value="currentAttackArgs.attack_batch" class="rounded-input" /> 
+                攻击次数<a-input-number v-model:value="currentAttackArgs.attack_nums" class="rounded-input" /> 
+                <a-select v-model:value="currentAttackArgs.distance_func" class="select-input" :options="['l2', 'cos'].map(func => ({ value: func, label: func }))" placeholder="选择距离函数" />
+                学习率<a-input-number v-model:value="currentAttackArgs.attack_lr" class="rounded-input" step="0.01" /> 
+                迭代次数<a-input-number v-model:value="currentAttackArgs.attack_iters" class="rounded-input" /> 
               </div>
             </a-collapse-panel>
           </a-collapse>
@@ -89,84 +101,15 @@
       </a-modal>
 
       <div class="action-buttons">
-        <a-button type="primary" @click="sendAttackList">发送攻击配置</a-button>
-        <a-button type="default" @click="executeAttack">执行攻击</a-button>
+        <a-button type="primary" @click="sendAttackList" class="action-button">发送攻击配置</a-button>
+        <a-button type="default" @click="executeAttack" class="action-button">执行攻击</a-button>
         <!-- 运行中弹框 -->
-        <a-modal
-          v-model:visible="isModalVisible"
-          title="攻击执行中"
-          :footer="null" <!-- 修正为 Vue 风格的绑定 -->
+        <a-modal v-model:visible="isModalVisible" title="攻击执行中" :footer="null">
           <div class="modal-content">
             <a-spin size="large" tip="攻击执行中..."></a-spin>
             <p class="loading-text">正在处理中，请稍候...</p>
           </div>
         </a-modal>
-
-      </div>
-    </div>
-    <!-- 防御配置部分 -->
-    <div class="defense-configuration">
-      <div class="header">
-        <a-button type="primary" icon="plus" @click="showDefenseModal = true">添加防御配置</a-button>
-      </div>
-
-      <a-table :columns="defenseColumns" :dataSource="defenseList" rowKey="index" class="defense-table">
-        <template #bodyCell="{ column, record, index }">
-          <span v-if="column.dataIndex === 'operation'">
-            <a-button type="link" @click="editDefenseArgs(index)">编辑</a-button>
-            <a-button type="link" danger @click="removeDefenseArgs(index)">删除</a-button>
-          </span>
-        </template>
-      </a-table>
-
-      <a-modal v-model:visible="showDefenseModal" title="添加防御配置" @ok="addDefenseArgs" @cancel="cancelDefenseModal" width="600px">
-        <div class="input-section">
-          <!-- 防御类型选择框和防御策略选择框 -->
-          <label class="input-label">
-            防御类型:
-            <a-select
-              v-model:value="currentDefenseArgs.defense_type"
-              style="width: 200px"
-              :options="defense_type_Data.map(type => ({ value: type, label: type }))"
-            />
-          </label>
-
-          <label class="input-label">
-            防御策略:
-            <a-select
-              v-model:value="currentDefenseArgs.defense_recipe"
-              style="width: 200px"
-              :options="defense_recipes.map(recipe => ({ value: recipe, label: recipe }))"
-            />
-          </label>
-
-          <!-- 高级设置 -->
-          <a-collapse>
-            <a-collapse-panel header="高级设置" key="1">
-              <div class="advanced-settings">
-                <div class="setting-item">
-                  <label class="input-label">使用本地模型:</label>
-                  <a-switch v-model:checked="currentDefenseArgs.use_local_model" />
-                </div>
-
-                <div class="setting-item">
-                  <label class="input-label">模型名称或路径:</label>
-                  <input type="file" webkitdirectory @change="(event) => handleFolderUpload(event, 'defense_model')" class="file-input" />
-                  <span v-if="currentDefenseArgs.model_name_or_path" class="upload-success">上传成功: {{ currentDefenseArgs.model_name_or_path }}</span>
-                </div>
-
-                <div class="setting-item">
-                  <label class="input-label">防御参数:</label>
-                  <input type="text" v-model="currentDefenseArgs.defense_params" placeholder="防御参数" class="rounded-input" />
-                </div>
-              </div>
-            </a-collapse-panel>
-          </a-collapse>
-        </div>
-      </a-modal>
-      <div class="action-buttons">
-        <a-button type="primary" @click="sendDefenseList">发送防御配置</a-button>
-        <a-button type="default" @click="executeDefense">执行防御</a-button>
       </div>
     </div>
   </div>
@@ -178,10 +121,11 @@ import axios from 'axios';
 import { message } from 'ant-design-vue';
 
 // 攻击类型数据和对应的攻击策略数据
-const attack_type_Data = ['GIAforNLP', 'SWAT', 'AdvAttack', 'BackDoorAttack', 'PoisoningAttack','FET'];
+const attack_type_Data = ['AdvAttack', 'FET', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'GIAforNLP'];
+
 const attack_recipe_Data = {
   GIAforNLP: ['default'],
-  SWAT: ['default'],
+  RLMI: ['default'],
   AdvAttack: [
     'A2TYoo2021', 'BAEGarg2019', 'BERTAttackLi2020', 'GeneticAlgorithmAlzantot2018',
     'FasterGeneticAlgorithmJia2019', 'DeepWordBugGao2018', 'HotFlipEbrahimi2017',
@@ -194,32 +138,78 @@ const attack_recipe_Data = {
   FET:['default']
 };
 
-// 默认攻击配置模板，将attack默认设为true，type和recipe设为空字符串
-const defaultAttackArgs = () => ({
-  index: 0,
-  attack: true,
-  attack_type: '',
-  attack_recipe: '',
-  use_local_model: true,
-  use_local_tokenizer: true,
-  use_local_dataset: true,
-  model_name_or_path: '',
-  tokenizer_name_or_path: '',
-  dataset_name_or_path: '',
-  attack_nums: 2,
-  display_full_info: true,
-});
-// 控制运行中弹框的显示状态
-const isModalVisible = ref(false);
+const defaultAttackConfig = {
+  AdvAttack: {
+    attack_type: 'AdvAttack',
+    attack_recipe: 'TextFoolerJin2019',
+    use_local_model: true,
+    use_local_tokenizer: true,
+    use_local_dataset: true,
+    attack_nums: 2,
+    display_full_info: true,
+  },
+  FET: {
+    attack_type: 'FET',
+    attack_recipe: 'default',
+    seed: 42,
+    attack_batch: 2,
+    attack_nums: 1,
+    distance_func: 'l2',
+    population_size: 300,
+    tournsize: 5,
+    crossover_rate: 0.9,
+    mutation_rate: 0.1,
+    max_generations: 2,
+    halloffame_size: 30,
+    display_full_info: true,
+  },
+  BackDoorAttack: {
+    attack_type: 'BackDoorAttack',
+    attack_recipe: 'default',
+    sample_metrics: [],
+    display_full_info: true,
+    defender: 'None',
+  },
+  PoisoningAttack: {
+    attack_type: 'PoisoningAttack',
+    attack_recipe: 'default',
+    poisoning_rate: 0.1,
+    epochs: 10,
+    display_full_info: true,
+  },
+  RLMI: {
+    attack_type: 'RLMI',
+    attack_recipe: 'default',
+    seed: 42,
+    seq_length: 20,
+    target_label: 0,
+    max_iterations: 2000,
+    min_input_length: 2,
+    max_input_length: 5,
+    num_generation: 1000,
+  },
+  GIAforNLP: {
+    attack_type: 'GIAforNLP',
+    attack_recipe: 'default',
+    optimizer: 'Adam',
+    attack_batch: 2,
+    attack_nums: 1,
+    distance_func: 'l2',
+    attack_lr: 0.01,
+    attack_iters: 10,
+    display_full_info: true,
+  },
+};
 
 // 当前攻击配置
-const currentAttackArgs = reactive(defaultAttackArgs());
+const currentAttackArgs = reactive(defaultAttackConfig['AdvAttack']);
 
 // 计算属性：根据选择的攻击类型动态更新攻击策略选项
 const attack_recipes = computed(() => currentAttackArgs.attack_type ? attack_recipe_Data[currentAttackArgs.attack_type] : []);
 
-// 监听攻击类型变化，自动更新攻击策略
+// 监听攻击类型变化，自动更新攻击策略和高级配置
 watch(() => currentAttackArgs.attack_type, (newAttackType) => {
+  Object.assign(currentAttackArgs, defaultAttackConfig[newAttackType]);
   if (newAttackType) {
     currentAttackArgs.attack_recipe = attack_recipe_Data[newAttackType][0];
   } else {
@@ -227,52 +217,44 @@ watch(() => currentAttackArgs.attack_type, (newAttackType) => {
   }
 });
 
-// 表格列配置
+// 需要添加的变量
+const isModalVisible = ref(false);  // 缺少的定义
+
 const columns = [
   { title: '序号', dataIndex: 'index' },
   { title: 'Attack Type', dataIndex: 'attack_type' },
   { title: 'Attack Recipe', dataIndex: 'attack_recipe' },
-  { title: 'Model Name or Path', dataIndex: 'model_name_or_path' },
   { title: '操作', dataIndex: 'operation' },
 ];
 
-// 攻击配置列表
 const attackList = ref([]);
-
-// 显示添加攻击配置的模态框
 const showAddModal = ref(false);
 
-// 添加攻击配置
 function addAttackArgs() {
-  currentAttackArgs.index = attackList.value.length + 1;
-  attackList.value.push({ ...currentAttackArgs });
-  Object.assign(currentAttackArgs, defaultAttackArgs());
+  const attackConfigCopy = { ...currentAttackArgs };
+  attackList.value.push(attackConfigCopy);
   showAddModal.value = false;
 }
 
-// 取消添加攻击配置
 function cancelAddModal() {
-  Object.assign(currentAttackArgs, defaultAttackArgs());
+  Object.assign(currentAttackArgs, defaultAttackConfig['AdvAttack']);
   showAddModal.value = false;
 }
 
-// 删除攻击配置
 function removeAttackArgs(index: number) {
   attackList.value.splice(index, 1);
   attackList.value.forEach((item, i) => (item.index = i + 1));
 }
 
-// 编辑攻击配置
 function editAttackArgs(index: number) {
   Object.assign(currentAttackArgs, attackList.value[index]);
   removeAttackArgs(index);
   showAddModal.value = true;
 }
 
-// 发送攻击配置列表
 async function sendAttackList() {
-  const username = localStorage.getItem('Global_username');  // 从 localStorage 获取用户名
-  const token=localStorage.getItem('Global_token'); 
+  const username = localStorage.getItem('Global_username');
+  const token = localStorage.getItem('Global_token'); 
   try {
     const response = await axios.post('http://localhost:5000/api/attack_list', { 
       attack_list: attackList.value, 
@@ -287,7 +269,6 @@ async function sendAttackList() {
   }
 }
 
-// 执行攻击时显示加载中的弹框
 async function executeAttack() {
   const username = localStorage.getItem('Global_username');
   const token = localStorage.getItem('Global_token');
@@ -297,7 +278,6 @@ async function executeAttack() {
     return;
   }
 
-  // 显示运行中弹框
   isModalVisible.value = true;
 
   try {
@@ -305,143 +285,26 @@ async function executeAttack() {
       username: username,
       token: token
     });
-    
     message.success('攻击执行成功！');
     console.log('Attack execution response:', response.data);
   } catch (error) {
     console.error('Failed to execute attack:', error);
     message.error('攻击执行失败');
   } finally {
-    // 关闭运行中弹框
     isModalVisible.value = false;
   }
 }
-
-// 防御类型数据和对应的防御策略数据
-const defense_type_Data = ['BackDoor'];
-const defense_recipe_Data = {
-  BackDoor: ['onion', 'bki','cube','rap','strip'],
-};
-
-// 默认防御配置模板
-const defaultDefenseArgs = () => ({
-  index: 0,
-  defense_type: 'DefenseType1',
-  defense_recipe: 'Recipe1',
-  use_local_model: false,
-  model_name_or_path: '',
-  defense_params: '',
-});
-
-// 计算属性：根据选择的防御类型动态更新防御策略选项
-const defense_recipes = computed(() => defense_recipe_Data[currentDefenseArgs.defense_type]);
-
-// 监听防御类型变化，自动更新防御策略
-watch(() => currentDefenseArgs.defense_type, (newDefenseType) => {
-  currentDefenseArgs.defense_recipe = defense_recipe_Data[newDefenseType][0];
-});
-
-// 防御配置表格列配置
-const defenseColumns = [
-  { title: '序号', dataIndex: 'index' },
-  { title: 'Defense Type', dataIndex: 'defense_type' },
-  { title: 'Defense Recipe', dataIndex: 'defense_recipe' },
-  { title: 'Model Name or Path', dataIndex: 'model_name_or_path' },
-  { title: '操作', dataIndex: 'operation' },
-];
-
-// 当前防御配置
-const currentDefenseArgs = reactive(defaultDefenseArgs());
-
-// 防御配置列表
-const defenseList = ref([]);
-
-// 显示添加防御配置的模态框
-const showDefenseModal = ref(false);
-
-// 添加防御配置
-function addDefenseArgs() {
-  currentDefenseArgs.index = defenseList.value.length + 1;
-  defenseList.value.push({ ...currentDefenseArgs });
-  Object.assign(currentDefenseArgs, defaultDefenseArgs());
-  showDefenseModal.value = false;
-}
-
-// 取消添加防御配置
-function cancelDefenseModal() {
-  Object.assign(currentDefenseArgs, defaultDefenseArgs());
-  showDefenseModal.value = false;
-}
-
-// 删除防御配置
-function removeDefenseArgs(index: number) {
-  defenseList.value.splice(index, 1);
-  defenseList.value.forEach((item, i) => (item.index = i + 1));
-}
-
-// 编辑防御配置
-function editDefenseArgs(index: number) {
-  Object.assign(currentDefenseArgs, defenseList.value[index]);
-  removeDefenseArgs(index);
-  showDefenseModal.value = true;
-}
-
-// 发送防御配置列表
-async function sendDefenseList() {
-  const username = localStorage.getItem('Global_username');  // 从 localStorage 获取用户名
-  const token=localStorage.getItem('Global_token'); 
-  
-  try {
-    const response = await axios.post('http://localhost:5000/api/defense_list', { 
-      defense_list: defenseList.value, 
-      username: username,  // 将用户名发送到后端
-      token:token
-    });
-    message.success('防御配置发送成功！');
-    console.log('Response:', response.data);
-  } catch (error) {
-    console.error('Failed to send defense data:', error);
-    message.error('防御配置发送失败');
-  }
-}
-
-// 执行防御
-async function executeDefense() {
-  const username = localStorage.getItem('Global_username');  // 从 localStorage 获取用户名
-  const token=localStorage.getItem('Global_token'); 
-  if (!username) {
-    message.error('未找到用户名，请重新登录');
-    return;
-  }
-  
-  try {
-    const response = await axios.post('http://localhost:5000/api/execute_defense', { 
-      username: username,  // 将用户名发送到后端
-      token:token
-    });
-    message.success('防御执行成功！');
-    console.log('Defense execution response:', response.data);
-  } catch (error) {
-    console.error('Failed to execute defense:', error);
-    message.error('防御执行失败');
-  }
-}
-
-// 文件上传处理函数（根据需要实现）
-function handleFolderUpload(event: Event, type: string) {
-  // 实现文件上传逻辑
-  // 例如，将文件路径保存到对应的配置中
-  // currentAttackArgs.model_name_or_path = 'path/to/model';
-  // currentDefenseArgs.model_name_or_path = 'path/to/model';
-}
 </script>
+
 
 <style scoped>
 .configuration {
-  padding: 20px;
+  padding: 30px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f7f7f7;
 }
 
-.attack-configuration, .defense-configuration {
+.attack-configuration {
   margin-bottom: 40px;
 }
 
@@ -454,7 +317,7 @@ function handleFolderUpload(event: Event, type: string) {
 .input-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
 .input-label {
@@ -466,95 +329,49 @@ function handleFolderUpload(event: Event, type: string) {
   font-weight: bold;
 }
 
-.attack-table, .defense-table {
-  margin-top: 20px;
+.select-input {
+  width: 100%;
   border-radius: 8px;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-  justify-content: flex-start;
-}
-
-.advanced-settings {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.setting-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.upload-success {
-  color: green;
-  margin-left: 10px;
-}
-
-.file-input {
-  border-radius: 8px;
+  padding: 10px;
   border: 1px solid #d9d9d9;
-  padding: 8px;
-  width: 60%;
-  transition: border-color 0.3s;
-}
-
-.file-input:focus {
-  border-color: #40a9ff;
-  outline: none;
+  font-size: 14px;
 }
 
 .rounded-input {
   border-radius: 8px;
   border: 1px solid #d9d9d9;
-  padding: 8px;
-  width: 60%;
-  transition: border-color 0.3s;
+  padding: 10px;
+  font-size: 14px;
 }
 
-.rounded-input:focus {
-  border-color: #40a9ff;
-  outline: none;
+.attack-table {
+  margin-top: 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
 }
 
-/* 美化loading-modal */
-.loading-modal .ant-modal-content {
-  background-color: rgba(0, 0, 0, 0.9);  /* 深色背景，增加模糊效果 */
-  border-radius: 16px;  /* 弹框圆角 */
-  padding: 24px;  /* 弹框内边距 */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-start;
 }
 
-.loading-modal .ant-modal-header {
-  background-color: #001529;  /* 设置头部颜色 */
-  border-radius: 16px 16px 0 0;  /* 弹框头部圆角 */
-}
-
-.loading-modal .ant-modal-title {
-  color: #fff;  /* 设置标题文字为白色 */
-  font-weight: bold;  /* 设置字体加粗 */
-  text-align: center;  /* 标题居中 */
+.action-button {
+  font-weight: bold;
+  padding: 10px 20px;
 }
 
 .modal-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-}
-
-.loading-modal .ant-spin {
-  margin-bottom: 16px;  /* 加载指示器底部留白 */
 }
 
 .loading-text {
-  color: #fff;
   font-size: 16px;
   font-weight: 500;
-  text-align: center;
+  margin-top: 10px;
 }
 
 </style>

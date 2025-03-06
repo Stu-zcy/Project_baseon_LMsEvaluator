@@ -15,21 +15,14 @@ attack_list:
     use_local_tokenizer: true
 - attack_args:
     attack: true
-    attack_batch: 2
-    attack_nums: 1
-    attack_type: SWAT
-    crossover_rate: 0.9
-    dataset_name_or_path: cola
+    attack_nums: 2
+    attack_recipe: TextFoolerJin2019
+    attack_type: AdvAttack
+    dataset_name_or_path: datasets/imdb/train.txt
     display_full_info: true
-    distance_func: l2
-    halloffame_size: 30
-    max_generations: 2
     model_name_or_path: LMs/bert_base_uncased_english
-    mutation_rate: 0.1
-    population_size: 300
-    seed: 42
     tokenizer_name_or_path: LMs/bert_base_uncased_english
-    tournsize: 5
+    use_local_dataset: true
     use_local_model: true
     use_local_tokenizer: true
 general:

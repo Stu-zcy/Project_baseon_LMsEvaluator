@@ -42,21 +42,6 @@ class MyTextAttack(BaseAttack):
         self.dataset_name_or_path = self.__get_name_or_path(self.use_local_dataset,
                                                             dataset_name_or_path, "dataset")
 
-    def __get_name_or_path(self, boolean, name_or_path, info):
-        if boolean:
-            result = os.path.join(self.project_path, name_or_path)
-            try:
-                if not os.path.exists(result):
-                    raise FileNotFoundError(
-                        print_red("FileNotFoundError: No such file or directory: " + result +
-                                  ". Please check the path to local " + info + " in my_textattack.py."))
-            except Exception as e:
-                print(e)
-                raise SystemError
-        else:
-            result = os.path.join("textattack", name_or_path)
-        return result
-
     def attack(self):
         import textattack
         from textattack import attack_recipes
@@ -129,8 +114,9 @@ class MyTextAttack(BaseAttack):
             logging.getLogger().handlers = self.my_handlers
 
         attacker.attack_dataset()
-        return self.__result_show()
+        self.__result_show()
 
+        # TODO 对抗训练算法实现
         # train_dataset = self.dataset
         # eval_dataset = self.dataset
         # # train_dataset = textattack.datasets.HuggingFaceDataset("imdb", split="train")
@@ -189,20 +175,23 @@ class MyTextAttack(BaseAttack):
             else:
                 attack_acc = successful_num / (successful_num + failed_num) * 100
 
-            table = MyPrettyTable()
-            table.add_field_names(['Attack Results', ''])
-            table.add_row(['Number of successful attacks:', successful_num])
-            table.add_row(['Number of failed attacks:', failed_num])
-            table.add_row(['Number of skipped attacks:', skipped_num])
-            table.add_row(['Original accuracy:', f"{ori_acc:.1f}%"])
-            table.add_row(['Accuracy under attack:', f"{acc_under_attack:.1f}%"])
-            table.add_row(['Attack success rate:', f"{attack_acc:.1f}%"])
-            table.set_align('Attack Results', 'l')
-            table.set_align('', 'l')
-            table.print_table()
-            table.logging_table()
-            
-            return [[successful_num, failed_num, skipped_num, f"{ori_acc:.1f}%", f"{acc_under_attack:.1f}%", f"{attack_acc:.1f}%"]] + list(csv_reader)
+            table_show(successful_num=successful_num, failed_num=failed_num, skipped_num=skipped_num, ori_acc=ori_acc,
+                       acc_under_attack=acc_under_attack, attack_acc=attack_acc)
+
+    def __get_name_or_path(self, boolean, name_or_path, info):
+        if boolean:
+            result = os.path.join(self.project_path, name_or_path)
+            try:
+                if not os.path.exists(result):
+                    raise FileNotFoundError(
+                        print_red("FileNotFoundError: No such file or directory: " + result +
+                                  ". Please check the path to local " + info + " in my_textattack.py."))
+            except Exception as e:
+                print(e)
+                raise SystemError
+        else:
+            result = os.path.join("textattack", name_or_path)
+        return result
 
     def get_local_dataset(self):
         """
@@ -227,7 +216,7 @@ class MyTextAttack(BaseAttack):
             return datasets.HuggingFaceDataset(self.dataset_name_or_path, split="test")
 
 
-def test_get_local_dataset(path):
+def dataset_getter(path):
     from textattack import datasets
     try:
         if not os.path.exists(path):
@@ -250,8 +239,26 @@ def test_get_local_dataset(path):
     return datasets.Dataset(local_dataset)
 
 
-# 本地测试内容
+def table_show(successful_num, failed_num, skipped_num, ori_acc, acc_under_attack, attack_acc):
+    table = MyPrettyTable()
+    table.add_field_names(['Attack Results', ''])
+    table.add_row(['Number of successful attacks:', successful_num])
+    table.add_row(['Number of failed attacks:', failed_num])
+    table.add_row(['Number of skipped attacks:', skipped_num])
+    table.add_row(['Original accuracy:', f"{ori_acc:.1f}%"])
+    table.add_row(['Accuracy under attack:', f"{acc_under_attack:.1f}%"])
+    table.add_row(['Attack success rate:', f"{attack_acc:.1f}%"])
+    table.set_align('Attack Results', 'l')
+    table.set_align('', 'l')
+    table.print_table()
+    table.logging_table()
+
+
+# 本地测试
 if __name__ == "__main__":
+    """
+    AdvAttack模块功能测试
+    """
     import textattack
 
     # 项目路径获取
@@ -263,9 +270,8 @@ if __name__ == "__main__":
     model_wrapper = textattack.models.wrappers.HuggingFaceModelWrapper(model, tokenizer)
 
     datasetPath = os.path.join(projectPath, "datasets", "imdb/test.txt")
-    localDataset = test_get_local_dataset(datasetPath)
-    dataset = textattack.datasets.Dataset(localDataset)
-    dataset = textattack.datasets.HuggingFaceDataset("imdb", split="test")
+    localDataset = dataset_getter(datasetPath)
+    # dataset = textattack.datasets.HuggingFaceDataset("imdb", split="test")
 
     attack = textattack.attack_recipes.TextFoolerJin2019.build(model_wrapper)
     # Attack 20 samples with CSV logging and checkpoint saved every 5 interval
@@ -276,7 +282,7 @@ if __name__ == "__main__":
         checkpoint_dir="checkpoints",
         disable_stdout=True
     )
-    attacker = textattack.Attacker(attack, dataset, attack_args)
+    attacker = textattack.Attacker(attack, localDataset, attack_args)
     attacker.attack_dataset()
 
     with open('log.csv', 'r', encoding='utf-8') as file:
@@ -302,15 +308,4 @@ if __name__ == "__main__":
         else:
             attack_acc = successful_num / (successful_num + failed_num) * 100
 
-        table = MyPrettyTable()
-        table.add_field_names(['Attack Results', ''])
-        table.add_row(['Number of successful attacks:', successful_num])
-        table.add_row(['Number of failed attacks:', failed_num])
-        table.add_row(['Number of skipped attacks:', skipped_num])
-        table.add_row(['Original accuracy:', f"{ori_acc:.1f}%"])
-        table.add_row(['Accuracy under attack:', f"{acc_under_attack:.1f}%"])
-        table.add_row(['Attack success rate:', f"{attack_acc:.1f}%"])
-        table.set_align('Attack Results', 'l')
-        table.set_align('', 'l')
-        table.print_table()
-        table.logging_table()
+        table_show(successful_num, failed_num, skipped_num, ori_acc, acc_under_attack, attack_acc)

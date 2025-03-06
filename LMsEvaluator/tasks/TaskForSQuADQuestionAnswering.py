@@ -5,7 +5,7 @@ import torch
 import logging
 import collections
 
-from attack import attack_helper
+from attack import attack_factory
 from tasks.BaseTask import BaseTask
 from utils.my_exception import print_red
 from attack.GIAforNLP import my_GIA_for_NLP

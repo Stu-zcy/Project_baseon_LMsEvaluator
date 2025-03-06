@@ -35,26 +35,15 @@ def create_database():
     )
     ''')
 
-    # 创建攻击记录表
+    # 创建攻击记录表，createUserName 字段改为 TEXT 类型以匹配 User.username
     cursor.execute(''' 
     CREATE TABLE IF NOT EXISTS attack_record (
         attackID INTEGER PRIMARY KEY AUTOINCREMENT,
-        createUserName INTEGER,
+        createUserName TEXT NOT NULL,
         createTime DATETIME DEFAULT CURRENT_TIMESTAMP,
         attackResult TEXT,
-        FOREIGN KEY (createUserName) REFERENCES user (id)
-    )
-    ''')
-
-    # 创建日志记录表
-    cursor.execute(''' 
-    CREATE TABLE IF NOT EXISTS log_record (
-        logID INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
-        log_filename TEXT NOT NULL,
-        log_status TEXT NOT NULL,
-        log_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (username) REFERENCES user (username)
+        isTreasure BOOLEAN DEFAULT FALSE,
+        FOREIGN KEY (createUserName) REFERENCES user (username)
     )
     ''')
 
@@ -140,13 +129,13 @@ def print_verification_codes():
 
 
 # 添加攻击记录
-def add_attack_record(createUserName, attackResult):
+def add_attack_record(createUserName, attackResult, isTreasure=False):
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO attack_record (createUserName, attackResult) VALUES (?, ?)',
-                   (createUserName, str(attackResult)))
+    cursor.execute('INSERT INTO attack_record (createUserName, attackResult, isTreasure) VALUES (?, ?, ?)',
+                   (createUserName, str(attackResult), isTreasure))
     conn.commit()
-    print(f"Attack record added for user ID '{createUserName}'.")
+    print(f"Attack record added for user '{createUserName}'.")
     conn.close()
 
 
@@ -198,7 +187,7 @@ if __name__ == '__main__':
     print_verification_codes()
 
     # 示例攻击记录操作
-    add_attack_record(1, {"result": "success"})
+    add_attack_record('zcy', {"result": "success"})
     print_attack_records()
 
     # 示例日志操作

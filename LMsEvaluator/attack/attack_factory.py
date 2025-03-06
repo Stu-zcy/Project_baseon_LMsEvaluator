@@ -1,36 +1,38 @@
 import logging
 
-from attack.SWAT.main import SWAT
+from attack.NOP.main import NOP
+from attack.FET.main import FET
+from attack.RLMI.main import RLMI
 from utils.my_exception import print_red
 from attack.base_attack import BaseAttack
 from attack.GIAforNLP.my_GIA_for_NLP import MyGIAforNLP
 from attack.AdvAttack.my_textattack import MyTextAttack
-from attack.BackDoorAttack.main import MyBackDoorAttack
+from attack.BackdoorAttack.main import MyBackDoorAttack
 from attack.PoisoningAttack.main import PoisoningAttack
 
 
-class AttackHelper:
-    def __init__(self, attack_type, config_parser, attack_config, **kwargs):
+class AttackFactory:
+    def __init__(self, attack_type, config_parser, attack_config, device, **kwargs):
         self.attack_type = attack_type
         self.config_parser = config_parser
         self.attack_config = attack_config
-        self.attack_model = BaseAttack(self.config_parser, self.attack_config)
+        self.device = device
+        self.attack_mode = BaseAttack(self.config_parser, self.attack_config)
+        logging.info(f"Checking the config of {self.attack_config['attack_type']}.")
         self.__config_check()
         if self.attack_type == "GIAforNLP":
-            logging.info("Checking the config of GIAforNLP.")
-            self.attack_model = MyGIAforNLP(
+            self.attack_mode = MyGIAforNLP(
                 attack_config=self.attack_config,
                 model=kwargs['model'],
                 tokenizer=kwargs['tokenizer'],
                 train_iter=kwargs['train_iter'],
-                distance_func=kwargs['distance_func'],
+                distance_func=self.attack_config['distance_func'],
                 gradients=kwargs['gradients'],
                 config_parser=self.config_parser,
                 data_loader=kwargs['data_loader'],
             )
         elif self.attack_type == "AdvAttack":
-            logging.info("Checking the config of AdvAttack.")
-            self.attack_model = MyTextAttack(
+            self.attack_mode = MyTextAttack(
                 config_parser=self.config_parser,
                 attack_config=self.attack_config,
                 use_local_model=self.attack_config['use_local_model'],
@@ -41,9 +43,8 @@ class AttackHelper:
                 dataset_name_or_path=self.attack_config['dataset_name_or_path'],
                 display_full_info=self.attack_config['display_full_info'],
             )
-        elif self.attack_type == "SWAT":
-            logging.info("Checking the config of SWAT.")
-            self.attack_model = SWAT(
+        elif self.attack_type == "FET":
+            self.attack_mode = FET(
                 config_parser=self.config_parser,
                 attack_config=self.attack_config,
                 use_local_model=self.attack_config['use_local_model'],
@@ -53,9 +54,8 @@ class AttackHelper:
                 dataset_name_or_path=self.attack_config['dataset_name_or_path'],
                 display_full_info=self.attack_config['display_full_info'],
             )
-        elif self.attack_type == "BackDoorAttack":
-            logging.info("Checking the config of BackDoorAttack.")
-            self.attack_model = MyBackDoorAttack(
+        elif self.attack_type == "BackdoorAttack":
+            self.attack_mode = MyBackDoorAttack(
                 config_parser=self.config_parser,
                 attack_config=self.attack_config,
                 model=self.attack_config['model'],
@@ -70,8 +70,7 @@ class AttackHelper:
                 sample_metrics=self.attack_config['sample_metrics'],
             )
         elif self.attack_type == "PoisoningAttack":
-            logging.info("Checking the config of PoisoningAttack")
-            self.attack_model = PoisoningAttack(
+            self.attack_mode = PoisoningAttack(
                 config_parser=self.config_parser,
                 attack_config=self.attack_config,
                 poisoning_rate=self.attack_config['poisoning_rate'],
@@ -82,9 +81,35 @@ class AttackHelper:
                 bert_tokenize=kwargs['bert_tokenize'],
                 display_full_info=self.attack_config['display_full_info'],
             )
+        elif self.attack_type == "RLMI":
+            ppo_config = {}
+            for key, value in self.attack_config['ppo_config'].items():
+                ppo_config[key] = value
+            self.attack_mode = RLMI(
+                config_parser=self.config_parser,
+                attack_config=self.attack_config,
+                dataset_name=self.attack_config['dataset_name'],
+                model_name=self.attack_config['model_name'],
+                seed=(self.attack_config['seed'] if 'seed' in self.attack_config
+                      else self.config_parser['general']['random_seed']),
+                device=self.device,
+                ppo_config=ppo_config,
+                seq_length=self.attack_config['seq_length'],
+                target_label=self.attack_config['target_label'],
+                max_iterations=self.attack_config['max_iterations'],
+                min_input_length=self.attack_config['min_input_length'],
+                max_input_length=self.attack_config['max_input_length'],
+            )
+        elif self.attack_type == "NOP":
+            self.attack_mode = NOP(
+                config_parser=self.config_parser,
+                attack_config=self.attack_config,
+                nop_config0=self.attack_config['nop_config0'],
+                nop_config1=self.attack_config['nop_config1'],
+            )
 
     def attack(self):
-        return self.attack_model.attack()
+        self.attack_mode.attack()
 
     def __config_check(self):
         GIAforNLP_config = [
@@ -106,7 +131,7 @@ class AttackHelper:
             'attack_nums',
             'display_full_info',
         ]
-        SWAT_config = [
+        FET_config = [
             'use_local_model',
             'use_local_tokenizer',
             'model_name_or_path',
@@ -131,19 +156,40 @@ class AttackHelper:
             'epochs',
             'display_full_info',
         ]
-        temp_config = []
+        RLMI_config = [
+            'dataset_name',
+            'model_name',
+            'ppo_config',
+            'seq_length',
+            'target_label',
+            'max_iterations',
+            'min_input_length',
+            'max_input_length',
+            'num_generation',
+        ]
+        NOP_config = [
+            'nop_config0',
+            'nop_config1',
+        ]
         if self.attack_type == "GIAforNLP":
             temp_config = GIAforNLP_config
         elif self.attack_type == "AdvAttack":
             temp_config = AdvAttack_config
-        elif self.attack_type == "SWAT":
-            temp_config = SWAT_config
-        elif self.attack_type == "BackDoorAttack":
+        elif self.attack_type == "FET":
+            temp_config = FET_config
+        elif self.attack_type == "BackdoorAttack":
             temp_config = BackDoorAttack_config
         elif self.attack_type == "PoisoningAttack":
             temp_config = PoisoningAttack_config
+        elif self.attack_type == "RLMI":
+            temp_config = RLMI_config
+        elif self.attack_type == "NOP":
+            temp_config = NOP_config
+        else:
+            print_red("AttackTypeError: The " + self.attack_type + "is not implemented yet.")
+            raise SystemError
 
         for config in temp_config:
             if config not in self.attack_config:
-                print_red("NoAttackConfigFound: No attack_args." + config + " in the config.yaml.")
+                print_red("AttackConfigNotFound: Not Found attack_args." + config + " in the config.yaml.")
                 raise SystemError

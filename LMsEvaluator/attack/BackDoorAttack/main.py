@@ -76,8 +76,6 @@ class MyBackDoorAttack(BaseAttack):
         # evaluate attack results
         result = attacker.eval(victim, target_dataset, defender)
         print(result)
-        print(result['ppl'])
-        print(result['grammar'])
         table_ppl, table_use, table_grammar = "nan", "nan", "nan"
         if result['ppl'] is not np.nan:
             table_ppl = "{:.3f}".format(result['ppl'])
@@ -87,7 +85,7 @@ class MyBackDoorAttack(BaseAttack):
             table_grammar = "{:.3f}".format(result['grammar'])
 
         table = MyPrettyTable()
-        table.add_field_names(['BackDoorAttack Attack Results', ''])
+        table.add_field_names(['BackdoorAttack Attack Results', ''])
         table.add_row(['Poison Dataset:', self.poison_dataset])
         table.add_row(['Poisoner:', self.poisoner['name']])
         table.add_row(['Test Clean Accuracy:', f"{result['test-clean']['accuracy']:.3f}%"])
@@ -95,15 +93,17 @@ class MyBackDoorAttack(BaseAttack):
         table.add_row(['PPL:', table_ppl])
         table.add_row(['USE:', table_use])
         table.add_row(['GRAMMAR:', table_grammar])
-        table.set_align('BackDoorAttack Attack Results', 'l')
+        table.set_align('BackdoorAttack Attack Results', 'l')
         table.set_align('', 'l')
         table.print_table()
         table.logging_table()
-        return [self.poison_dataset, self.poisoner['name'], f"{result['test-clean']['accuracy']:.3f}%", 
-                f"{result['test-poison']['accuracy']:.3f}%", table_ppl, table_use, table_grammar]
 
 
+# 本地测试
 if __name__ == '__main__':
+    """
+    BackdoorAttack模块功能测试
+    """
     import openbackdoor as ob
     from openbackdoor import load_dataset
 

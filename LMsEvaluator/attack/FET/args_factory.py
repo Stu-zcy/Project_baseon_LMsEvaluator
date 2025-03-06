@@ -2,7 +2,7 @@ import argparse
 
 
 def get_arguments():
-    parser = argparse.ArgumentParser(description='SWAT attack')
+    parser = argparse.ArgumentParser(description='FET attack')
 
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--dataset', choices=['cola', 'sst2', 'rotten_tomatoes'], default='cola')

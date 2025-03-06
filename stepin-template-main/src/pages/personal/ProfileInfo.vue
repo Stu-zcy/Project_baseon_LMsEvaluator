@@ -67,12 +67,13 @@ const handleChange = (info) => {
 	}
 }
 const uploadAvatar = async (file: Blob, type: string) => {
+	const currentTime = new Date().toISOString().replace(/[:.]/g, '-');  // 获取当前时间并格式化
+	const fileName =  currentTime + (type == 'image/jpeg' ? '.jpg' : '.png');
 
-	const fileName = (await getSHA256(file)) + (type == 'image/jpeg' ? '.jpg' : '.png')
+	//const fileName = (await getSHA256(file)) + (type == 'image/jpeg' ? '.jpg' : '.png')
 	const rawUrl = 'https://api.github.com/repos/Stu-zcy/Public_image/contents/'
-	const fastUrl = 'https://cdn.jsdelivr.net/gh/Stu-zcy/Public_image/'
+	const fastUrl = 'https://raw.githubusercontent.com/Stu-zcy/Public_image/refs/heads/main/'
 	const token = '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'
-
 	const reader = new FileReader();
 	reader.onloadend = async function () {
 		const base64Img = reader.result.toString().split(',')[1]

@@ -4,7 +4,7 @@ import time
 import torch
 import logging
 import numpy as np
-from attack import attack_helper
+from attack import attack_factory
 from tasks.BaseTask import BaseTask
 from transformers import BertTokenizer
 from utils.my_exception import print_red
@@ -25,8 +25,9 @@ class TaskForMultipleChoice(BaseTask):
         model = BertForMultipleChoice(self.config,
                                       self.config.pretrained_model_dir)
         model_save_path = os.path.join(self.config.model_save_dir, 'model.pt')
-        if os.path.exists(model_save_path):
-            loaded_paras = torch.load(model_save_path)
+        model_load_path = os.path.join(self.config.model_load_dir, 'model.pt')
+        if os.path.exists(model_load_path):
+            loaded_paras = torch.load(model_load_path)
             model.load_state_dict(loaded_paras)
             logging.info("## 成功载入已有模型，进行追加训练......")
         model = model.to(self.config.device)

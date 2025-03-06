@@ -1,8 +1,7 @@
 import os
 import yaml
 from utils.my_exception import print_red
-from tasks import TaskForSingleSentenceClassification, TaskForSQuADQuestionAnswering, TaskForChineseNER, \
-    TaskForMultipleChoice, TaskForPairSentenceClassification, TaskForPretraining
+from tasks import TaskForSingleSentenceClassification, TaskForSQuADQuestionAnswering, TaskForChineseNER,TaskForMultipleChoice, TaskForPairSentenceClassification, TaskForPretraining
 
 
 def parse_config(projectPath, initTime, username='default'):
