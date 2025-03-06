@@ -19,6 +19,9 @@
 
 # Databases
 
+*.sql
+*.sqlite
+
 # Logs
 
 *.log
@@ -57,7 +60,6 @@
 /datasets/GLUE/*
 /datasets/imdb/*
 /datasets/Tomatoes/*
-
 !/datasets/GLUE/.gitkeep
 
 !README.md
