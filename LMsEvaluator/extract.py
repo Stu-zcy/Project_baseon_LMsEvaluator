@@ -5,7 +5,7 @@ def extractResult(path):
 	f = open(path, "r", encoding='utf-8')
 	content = iter(f.readlines())
 	f.close()
-	result = {k: [] for k in ['AdvAttack', 'BackDoorAttack', 'PoisoningAttack', 'SWAT']}
+	result = {k: [] for k in ['AdvAttack', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'SWAT']}
 	# def GetPair(s: str):
 	# 	ret = re.match(r'\|\s*([a-zA-Z][a-zA-Z ]*[a-zA-Z]):?\s*\|\s*([\d.]+%?)\s*\|', s)
 	# 	return ret.group(1,2)
@@ -19,12 +19,15 @@ def extractResult(path):
 		else:
 			ret = re.findall(r'\s([\d\.]+%?)\s', s)
 			return ret
+	'''获取表格化数据，会连带获取百分号'''
 	def getContent(s):
 		ret = re.search(r'\|.*\|\s*(\S*)\s*\|', s)
 		return ret.group(1)
+	'''专用：获取rouge分数'''
 	def getRouges(s):
 		ret = re.search(r'\'rouge1\': ([\d\.]+), \'rouge2\': ([\d\.]+), \'rougeL\': ([\d\.]+)', s)
 		return ret.groups()
+	'''迭代指定次数'''
 	def iterate(num):
 		for _ in range(num-1):
 			next(content)
@@ -82,6 +85,14 @@ def extractResult(path):
 					row = next(content)
 					ls.append(getContent(row))
 				result['BackDoorAttack'].append(ls)
+			elif re.match(r'\|\s*RLMI Attack Results.*\|.*\|', row):
+				rowNum = 4
+				ls = []
+				next(content)
+				for _ in range(rowNum):
+					row = next(content)
+					ls.append(getContent(row))
+				result['RLMI'].append(ls)
 			elif (re.search('SWAT 攻击开始', row)):
 				row = next(content)
 				ret = re.search(r'n_attacks=(\d)', row)

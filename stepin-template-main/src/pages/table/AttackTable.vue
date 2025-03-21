@@ -33,6 +33,13 @@ const BackDoorColumns = [
 	{ title: 'USE', dataIndex: 'USE' },
 	{ title: 'GRAMMAR', dataIndex: 'GRAMMAR' },
 ];
+const RLMIAttackColumns = [
+	{ title: '索引', dataIndex: 'index'},
+	{ title: 'average ASR(Attack)', dataIndex: 'ASR_Attack' },
+	{ title: 'average WER(Attack)', dataIndex: 'WER_Attack' },
+	{ title: 'average ASR(inference)', dataIndex: 'ASR_Inference' },
+	{ title: 'average WER(inference)', dataIndex: 'WER_Inference' },
+]
 const SWATAttackColumns = [
 	{ title: '轮', dataIndex: 'index'},
 	{ title: 'average rouge1', dataIndex: 'rouge1' },
@@ -42,7 +49,6 @@ const SWATAttackColumns = [
 	{ title: 'average Edit distance', dataIndex: 'distance' },
 	{ title: 'full recovery rate', dataIndex: 'fr' },
 ];
-
 const SWATInnoColumns = [
 	{ title: 'rouge1', dataIndex: 'rouge1' },
 	{ title: 'rouge2', dataIndex: 'rouge2' },
@@ -56,7 +62,8 @@ const responseData = ref({
 	AdvAttack: [],
 	BackDoorAttack: [],
 	PoisoningAttack: [],
-	SWAT: []
+	RLMI: [],
+	SWAT: [],
 });
 
 const BackDoorAttack = ref([])
@@ -68,11 +75,11 @@ const props = defineProps({
 	targetCreateTime: Number
 })
 function getInnerData(expanded, record) {
-      if (expanded) { 
-        SWATInnerData.value = record.slice(0, record.length-1);
-				console.log(record.slice(0, record.length-1))
-      }
-    }
+	if (expanded) {
+		SWATInnerData.value = record.slice(0, record.length - 1);
+		console.log(record.slice(0, record.length - 1))
+	}
+}
 onMounted(async () => {
 	try {
 		const response = await axios.post('http://localhost:5000/api/getRecord', {
@@ -98,6 +105,11 @@ onMounted(async () => {
 	}
 	if (responseData.value.BackDoorAttack) {
 		responseData.value.BackDoorAttack = responseData.value.BackDoorAttack.map((item, index) => {
+			return [index + 1, ...item];
+		});
+	}
+	if (responseData.value.RLMI) {
+		responseData.value.RLMI = responseData.value.RLMI.map((item, index) => {
 			return [index + 1, ...item];
 		});
 	}
@@ -221,6 +233,7 @@ onMounted(async () => {
 			</div>
 		</template>
 	</a-table>
+
 	<a-table v-bind="$attrs" :columns="BackDoorColumns" :dataSource="responseData.BackDoorAttack" :pagination="false">
 		<template #title>
 			<div class="flex justify-between pr-4">
@@ -266,6 +279,44 @@ onMounted(async () => {
 			<div class="" v-else-if="column.dataIndex === 'GRAMMAR'">
 				<div class="text-subtext">
 					{{ record[7] }}
+				</div>
+			</div>
+			<div v-else class="text-subtext">
+				{{ text }}
+			</div>
+		</template>
+	</a-table>
+
+	<a-table v-bind="$attrs" :columns="RLMIAttackColumns" :dataSource="responseData.RLMI" :pagination="false">
+		<template #title>
+			<div class="flex justify-between pr-4">
+				<h4>RLMI_Attack Results</h4>
+			</div>
+		</template>
+		<template #bodyCell="{ column, text, record }">
+			<div class="" v-if="column.dataIndex === 'index'">
+				<div class="text-subtext">
+					{{ record[0] }}
+				</div>
+			</div>
+			<div class="" v-else-if="column.dataIndex === 'ASR_Attack'">
+				<div class="text-subtext">
+					{{ record[1] }}
+				</div>
+			</div>
+			<div class="" v-else-if="column.dataIndex === 'WER_Attack'">
+				<div class="text-subtext">
+					{{ record[2] }}
+				</div>
+			</div>
+			<div class="" v-else-if="column.dataIndex === 'ASR_Inference'">
+				<div class="text-subtext">
+					{{ record[3] }}
+				</div>
+			</div>
+			<div class="" v-else-if="column.dataIndex === 'WER_Inference'">
+				<div class="text-subtext">
+					{{ record[4] }}
 				</div>
 			</div>
 			<div v-else class="text-subtext">

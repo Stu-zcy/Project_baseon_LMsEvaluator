@@ -5,3 +5,4 @@ from .data_helpers import LoadSQuADQuestionAnsweringDataset
 from .data_helpers import LoadChineseNERDataset
 from .log_helper import logger_init
 from .create_pretraining_data import LoadBertPretrainingDataset
+# from .frontend_helper import extractResult

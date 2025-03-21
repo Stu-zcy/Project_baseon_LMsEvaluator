@@ -9,6 +9,5 @@ stepin-template/node_modules/
 *.db
 components.d.ts
 yarn.lock
-
 test.vue
 .DS_Store

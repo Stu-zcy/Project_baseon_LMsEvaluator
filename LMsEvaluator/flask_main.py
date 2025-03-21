@@ -490,7 +490,7 @@ def getRecord():
         return jsonify(result), 200
     except Exception as e:
         print(f"Error fetching log: {e}")
-        return jsonify({"error": "Failed to fetch log", "details": str(e)}), 500
+        return jsonify({"status": "error", "message": str(e)}), 500
     
 @app.route('/api/attackRecords', methods=['POST'])
 def attackRecords():
@@ -589,5 +589,21 @@ def treasure():
         print(f"Error fetching log: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     
-if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+# if __name__ == '__main__':
+#     app.run(port=5000, debug=True)
+
+def pushIntoDB(filename: str):
+	info = filename.split('_')
+	username, initTime = info[0], eval(info[2])
+	result = extract.extractResult(lmsDir + "\\logs\\" + filename)
+	attack = AttackRecord(createUserName=username, createTime=initTime, attackResult=json.dumps(result))
+	db.session.add(attack)
+	db.session.commit()
+
+if __name__ == "__main__":
+	# lmsDir = os.path.dirname(os.path.abspath(__file__))
+	# path = lmsDir + "\\logs\\u1h_single_1737727113_2025-01-24.txt"
+	# res = extract.extractResult(path)
+	# j = json.dumps(res, indent=2)
+	# print(j)
+	app.run(port=5000, debug=True)

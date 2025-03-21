@@ -1,0 +1,28 @@
+LM_config:
+  model: bert_base_uncased_english
+attack_list:
+- attack_args:
+    attack: true
+    attack_nums: 2
+    attack_recipe: A2TYoo2021
+    attack_type: AdvAttack
+    dataset_name_or_path: datasets/imdb/train.txt
+    display_full_info: true
+    model_name_or_path: LMs/bert_base_uncased_english
+    tokenizer_name_or_path: LMs/bert_base_uncased_english
+    use_local_dataset: true
+    use_local_model: true
+    use_local_tokenizer: true
+general:
+  random_seed: 0
+  use_gpu: true
+output:
+  base_path: output
+  evaluation_result: evaluationResult
+  model_output: modelOutput
+task_config:
+  dataset: imdb
+  dataset_type: .txt
+  epochs: 1
+  split_sep: _!_
+  task: TaskForSingleSentenceClassification
