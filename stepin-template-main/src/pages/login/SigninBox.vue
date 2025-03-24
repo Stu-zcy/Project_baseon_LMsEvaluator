@@ -276,18 +276,25 @@ function goBack() {
 .avatar-item {
   margin-right: 10px;
   cursor: pointer;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s;
+}
+
+.avatar-item:hover {
+  transform: scale(1.1);
 }
 
 .avatar-item.selected {
   border: 2px solid #1896ff;
-  transform: scale(1.1);
+  padding: 2px;
 }
 
 .avatar-img {
-  width: 50px;
-  height: 50px;
-  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.verification-container .signin-input {
+  width: 200px;
 }
 </style>
