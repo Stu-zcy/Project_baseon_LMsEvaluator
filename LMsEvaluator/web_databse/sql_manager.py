@@ -2,6 +2,12 @@ import sqlite3
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 
+# 添加数据用
+import sys
+import os
+import json
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from utils.database_helper import extractResult
 
 # 创建数据库和表
 def create_database():
@@ -40,7 +46,7 @@ def create_database():
     CREATE TABLE IF NOT EXISTS attack_record (
         attackID INTEGER PRIMARY KEY AUTOINCREMENT,
         createUserName TEXT NOT NULL,
-        createTime DATETIME DEFAULT CURRENT_TIMESTAMP,
+        createTime BIGINT DEFAULT (CAST(strftime('%s', 'now') AS BIGINT)) NOT NULL,
         attackResult TEXT,
         isTreasure BOOLEAN DEFAULT FALSE,
         FOREIGN KEY (createUserName) REFERENCES user (username)
@@ -129,11 +135,11 @@ def print_verification_codes():
 
 
 # 添加攻击记录
-def add_attack_record(createUserName, attackResult, isTreasure=False):
+def add_attack_record(createUserName, createTime, attackResult, isTreasure=False):
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO attack_record (createUserName, attackResult, isTreasure) VALUES (?, ?, ?)',
-                   (createUserName, str(attackResult), isTreasure))
+    cursor.execute('INSERT INTO attack_record (createUserName, createTime, attackResult, isTreasure) VALUES (?, ?, ?, ?)',
+                   (createUserName, createTime, str(attackResult), isTreasure))
     conn.commit()
     print(f"Attack record added for user '{createUserName}'.")
     conn.close()
@@ -189,6 +195,15 @@ if __name__ == '__main__':
     # 示例攻击记录操作
     add_attack_record('zcy', {"result": "success"})
     print_attack_records()
+    
+    # 测试攻击记录
+    lmsDir = os.path.dirname(os.path.abspath(__file__))
+    filename = "u1h_single_1737727113_2025-01-24.txt"
+    info = filename.split('_')
+    username, initTime = info[0], eval(info[2])
+    result = extractResult(lmsDir + "\\..\\logs\\" + filename)
+    add_attack_record(username, initTime, json.dumps(result))
+    
 
     # 示例日志操作
     add_log_record('zcy', 'admin_single_1737092485_2024-12-04.txt', 'FINISHED')

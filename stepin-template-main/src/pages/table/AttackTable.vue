@@ -124,7 +124,7 @@ onMounted(async () => {
 			})
 		})
 	}
-	console.log(responseData.value.SWAT)
+	console.log(responseData.value)
 
 	//后门攻击的输出改为pretty table
 	// BackDoorColumns = [

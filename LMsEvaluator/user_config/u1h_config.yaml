@@ -4,7 +4,7 @@ attack_list:
 - attack_args:
     attack: true
     attack_nums: 2
-    attack_recipe: A2TYoo2021
+    attack_recipe: TextFoolerJin2019
     attack_type: AdvAttack
     dataset_name_or_path: datasets/imdb/train.txt
     display_full_info: true

@@ -93,8 +93,13 @@ fetchData();
 			<div class="hcard" v-for="item, index in responseData">
 				<div>{{ formatTime(item[0]) }}</div>
 				<div>
-					<a-spin :indicator="indicator" v-if="item[1]==false"></a-spin>
-					<img src="@/assets/icons/complete.png" v-else>
+					<a-spin :indicator="indicator" v-if="item[1]==0"></a-spin>
+					<div v-else-if="item[1]==2" class="w-8 h-8">
+						<img src="@/assets/icons/fail.png" class="w-full h-full">
+					</div>
+					<div v-else class="w-8 h-8">
+						<img src="@/assets/icons/complete.png" class="w-full h-full">
+					</div>
 				</div>
 				<div style="display: flex; justify-content: space-between;width: 180px;">
 					<a-rate 

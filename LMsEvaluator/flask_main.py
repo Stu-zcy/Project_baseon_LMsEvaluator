@@ -9,7 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import random,time
 import string
 from datetime import datetime, timedelta
-import extract
+from utils.database_helper import extractResult
 from jwt_token import sign
 from user_config.config_gen import generate_config
 app = Flask(__name__)
@@ -58,9 +58,9 @@ class VerificationCode(db.Model):
     
 class AttackRecord(db.Model):
     attackID = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    createUserName = db.Column(db.Integer, db.ForeignKey(User.username), nullable=False)
+    createUserName = db.Column(db.String, db.ForeignKey(User.username), nullable=False)
     createTime = db.Column(db.BigInteger, default=int(time.time()), nullable=False)
-    attackResult = db.Column(db.JSON, nullable=False)
+    attackResult = db.Column(db.String, nullable=False)
     isTreasure = db.Column(db.Boolean, default=False)
     
 # def afterInsertListener_AttackRecord
@@ -449,14 +449,18 @@ def execute_attack():
         db.session.add(attack)
         db.session.commit()
         project_path = os.path.dirname(os.path.abspath(__file__))
-        model_class = parse_config(project_path, initTime, str(username))
-        model_class.run()
+        try:
+            model_class = parse_config(project_path, initTime, str(username))
+            model_class.run()
         
-        fileName = username + '_single_' + initTime + '_' + date + '.txt'
-        result = extract.extractResult(project_path + '\\logs\\' + fileName)
-        AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update({AttackRecord.attackResult: json.dumps(result)})
-        db.session.commit()
-        return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
+            fileName = username + '_single_' + initTime + '_' + date + '.txt'
+            result = extractResult(project_path + '\\logs\\' + fileName)
+            AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update({AttackRecord.attackResult: json.dumps(result)})
+            db.session.commit()
+            return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
+        except Exception as executeError:
+            AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update({AttackRecord.attackResult: json.dumps("FAILED")})
+            raise executeError
 
     except Exception as e:
         print("Error executing attack:", e)
@@ -486,6 +490,7 @@ def getRecord():
         #     attackRecord = AttackRecord.query.filter_by(createUserName=username).order_by(AttackRecord.createTime.desc()).first()
         # else:
         #     attackRecord = AttackRecord.query.filter_by(attackID=attackID, createUserName=username).first()
+        # result = attackRecord.attackResult
         result = json.loads(attackRecord.attackResult)
         return jsonify(result), 200
     except Exception as e:
@@ -529,15 +534,18 @@ def attackRecords():
             else:
                 records = (AttackRecord.query.filter_by(createUserName=username).
                 order_by(AttackRecord.createTime.desc()).offset((currentPage - 1) * currentPageSize).limit(currentPageSize).all())
-            records = list(map(lambda r: (r.createTime, r.attackResult != json.dumps("RUNNING"), r.isTreasure), records))
+            records = list(map(
+                lambda r: (r.createTime, 0 if r.attackResult == json.dumps("RUNNING") else (2 if r.attackResult == json.dumps("FAILED") else 1), r.isTreasure), 
+                records))
         else:
             records = []
         retData = {'records': records, 'pagination': {'totalRecordsNum': totalRecordsNum}}
         return jsonify(retData), 200
     except Exception as e:
         print(f"Error fetching log: {e}")
-        return jsonify({"error": "Failed to fetch records", "details": str(e)}), 500
+        return jsonify({"status": 'error', "message": "Failed to fetch records"}), 500
     
+'''删除一条记录，同时删除日志文件与数据库记录。不存在日志文件时会报错。'''
 @app.route('/api/deleteRecord', methods=['POST'])
 def deleteRecord():
     try:
@@ -589,21 +597,5 @@ def treasure():
         print(f"Error fetching log: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     
-# if __name__ == '__main__':
-#     app.run(port=5000, debug=True)
-
-def pushIntoDB(filename: str):
-	info = filename.split('_')
-	username, initTime = info[0], eval(info[2])
-	result = extract.extractResult(lmsDir + "\\logs\\" + filename)
-	attack = AttackRecord(createUserName=username, createTime=initTime, attackResult=json.dumps(result))
-	db.session.add(attack)
-	db.session.commit()
-
-if __name__ == "__main__":
-	# lmsDir = os.path.dirname(os.path.abspath(__file__))
-	# path = lmsDir + "\\logs\\u1h_single_1737727113_2025-01-24.txt"
-	# res = extract.extractResult(path)
-	# j = json.dumps(res, indent=2)
-	# print(j)
-	app.run(port=5000, debug=True)
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)
