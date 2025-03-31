@@ -103,7 +103,7 @@ class MyTextAttack(BaseAttack):
 
         attack_args = textattack.AttackArgs(
             num_examples=self.attack_config['attack_nums'],
-            log_to_csv=os.path.join(self.project_path, "attack/AdvAttack/log.csv"),
+            log_to_csv=os.path.join(self.project_path, "attack/AdversarialAttack/log.csv"),
             checkpoint_interval=5,
             checkpoint_dir="checkpoints",
             disable_stdout=True,
@@ -152,7 +152,7 @@ class MyTextAttack(BaseAttack):
         # trainer.train()
 
     def __result_show(self):
-        with open('attack/AdvAttack/log.csv', 'r', encoding='utf-8') as file:
+        with open('attack/AdversarialAttack/log.csv', 'r', encoding='utf-8') as file:
             csv_reader = csv.reader(file)
             header = next(csv_reader)
             total_num, successful_num, skipped_num, failed_num = 0, 0, 0, 0

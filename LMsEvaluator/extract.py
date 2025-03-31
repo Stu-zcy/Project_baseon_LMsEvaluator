@@ -5,7 +5,7 @@ def extractResult(path):
 	f = open(path, "r", encoding='utf-8')
 	content = iter(f.readlines())
 	f.close()
-	result = {k: [] for k in ['AdvAttack', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'SWAT']}
+	result = {k: [] for k in ['AdversarialAttack', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'SWAT']}
 	# def GetPair(s: str):
 	# 	ret = re.match(r'\|\s*([a-zA-Z][a-zA-Z ]*[a-zA-Z]):?\s*\|\s*([\d.]+%?)\s*\|', s)
 	# 	return ret.group(1,2)
@@ -43,7 +43,7 @@ def extractResult(path):
 				for _ in range(rowNum):
 					row = next(content)
 					ls.append(getContent(row))
-				result['AdvAttack'].append(ls)
+				result['AdversarialAttack'].append(ls)
 			elif (re.search('PoisoningAttack 攻击开始', row)):
 				while not (re.match(r'\|.*Result.*\|.*\|', row)):
 					row = next(content)

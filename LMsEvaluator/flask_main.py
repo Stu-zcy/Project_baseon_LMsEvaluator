@@ -6,12 +6,13 @@ import os
 import json
 from utils.config_parser import parse_config
 from werkzeug.security import generate_password_hash, check_password_hash
-import random,time
+import random, time
 import string
 from datetime import datetime, timedelta
 from utils.database_helper import extractResult
 from jwt_token import sign
 from user_config.config_gen import generate_config
+
 app = Flask(__name__)
 CORS(app)
 
@@ -29,7 +30,7 @@ mail = Mail(app)
 project_path = os.path.dirname(os.path.abspath(__file__))
 # 数据库配置
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
 lmsDir = os.path.dirname(os.path.abspath(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + lmsDir + r'\web_databse\users.db'
 db = SQLAlchemy(app)
@@ -55,21 +56,22 @@ class VerificationCode(db.Model):
     email = db.Column(db.String(120), nullable=False)
     code = db.Column(db.String(6), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
+
+
 class AttackRecord(db.Model):
     attackID = db.Column(db.Integer, autoincrement=True, primary_key=True)
     createUserName = db.Column(db.String, db.ForeignKey(User.username), nullable=False)
     createTime = db.Column(db.BigInteger, default=int(time.time()), nullable=False)
     attackResult = db.Column(db.String, nullable=False)
     isTreasure = db.Column(db.Boolean, default=False)
-    
+
+
 # def afterInsertListener_AttackRecord
 
 @app.before_request
 def create_tables():
     db.create_all()
     print("created!")
-
 
 
 @app.route('/api/send_verification_code', methods=['POST'])
@@ -127,8 +129,8 @@ def register():
     username = data['username']
     password = data['password']
     avatar_url = data['avatar']
-    verification_code=data['verificationCode']
-    email=data['email']
+    verification_code = data['verificationCode']
+    email = data['email']
     age = 0
     gender = 1  # 如果没有前端提供性别，默认为1（男）
 
@@ -146,7 +148,8 @@ def register():
 
     # 添加用户
     hashed_password = generate_password_hash(password)
-    new_user = User(username=username, password=hashed_password, role='user', age=age, gender=gender,permissions="'edit', 'delete', 'add'",avatar_url=avatar_url,email=email)
+    new_user = User(username=username, password=hashed_password, role='user', age=age, gender=gender,
+                    permissions="'edit', 'delete', 'add'", avatar_url=avatar_url, email=email)
 
     db.session.add(new_user)
     db.session.commit()
@@ -195,7 +198,9 @@ def login():
         "code": 401,
         "message": "用户名或密码错误"
     }), 401
-#存储在account.ts的profile函数中：
+
+
+# 存储在account.ts的profile函数中：
 @app.route('/api/profile', methods=['POST'])
 def profile():
     try:
@@ -212,15 +217,16 @@ def profile():
             return jsonify({'status': 'error', 'message': message}), 401
         user = User.query.filter_by(username=username).first()
         if user:
-
-            account = {'username': user.username,'avatar': user.avatar_url,'gender': user.gender, 'age': user.age}
-            data={'account':account,'permissions': user.permissions.strip(',') if user.permissions else [],'role': user.role}
+            account = {'username': user.username, 'avatar': user.avatar_url, 'gender': user.gender, 'age': user.age}
+            data = {'account': account, 'permissions': user.permissions.strip(',') if user.permissions else [],
+                    'role': user.role}
             print(data)
             return jsonify({
                 'status': 'success',
                 'message': 'Profile fetched successfully!',
-                'data':{'account':account,'permissions': user.permissions.strip(',') if user.permissions else [],'role': user.role}
-            }),200
+                'data': {'account': account, 'permissions': user.permissions.strip(',') if user.permissions else [],
+                         'role': user.role}
+            }), 200
 
         return jsonify({
             'status': 'error',
@@ -230,6 +236,7 @@ def profile():
     except Exception as e:
         print("Error executing attack:", e)
         return jsonify({'status': 'error', 'message': 'Failed to fetch profile'}), 500
+
 
 # 验证用户身份
 @app.route('/api/auth', methods=['POST'])
@@ -264,7 +271,6 @@ def auth():
         return jsonify({'status': 'error', 'message': 'Failed to fetch auth', 'error': str(e)}), 500
 
 
-
 # 获取用户列表，只返回role为'user'的用户
 @app.route('/api/users', methods=['POST'])
 def get_users():
@@ -295,7 +301,7 @@ def get_users():
         users = User.query.filter_by(role='user').all()
         user_data = []
         for user in users:
-            user_info={
+            user_info = {
                 'username': user.username,
                 'avatar_url': user.avatar_url,
                 'age': user.age,
@@ -355,6 +361,7 @@ def delete_user():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+
 def verify_token(token, username):
     try:
         # 解码 token
@@ -374,6 +381,7 @@ def verify_token(token, username):
     except Exception as e:
         return False, f"Token verification failed: {str(e)}"
 
+
 @app.route('/api/updateInfo', methods=['POST'])
 def updateProfile():
     data = request.json
@@ -389,12 +397,12 @@ def updateProfile():
     is_valid, message = verify_token(token, username)
     if not is_valid:
         return jsonify({'status': 'error', 'message': message}), 401
-    
-    #todo: 检测用户名是否重复
+
+    # todo: 检测用户名是否重复
     count = User.query.filter_by(username=username).update({
-        User.username: newUsername, 
+        User.username: newUsername,
         User.avatar_url: newAvatar,
-        User.gender: newGender, 
+        User.gender: newGender,
         User.age: newAge
     })
     db.session.commit()
@@ -402,6 +410,7 @@ def updateProfile():
         return jsonify({'status': 'success', 'message': 'success to update'}), 200
     else:
         return jsonify({'status': 'error', 'message': 'no users match'}), 500
+
 
 @app.route('/api/attack_list', methods=['POST'])
 def receive_attack_list():
@@ -420,7 +429,7 @@ def receive_attack_list():
 
     print(f"Received data from user: {username}")
     print("Received attack list:", attack_list)  # 输出接收到的数据
-    generate_config(username,attack_list)
+    generate_config(username, attack_list)
     return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': attack_list})
 
 
@@ -452,22 +461,21 @@ def execute_attack():
         try:
             model_class = parse_config(project_path, initTime, str(username))
             model_class.run()
-        
+
             fileName = username + '_single_' + initTime + '_' + date + '.txt'
-            result = extractResult(project_path + '\\logs\\' + fileName)
-            AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update({AttackRecord.attackResult: json.dumps(result)})
+            result = extractResult(os.path.join(project_path, 'logs', fileName))
+            AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update(
+                {AttackRecord.attackResult: json.dumps(result)})
             db.session.commit()
             return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
         except Exception as executeError:
-            AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update({AttackRecord.attackResult: json.dumps("FAILED")})
+            AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update(
+                {AttackRecord.attackResult: json.dumps("FAILED")})
             raise executeError
 
     except Exception as e:
         print("Error executing attack:", e)
         return jsonify({'status': 'error', 'message': 'Failed to execute attack'}), 500
-
-
-
 
 
 @app.route('/api/getRecord', methods=['POST'])
@@ -496,12 +504,13 @@ def getRecord():
     except Exception as e:
         print(f"Error fetching log: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
-    
+
+
 @app.route('/api/attackRecords', methods=['POST'])
 def attackRecords():
     data = request.json
     username = data.get('username', None).strip('"')
-    currentPageSize = data.get('currentPageSize') #可调
+    currentPageSize = data.get('currentPageSize')  # 可调
     token = data.get('token', None).strip('"')
     currentPage = data.get('currentPage', None)
     onlyTreasure = data.get('onlyTreasure', False)
@@ -530,12 +539,15 @@ def attackRecords():
         if totalRecordsNum != 0:
             if onlyTreasure:
                 records = (AttackRecord.query.filter_by(createUserName=username, isTreasure=True).
-                order_by(AttackRecord.createTime.desc()).offset((currentPage - 1) * currentPageSize).limit(currentPageSize).all())
+                           order_by(AttackRecord.createTime.desc()).offset((currentPage - 1) * currentPageSize).limit(
+                    currentPageSize).all())
             else:
                 records = (AttackRecord.query.filter_by(createUserName=username).
-                order_by(AttackRecord.createTime.desc()).offset((currentPage - 1) * currentPageSize).limit(currentPageSize).all())
+                           order_by(AttackRecord.createTime.desc()).offset((currentPage - 1) * currentPageSize).limit(
+                    currentPageSize).all())
             records = list(map(
-                lambda r: (r.createTime, 0 if r.attackResult == json.dumps("RUNNING") else (2 if r.attackResult == json.dumps("FAILED") else 1), r.isTreasure), 
+                lambda r: (r.createTime, 0 if r.attackResult == json.dumps("RUNNING") else (
+                    2 if r.attackResult == json.dumps("FAILED") else 1), r.isTreasure),
                 records))
         else:
             records = []
@@ -544,8 +556,11 @@ def attackRecords():
     except Exception as e:
         print(f"Error fetching log: {e}")
         return jsonify({"status": 'error', "message": "Failed to fetch records"}), 500
-    
+
+
 '''删除一条记录，同时删除日志文件与数据库记录。不存在日志文件时会报错。'''
+
+
 @app.route('/api/deleteRecord', methods=['POST'])
 def deleteRecord():
     try:
@@ -563,7 +578,7 @@ def deleteRecord():
         count = AttackRecord.query.filter_by(createUserName=username, createTime=createTime).delete()
         db.session.commit()
         fileName = username + '_single_' + str(createTime) + '_' + str(datetime.now())[:10] + '.txt'
-        filePath = project_path + '\\logs\\' + fileName
+        filePath = os.path.join(project_path, 'logs', fileName)
         os.remove(filePath)
         if (count == 0) or (os.path.exists(filePath)):
             return jsonify({'status': 'error', 'message': 'failed to delete record'}), 500
@@ -572,6 +587,7 @@ def deleteRecord():
     except Exception as e:
         print(f"Error fetching log: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 # 收藏
 @app.route('/api/treasure', methods=['POST'])
@@ -587,7 +603,8 @@ def treasure():
         is_valid, message = verify_token(token, username)
         if not is_valid:
             return jsonify({'status': 'error', 'message': message}), 401
-        count = AttackRecord.query.filter_by(createUserName=username, createTime=createTime).update({AttackRecord.isTreasure: isTreasure})
+        count = AttackRecord.query.filter_by(createUserName=username, createTime=createTime).update(
+            {AttackRecord.isTreasure: isTreasure})
         db.session.commit()
         if count == 0:
             return jsonify({'status': 'error', 'message': 'failed to treasure'}), 500
@@ -596,6 +613,7 @@ def treasure():
     except Exception as e:
         print(f"Error fetching log: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
-    
+
+
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

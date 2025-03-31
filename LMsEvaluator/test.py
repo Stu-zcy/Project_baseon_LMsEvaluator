@@ -2,7 +2,7 @@ import user_config.config_gen
 from utils.config_parser import parse_config
 
 attack_types = [{"attack": True,
-    "attack_type": "AdvAttack",
+    "attack_type": "AdversarialAttack",
     "attack_recipe": "TextFoolerJin2019",
     "use_local_model": True,
     "use_local_tokenizer": True,
@@ -12,7 +12,7 @@ attack_types = [{"attack": True,
     "dataset_name_or_path": "datasets/imdb/train.txt",
     "attack_nums": 2,
     "display_full_info": True}, {"attack": True,
-    "attack_type": "AdvAttack",
+    "attack_type": "AdversarialAttack",
     "attack_recipe": "TextFoolerJin2019",
     "use_local_model": True,
     "use_local_tokenizer": True,

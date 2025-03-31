@@ -43,7 +43,7 @@
           <!-- 高级设置折叠面板 -->
           <a-collapse v-if="currentAttackArgs.attack_type" defaultActiveKey="1">
             <a-collapse-panel header="高级设置" key="1">
-              <div v-if="currentAttackArgs.attack_type === 'AdvAttack'">
+              <div v-if="currentAttackArgs.attack_type === 'AdversarialAttack'">
                 使用本地模型 <a-switch v-model:checked="currentAttackArgs.use_local_model" /> 
                 使用本地分词器<a-switch v-model:checked="currentAttackArgs.use_local_tokenizer" />
                 使用本地数据集<a-switch v-model:checked="currentAttackArgs.use_local_dataset" /> 
@@ -121,12 +121,12 @@ import axios from 'axios';
 import { message } from 'ant-design-vue';
 
 // 攻击类型数据和对应的攻击策略数据
-const attack_type_Data = ['AdvAttack', 'FET', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'GIAforNLP'];
+const attack_type_Data = ['AdversarialAttack', 'FET', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'GIAforNLP'];
 
 const attack_recipe_Data = {
   GIAforNLP: ['default'],
   RLMI: ['default'],
-  AdvAttack: [
+  AdversarialAttack: [
     'A2TYoo2021', 'BAEGarg2019', 'BERTAttackLi2020', 'GeneticAlgorithmAlzantot2018',
     'FasterGeneticAlgorithmJia2019', 'DeepWordBugGao2018', 'HotFlipEbrahimi2017',
     'InputReductionFeng2018', 'Kuleshov2017', 'MorpheusTan2020', 'Seq2SickCheng2018BlackBox',
@@ -139,8 +139,8 @@ const attack_recipe_Data = {
 };
 
 const defaultAttackConfig = {
-  AdvAttack: {
-    attack_type: 'AdvAttack',
+  AdversarialAttack: {
+    attack_type: 'AdversarialAttack',
     attack_recipe: 'TextFoolerJin2019',
     use_local_model: true,
     use_local_tokenizer: true,
@@ -202,7 +202,7 @@ const defaultAttackConfig = {
 };
 
 // 当前攻击配置
-const currentAttackArgs = reactive(defaultAttackConfig['AdvAttack']);
+const currentAttackArgs = reactive(defaultAttackConfig['AdversarialAttack']);
 
 // 计算属性：根据选择的攻击类型动态更新攻击策略选项
 const attack_recipes = computed(() => currentAttackArgs.attack_type ? attack_recipe_Data[currentAttackArgs.attack_type] : []);
@@ -237,7 +237,7 @@ function addAttackArgs() {
 }
 
 function cancelAddModal() {
-  Object.assign(currentAttackArgs, defaultAttackConfig['AdvAttack']);
+  Object.assign(currentAttackArgs, defaultAttackConfig['AdversarialAttack']);
   showAddModal.value = false;
 }
 
@@ -256,7 +256,7 @@ async function sendAttackList() {
   const username = localStorage.getItem('Global_username');
   const token = localStorage.getItem('Global_token'); 
   try {
-    const response = await axios.post('http://localhost:5000/api/attack_list', { 
+    const response = await axios.post('http://127.0.0.1:5000/api/attack_list', {
       attack_list: attackList.value, 
       username: username,
       token: token
@@ -281,7 +281,7 @@ async function executeAttack() {
   isModalVisible.value = true;
 
   try {
-    const response = await axios.post('http://localhost:5000/api/execute_attack', { 
+    const response = await axios.post('http://127.0.0.1:5000/api/execute_attack', {
       username: username,
       token: token
     });

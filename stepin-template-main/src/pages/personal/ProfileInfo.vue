@@ -38,7 +38,7 @@ const lastY = ref<number>(0);
 // 获取用户信息
 async function fetchInfo() {
   try {
-    const response = await axios.post('http://localhost:5000/api/profile', {
+    const response = await axios.post('http://127.0.0.1:5000/api/profile', {
       username: username,
       token: token,
     });
@@ -239,7 +239,7 @@ const showModal = () => {
 const handleOk = async () => {
   confirmLoading.value = true;
   const newAvatar = await uploadAvatar(imageUrl.value);  // 只上传裁剪后的图像
-  const response = await axios.post('http://localhost:5000/api/updateInfo', {
+  const response = await axios.post('http://127.0.0.1:5000/api/updateInfo', {
     username: username,
     token: token,
     newUsername: newUsername.value,

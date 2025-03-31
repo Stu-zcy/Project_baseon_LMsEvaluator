@@ -19,7 +19,7 @@ task_config:
 attack_list:
   - attack_args:
       attack: True
-      attack_type: AdvAttack
+      attack_type: AdversarialAttack
       attack_recipe: TextFoolerJin2019
       use_local_model: True
       use_local_tokenizer: True
@@ -74,7 +74,7 @@ attack_list:
 
 #attack_args:
 #  attack: True
-#  attack_type: AdvAttack
+#  attack_type: AdversarialAttack
 #  attack_recipe: TextFoolerJin2019
 #  use_local_model: True
 #  use_local_tokenizer: True
@@ -119,7 +119,7 @@ attack_list:
 ## 对抗性文本攻击配置文件示例
 #attack_args:
 #  attack: True                    # boolean: 是否开启攻击
-#  attack_type: AdvAttack           # attackType: str, 攻击方法, ‘AdvAttack’代表对抗性文本攻击
+#  attack_type: AdversarialAttack           # attackType: str, 攻击方法, ‘AdversarialAttack’代表对抗性文本攻击
 #  attack_recipe: TextFoolerJin2019     # str: 具体攻击策略
 #  use_local_model: True                 # boolean: 是否使用本地model
 #  use_local_tokenizer: True             # boolean: 是否使用本地tokenizer

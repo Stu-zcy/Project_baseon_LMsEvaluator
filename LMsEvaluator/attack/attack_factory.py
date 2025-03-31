@@ -6,7 +6,7 @@ from attack.RLMI.main import RLMI
 from utils.my_exception import print_red
 from attack.base_attack import BaseAttack
 from attack.GIAforNLP.my_GIA_for_NLP import MyGIAforNLP
-from attack.AdvAttack.my_textattack import MyTextAttack
+from attack.AdversarialAttack.my_textattack import MyTextAttack
 from attack.BackdoorAttack.main import MyBackDoorAttack
 from attack.PoisoningAttack.main import PoisoningAttack
 
@@ -31,7 +31,7 @@ class AttackFactory:
                 config_parser=self.config_parser,
                 data_loader=kwargs['data_loader'],
             )
-        elif self.attack_type == "AdvAttack":
+        elif self.attack_type == "AdversarialAttack":
             self.attack_mode = MyTextAttack(
                 config_parser=self.config_parser,
                 attack_config=self.attack_config,
@@ -120,7 +120,7 @@ class AttackFactory:
             'attack_lr',
             'attack_iters',
         ]
-        AdvAttack_config = [
+        AdversarialAttack_config = [
             'attack_recipe',
             'use_local_model',
             'use_local_tokenizer',
@@ -173,8 +173,8 @@ class AttackFactory:
         ]
         if self.attack_type == "GIAforNLP":
             temp_config = GIAforNLP_config
-        elif self.attack_type == "AdvAttack":
-            temp_config = AdvAttack_config
+        elif self.attack_type == "AdversarialAttack":
+            temp_config = AdversarialAttack_config
         elif self.attack_type == "FET":
             temp_config = FET_config
         elif self.attack_type == "BackdoorAttack":

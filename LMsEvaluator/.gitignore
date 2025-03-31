@@ -60,13 +60,15 @@
 /datasets/GLUE/*
 /datasets/imdb/*
 /datasets/Tomatoes/*
+/datasets/*
 !/datasets/GLUE/.gitkeep
 
 !README.md
 
-/attack/AdvAttack/checkpoints
-/attack/AdvAttack/log.csv
-/attack/BackDoorAttack/models
+/attack/AdversarialAttack/checkpoints
+/attack/AdversarialAttack/log.csv
+/attack/BackdoorAttack/models
+/attack/BackdoorAttack/openbackdoor
 /LMs/bert_base_chinese/*
 /LMs/bert_base_uncased_english/*
 !/LMs/.gitkeep

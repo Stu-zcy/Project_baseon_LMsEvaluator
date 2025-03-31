@@ -15,7 +15,7 @@ class NOP(BaseAttack):
 # 本地测试
 if __name__ == "__main__":
     """
-    AdvAttack模块功能测试
+    NOP模块功能测试
     """
 
     # 项目路径获取

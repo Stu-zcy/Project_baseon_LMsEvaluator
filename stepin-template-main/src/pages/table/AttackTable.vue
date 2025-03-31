@@ -59,7 +59,7 @@ const SWATInnoColumns = [
 ]
 
 const responseData = ref({
-	AdvAttack: [],
+  AdversarialAttack: [],
 	BackDoorAttack: [],
 	PoisoningAttack: [],
 	RLMI: [],
@@ -82,7 +82,7 @@ function getInnerData(expanded, record) {
 }
 onMounted(async () => {
 	try {
-		const response = await axios.post('http://localhost:5000/api/getRecord', {
+		const response = await axios.post('http://127.0.0.1:5000/api/getRecord', {
 			username: username,
 			token: token,
 			createTime: props.targetCreateTime
@@ -93,8 +93,8 @@ onMounted(async () => {
 		console.error("请求出错", error);
 	}
 
-	if (responseData.value.AdvAttack) {
-		responseData.value.AdvAttack = responseData.value.AdvAttack.map((item, index) => {
+	if (responseData.value.AdversarialAttack) {
+		responseData.value.AdversarialAttack = responseData.value.AdversarialAttack.map((item, index) => {
 			return [[index + 1, ...item]];
 		});
 	}
@@ -158,10 +158,10 @@ onMounted(async () => {
 </script>
 
 <template>
-	<a-table v-bind="$attrs" :columns="AdvColumns" :dataSource="responseData.AdvAttack" :pagination="false">
+	<a-table v-bind="$attrs" :columns="AdvColumns" :dataSource="responseData.AdversarialAttack" :pagination="false">
 		<template #title>
 			<div class="flex justify-between pr-4">
-				<h4>AdvAttack Results</h4>
+				<h4>AdversarialAttack Results</h4>
 			</div>
 		</template>
 		<template #bodyCell="{ column, text, record }">

@@ -33,9 +33,9 @@ FET:
   display_full_info: True         # boolean: 是否显示全部过程信息
 
 
-AdvAttack:
+AdversarialAttack:
   attack: False                   # boolean: 是否开启攻击
-  attack_type: AdvAttack          # str: 攻击方法, ‘AdvAttack’代表对抗攻击
+  attack_type: AdversarialAttack  # str: 攻击方法, ‘AdversarialAttack’代表对抗攻击
   attack_recipe: BAEGarg2019      # str: 具体攻击策略
   use_local_model: True           # boolean: 是否使用本地model
   use_local_tokenizer: True       # boolean: 是否使用本地tokenizer
