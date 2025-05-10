@@ -34,7 +34,7 @@ export const useAccountStore = defineStore('account', {
       return http
         .request<TokenResult, Response<TokenResult>>('http://127.0.0.1:5000/api/login', 'post_json', { username, password })
         .then(async (response) => {
-          if (response.code === 0) {
+          if (response.code === 200) {
             // 登录成功，更新登录状态
             this.logged = true;
             const { token, expires } = response.data;

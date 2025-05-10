@@ -25,6 +25,7 @@ def create_database():
         gender INTEGER NOT NULL,
         permissions TEXT,
         token TEXT,
+        token_refresh TEXT,
         login_time DATETIME,
         avatar_url TEXT,
         email TEXT UNIQUE NOT NULL  -- 新增邮箱字段
@@ -180,31 +181,32 @@ def print_log_records():
 
 # 运行示例
 if __name__ == '__main__':
-    create_database()
-
-    # 示例用户操作，带邮箱
-    add_user('zcy', '123', 'user', 25, 0, "'edit', 'delete', 'add'", 'zcy@example.com', 'https://gitee.com/topiza/image/raw/master/file_1.png')
+    # create_database()
+    
     add_user('admin', '888888', 'admin', 30, 1, "'edit', 'delete', 'add'", 'admin@example.com', 'https://gitee.com/topiza/image/raw/master/file_3.png')
-    update_user_token('zcy', 'sample_token')
-    print_users()
+    # # 示例用户操作，带邮箱
+    # add_user('zcy', '123', 'user', 25, 0, "'edit', 'delete', 'add'", 'zcy@example.com', 'https://gitee.com/topiza/image/raw/master/file_1.png')
+    # add_user('admin', '888888', 'admin', 30, 1, "'edit', 'delete', 'add'", 'admin@example.com', 'https://gitee.com/topiza/image/raw/master/file_3.png')
+    # update_user_token('zcy', 'sample_token')
+    # print_users()
 
-    # 示例验证码操作
-    add_verification_code('example@example.com', '123456')
-    print_verification_codes()
+    # # 示例验证码操作
+    # add_verification_code('example@example.com', '123456')
+    # print_verification_codes()
 
-    # 示例攻击记录操作
-    add_attack_record('zcy', {"result": "success"})
-    print_attack_records()
+    # # 示例攻击记录操作
+    # add_attack_record('zcy', {"result": "success"})
+    # print_attack_records()
     
-    # 测试攻击记录
-    lmsDir = os.path.dirname(os.path.abspath(__file__))
-    filename = "u1h_single_1737727113_2025-01-24.txt"
-    info = filename.split('_')
-    username, initTime = info[0], eval(info[2])
-    result = extractResult(lmsDir + "\\..\\logs\\" + filename)
-    add_attack_record(username, initTime, json.dumps(result))
+    # # 测试攻击记录
+    # lmsDir = os.path.dirname(os.path.abspath(__file__))
+    # filename = "u1h_single_1737727113_2025-01-24.txt"
+    # info = filename.split('_')
+    # username, initTime = info[0], eval(info[2])
+    # result = extractResult(lmsDir + "\\..\\logs\\" + filename)
+    # add_attack_record(username, initTime, json.dumps(result))
     
 
-    # 示例日志操作
-    add_log_record('zcy', 'admin_single_1737092485_2024-12-04.txt', 'FINISHED')
-    print_log_records()
+    # # 示例日志操作
+    # add_log_record('zcy', 'admin_single_1737092485_2024-12-04.txt', 'FINISHED')
+    # print_log_records()

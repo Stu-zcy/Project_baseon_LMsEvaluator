@@ -1,10 +1,10 @@
 #DIR
 .vscode/
-LMsEvaluator/LMs
-LMsEvaluator/datasets/*
-LMsEvaluator/logs
+LMsEvaluator/LMs/
+LMsEvaluator/datasets/
+LMsEvaluator/logs/
+**/node_modules/
 LMsEvaluator/attack/BackdoorAttack/openbackdoor
-stepin-template/node_modules
 
 #FILE
 *.db
