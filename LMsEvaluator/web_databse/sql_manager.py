@@ -181,7 +181,7 @@ def print_log_records():
 
 # 运行示例
 if __name__ == '__main__':
-    # create_database()
+    create_database()
     
     add_user('admin', '888888', 'admin', 30, 1, "'edit', 'delete', 'add'", 'admin@example.com', 'https://gitee.com/topiza/image/raw/master/file_3.png')
     # # 示例用户操作，带邮箱
