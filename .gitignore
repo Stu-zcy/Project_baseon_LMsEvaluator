@@ -5,6 +5,7 @@ LMsEvaluator/datasets/
 LMsEvaluator/logs/
 **/node_modules/
 LMsEvaluator/attack/BackdoorAttack/openbackdoor
+LMsEvaluator/OpenBackdoor/
 
 #FILE
 *.db

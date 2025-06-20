@@ -149,7 +149,7 @@
 	<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
 	<script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 	<script type="module">
-		import http from '../assets/js/utils/axiosConfig.js';
+		import axios from '../assets/js/utils/axiosConfig.js';
 		import authStore from '../assets/js/utils/authStore.js';
 
 		const login = async () => {
@@ -157,7 +157,7 @@
 				const username = document.getElementById('input_username').value;
 				const password = document.getElementById('input_pwd').value;
 				console.log("正在登录");
-				const response = await http.post('/api/login', {
+				const response = await axios.post('/api/login', {
 					'username': username,
 					'password': password
 				});

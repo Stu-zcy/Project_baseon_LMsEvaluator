@@ -4,8 +4,8 @@ import browserSync from 'browser-sync';
 
 const bs = browserSync.create(); // 创建一个 browser-sync 实例
 
-const SRC_DIR = './';          // 你的所有前端文件所在的目录
-const SERVER_PORT = 5173;       // 你希望服务器运行的端口
+const SRC_DIR = './';      
+const SERVER_PORT = 5173;       // 服务器运行的端口
 const START_PAGE = 'pages/sign-in.html'; // 服务器启动后默认打开的页面
 
 // 任务：启动 BrowserSync 服务器并监视文件

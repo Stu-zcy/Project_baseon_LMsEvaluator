@@ -78,6 +78,7 @@ def create_tables():
     print("created!")
 
 def verify_token(token, username):
+
   # 解码 token
   # 检查 token 是否匹配
   user = User.query.filter_by(username=username).first()
@@ -142,16 +143,16 @@ def auth(f):
 
 @app.route('/api/refresh_token', methods=['POST'])
 def refresh_token():
-    token_refresh = request.json.get('token_refresh', None)
+    refresh_token = request.json.get('refresh_token', None)
     username = request.json.get('username', None)
-    if not (token_refresh and username):
+    if not (refresh_token and username):
         return jsonify({
             'code': 401,
             'message': '无效的token或用户名'
         }), 401
-  
-    try:  
-        verify_token_refresh(token_refresh, username)
+
+    try:
+        verify_token_refresh(refresh_token, username)
     except jwt.ExpiredSignatureError:
         return jsonify({
             'code': 403,
@@ -356,19 +357,14 @@ def profile():
         data={'account':account,'permissions': user.permissions.strip(',') if user.permissions else [],'role': user.role}
         print(data)
         return jsonify({
-            'code': 200,
-            'status': 'success',
-            'message': 'Profile fetched successfully!',
-            'data':{'account':account,'permissions': user.permissions.strip(',') if user.permissions else [],'role': user.role}
+            'account':account,
+            'permissions': user.permissions.strip(',') if user.permissions else [],
+            'role': user.role
         }), 200
 
     except Exception as e:
         print("Error executing attack:", e)
-        return jsonify({
-            'code': 500,
-            'status': 'error', 
-            'message': 'Failed to fetch profile'
-        }), 500
+        return jsonify({}), 500
 
 
 # 验证用户身份

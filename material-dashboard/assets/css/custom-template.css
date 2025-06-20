@@ -1,0 +1,25 @@
+.navbar-main .container-fluid {
+	display: flex;
+	align-items: center;
+}
+
+/*
+ * 步骤 2: 强制将右侧容器推到最右。
+ * 我们使用 `!important` 来确保这个规则的优先级最高，
+ * 不会被模板自带的任何样式覆盖。
+*/
+.navbar-main .collapse.navbar-collapse {
+	margin-left: auto !important;
+	flex-grow: 0 !important;
+	/* 防止它不必要地伸展 */
+}
+
+.navbar-main .navbar-nav {
+	display: flex !important;
+	align-items: center !important;
+	/* 强制垂直居中对齐所有图标和按钮 */
+	flex-direction: row;
+	/* 确保是水平排列 */
+	gap: 1rem;
+	/* （可选）在项目之间添加一些固定的间距，比 margin 更好控制 */
+}

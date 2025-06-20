@@ -13,7 +13,7 @@ const props = defineProps({
 	onlyTreasure: Boolean
 })
 const currentPageSize = ref(props.defaultCurrentPageSize)
-const totalPagesNum = ref(1);
+const totalRecordsNum = ref(1);
 const OPEN = ref<boolean>(false);
 const targetCreateTime = ref<number>(null);
 const starValues = ref({});
@@ -34,7 +34,7 @@ async function fetchData() {
 		onlyTreasure: props.onlyTreasure
 	});
 	responseData.value = response.data.records;
-	totalPagesNum.value = response.data.pagination.totalPagesNum;
+	totalRecordsNum.value = response.data.pagination.totalRecordsNum;
 	responseData.value.forEach(item => {
 		starValues.value[item[0]] = item[2]
 	})
@@ -85,9 +85,6 @@ async function treasure(createTime: number, value: number) {
 fetchData();
 </script>
 <template>
-	<!-- <div class="table w-full">-->
-	<!-- <AttackTable /> -->
-	<!--</div> -->
 	<div class="history w-4/5 mx-auto mt-4" v-if="responseData.length>0">
 		<div class="records">
 			<div class="hcard" v-for="item, index in responseData">
@@ -110,7 +107,7 @@ fetchData();
 				</div>
 			</div>
 		</div>
-		<a-pagination v-model:current="currentPage" :total="totalPagesNum" v-model:pageSize="currentPageSize"
+		<a-pagination v-model:current="currentPage" :total="totalRecordsNum" v-model:pageSize="currentPageSize"
 			:showSizeChanger="false" @change="onPageChange" style="text-align: center;"/>
 		<a-modal v-if="OPEN" visible="true" title="hello" width = 80% wrap-class-name="full-modal" 
 		:footer="null" destroyOnClose="true" @cancel="handleOK">

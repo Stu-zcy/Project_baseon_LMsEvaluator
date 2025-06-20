@@ -1,0 +1,203 @@
+ant-card {
+	width: 100%;
+	height: 300px;
+}
+
+/* 头像居中 */
+.avatarContainer {
+	/* text-align: center; */
+	margin: 0 auto;
+	max-width: 150px;
+	max-height: 150px;
+}
+
+.avatarContainer img {
+	display: inline-block;
+}
+
+.cropper-container {
+	width: 300px;
+	height: 300px;
+	position: relative;
+	overflow: hidden;
+	/* 确保裁剪区域不会超出容器 */
+	border: 1px solid #ddd;
+	/* 添加边框以便更好地看到裁剪区域 */
+}
+
+/* 1. 图片容器 */
+.display-avatar-container {
+	width: 150px;
+	/* 容器宽度占满父元素 */
+	height: 150px;
+	/* 容器高度占满父元素 */
+	border-radius: 15px;
+	/* 圆角半径，形成圆形或圆角矩形效果 */
+	overflow: hidden;
+	/* 超出部分隐藏，确保图片不会溢出圆角 */
+	position: relative;
+	/* 为绝对定位的子元素提供定位上下文 */
+	cursor: pointer;
+	/* 鼠标悬停时显示为手型，提示可点击 */
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	/* 添加阴影，提升立体感 */
+}
+
+.ant-upload-wrapper {
+	width: 100%;
+	height: 100%;
+	/* 确保上传区域宽度和高度占满容器 */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* 居中对齐上传区域内容 */
+	background: transparent;
+	/* 背景色，确保上传区域明显 */
+	border-radius: 15px;
+	/* 圆角与图片容器一致 */
+}
+
+.ant-upload-select.ant-upload-select-picture-card {
+	margin: 0;
+	width: 100% !important;
+	/* 确保上传区域宽度占满容器 */
+	height: 100% !important;
+	/* 确保上传区域高度占满容器 */
+	position: relative;
+	/* 为伪元素定位提供上下文 */
+}
+
+.display-avatar-container img {
+	width: 150px;
+	height: 150px;
+	object-fit: cover;
+	/* 保证图片不变形地填充满容器 */
+	transition: filter 0.3s ease;
+	/* 为滤镜添加平滑过渡效果 */
+}
+
+/* 3. 遮罩层 (使用 ::after 伪元素) */
+.display-avatar-container::after {
+	content: '';
+	/* 伪元素必须有 content 属性 */
+	position: absolute;
+	/* 绝对定位，相对于 display-avatar-container */
+	bottom: 0;
+	/* 定位到容器底部 */
+	left: 0;
+	width: 100%;
+	height: 50%;
+	/* 高度为容器的一半 */
+
+	/* 从下到上的半透明黑色渐变，效果比纯色更好 */
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+
+	opacity: 0;
+	/* 初始状态：完全透明 */
+	transition: opacity 0.3s ease;
+	/* 为透明度添加平滑过渡 */
+
+	pointer-events: none;
+}
+
+/* 4. 修改图标 (使用 ::before 伪元素) */
+.display-avatar-container svg {
+
+	position: absolute;
+	/* 绝对定位 */
+	top: 75%;
+	/* 将图标垂直定位在下半部分的中间 */
+	left: 50%;
+	/* 水平居中 */
+	transform: translate(-50%, -50%);
+	/* 精确居中 */
+
+	background: transparent;
+	/* 背景透明 */
+	border: none;
+	/* 无边框 */
+
+	color: white;
+	/* 图标颜色 */
+	font-size: 28px;
+	/* 图标大小 */
+	z-index: 2;
+	/* 确保图标在遮罩层之上 */
+
+	opacity: 0;
+	/* 初始状态：完全透明 */
+	transform: translate(-50%, -20%);
+	/* 初始位置稍微偏上，配合过渡产生动感 */
+	transition: opacity 0.3s ease, transform 0.3s ease;
+	/* 添加平滑过渡 */
+}
+
+
+/* 5. 鼠标悬停时的效果 */
+.display-avatar-container:hover img {
+	filter: brightness(0.9);
+	/* 图片稍微变暗，突出遮罩和图标 */
+}
+
+.display-avatar-container:hover::after,
+.display-avatar-container:hover svg {
+	opacity: 1;
+	/* 遮罩层和图标变为不透明 */
+}
+
+.display-avatar-container:hover svg {
+	transform: translate(-50%, -50%);
+	/* 图标移动到最终的居中位置 */
+}
+
+.display-avatar-container svg path {
+	fill: white;
+	/* 确保图标颜色为白色 */
+}
+
+#avatar-preview,
+#avatar {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* 字段对齐 */
+.infoList {
+	padding-left: 0;
+	margin-left: 1rem;
+}
+
+.infoItem {
+	display: flex;
+	align-items: center;
+	margin-bottom: 0.5em;
+}
+
+.label {
+	min-width: 6em;
+	/* 你可以根据实际内容微调宽度 */
+	text-align: left;
+	margin-right: 0.5em;
+	color: #333;
+}
+
+.w-05em {
+	width: 0.5em;
+	display: inline-block;
+}
+
+.w-1em {
+	width: 1em;
+	display: inline-block;
+}
+
+.w-2em {
+	width: 2em;
+	display: inline-block;
+}
+
+.no-border {
+	border: none;
+	outline: none;
+}

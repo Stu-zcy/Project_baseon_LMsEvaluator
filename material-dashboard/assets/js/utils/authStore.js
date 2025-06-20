@@ -47,7 +47,7 @@ class AuthStore {
 	}
 
 	// 获取刷新 token
-	gettoken_refresh() {
+	getRefreshToken() {
 		return this.token_refresh;
 	}
 

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  // import { ref } from 'vue';
   import AttackRecords from '@/pages/table/AttackRecords.vue';
   import ProfileInfo from './ProfileInfo.vue';
 
-  const select = ref('overview');
+  // const select = ref('overview');
 </script>
 <template>
 		<div class="mt-2 flex justify-evenly">

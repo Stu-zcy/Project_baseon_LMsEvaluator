@@ -76,8 +76,8 @@ const props = defineProps({
 })
 function getInnerData(expanded, record) {
 	if (expanded) {
-		SWATInnerData.value = record.slice(0, record.length - 1);
-		console.log(record.slice(0, record.length - 1))
+		SWATInnerData.value = record.slice(0, -1);
+		console.log(record.slice(0, -1));
 	}
 }
 onMounted(async () => {
