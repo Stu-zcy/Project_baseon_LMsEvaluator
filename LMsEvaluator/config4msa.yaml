@@ -1,0 +1,90 @@
+# 基础配置
+general:
+  random_seed: 42
+  use_gpu: True
+
+# 语言模型配置
+LM_config:
+  model: bert_base_uncased_english    # bert_base_chinese, bert_base_uncased_english, Llama-2-7b-hf
+
+# 任务配置
+task_config:
+  task: TaskForSingleSentenceClassification
+  dataset: imdb    # IMDB, SST-2, AGNEWS, HATESPEECH
+  num_labels: 2    # IMDB/SST-2/HATESPEECH: 2, AGNEWS: 4
+  dataset_type: ".txt"
+  split_sep: "_!_"
+  epochs: 1
+
+# 攻击配置列表
+attack_list:
+  - attack_args:
+      attack: True
+      attack_type: MeaeQ
+      attack_nums: 2
+      display_full_info: True
+
+      use_local_model: True
+      use_local_tokenizer: True
+      use_local_dataset: True
+      model_name_or_path: "LMs/bert_base_uncased_english"
+      tokenizer_name_or_path: "LMs/bert_base_uncased_english"
+      dataset_name_or_path: "datasets/imdb/train.txt"
+
+      query_num: 320    # IMDB: 320, SST-2: 536, AGNEWS: 960, HATESPEECH: 574
+      pool_data_type: "reduced_subset_by_prompt"    # whole, random_subset, reduced_subset_by_prompt, reduced_subset_by_prompt_integrate
+      prompt: "This is a movie review."    # IMDB/SST-2: movie review, AGNEWS: news, HATESPEECH: hate speech
+      pool_subsize: 1766    # IMDB/SST-2: 1766, AGNEWS: 212630, HATESPEECH: 1561
+      pool_data_source: "wiki"    # wiki, imdb, sst2
+      
+      method: "MeaeQ"    # RS, TRF, DRC, MeaeQ, AL-RS, AL-US
+      epsilon: 0.95
+      initial_sample_method: "data_reduction_kmeans"    # random_sentence, data_reduction_kmeans, WIKI, RANDOM
+      initial_drk_model: "bart-large-mnli"    # None, sentence-bert, bart-large-mnli
+      
+      al_sample_batch_num: 20
+      al_sample_method: "uncertainty"    # random, uncertainty, dr-greedy-select-min-max, dr-greedy-select-max-sum
+      
+      weighted_cross_entropy: True
+      tokenize_max_length: 128    # IMDB/SST-2/HATESPEECH: 128, AGNEWS: 256
+      batch_size: 32    # IMDB/SST-2/HATESPEECH: 32, AGNEWS: 16
+      optimizer: "adam"
+      learning_rate: 3e-5    # IMDB/SST-2/HATESPEECH: 3e-5, AGNEWS: 5e-5
+      weight_decay: 1e-4
+      num_epochs: 10
+
+# 输出配置
+output:
+  base_path: "output"
+  model_output: "modelOutput"
+  evaluation_result: "evaluationResult" 
+
+
+
+# ==================
+# IMDB/SST-2:
+#   num_labels: 2
+#   query_num: 320/536
+#   pool_subsize: 1766
+#   tokenize_max_length: 128
+#   batch_size: 32
+#   learning_rate: 3e-5
+#   prompt: "This is a movie review."
+#
+# AGNEWS:
+#   num_labels: 4
+#   query_num: 960
+#   pool_subsize: 212630
+#   tokenize_max_length: 256
+#   batch_size: 16
+#   learning_rate: 5e-5
+#   prompt: "This is a news."
+#
+# HATESPEECH:
+#   num_labels: 2
+#   query_num: 574
+#   pool_subsize: 1561
+#   tokenize_max_length: 128
+#   batch_size: 32
+#   learning_rate: 3e-5
+#   prompt: "This is a hate speech." 

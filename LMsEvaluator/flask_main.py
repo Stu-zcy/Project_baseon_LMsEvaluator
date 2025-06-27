@@ -35,7 +35,9 @@ project_path = os.path.dirname(os.path.abspath(__file__))
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
 lmsDir = os.path.dirname(os.path.abspath(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + lmsDir + r'\web_databse\users.db'
+# 使用os.path.join来正确拼接路径
+data_path = os.path.join(lmsDir, 'web_databse', 'users.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' +f"{data_path}"
 db = SQLAlchemy(app)
 
 
@@ -653,4 +655,4 @@ def treasure():
 
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=46666, debug=True)

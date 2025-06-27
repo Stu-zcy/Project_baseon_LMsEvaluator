@@ -9,7 +9,7 @@ from attack.GIAforNLP.my_GIA_for_NLP import MyGIAforNLP
 from attack.AdversarialAttack.my_textattack import MyTextAttack
 from attack.BackdoorAttack.main import MyBackDoorAttack
 from attack.PoisoningAttack.main import PoisoningAttack
-
+#from attack.MeaeQ.my_meaeq import MyMeaeQ
 
 class AttackFactory:
     def __init__(self, attack_type, config_parser, attack_config, device, **kwargs):
@@ -100,6 +100,49 @@ class AttackFactory:
                 min_input_length=self.attack_config['min_input_length'],
                 max_input_length=self.attack_config['max_input_length'],
             )
+        elif self.attack_type == "ModelStealingAttack":
+            self.attack_mode = MyMeaeQ(
+                config_parser=self.config_parser,
+                attack_config=self.attack_config,
+                # attack_nums=self.attack_config['attack_nums'],
+                # display_full_info=self.attack_config['display_full_info'],
+                # use_local_model=self.attack_config['use_local_model'],
+                # use_local_tokenizer=self.attack_config['use_local_tokenizer'],
+                # use_local_dataset=self.attack_config['use_local_dataset'],
+                # model_name_or_path=self.attack_config['model_name_or_path'],
+                # tokenizer_name_or_path=self.attack_config['tokenizer_name_or_path'],
+                # dataset_name_or_path=self.attack_config['dataset_name_or_path'],
+                # query_num=self.attack_config['query_num'],
+                # pool_data_type=self.attack_config['pool_data_type'],
+                # prompt=self.attack_config['prompt'],
+                # pool_subsize=self.attack_config['pool_subsize'],
+                # pool_data_source=self.attack_config['pool_data_source'],
+                # method=self.attack_config['method'],
+                # epsilon=self.attack_config['epsilon'],
+                # initial_sample_method=self.attack_config['initial_sample_method'],
+                # initial_drk_model=self.attack_config['initial_drk_model'],
+                # al_sample_batch_num=self.attack_config['al_sample_batch_num'],
+                # al_sample_method=self.attack_config['al_sample_method'],
+                # weighted_cross_entropy=self.attack_config['weighted_cross_entropy'],
+                # tokenize_max_length=self.attack_config['tokenize_max_length'],
+                # batch_size=self.attack_config['batch_size'],
+                # optimizer=self.attack_config['optimizer'],
+                # learning_rate=self.attack_config['learning_rate'],
+                # weight_decay=self.attack_config['weight_decay'],
+                # num_epochs=self.attack_config['num_epochs'],
+                method=self.attack_config['method'],
+                query_num=self.attack_config['query_num'],
+                run_seed_arr=self.attack_config['run_seed_arr'],
+                pool_data_type=self.attack_config['pool_data_type'],
+                pool_data_source=self.attack_config['pool_data_source'],
+                pool_subsize=self.attack_config['pool_subsize'],
+                prompt=self.attack_config['prompt'],
+                epsilon=self.attack_config['epsilon'],
+                initial_sample_method=self.attack_config['initial_sample_method'],
+                initial_drk_model=self.attack_config['initial_drk_model'],
+                al_sample_batch_num=self.attack_config['al_sample_batch_num'],
+                al_sample_method=self.attack_config['al_sample_method'],
+            )
         elif self.attack_type == "NOP":
             self.attack_mode = NOP(
                 config_parser=self.config_parser,
@@ -167,14 +210,54 @@ class AttackFactory:
             'max_input_length',
             'num_generation',
         ]
+        ModelStealingAttack_config = [
+            # 'attack_nums',
+            # 'display_full_info',
+            # 'use_local_model',
+            # 'use_local_tokenizer',
+            # 'use_local_dataset',
+            # 'model_name_or_path',
+            # 'tokenizer_name_or_path',
+            # 'dataset_name_or_path',
+            # 'query_num',
+            # 'pool_data_type',
+            # 'prompt',
+            # 'pool_subsize',
+            # 'pool_data_source',
+            # 'method',
+            # 'epsilon',
+            # 'initial_sample_method',
+            # 'initial_drk_model',
+            # 'al_sample_batch_num',
+            # 'al_sample_method',
+            # 'weighted_cross_entropy',
+            # 'tokenize_max_length',
+            # 'batch_size',
+            # 'optimizer',
+            # 'learning_rate',
+            # 'weight_decay',
+            # 'num_epochs',
+            'method',
+            'query_num',
+            'run_seed_arr',
+            'pool_data_type',
+            'pool_data_source',
+            'pool_subsize',
+            'prompt',
+            'epsilon',
+            'initial_sample_method',
+            'initial_drk_model',
+            'al_sample_batch_num',
+            'al_sample_method',
+        ]
         NOP_config = [
             'nop_config0',
             'nop_config1',
         ]
         if self.attack_type == "GIAforNLP":
             temp_config = GIAforNLP_config
-        elif self.attack_type == "AdversarialAttack":
-            temp_config = AdversarialAttack_config
+        elif self.attack_type == "AdvAttack":
+            temp_config = AdvAttack_config
         elif self.attack_type == "FET":
             temp_config = FET_config
         elif self.attack_type == "BackdoorAttack":
@@ -183,6 +266,8 @@ class AttackFactory:
             temp_config = PoisoningAttack_config
         elif self.attack_type == "RLMI":
             temp_config = RLMI_config
+        elif self.attack_type == "ModelStealingAttack":
+            temp_config = ModelStealingAttack_config
         elif self.attack_type == "NOP":
             temp_config = NOP_config
         else:

@@ -8,10 +8,12 @@ import os
 import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from utils.database_helper import extractResult
-
+lmsDir = os.path.dirname(os.path.abspath(__file__))
+# 使用os.path.join来正确拼接路径
+data_path = os.path.join(lmsDir, 'web_databse', 'users.db')
 # 创建数据库和表
 def create_database():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
 
     # 创建用户表，添加 email 字段
@@ -60,7 +62,7 @@ def create_database():
 
 # 添加用户
 def add_user(username, password, role, age, gender, permissions, email, avatar_url=None):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
     hashed_password = generate_password_hash(password)  # 哈希密码
     try:
@@ -76,7 +78,7 @@ def add_user(username, password, role, age, gender, permissions, email, avatar_u
 
 # 更新用户 Token 和登录时间
 def update_user_token(username, token):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
     login_time = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')  # 当前时间
     cursor.execute('UPDATE user SET token = ?, login_time = ? WHERE username = ?',
@@ -91,7 +93,7 @@ def update_user_token(username, token):
 
 # 删除用户
 def delete_user(username):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
     cursor.execute('DELETE FROM user WHERE username = ?', (username,))
     conn.commit()
@@ -104,7 +106,7 @@ def delete_user(username):
 
 # 添加验证码
 def add_verification_code(email, code):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
     cursor.execute('INSERT INTO verification_code (email, code) VALUES (?, ?)', (email, code))
     conn.commit()
@@ -114,7 +116,7 @@ def add_verification_code(email, code):
 
 # 打印用户数据
 def print_users():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM user')
     users = cursor.fetchall()
@@ -126,7 +128,7 @@ def print_users():
 
 # 打印验证码
 def print_verification_codes():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM verification_code')
     codes = cursor.fetchall()
@@ -137,7 +139,7 @@ def print_verification_codes():
 
 # 添加攻击记录
 def add_attack_record(createUserName, createTime, attackResult, isTreasure=False):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
     cursor.execute('INSERT INTO attack_record (createUserName, createTime, attackResult, isTreasure) VALUES (?, ?, ?, ?)',
                    (createUserName, createTime, str(attackResult), isTreasure))
@@ -148,7 +150,7 @@ def add_attack_record(createUserName, createTime, attackResult, isTreasure=False
 
 # 打印攻击记录
 def print_attack_records():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM attack_record')
     records = cursor.fetchall()
@@ -159,7 +161,7 @@ def print_attack_records():
 
 # 添加日志记录
 def add_log_record(username, log_filename, log_status):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
     cursor.execute('INSERT INTO log_record (username, log_filename, log_status) VALUES (?, ?, ?)',
                    (username, log_filename, log_status))
@@ -170,7 +172,7 @@ def add_log_record(username, log_filename, log_status):
 
 # 打印日志记录
 def print_log_records():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM log_record')
     logs = cursor.fetchall()
@@ -185,7 +187,7 @@ if __name__ == '__main__':
     
     # add_user('admin', '888888', 'admin', 30, 1, "'edit', 'delete', 'add'", 'admin@example.com', 'https://gitee.com/topiza/image/raw/master/file_3.png')
     # # 示例用户操作，带邮箱
-    # add_user('zcy', '123', 'user', 25, 0, "'edit', 'delete', 'add'", 'zcy@example.com', 'https://gitee.com/topiza/image/raw/master/file_1.png')
+    add_user('zcy', '123', 'user', 25, 0, "'edit', 'delete', 'add'", 'zcy@example.com', 'https://gitee.com/topiza/image/raw/master/file_1.png')
     # add_user('admin', '888888', 'admin', 30, 1, "'edit', 'delete', 'add'", 'admin@example.com', 'https://gitee.com/topiza/image/raw/master/file_3.png')
     # update_user_token('zcy', 'sample_token')
     # print_users()
@@ -199,13 +201,13 @@ if __name__ == '__main__':
     # print_attack_records()
     
     # 向数据库中添加攻击记录
-    lmsDir = os.path.dirname(os.path.abspath(__file__))
-    filename = "u1h_single_1737727113_2025-01-24.txt"
-    info = filename.split('_')
-    username = 'admin'
-    initTime = eval(info[2])
-    result = extractResult(lmsDir + "\\..\\logs\\" + filename)
-    add_attack_record(username, initTime, json.dumps(result))
+    #lmsDir = os.path.dirname(os.path.abspath(__file__))
+    #filename = "u1h_single_1737727113_2025-01-24.txt"
+    #info = filename.split('_')
+    #username = 'admin'
+    #initTime = eval(info[2])
+    #result = extractResult(lmsDir + "\\..\\logs\\" + filename)
+    #add_attack_record(username, initTime, json.dumps(result))
     
 
     # # 示例日志操作

@@ -1,7 +1,7 @@
 import os
 import yaml
 from utils.my_exception import print_red
-from tasks import TaskForSingleSentenceClassification, TaskForSQuADQuestionAnswering, TaskForChineseNER,TaskForMultipleChoice, TaskForPairSentenceClassification, TaskForPretraining
+from tasks import TaskForSingleSentenceClassification, TaskForSQuADQuestionAnswering, TaskForChineseNER,TaskForMultipleChoice, TaskForPairSentenceClassification, TaskForPretraining#,TaskForSequenceClassification
 
 
 def parse_config(projectPath, initTime, username='default'):
@@ -166,13 +166,23 @@ def check_attack_config(attack_list, project_path):
     :param project_path: 项目根目录
     :return: attack_list: 删除无效信息后的attack_list
     """
-    del_index = []
+    attack_type_list, del_index = ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'FET', 'RLMI', 'GIAforNLP',
+                                   'ModelStealingAttack', 'NOP'], []
     for index in range(len(attack_list)):
         # 读取攻击模块配置
         attack_config = attack_list[index]['attack_args']
         if 'attack' in attack_config and attack_config['attack']:
             attack_type = attack_config['attack_type']
-            attack_path = os.path.join(project_path, "attack", attack_type)
+            if attack_type == 'ModelStealingAttack':
+                attack_path = os.path.join(project_path, "attack", "MeaeQ")
+            else:
+                attack_path = os.path.join(project_path, "attack", attack_type)
+
+            if attack_type not in attack_type_list:
+                print_red("UNKNOWN ATTACK TYPE CONFIG: " + str(attack_type) +
+                          ". Please check the attack_args.attack_type config in config.yaml.")
+                del_index.append(index)
+                continue
 
             # 攻击模块路径检查
             try:

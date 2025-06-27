@@ -15,18 +15,173 @@
   <meta name="referrer" content="no-referrer">
   <title>LMsEvaluator - 注册</title>
   
-  <!-- Fonts and icons -->
+  <!-- 字体和图标 -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-  
-  <!-- CSS Files -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+
+  <!-- CSS文件 -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
-  
-  <!-- Custom Styles -->
+
+  <!-- 自定义样式 -->
   <style>
+    /* 新增头像图片样式 */
+    .avatar-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* 修改文字颜色为白色 */
+    .overlay-content h2 {
+      color: white !important;
+    }
+    :root {
+      --primary-gradient: linear-gradient(195deg, #42424a 0%, #191919 100%);
+      --accent-color: #4A90E2;
+      --hover-effect: brightness(0.95);
+    }
+
+    .card {
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+      transform: translateY(0);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 32px rgba(0,0,0,0.15);
+    }
+
+    /* 头像选择器样式 */
+    .avatar-selector {
+      position: relative;
+      margin: 1.5rem 0;
+    }
+
+    .avatar-scroller {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding: 1rem 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-color) rgba(0,0,0,0.1);
+      cursor: grab;
+    }
+
+    .avatar-scroller::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .avatar-scroller::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.1);
+      border-radius: 3px;
+    }
+
+    .avatar-scroller::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 3px;
+    }
+
+    .avatar-item {
+      flex: 0 0 60px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .avatar-item:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .avatar-item.selected {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(74,144,226,0.3);
+      animation: avatar-pulse 1.5s infinite;
+    }
+
+    @keyframes avatar-pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .avatar-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .avatar-nav:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .avatar-prev { left: -20px; }
+    .avatar-next { right: -20px; }
+
+    @media (min-width: 768px) {
+      .avatar-nav {
+        display: flex;
+      }
+    }
+
+    /* 其他表单样式 */
+    .input-group {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      color: #6c757d;
+    }
+
+    .input-group input:focus ~ .form-label,
+    .input-group input:valid ~ .form-label {
+      transform: translateY(-140%) scale(0.9);
+      color: var(--accent-color);
+      padding: 0 5px;
+      background: white;
+    }
+
+    .btn-gradient {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
     .password-strength {
       height: 4px;
       background: rgba(255,255,255,0.2);
@@ -34,57 +189,19 @@
       border-radius: 2px;
       overflow: hidden;
     }
+
     .strength-bar {
       height: 100%;
       transition: all 0.3s ease;
     }
+
     .strength-weak { width: 30%; background: #ff4757; }
     .strength-medium { width: 60%; background: #ffa502; }
     .strength-strong { width: 100%; background: #2ed573; }
-    
-    .avatar-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
-      margin: 16px 0;
-    }
-    .avatar-item {
-      border: 2px solid transparent;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.3s;
-      overflow: hidden;
-    }
-    .avatar-item.selected {
-      border-color: #1896ff;
-      box-shadow: 0 0 12px rgba(24,150,255,0.3);
-    }
-    .avatar-img {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 1/1;
-      object-fit: cover;
-    }
-    
-    .verification-group {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-    #sendCodeBtn.disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
   </style>
 </head>
 
 <body class="bg-gray-100">
-  <div class="container position-sticky z-index-sticky top-0">
-    <div class="row">
-      <div class="col-12">
-      </div>
-    </div>
-  </div>
   <main class="main-content mt-0">
     <section>
       <div class="page-header min-vh-100">
@@ -93,63 +210,96 @@
             <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0 text-center justify-content-center flex-column">
               <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center" 
                    style="background-image: url('../assets/img/illustrations/illustration-signup.jpg'); background-size: cover;">
+                <div class="position-absolute overlay-content text-white text-start p-5">
+                  <h2 class="display-4 mb-4">加入智能评测社区</h2>
+                  <p class="lead">探索机器模型的无限可能</p>
+                  <div class="feature-list mt-5">
+                    <div class="d-flex align-items-center mb-3">
+                      <i class='bx bxs-check-circle fs-3 me-3'></i>
+                      <span>专业模型评测工具</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                      <i class='bx bxs-data fs-3 me-3'></i>
+                      <span>实时数据分析</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <i class='bx bxs-group fs-3 me-3'></i>
+                      <span>专家社区支持</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             
             <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
               <div class="card card-plain">
-                <div class="card-header">
-                  <h4 class="font-weight-bolder">用户注册</h4>
-                  <p class="mb-0">填写完整信息完成注册</p>
+                <div class="card-header text-center">
+                  <img src="../assets/img/logo-ct-dark.png" alt="Logo" class="mb-4" style="height: 60px;">
+                  <h3 class="font-weight-bolder mb-1">创建您的账户</h3>
+                  <p class="mb-0">开启智能评测之旅</p>
                 </div>
                 
                 <div class="card-body pb-0">
-                  <form id="registerForm" role="form">
+                  <form id="registerForm" role="form" class="needs-validation" novalidate>
                     <!-- 用户名 -->
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label">用户名</label>
-                      <input type="text" id="username" class="form-control" required>
+                    <div class="input-group input-group-dynamic mb-4">
+                      <input type="text" id="username" class="form-control" placeholder='用户名' required>
+                      <div class="invalid-feedback">
+                        请输入有效的用户名
+                      </div>
                     </div>
 
                     <!-- 邮箱 -->
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label">电子邮箱</label>
-                      <input type="email" id="email" class="form-control" required>
+                    <div class="input-group input-group-dynamic mb-4">
+                      <input type="email" id="email" class="form-control" placeholder='电子邮箱' required>
+                      <div class="invalid-feedback">
+                        请输入有效的邮箱地址
+                      </div>
                     </div>
 
                     <!-- 密码 -->
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label">密码</label>
-                      <input type="password" id="password" class="form-control" required>
+                    <div class="input-group input-group-dynamic mb-4">
+                      <input type="password" id="password" class="form-control"placeholder="密码" required>
                       <div class="password-strength w-100">
-                        <div class="strength-bar strength-weak"></div>
+                        <div class="strength-bar"></div>
+                      </div>
+                      <div class="invalid-feedback">
+                        密码必须包含大小写字母和数字
                       </div>
                     </div>
 
                     <!-- 确认密码 -->
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label">确认密码</label>
-                      <input type="password" id="confirmPassword" class="form-control" required>
-                    </div>
-
-                    <!-- 验证码 -->
-                    <div class="input-group input-group-outline mb-3">
-                      <div class="verification-group w-100">
-                        <input type="text" id="verificationCode" class="form-control" placeholder="验证码" required>
-                        <button type="button" id="sendCodeBtn" class="btn btn-outline-dark btn-sm">
-                          获取验证码
-                        </button>
+                    <div class="input-group input-group-dynamic mb-4">
+                      <input type="password" id="confirmPassword" class="form-control" placeholder="确认密码" required>
+                      <div class="invalid-feedback">
+                        两次密码输入不一致
                       </div>
                     </div>
 
-                    <!-- 头像选择 -->
-                    <div class="mb-4">
-                      <label class="text-sm mb-2">选择头像</label>
-                      <div class="avatar-grid"></div>
+                    <!-- 验证码 -->
+                    <div class="input-group input-group-dynamic mb-4">
+                      <div class="verification-group w-100">
+                        <input type="text" id="verificationCode" class="form-control" placeholder=" 验证码" required>
+                        
+                        <button type="button" id="sendCodeBtn" class="btn btn-outline-dark btn-sm mt-4"style="margin-top: 10px;">
+                          获取验证码
+                        </button>
+                      </div>
+                      <div class="invalid-feedback">
+                        请输入正确的验证码
+                      </div>
+                    </div>
+
+                    <!-- 头像选择器 -->
+                    <div class="avatar-selector">
+                      <label class="text-sm mb-2 d-block">选择头像</label>
+                      <div class="avatar-scroller"></div>
+                      <div class="avatar-nav avatar-prev"><i class='bx bx-chevron-left'></i></div>
+                      <div class="avatar-nav avatar-next"><i class='bx bx-chevron-right'></i></div>
                     </div>
 
                     <!-- 协议条款 -->
-                    <div class="form-check form-check-info text-start ps-0">
+                    <div class="form-check form-check-info text-start ps-0 mb-4">
                       <input class="form-check-input" type="checkbox" id="termsCheck" required>
                       <label class="form-check-label" for="termsCheck">
                         同意<a href="#" class="text-dark font-weight-bolder">《服务条款》</a>
@@ -157,17 +307,20 @@
                     </div>
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-lg bg-gradient-dark btn-lg w-100 mt-4 mb-0">
-                        立即注册
+                      <button type="submit" class="btn btn-gradient btn-lg w-100 mt-4 mb-2 py-3">
+                        <span class="btn-text">立即注册</span>
+                        <i class='bx bx-right-arrow-alt fs-4 ms-2'></i>
                       </button>
                     </div>
                   </form>
                 </div>
 
-                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                <div class="card-footer text-center pt-0">
                   <p class="mb-2 text-sm mx-auto">
                     已有账户？
-                    <a href="../pages/sign-in.html" class="text-primary text-gradient font-weight-bold">立即登录</a>
+                    <a href="../pages/sign-in.html" class="text-primary font-weight-bold">
+                      <i class='bx bx-log-in fs-5 align-middle me-1'></i>立即登录
+                    </a>
                   </p>
                 </div>
               </div>
@@ -178,30 +331,59 @@
     </section>
   </main>
 
-  <!-- Core JS Files -->
+
+  <!-- 核心JS文件 -->
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="https://unpkg.com/scrollreveal"></script>
 
   <!-- 注册功能逻辑 -->
   <script>
     // 初始化头像选择
     function initAvatarSelection() {
-      const grid = document.querySelector('.avatar-grid');
+      const scroller = document.querySelector('.avatar-scroller');
       const avatars = Array.from({length: 20}, (_,i) => 
         `https://gitee.com/topiza/image/raw/master/file_${i+1}.png`);
 
+      // 生成头像项
       avatars.forEach((url, index) => {
         const item = document.createElement('div');
         item.className = `avatar-item ${index === 0 ? 'selected' : ''}`;
-        item.innerHTML = `<img src="${url}" class="avatar-img">`;
+        item.innerHTML = `<img src="${url}" class="avatar-img" loading="lazy">`;
         item.addEventListener('click', () => {
           document.querySelectorAll('.avatar-item').forEach(el => 
             el.classList.remove('selected'));
           item.classList.add('selected');
+          centerSelectedItem(item);
         });
-        grid.appendChild(item);
+        scroller.appendChild(item);
+      });
+
+      // 导航事件
+      document.querySelector('.avatar-prev').addEventListener('click', () => {
+        scroller.scrollBy({left: -200, behavior: 'smooth'});
+      });
+
+      document.querySelector('.avatar-next').addEventListener('click', () => {
+        scroller.scrollBy({left: 200, behavior: 'smooth'});
+      });
+
+      // 初始化自动居中
+      centerSelectedItem(scroller.querySelector('.selected'));
+    }
+
+    // 居中选中项
+    function centerSelectedItem(item) {
+      const container = item.parentElement;
+      const containerWidth = container.offsetWidth;
+      const itemOffset = item.offsetLeft;
+      const itemWidth = item.offsetWidth;
+      
+      container.scrollTo({
+        left: itemOffset - (containerWidth/2) + (itemWidth/2),
+        behavior: 'smooth'
       });
     }
 
@@ -235,13 +417,19 @@
       if (countdown > 0) return;
 
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/send_verification_code', {
+        const response = await fetch('http://127.0.0.1:46666/api/send_verification_code', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ email })
         });
         
-        if (!response.ok) throw await response.json();
+        const data = await response.json();
+        if (data.code === 200) {
+          alert('成功发送验证码');
+        } else {
+          throw new Error(data.message || '验证码发送失败');
+        }
+
         countdown = 60;
         btn.classList.add('disabled');
         
@@ -254,9 +442,20 @@
           }
         }, 1000);
       } catch (error) {
-        alert(error.message || '验证码发送失败');
+        alert(error.message);
       }
     }
+
+    // 新增输入框事件处理
+    function handleInput(e) {
+      const label = e.target.previousElementSibling;
+      if (e.target.value) {
+        label.classList.add('filled');
+      } else {
+        label.classList.remove('filled');
+      }
+    }
+
 
     // 表单提交
     async function handleSubmit(e) {
@@ -277,7 +476,7 @@
       }
 
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/register', {
+        const response = await fetch('http://127.0.0.1:46666/api/register', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(formData)
@@ -298,6 +497,25 @@
         checkPasswordStrength(e.target.value));
       document.getElementById('sendCodeBtn').addEventListener('click', handleSendCode);
       document.getElementById('registerForm').addEventListener('submit', handleSubmit);
+
+      // 新增输入框事件监听
+      document.querySelectorAll('.input-group-dynamic input').forEach(input => {
+        input.addEventListener('input', handleInput);
+        // 初始化时检查值
+        if (input.value) {
+          input.previousElementSibling.classList.add('filled');
+        }
+      });
+
+      // 表单验证（保持原有代码不变）
+      const forms = document.querySelector('.needs-validation');
+      forms.addEventListener('submit', function(event) {
+        if (!forms.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        forms.classList.add('was-validated');
+      }, false);
     });
   </script>
 </body>

@@ -128,14 +128,16 @@ def generate_config(username, attack_types):
 
     # 遍历输入的 attack_types，修改配置
     for index, attack_info in enumerate(attack_types):
-        attack_type = attack_info.get('attack_type')
+        attack_type = attack_info.get('type')
 
         # 检查攻击类型是否在已定义的策略中
-        if attack_type and attack_type in attack_strategies:
+        if attack_type in attack_strategies:
             attack_config = copy.deepcopy(attack_strategies[attack_type])  # 深度复制攻击策略
+            if "attack_recipe" in attack_config:
+                attack_config['attack_recipe']=attack_info['strategy']
             for key in attack_config:
-                if key in attack_info:
-                    attack_config[key] = attack_info[key]
+                if key in attack_info['params']:
+                    attack_config[key] = attack_info['params'][key]
 
             # 将修改后的配置添加到 attack_list
             if len(config["attack_list"]) <= index:
@@ -162,28 +164,35 @@ def generate_config(username, attack_types):
 # 示例输入
 if __name__ == '__main__':
 
-    attack_types = [{"attack": True,
-    "attack_type": "AdvAttack",
-    "attack_recipe": "TextFoolerJin2019",
-    "use_local_model": True,
-    "use_local_tokenizer": True,
-    "use_local_dataset": True,
-    "model_name_or_path": "LMs/bert_base_uncased_english",
-    "tokenizer_name_or_path": "LMs/bert_base_uncased_english",
-    "dataset_name_or_path": "datasets/imdb/train.txt",
-    "attack_nums": 2,
-    "display_full_info": True}, {"attack": True,
-    "attack_type": "AdvAttack",
-    "attack_recipe": "TextFoolerJin2019",
-    "use_local_model": True,
-    "use_local_tokenizer": True,
-    "use_local_dataset": True,
-    "model_name_or_path": "LMs/bert_base_uncased_english",
-    "tokenizer_name_or_path": "LMs/bert_base_uncased_english",
-    "dataset_name_or_path": "datasets/imdb/train.txt",
-    "attack_nums": 2,
-    "display_full_info": True}]
-    generate_config("user123", attack_types)
+    username = "test_user"
+    attack_types = [
+        {
+            "type": "AdvAttack",
+            "strategy": "TextFoolerJin2019",
+            "params": {
+                "attack_nums": 2,
+                "display_full_info": True
+            }
+        },
+        {
+            "type": "FET",
+            "strategy": "FETStrategy",
+            "params": {
+                "population_size": 300,
+                "max_generations": 2
+            }
+        },
+        {
+            "type": "BackDoorAttack",
+            "strategy": "",
+            "params": {
+                "poisoning_rate": 0.1,
+                "epochs": 10
+            }
+        }
+    ]
+
+    generate_config(username, attack_types)
 
 
 

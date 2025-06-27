@@ -1,0 +1,21 @@
+general:
+  random_seed: 42
+  use_gpu: True
+
+LM_config:
+  model: bert_base_uncased_english
+  local_model: True
+
+task_config:
+  task: TaskForSingleSentenceClassification
+  dataset: sst2
+  local_dataset: True
+  train_config:
+    output_dir: './outputs'
+    num_train_epochs: 1
+    per_device_train_batch_size: 16
+    per_device_eval_batch_size: 64
+    warmup_steps: 500
+    weight_decay: 0.01
+    logging_dir: './logs'
+    logging_steps: 1000

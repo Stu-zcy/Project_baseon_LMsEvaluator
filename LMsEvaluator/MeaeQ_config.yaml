@@ -1,0 +1,38 @@
+general:
+  random_seed: 42
+  use_gpu: True
+
+model_config:
+  victim_model: bert_base_uncased
+  steal_model: bert_base_uncased
+
+task_config:
+  task_name: IMDB         # 可选：SST-2, IMDB, AGNEWS, HATESPEECH
+  num_labels: 2           # IMDB: 2
+  tokenize_max_length: 128  # IMDB: 128
+
+attack_config:
+  method: RS
+  query_num: 320
+  run_seed_arr: [56]
+  pool_data_type: whole
+  pool_data_source: imdb
+  pool_subsize: -1
+  prompt: None
+  epsilon: -1
+  initial_sample_method: random_sentence
+  initial_drk_model: None
+  al_sample_batch_num: -1
+  al_sample_method: None
+
+train_config:
+  batch_size: 32             # IMDB: 32
+  optimizer: adam
+  learning_rate: 3e-5        # IMDB: 3e-5
+  weight_decay: 1e-4         # IMDB: 1e-4
+  num_epochs: 10
+  weighted_cross_entropy: True
+
+output:
+  log_dir: "steal/model_steal/log"
+  model_save_dir: "saved_model" 

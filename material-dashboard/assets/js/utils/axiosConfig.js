@@ -3,7 +3,7 @@ import authStore from './authStore.js';
 
 // 创建 axios 实例
 const instance = axios.create({
-	baseURL: 'http://127.0.0.1:5000',
+	baseURL: 'http://127.0.0.1:46666',
 	timeout: 5000
 });
 
@@ -47,7 +47,7 @@ instance.interceptors.response.use(
 
 			try {
 				// 尝试刷新token
-				const response = await instance.post('http://127.0.0.1:5000/api/refresh_token', {
+				const response = await instance.post('http://127.0.0.1:46666/api/refresh_token', {
 					refresh_token: authStore.getRefreshToken(),
 					username: authStore.getUsername()
 				});
