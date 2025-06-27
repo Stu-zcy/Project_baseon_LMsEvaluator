@@ -6,7 +6,7 @@ LMsEvaluator/logs/
 **/node_modules/
 LMsEvaluator/attack/BackdoorAttack/openbackdoor
 LMsEvaluator/OpenBackdoor/
-
+/LMsEvaluator/attack/MeaeQ/steal/query_and_poolseed=56
 #FILE
 *.db
 components.d.ts
