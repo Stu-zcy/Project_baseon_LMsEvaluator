@@ -30,6 +30,12 @@ instance.interceptors.response.use(
 	async error => {
 		const originalRequest = error.config;
 
+		if (originalRequest.url.endsWith("/api/refresh_token")) {
+			// 如果是刷新token的请求失败，直接抛出错误
+			throw new Error('刷新token失败');
+		}
+
+
 		// token相关错误处理
 		if (error.response?.status === 403 && !originalRequest._retry) {
 			originalRequest._retry = true;
@@ -64,11 +70,10 @@ instance.interceptors.response.use(
 
 					// 重试原始请求
 					return ret;
-				} else {
-					throw new Error('刷新token失败');
 				}
 			} catch (refreshError) {
-				// 刷新token失败，清除用户信息并跳转到登录页
+				antd.message.error('登录已过期，请重新登录');
+				console.error('刷新token失败:', refreshError);
 				authStore.clearLoginInfo();
 				window.location.href = '/pages/sign-in.html';
 				return Promise.reject(refreshError);

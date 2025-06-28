@@ -86,6 +86,9 @@
       background-color: rgba(0, 0, 0, 0.05);
     }
   </style>
+		<!-- css 样式 -->
+		<link rel="stylesheet" href="../assets/css/attack-records.css">
+		<link rel="stylesheet" href="../assets/css/attack-table.css">
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -163,7 +166,7 @@
 			</ul>
 		</div>
 	</aside>
-	<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
 		<!-- Navbar -->
 		<nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur"
 			data-scroll="true">
@@ -171,7 +174,7 @@
 				<nav aria-label="breadcrumb">
 					<ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
 						<li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
-						<li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tables</li>
+						<li class="breadcrumb-item text-sm text-dark active" aria-current="page">攻击数据分析</li>
 					</ol>
 				</nav>
 				<div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
@@ -285,10 +288,10 @@
 				</div>
 			</div>
 		</nav>
-  <!-- End Navbar -->
-  <div id="app" class="container-fluid py-2">
+		<!-- End Navbar -->
+    <div id="app" class="container-fluid py-2">
       <!-- Vue的内容将会渲染在此处, 位于背景图和遮罩层之上 -->
-  </div>
+  	</div>
   <footer class="footer py-4  ">
 			<div class="container-fluid">
 				<div class="row align-items-center justify-content-lg-between">
@@ -401,11 +404,9 @@
  </script>
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
-  <script src="../assets/js/custom-template.js"></script>
- 
+	<script src="../assets/js/custom-template.js"></script>
   <!-- <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script> -->
   <!-- <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script> -->
-  
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {

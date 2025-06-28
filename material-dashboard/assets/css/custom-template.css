@@ -1,13 +1,27 @@
+/*
+
+*/
+main.main-content {
+	display: flex;
+	flex-direction: column;
+}
+
+main.main-content>#app {
+	flex: 1;
+	overflow: auto;
+}
+
+main.main-content>#background {
+	flex: 1;
+	overflow: auto;
+}
+
+/* 下面修改了最上方面包屑一行的内容 </a> */
 .navbar-main .container-fluid {
 	display: flex;
 	align-items: center;
 }
 
-/*
- * 步骤 2: 强制将右侧容器推到最右。
- * 我们使用 `!important` 来确保这个规则的优先级最高，
- * 不会被模板自带的任何样式覆盖。
-*/
 .navbar-main .collapse.navbar-collapse {
 	margin-left: auto !important;
 	flex-grow: 0 !important;
@@ -22,4 +36,10 @@
 	/* 确保是水平排列 */
 	gap: 1rem;
 	/* （可选）在项目之间添加一些固定的间距，比 margin 更好控制 */
+}
+
+.page-header {
+	flex-direction: column;
+	/* align-items: center; */
+	/* justify-content: center; */
 }

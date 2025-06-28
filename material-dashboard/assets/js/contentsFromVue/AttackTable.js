@@ -13,126 +13,261 @@ const AttackTable = defineComponent({
 
     // The <template> content goes here as a string
     template: `
-        <div> <!-- Added a root div for good practice, though not strictly necessary if only one a-table per section -->
-            <a-table v-bind="$attrs" :columns="AdvColumns" :dataSource="responseData.AdversarialAttack" :pagination="false">
-                <template #title>
-                    <div class="flex justify-between pr-4">
-                        <h4>AdversarialAttack Results</h4>
-                    </div>
-                </template>
-                <template #bodyCell="{ column, record }">
-                    <div class="" v-if="column.dataIndex === 'index'">
-                        <div class="text-subtext">
-                            {{ record[0] && record[0][0] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'success'">
-                        <div class="text-subtext">
-                            {{ record[0] && record[0][1] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'fail'">
-                        <div class="text-subtext">
-                            {{ record[0] && record[0][2] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'skip'">
-                        <div class="text-subtext">
-                            {{ record[0] && record[0][3] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'before'">
-                        <div class="text-subtext">
-                            {{ record[0] && record[0][4] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'after'">
-                        <div class="text-subtext">
-                            {{ record[0] && record[0][5] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'rate'">
-                        <div class="text-subtext">
-                            {{ record[0] && record[0][6] }}
-                        </div>
-                    </div>
-                    <div v-else class="text-subtext">
-                        {{ record[column.dataIndex] }} <!-- Fallback for other potential columns -->
-                    </div>
-                </template>
-            </a-table>
+<div>
+    <a-table v-if="responseData.AdversarialAttack.length > 0" v-bind="$attrs" 
+        :columns="AdvColumns" :dataSource="responseData.AdversarialAttack" 
+        :pagination="false">
+        <template #title>
+            <div class="flex justify-between pr-4">
+                <h4>AdversarialAttack Results</h4>
+            </div>
+        </template>
+        <template #bodyCell="{ column, record }">
+            <div class="" v-if="column.dataIndex === 'index'">
+                <div class="text-subtext">
+                    实验配置{{ record[0] && record[0][0] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'success'">
+                <div class="text-subtext">
+                    {{ record[0] && record[0][1] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'fail'">
+                <div class="text-subtext">
+                    {{ record[0] && record[0][2] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'skip'">
+                <div class="text-subtext">
+                    {{ record[0] && record[0][3] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'before'">
+                <div class="text-subtext">
+                    {{ record[0] && record[0][4] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'after'">
+                <div class="text-subtext">
+                    {{ record[0] && record[0][5] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'rate'">
+                <div class="text-subtext">
+                    {{ record[0] && record[0][6] }}
+                </div>
+            </div>
+            <div v-else class="text-subtext">
+                {{ record[column.dataIndex] }}
+            </div>
+        </template>
+    </a-table>
 
-            <a-table v-bind="$attrs" :columns="PoisoningColumns" :dataSource="responseData.PoisoningAttack" :pagination="false">
-                <template #title>
-                    <div class="flex justify-between pr-4">
-                        <h4>PoisoningAttack Results</h4>
-                    </div>
-                </template>
+    <a-table v-if="responseData.PoisoningAttack.length > 0" v-bind="$attrs" 
+        :columns="PoisoningColumns" :dataSource="responseData.PoisoningAttack" 
+        :pagination="false">
+        <template #title>
+            <div class="flex justify-between pr-4">
+                <h4>PoisoningAttack Results</h4>
+            </div>
+        </template>
+        <template #bodyCell="{ column, record }">
+            <div class="" v-if="column.dataIndex === 'index'">
+                <div class="text-subtext">
+                    实验配置{{ record[0] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'before'">
+                <div class="text-subtext">
+                    {{ record[1] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'after'">
+                <div class="text-subtext">
+                    {{ record[2] }}
+                </div>
+            </div>
+            <div v-else class="text-subtext">
+                {{ record[column.dataIndex] }}
+            </div>
+        </template>
+    </a-table>
+
+    <a-table v-if="responseData.BackDoorAttack.length > 0" v-bind="$attrs" 
+        :columns="BackDoorColumns" :dataSource="responseData.BackDoorAttack" 
+        :pagination="false">
+        <template #title>
+            <div class="flex justify-between pr-4">
+                <h4>BackDoorAttack Results</h4>
+            </div>
+        </template>
+        <template #bodyCell="{ column, record }">
+            <div class="" v-if="column.dataIndex === 'index'">
+                <div class="text-subtext">
+                    实验配置{{ record[0] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'dataset'">
+                <div class="text-subtext">
+                    {{ record[1] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'Poisoner'">
+                <div class="text-subtext">
+                    {{ record[2] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'before'">
+                <div class="text-subtext">
+                    {{ record[3] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'after'">
+                <div class="text-subtext">
+                    {{ record[4] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'PPL'">
+                <div class="text-subtext">
+                    {{ record[5] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'USE'">
+                <div class="text-subtext">
+                    {{ record[6] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'GRAMMAR'">
+                <div class="text-subtext">
+                    {{ record[7] }}
+                </div>
+            </div>
+            <div v-else class="text-subtext">
+                {{ record[column.dataIndex] }}
+            </div>
+        </template>
+    </a-table>
+
+    <a-table v-if="responseData.RLMI.length > 0" v-bind="$attrs" 
+        :columns="RLMIAttackColumns" :dataSource="responseData.RLMI" 
+        :pagination="false">
+        <template #title>
+            <div class="flex justify-between pr-4">
+                <h4>RLMI_Attack Results</h4>
+            </div>
+        </template>
+        <template #bodyCell="{ column, record }">
+            <div class="" v-if="column.dataIndex === 'index'">
+                <div class="text-subtext">
+                    实验配置{{ record[0] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'ASR_Attack'">
+                <div class="text-subtext">
+                    {{ record[1] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'WER_Attack'">
+                <div class="text-subtext">
+                    {{ record[2] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'ASR_Inference'">
+                <div class="text-subtext">
+                    {{ record[3] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'WER_Inference'">
+                <div class="text-subtext">
+                    {{ record[4] }}
+                </div>
+            </div>
+            <div v-else class="text-subtext">
+                {{ record[column.dataIndex] }}
+            </div>
+        </template>
+    </a-table>
+
+    <a-table v-if="responseData.SWAT.length > 0" v-bind="$attrs" 
+        :columns="SWATAttackColumns" :dataSource="responseData.SWAT" 
+        :pagination="false" @expand="getInnerData">
+        <template #title>
+            <div class="flex justify-between pr-4">
+                <h4>SWAT_Attack Results</h4>
+            </div>
+        </template>
+        <template #bodyCell="{ column, record }">
+            <div class="" v-if="column.dataIndex === 'index'">
+                <div class="text-subtext">
+                    {{ record.at(-1) && record.at(-1)[0] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'rouge1'">
+                <div class="text-subtext">
+                    {{ record.at(-1) && record.at(-1)[1] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'rouge2'">
+                <div class="text-subtext">
+                    {{ record.at(-1) && record.at(-1)[2] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'rougeL'">
+                <div class="text-subtext">
+                    {{ record.at(-1) && record.at(-1)[3] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'wrr'">
+                <div class="text-subtext">
+                    {{ record.at(-1) && record.at(-1)[4] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'distance'">
+                <div class="text-subtext">
+                    {{ record.at(-1) && record.at(-1)[5] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'fr'">
+                <div class="text-subtext">
+                    {{ record.at(-1) && record.at(-1)[6] }}
+                </div>
+            </div>
+            <div v-else class="text-subtext">
+                {{ record[column.dataIndex] }}
+            </div>
+        </template>
+        <template #expandedRowRender>
+            <a-table v-if="responseData.SWAT.length > 0"
+                :columns="SWATInnoColumns" :data-source="SWATInnerData" 
+                :pagination="false">
                 <template #bodyCell="{ column, record }">
-                    <div class="" v-if="column.dataIndex === 'index'">
-                        <div class="text-subtext">
-                            {{ record[0] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'before'">
-                        <div class="text-subtext">
-                            {{ record[1] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'after'">
+                    <div class="" v-if="column.dataIndex === 'rouge1'">
                         <div class="text-subtext">
                             {{ record[2] }}
                         </div>
                     </div>
-                    <div v-else class="text-subtext">
-                        {{ record[column.dataIndex] }}
-                    </div>
-                </template>
-            </a-table>
-
-            <a-table v-bind="$attrs" :columns="BackDoorColumns" :dataSource="responseData.BackDoorAttack" :pagination="false">
-                <template #title>
-                    <div class="flex justify-between pr-4">
-                        <h4>BackDoorAttack Results</h4> <!-- Typo 'BackDoorAttackp' corrected -->
-                    </div>
-                </template>
-                <template #bodyCell="{ column, record }">
-                    <div class="" v-if="column.dataIndex === 'index'">
-                        <div class="text-subtext">
-                            {{ record[0] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'dataset'">
-                        <div class="text-subtext">
-                            {{ record[1] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'Poisoner'">
-                        <div class="text-subtext">
-                            {{ record[2] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'before'">
+                    <div class="" v-else-if="column.dataIndex === 'rouge2'">
                         <div class="text-subtext">
                             {{ record[3] }}
                         </div>
                     </div>
-                    <div class="" v-else-if="column.dataIndex === 'after'">
+                    <div class="" v-else-if="column.dataIndex === 'rougeL'">
                         <div class="text-subtext">
                             {{ record[4] }}
                         </div>
                     </div>
-                    <div class="" v-else-if="column.dataIndex === 'PPL'">
+                    <div class="" v-else-if="column.dataIndex === 'wrr'">
                         <div class="text-subtext">
                             {{ record[5] }}
                         </div>
                     </div>
-                    <div class="" v-else-if="column.dataIndex === 'USE'">
+                    <div class="" v-else-if="column.dataIndex === 'distance'">
                         <div class="text-subtext">
                             {{ record[6] }}
                         </div>
                     </div>
-                    <div class="" v-else-if="column.dataIndex === 'GRAMMAR'">
+                    <div class="" v-else-if="column.dataIndex === 'fr'">
                         <div class="text-subtext">
                             {{ record[7] }}
                         </div>
@@ -142,193 +277,117 @@ const AttackTable = defineComponent({
                     </div>
                 </template>
             </a-table>
+        </template>
+    </a-table>
 
-            <a-table v-bind="$attrs" :columns="RLMIAttackColumns" :dataSource="responseData.RLMI" :pagination="false">
-                <template #title>
-                    <div class="flex justify-between pr-4">
-                        <h4>RLMI_Attack Results</h4>
-                    </div>
-                </template>
-                <template #bodyCell="{ column, record }">
-                    <div class="" v-if="column.dataIndex === 'index'">
-                        <div class="text-subtext">
-                            {{ record[0] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'ASR_Attack'">
-                        <div class="text-subtext">
-                            {{ record[1] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'WER_Attack'">
-                        <div class="text-subtext">
-                            {{ record[2] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'ASR_Inference'">
-                        <div class="text-subtext">
-                            {{ record[3] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'WER_Inference'">
-                        <div class="text-subtext">
-                            {{ record[4] }}
-                        </div>
-                    </div>
-                    <div v-else class="text-subtext">
-                        {{ record[column.dataIndex] }}
-                    </div>
-                </template>
-            </a-table>
-
-            <a-table v-bind="$attrs" :columns="SWATAttackColumns" :dataSource="responseData.SWAT" :pagination="false" @expand="getInnerData">
-                <template #title>
-                    <div class="flex justify-between pr-4">
-                        <h4>SWAT_Attack Results</h4>
-                    </div>
-                </template>
-                <template #bodyCell="{ column, record }">
-                    <div class="" v-if="column.dataIndex === 'index'">
-                        <div class="text-subtext">
-                            {{ record.at(-1) && record.at(-1)[0] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'rouge1'">
-                        <div class="text-subtext">
-                            {{ record.at(-1) && record.at(-1)[1] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'rouge2'">
-                        <div class="text-subtext">
-                            {{ record.at(-1) && record.at(-1)[2] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'rougeL'">
-                        <div class="text-subtext">
-                            {{ record.at(-1) && record.at(-1)[3] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'wrr'">
-                        <div class="text-subtext">
-                            {{ record.at(-1) && record.at(-1)[4] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'distance'">
-                        <div class="text-subtext">
-                            {{ record.at(-1) && record.at(-1)[5] }}
-                        </div>
-                    </div>
-                    <div class="" v-else-if="column.dataIndex === 'fr'">
-                        <div class="text-subtext">
-                            {{ record.at(-1) && record.at(-1)[6] }}
-                        </div>
-                    </div>
-                    <div v-else class="text-subtext">
-                         {{ record[column.dataIndex] }}
-                    </div>
-                </template>
-                <template #expandedRowRender>
-                    <a-table :columns="SWATInnoColumns" :data-source="SWATInnerData" :pagination="false">
-                        <template #bodyCell="{ column, record }">
-                            <div class="" v-if="column.dataIndex === 'rouge1'">
-                                <div class="text-subtext">
-                                    {{ record[2] }}
-                                </div>
-                            </div>
-                            <div class="" v-else-if="column.dataIndex === 'rouge2'">
-                                <div class="text-subtext">
-                                    {{ record[3] }}
-                                </div>
-                            </div>
-                            <div class="" v-else-if="column.dataIndex === 'rougeL'">
-                                <div class="text-subtext">
-                                    {{ record[4] }}
-                                </div>
-                            </div>
-                            <div class="" v-else-if="column.dataIndex === 'wrr'">
-                                <div class="text-subtext">
-                                    {{ record[5] }}
-                                </div>
-                            </div>
-                            <div class="" v-else-if="column.dataIndex === 'distance'">
-                                <div class="text-subtext">
-                                    {{ record[6] }}
-                                </div>
-                            </div>
-                            <div class="" v-else-if="column.dataIndex === 'fr'">
-                                <div class="text-subtext">
-                                    {{ record[7] }}
-                                </div>
-                            </div>
-                             <div v-else class="text-subtext">
-                                {{ record[column.dataIndex] }}
-                            </div>
-                        </template>
-                    </a-table>
-                </template>
-            </a-table>
-        </div>
+    <a-table v-if="responseData.ModelStealingAttack.length > 0" v-bind="$attrs" 
+        :columns="ModelStealingAttackColumns" :dataSource="responseData.ModelStealingAttack" 
+        :pagination="false">
+        <template #title>
+            <div class="flex justify-between pr-4">
+                <h4>ModelStealingAttack Results</h4>
+            </div>
+        </template>
+        <template #bodyCell="{ column, record }">
+            <div class="" v-if="column.dataIndex === 'index'">
+                <div class="text-subtext">
+                    实验配置{{ record.index }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'train_loss'">
+                <div class="text-subtext">
+                    {{ record.iteration.at(-1)[0] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'train_acc'">
+                <div class="text-subtext">
+                    {{ record.iteration.at(-1)[1] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'valid_acc'">
+                <div class="text-subtext">
+                    {{ record.iteration.at(-1)[2] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'victim_acc'">
+                <div class="text-subtext">
+                    {{ record.victim_acc }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'steal_acc'">
+                <div class="text-subtext">
+                    {{ record.steal_acc }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'agreement'">
+                <div class="text-subtext">
+                    {{ record.agreement }}
+                </div>
+            </div>
+        </template>
+    </a-table>
+</div>
     `,
 
     setup(props) { // `props` is automatically passed here
         // Constants for columns
-        const AdvColumns = [
-            {
-                title: '索引',
-                dataIndex: 'index',
-                // customRender: ({ text, index }) => { index } // This was unusual. Assuming you want to display the index+1
-                customRender: ({ index }) => index + 1 // Corrected: typically display 1-based index
-            },
-            { title: '成功攻击次数', dataIndex: 'success' },
-            { title: '失败攻击次数', dataIndex: 'fail' },
-            { title: '跳过攻击次数', dataIndex: 'skip' },
-            { title: '准确率（攻击前）', dataIndex: 'before' },
-            { title: '准确率（攻击后）', dataIndex: 'after' },
-            { title: '成功率', dataIndex: 'rate' },
-        ];
-        const PoisoningColumns = [
-            {
-                title: '索引',
-                dataIndex: 'index',
-                 customRender: ({ index }) => index + 1 // Added for consistency if needed
-            },
-            { title: '准确率（攻击前）', dataIndex: 'before' },
-            { title: '准确率（攻击后）', dataIndex: 'after' },
-        ];
-        const BackDoorColumns = [
-            { title: '索引', dataIndex: 'index', customRender: ({ index }) => index + 1 },
-            { title: '数据集', dataIndex: 'dataset' },
-            { title: '投毒方', dataIndex: 'Poisoner' },
-            { title: '准确率（原始数据集）', dataIndex: 'before' },
-            { title: '准确率（毒化数据集）', dataIndex: 'after' },
-            { title: 'PPL', dataIndex: 'PPL' },
-            { title: 'USE', dataIndex: 'USE' },
-            { title: 'GRAMMAR', dataIndex: 'GRAMMAR' },
-        ];
-        const RLMIAttackColumns = [
-            { title: '索引', dataIndex: 'index', customRender: ({ index }) => index + 1 },
-            { title: 'average ASR(Attack)', dataIndex: 'ASR_Attack' },
-            { title: 'average WER(Attack)', dataIndex: 'WER_Attack' },
-            { title: 'average ASR(inference)', dataIndex: 'ASR_Inference' },
-            { title: 'average WER(inference)', dataIndex: 'WER_Inference' },
-        ];
-        const SWATAttackColumns = [
-            { title: '轮', dataIndex: 'index' }, // This seems to refer to the outer loop index in template
-            { title: 'average rouge1', dataIndex: 'rouge1' },
-            { title: 'average rouge2', dataIndex: 'rouge2' },
-            { title: 'average rougeL', dataIndex: 'rougeL' },
-            { title: 'average Word recovery rate', dataIndex: 'wrr' },
-            { title: 'average Edit distance', dataIndex: 'distance' },
-            { title: 'full recovery rate', dataIndex: 'fr' },
-        ];
-        const SWATInnoColumns = [ // Typo "SWATInnoColumns" vs "SWATInnerColumns", using original
-            { title: 'rouge1', dataIndex: 'rouge1' },
-            { title: 'rouge2', dataIndex: 'rouge2' },
-            { title: 'rougeL', dataIndex: 'rougeL' },
-            { title: 'Word recovery rate', dataIndex: 'wrr' },
-            { title: 'Edit distance', dataIndex: 'distance' },
-            { title: 'if full recovery', dataIndex: 'fr' },
-        ];
+				const AdvColumns = [
+						{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
+						{ title: '成功攻击次数', dataIndex: 'success', align: 'center' },
+						{ title: '失败攻击次数', dataIndex: 'fail', align: 'center' },
+						{ title: '跳过攻击次数', dataIndex: 'skip', align: 'center' },
+						{ title: '准确率（攻击前）', dataIndex: 'before', align: 'center' },
+						{ title: '准确率（攻击后）', dataIndex: 'after', align: 'center' },
+						{ title: '成功率', dataIndex: 'rate', align: 'center' },
+				];
+				const PoisoningColumns = [
+						{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
+						{ title: '准确率（攻击前）', dataIndex: 'before', align: 'center' },
+						{ title: '准确率（攻击后）', dataIndex: 'after', align: 'center' },
+				];
+				const BackDoorColumns = [
+						{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
+						{ title: '数据集', dataIndex: 'dataset', align: 'center' },
+						{ title: '投毒方', dataIndex: 'Poisoner', align: 'center' },
+						{ title: '准确率（原始数据集）', dataIndex: 'before', align: 'center' },
+						{ title: '准确率（毒化数据集）', dataIndex: 'after', align: 'center' },
+						{ title: 'PPL', dataIndex: 'PPL', align: 'center' },
+						{ title: 'USE', dataIndex: 'USE', align: 'center' },
+						{ title: 'GRAMMAR', dataIndex: 'GRAMMAR', align: 'center' },
+				];
+				const RLMIAttackColumns = [
+						{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
+						{ title: 'average ASR(Attack)', dataIndex: 'ASR_Attack', align: 'center' },
+						{ title: 'average WER(Attack)', dataIndex: 'WER_Attack', align: 'center' },
+						{ title: 'average ASR(inference)', dataIndex: 'ASR_Inference', align: 'center' },
+						{ title: 'average WER(inference)', dataIndex: 'WER_Inference', align: 'center' },
+				];
+				const SWATAttackColumns = [
+						{ title: '轮', dataIndex: 'index', align: 'center' },
+						{ title: 'average rouge1', dataIndex: 'rouge1', align: 'center' },
+						{ title: 'average rouge2', dataIndex: 'rouge2', align: 'center' },
+						{ title: 'average rougeL', dataIndex: 'rougeL', align: 'center' },
+						{ title: 'average Word recovery rate', dataIndex: 'wrr', align: 'center' },
+						{ title: 'average Edit distance', dataIndex: 'distance', align: 'center' },
+						{ title: 'full recovery rate', dataIndex: 'fr', align: 'center' },
+				];
+				const SWATInnoColumns = [
+						{ title: 'rouge1', dataIndex: 'rouge1', align: 'center' },
+						{ title: 'rouge2', dataIndex: 'rouge2', align: 'center' },
+						{ title: 'rougeL', dataIndex: 'rougeL', align: 'center' },
+						{ title: 'Word recovery rate', dataIndex: 'wrr', align: 'center' },
+						{ title: 'Edit distance', dataIndex: 'distance', align: 'center' },
+						{ title: 'if full recovery', dataIndex: 'fr', align: 'center' },
+				];
+				const ModelStealingAttackColumns = [
+						{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
+						{ title: '损失函数（最终）', dataIndex: 'train_loss', align: 'center' },
+						{ title: '训练集准确率（最终）', dataIndex: 'train_acc', align: 'center' },
+						{ title: '验证集准确率（最终）', dataIndex: 'valid_acc', align: 'center' },
+						{ title: '目标模型准确率', dataIndex: 'victim_acc', align: 'center' },
+						{ title: '窃取模型准确率', dataIndex: 'steal_acc', align: 'center' },
+						{ title: '一致性', dataIndex: 'agreement', align: 'center' },
+				];
 
         const responseData = ref({
             AdversarialAttack: [],
@@ -336,9 +395,10 @@ const AttackTable = defineComponent({
             PoisoningAttack: [],
             RLMI: [],
             SWAT: [],
+            ModelStealingAttack: []
         });
 
-				// 子表格
+        // 子表格
         const SWATInnerData = ref([]);
 
         const username = localStorage.getItem('Global_username');
@@ -377,6 +437,7 @@ const AttackTable = defineComponent({
                     responseData.value.PoisoningAttack = response.data.PoisoningAttack || [];
                     responseData.value.RLMI = response.data.RLMI || [];
                     responseData.value.SWAT = response.data.SWAT || [];
+                    responseData.value.ModelStealingAttack = response.data.ModelStealingAttack || [];
                 } else {
                     console.error("Invalid API response structure:", response);
                 }
@@ -384,20 +445,18 @@ const AttackTable = defineComponent({
             } catch (error) {
                 console.error("请求出错 (Error fetching data):", error);
                 // Reset data or show error message to user
-                responseData.value = { AdversarialAttack: [], BackDoorAttack: [], PoisoningAttack: [], RLMI: [], SWAT: [] };
+                responseData.value = {
+                    AdversarialAttack: [],
+                    BackDoorAttack: [],
+                    PoisoningAttack: [],
+                    RLMI: [],
+                    SWAT: [],
+                    ModelStealingAttack: []
+                };
             }
 
-            // The .map logic below to prepend an index seems to conflict with how
-            // Ant Design Table's `customRender: ({index})` works for its own index.
-            // If your data ALREADY has an index-like first element, then these maps might be okay,
-            // but it makes the template access like `record[0][0]` more complex.
-            // For simplicity with Ant Design Table, it's often better if `dataSource` items are flat objects
-            // and `columns` `dataIndex` directly map to object keys.
-            // However, I'll keep your original mapping logic. Be mindful of `record[0][0]` vs `record.index` etc.
-
+            // 预处理各个结果，添加索引什么的
             if (responseData.value.AdversarialAttack && Array.isArray(responseData.value.AdversarialAttack)) {
-                // Your original map creates an array of arrays: [[index, ...item]]
-                // This means in template: record[0] is the inner array, record[0][0] is index, record[0][1] is first data point etc.
                 responseData.value.AdversarialAttack = responseData.value.AdversarialAttack.map((item, index) => {
                     return [[index + 1, ...item]];
                 });
@@ -417,17 +476,23 @@ const AttackTable = defineComponent({
                     return [index + 1, ...item];
                 });
             }
-					if (responseData.value.SWAT && Array.isArray(responseData.value.SWAT)) {
-						responseData.value.SWAT = responseData.value.SWAT.map((item, index) => {
-							return item.map((element) => {
-								if (element.length == 6) {
-									return [index + 1, ...element]
-								} else {
-									return element
-								}
-							})
-						})
-					}
+            if (responseData.value.SWAT && Array.isArray(responseData.value.SWAT)) {
+                responseData.value.SWAT = responseData.value.SWAT.map((item, index) => {
+                    return item.map((element) => {
+                        if (element.length == 6) {
+                            return [index + 1, ...element]
+                        } else {
+                            return element
+                        }
+                    })
+                })
+            }
+            if (responseData.value.ModelStealingAttack && Array.isArray(responseData.value.ModelStealingAttack)) {
+                responseData.value.ModelStealingAttack = responseData.value.ModelStealingAttack.map((item, index) => {
+                    item.index = index + 1; 
+                    return item; 
+                });
+            }
             console.log("Processed responseData:", responseData.value);
 
         });
@@ -440,6 +505,7 @@ const AttackTable = defineComponent({
             RLMIAttackColumns,
             SWATAttackColumns,
             SWATInnoColumns,
+            ModelStealingAttackColumns,
             responseData,
             SWATInnerData,
             getInnerData,

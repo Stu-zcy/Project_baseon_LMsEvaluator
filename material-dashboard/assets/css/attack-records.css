@@ -57,11 +57,7 @@
 	display: flex;
 	gap: 0.5rem;
 }
-.empty-message {
-	text-align: center;
-	padding: 3rem 0;
-	color: #fff;
-}
+
 .pagination-container {
 	margin-top: 2rem;
 	display: flex;

@@ -3,8 +3,8 @@ const { ref, onMounted, defineComponent } = Vue;
 import axios from "../utils/axiosConfig.js";
 
 const ProfileInfo = defineComponent({
-  name: 'ProfileInfo',
-  template: `
+	name: 'ProfileInfo',
+	template: `
     <div class="account-profile-editor flex">
       <a-card>
         <div class="avatarContainer rounded-full">
@@ -123,213 +123,212 @@ const ProfileInfo = defineComponent({
       </a-modal>
     </div>
   `,
-  setup() {
-    const username = localStorage.getItem('Global_username');
-    const token = localStorage.getItem('Global_token');
-    const responseData = ref({}); // Initialize as object
-    const newUsername = ref('');
-    const newGender = ref(undefined); // Use undefined for unselected radio
-    const newAge = ref(undefined);
-    const open = ref(false);
-    const confirmLoading = ref(false);
-    const imageUrl = ref('');
-    const loading = ref(false); // For a-upload loading state
-    const fileList = ref([]);
-    const isUploading = ref(false);
-    const cropper = ref(null);
+	setup() {
+		const username = localStorage.getItem('Global_username');
+		const token = localStorage.getItem('Global_token');
+		const responseData = ref({}); // Initialize as object
+		const newUsername = ref('');
+		const newGender = ref(undefined); // Use undefined for unselected radio
+		const newAge = ref(undefined);
+		const open = ref(false);
+		const confirmLoading = ref(false);
+		const imageUrl = ref('');
+		const loading = ref(false); // For a-upload loading state
+		const fileList = ref([]);
+		const isUploading = ref(false);
+		const cropper = ref(null);
 
-    async function fetchInfo() {
-      if (!username || !token) {
-        console.error("Username or token is missing from localStorage.");
-        // antd.message.error("用户未登录或登录已失效");
-        return;
-      }
-      try {
-        const response = await axios.post('http://127.0.0.1:46666/api/profile', {
-          username: username,
-          token: token,
-        });
-        console.log(response);
-        if (response.status === 200) {
-          responseData.value = response.data;
-        } else {
-          responseData.value = {}; // Ensure it's an object
-          console.error("Invalid profile data structure:", response.data);
-          antd.message.error("获取用户信息失败，请检查网络连接");
-        }
-      } catch (error) {
-        console.error('获取用户信息请求出错:', error);
-        responseData.value = {};
-        antd.message.error("获取用户信息失败，请检查网络连接");
-      }
-    }
+		async function fetchInfo() {
+			if (!username || !token) {
+				console.error("Username or token is missing from localStorage.");
+				// antd.message.error("用户未登录或登录已失效");
+				return;
+			}
+			try {
+				const response = await axios.post('http://127.0.0.1:5000/api/profile', {
+					username: username,
+					token: token,
+				});
+				console.log(response);
+				if (response.status === 200) {
+					responseData.value = response.data;
+				} else {
+					responseData.value = {}; // Ensure it's an object
+					console.error("Invalid profile data structure:", response.data);
+					antd.message.error("获取用户信息失败，请检查网络连接");
+				}
+			} catch (error) {
+				console.error('获取用户信息请求出错:', error);
+				responseData.value = {};
+				antd.message.error("获取用户信息失败，请检查网络连接");
+			}
+		}
 
-    onMounted(fetchInfo);
+		onMounted(fetchInfo);
 
-    //转化为base64编码
-    function fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => {
-          resolve(e.target.result);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
+		//转化为base64编码
+		function fileToBase64(file) {
+			return new Promise((resolve, reject) => {
+				const reader = new FileReader();
+				reader.onload = e => {
+					resolve(e.target.result);
+				};
+				reader.onerror = reject;
+				reader.readAsDataURL(file);
+			});
+		}
 
-    const beforeUpload = async (file) => {
-      loading.value = true; // a-upload loading
-      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-      const isLt2M = file.size / 1024 / 1024 < 20;
+		const beforeUpload = async (file) => {
+			loading.value = true; // a-upload loading
+			const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+			const isLt2M = file.size / 1024 / 1024 < 20;
 
-      if (!isJpgOrPng) {
-        antd.message.error('只能上传 JPG 或 PNG 格式的图片!');
-      } else if (!isLt2M) {
-        antd.message.error('图片大小必须小于 20MB!');
-      } else {
-        imageUrl.value = await fileToBase64(file);
-        isUploading.value = true;
-      }
-      loading.value = false;
-      return false;
-    };
+			if (!isJpgOrPng) {
+				antd.message.error('只能上传 JPG 或 PNG 格式的图片!');
+			} else if (!isLt2M) {
+				antd.message.error('图片大小必须小于 20MB!');
+			} else {
+				imageUrl.value = await fileToBase64(file);
+				isUploading.value = true;
+			}
+			loading.value = false;
+			return false;
+		};
 
-    const uploadToGithub = async (base64File) => {
-      loading.value = true; // Indicate general loading
-      const fileName = Date.now().toString() + '.png'; // Use timestamp for unique file name
-      const rawUrl = 'https://api.github.com/repos/Stu-zcy/Public_image/contents/';
-      const fastUrl = 'https://raw.githubusercontent.com/Stu-zcy/Public_image/main/'; // Corrected path
-      const githubToken = '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'; // Sensitive data, should not be hardcoded
+		const uploadToGithub = async (base64File) => {
+			loading.value = true; // Indicate general loading
+			const fileName = Date.now().toString() + '.png'; // Use timestamp for unique file name
+			const rawUrl = 'https://api.github.com/repos/Stu-zcy/Public_image/contents/';
+			const fastUrl = 'https://raw.githubusercontent.com/Stu-zcy/Public_image/main/'; // Corrected path
+			const githubToken = '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'; // Sensitive data, should not be hardcoded
 
-      const base64ImgContent = base64File.split(',')[1];
+			const base64ImgContent = base64File.split(',')[1];
 
-      try {
-        const response = await fetch(rawUrl + fileName, {
-          method: 'PUT',
-          headers: {
-            'Authorization': 'token ' + githubToken,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message: 'Upload cropped avatar for ',
-            content: base64ImgContent,
-            branch: 'main',
-          }),
-        });
+			try {
+				const response = await fetch(rawUrl + fileName, {
+					method: 'PUT',
+					headers: {
+						'Authorization': 'token ' + githubToken,
+						'Accept': 'application/vnd.github.v3+json',
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						message: 'Upload cropped avatar for ',
+						content: base64ImgContent,
+						branch: 'main',
+					}),
+				});
 
-        loading.value = false;
-        if (response.ok) { // Check for 200-299 status
-          const responseData = await response.json();
-          console.log('裁剪后的图片上传GitHub成功', responseData);
-          return fastUrl + fileName;
-        } else {
-          const errorData = await response.text();
-          console.error('GitHub上传失败:', response.status, errorData);
-          antd.message.error(`GitHub上传失败: ${response.status}`);
-          return '';
-        }
-      } catch (error) {
-        console.error('GitHub上传异常:', error);
-        antd.message.error('GitHub上传异常');
-        loading.value = false;
-        return '';
-      }
-    };
+				loading.value = false;
+				if (response.ok) { // Check for 200-299 status
+					const responseData = await response.json();
+					console.log('裁剪后的图片上传GitHub成功', responseData);
+					return fastUrl + fileName;
+				} else {
+					const errorData = await response.text();
+					console.error('GitHub上传失败:', response.status, errorData);
+					antd.message.error(`GitHub上传失败: ${response.status}`);
+					return '';
+				}
+			} catch (error) {
+				console.error('GitHub上传异常:', error);
+				antd.message.error('GitHub上传异常');
+				loading.value = false;
+				return '';
+			}
+		};
 
-    const showModal = () => {
-      open.value = true;
-      confirmLoading.value = false;
-      console.log(responseData.value);
-      if (responseData.value && responseData.value.account) {
-        newUsername.value = responseData.value.account.username;
-        imageUrl.value = responseData.value.account.avatar; // Fallback to empty string
-        newGender.value = responseData.value.account.gender;
-        newAge.value = responseData.value.account.age;
-      } else {
-        // Handle case where responseData is not yet loaded or malformed
-        newUsername.value = '';
-        imageUrl.value = '';
-        newGender.value = undefined;
-        newAge.value = undefined;
-      }
-      fileList.value = []; // Clear previous file list for a-upload
-    };
+		const showModal = () => {
+			open.value = true;
+			confirmLoading.value = false;
+			console.log(responseData.value);
+			if (responseData.value && responseData.value.account) {
+				newUsername.value = responseData.value.account.username;
+				imageUrl.value = responseData.value.account.avatar; // Fallback to empty string
+				newGender.value = responseData.value.account.gender;
+				newAge.value = responseData.value.account.age;
+			} else {
+				// Handle case where responseData is not yet loaded or malformed
+				newUsername.value = '';
+				imageUrl.value = '';
+				newGender.value = undefined;
+				newAge.value = undefined;
+			}
+			fileList.value = []; // Clear previous file list for a-upload
+		};
 
-    const handleModalCancel = () => {
-      isUploading.value = false;
-      open.value = false;
-    };
+		const handleModalCancel = () => {
+			isUploading.value = false;
+			open.value = false;
+		};
 
-    const handleOk = async () => {
-      confirmLoading.value = true;
+		const handleOk = async () => {
+			confirmLoading.value = true;
 
-      let newAvatar = '';
-      if (isUploading.value) {
-        // 裁剪并上传
-        cropper.value.getCropData(async (croppedData) => {
-          imageUrl.value = croppedData; // Update imageUrl with cropped data
-          isUploading.value = false;
-        });
-        newAvatar = await uploadToGithub(imageUrl.value); // Upload cropped image to GitHub
-        if (!newAvatar) {
-          // 如果上传失败或异常
-          open.value = false;
-          confirmLoading.value = false;
-          return;
-        }
-      } else {
-        // 如果没有裁剪
-        newAvatar = imageUrl.value;
-      }
+			let newAvatar = '';
 
-      if (!newUsername.value || !newAge.value || !newAvatar || (newGender.value !== 0 && newGender.value !== 1)) {
-        antd.message.error('请填写所有必填项');
-        open.value = false;
-        confirmLoading.value = false; // Reset loading state
-        return;
-      }
+			if (isUploading.value && cropper.value) {
+				// 裁剪并上传
+				console.log('正在裁剪');
+				await new Promise((resolve) => {
+					cropper.value.getCropData((croppedData) => {
+						imageUrl.value = croppedData; // Update imageUrl with cropped data
+						isUploading.value = false;
+						resolve('裁剪完成');
+					});
+				});
+				newAvatar = await uploadToGithub(imageUrl.value);
+			} else {
+				console.log('无需裁剪');
+				newAvatar = imageUrl.value;
+			}
 
-      const response = await axios.post('http://127.0.0.1:46666/api/updateInfo', {
-        username: username,
-        token: token,
-        newUsername: newUsername.value,
-        newAvatar: newAvatar,
-        newGender: newGender.value,
-        newAge: newAge.value,
-      });
+			if (!newUsername.value || !newAge.value || !newAvatar || (newGender.value !== 0 && newGender.value !== 1)) {
+				antd.message.error('请填写所有必填项');
+				open.value = false;
+				confirmLoading.value = false; // Reset loading state
+				return;
+			}
 
-      if (response.status === 200) {
-        antd.message.success('用户信息更新成功');
-        await fetchInfo();
-      } else {
-        antd.message.error(`用户信息更新失败`);
-      }
+			const response = await axios.post('http://127.0.0.1:5000/api/updateInfo', {
+				username: username,
+				token: token,
+				newUsername: newUsername.value,
+				newAvatar: newAvatar,
+				newGender: newGender.value,
+				newAge: newAge.value,
+			});
 
-      open.value = false; // Close modal after handling
-      confirmLoading.value = false; // Reset loading state
-    }
-    
-    return {
-      responseData,
-      newUsername,
-      newGender,
-      newAge,
-      open,
-      confirmLoading,
-      imageUrl,
-      loading,
-      fileList,
-      isUploading,
-      cropper,
-      fetchInfo,
-      beforeUpload,
-      showModal,
-      handleOk,
-      handleModalCancel
-    };
-  }
+			if (response.status === 200) {
+				antd.message.success('用户信息更新成功');
+				await fetchInfo();
+			} else {
+				antd.message.error(`用户信息更新失败`);
+			}
+
+			open.value = false; // Close modal after handling
+			confirmLoading.value = false; // Reset loading state
+		}
+
+		return {
+			responseData,
+			newUsername,
+			newGender,
+			newAge,
+			open,
+			confirmLoading,
+			imageUrl,
+			loading,
+			fileList,
+			isUploading,
+			cropper,
+			fetchInfo,
+			beforeUpload,
+			showModal,
+			handleOk,
+			handleModalCancel
+		};
+	}
 });
 
 export default ProfileInfo;

@@ -13,6 +13,7 @@ const darkPaginationStyle = `
   .ant-pagination-item-link { color: rgba(255, 255, 255, 0.85) !important;}
   .ant-pagination-disabled .ant-pagination-item-link, .ant-pagination-disabled:hover .ant-pagination-item-link { color: rgba(255, 255, 255, 0.3) !important; background-color: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
   .ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-ellipsis, .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis { color: rgba(255, 255, 255, 0.85) !important; }
+	.empty-message {text-align: center;	padding: 3rem 0;color: #fff;}
 `;
 
 const lightPaginationStyle = `
@@ -24,6 +25,7 @@ const lightPaginationStyle = `
   .ant-pagination-disabled .ant-pagination-item-link, .ant-pagination-disabled a { color: rgba(0, 0, 0, 0.25) !important; }
   .ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-ellipsis,
   .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis { color: rgba(0, 0, 0, 0.85) !important; }
+	.empty-message {text-align: center;	padding: 3rem 0;color: #344767;} /* 黑色用black，深蓝色用#344767 */
 `;
 
 function injectGlobalStyle(css, id) {

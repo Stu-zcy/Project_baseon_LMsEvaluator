@@ -609,8 +609,6 @@ def attackRecords():
 
 
 '''删除一条记录，同时删除日志文件与数据库记录。不存在日志文件时会报错。'''
-
-
 @app.route('/api/deleteRecord', methods=['POST'])
 @auth
 def deleteRecord():

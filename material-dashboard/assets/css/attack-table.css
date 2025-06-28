@@ -1,0 +1,43 @@
+.ant-table {
+	border: 4px solid #E8EBF1;
+	border-radius: 10px !important;
+
+	position: relative;
+	padding-top:  4em !important;
+	background-color: #fafafa !important;
+}
+
+.ant-spin-container {
+	margin-top: 5em;
+}
+
+.ant-table-title {
+	display: inline-block;
+	width: auto;
+	white-space: nowrap;
+
+	position: absolute;
+	top: 0;
+	transform: translateY(-50%);
+	left: 20px;
+	z-index: 2;
+	/* padding: 6px; */
+	/* 渐变背景，上方是空白，下方是卡片 */
+	/* background: linear-gradient(to bottom,
+			#fff 0%,
+			#fff 50%,
+			#fafafa 50%,
+			#fafafa 100%
+	); */
+	background-color: #00adb5;
+	border: 0px;
+	border-radius: 10px !important;
+	box-shadow: 0 4px 12px #83898d;
+}
+
+
+.ant-table-title h4 {
+	color: white;
+
+
+}
