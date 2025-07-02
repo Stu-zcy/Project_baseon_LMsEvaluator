@@ -53,7 +53,7 @@ instance.interceptors.response.use(
 
 			try {
 				// 尝试刷新token
-				const response = await instance.post('http://127.0.0.1:46666/api/refresh_token', {
+				const response = await instance.post('/api/refresh_token', {
 					refresh_token: authStore.getRefreshToken(),
 					username: authStore.getUsername()
 				});

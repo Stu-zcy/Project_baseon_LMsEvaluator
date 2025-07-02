@@ -110,7 +110,7 @@ const auth = async () => {
   const token = localStorage.getItem('Global_token');
 
   try {
-    const response = await axios.post('http://127.0.0.1:5000/api/auth', { username, token });
+    const response = await axios.post('http://127.0.0.1:46666/api/auth', { username, token });
 
     if (response.data.status === 'success') {
       hasAccess.value = true;
@@ -127,7 +127,7 @@ const auth = async () => {
 // 获取用户列表
 const fetchUsers = async () => {
   try {
-    const response = await axios.post('http://127.0.0.1:5000/api/users', {
+    const response = await axios.post('http://127.0.0.1:46666/api/users', {
       username: localStorage.getItem('Global_username'),
       token: localStorage.getItem('Global_token')
     });
@@ -143,7 +143,7 @@ const fetchUsers = async () => {
 
 const deleteUser = async (username) => {
   try {
-    const response = await axios.post('http://127.0.0.1:5000/api/delete_users', {
+    const response = await axios.post('http://127.0.0.1:46666/api/delete_users', {
       username: localStorage.getItem('Global_username'),
       token: localStorage.getItem('Global_token'),
       delete_username: username

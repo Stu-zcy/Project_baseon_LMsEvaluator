@@ -424,7 +424,7 @@ const AttackTable = defineComponent({
                     console.error("axios is not defined. Make sure it's loaded globally via CDN.");
                     return;
                 }
-                const response = await axios.post('http://127.0.0.1:46666/api/getRecord', {
+                const response = await axios.post('/api/getRecord', {
                     username: username,
                     token: token,
                     createTime: props.targetCreateTime

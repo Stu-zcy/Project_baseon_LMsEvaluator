@@ -82,7 +82,7 @@ function getInnerData(expanded, record) {
 }
 onMounted(async () => {
 	try {
-		const response = await axios.post('http://127.0.0.1:5000/api/getRecord', {
+		const response = await axios.post('http://127.0.0.1:46666/api/getRecord', {
 			username: username,
 			token: token,
 			createTime: props.targetCreateTime

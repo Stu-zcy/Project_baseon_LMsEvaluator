@@ -256,7 +256,7 @@ async function sendAttackList() {
   const username = localStorage.getItem('Global_username');
   const token = localStorage.getItem('Global_token'); 
   try {
-    const response = await axios.post('http://127.0.0.1:5000/api/attack_list', {
+    const response = await axios.post('http://127.0.0.1:46666/api/attack_list', {
       attack_list: attackList.value, 
       username: username,
       token: token
@@ -281,7 +281,7 @@ async function executeAttack() {
   isModalVisible.value = true;
 
   try {
-    const response = await axios.post('http://127.0.0.1:5000/api/execute_attack', {
+    const response = await axios.post('http://127.0.0.1:46666/api/execute_attack', {
       username: username,
       token: token
     });

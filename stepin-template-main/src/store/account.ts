@@ -32,7 +32,7 @@ export const useAccountStore = defineStore('account', {
   actions: {
     async login(username: string, password: string) {
       return http
-        .request<TokenResult, Response<TokenResult>>('http://127.0.0.1:5000/api/login', 'post_json', { username, password })
+        .request<TokenResult, Response<TokenResult>>('http://127.0.0.1:46666/api/login', 'post_json', { username, password })
         .then(async (response) => {
           if (response.code === 200) {
             // 登录成功，更新登录状态
@@ -80,7 +80,7 @@ export const useAccountStore = defineStore('account', {
       }
 
       return http
-        .request<Account, Response<Profile>>('http://127.0.0.1:5000/api/profile', 'post_json', { username, token })
+        .request<Account, Response<Profile>>('http://127.0.0.1:46666/api/profile', 'post_json', { username, token })
         .then((response) => {
           if (response.code === 200) {
             const { setAuthorities } = useAuthStore();

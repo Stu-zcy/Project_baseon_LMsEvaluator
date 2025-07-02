@@ -26,7 +26,7 @@ const indicator = h(LoadingOutlined, {
 
 
 async function fetchData() {
-	const response = await axios.post('http://127.0.0.1:5000/api/attackRecords', {
+	const response = await axios.post('http://127.0.0.1:46666/api/attackRecords', {
 		username: username,
 		token: token,
 		currentPage: currentPage.value,
@@ -61,7 +61,7 @@ function handleOK(e: MouseEvent) {
 }
 
 async function del(createTime: number) {
-	const response = await axios.post('http://127.0.0.1:5000/api/deleteRecord', {
+	const response = await axios.post('http://127.0.0.1:46666/api/deleteRecord', {
 		username: username,
 		token: token,
 		createTime: createTime
@@ -72,7 +72,7 @@ async function del(createTime: number) {
 
 async function treasure(createTime: number, value: number) {
 	starValues[createTime] = !starValues[createTime]
-	const response = await axios.post('http://127.0.0.1:5000/api/treasure', {
+	const response = await axios.post('http://127.0.0.1:46666/api/treasure', {
 		username: username,
 		token: token,
 		createTime: createTime,

@@ -115,7 +115,7 @@ const avatarList = Array.from({ length: 20 }, (_, index) => `https://gitee.com/t
 
 async function requestMailcode() {
   try {
-    const response = await axios.post('http://127.0.0.1:5000/api/send_verification_code', { email: form.email });
+    const response = await axios.post('http://127.0.0.1:46666/api/send_verification_code', { email: form.email });
     message.success('验证码已发送，请查收邮箱！');
   } catch (error) {
     throw new Error(error.response?.data?.message || '发送验证码失败');
@@ -126,7 +126,7 @@ async function requestSignin() {
   loading.value = true;
   try {
     // 向后端发送请求
-    const response = await axios.post('http://127.0.0.1:5000/api/register', form);
+    const response = await axios.post('http://127.0.0.1:46666/api/register', form);
 
     // 根据后端返回的消息处理
     if (response.status === 201) {

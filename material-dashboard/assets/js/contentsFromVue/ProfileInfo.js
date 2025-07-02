@@ -145,7 +145,7 @@ const ProfileInfo = defineComponent({
 				return;
 			}
 			try {
-				const response = await axios.post('http://127.0.0.1:5000/api/profile', {
+				const response = await axios.post('/api/profile', {
 					username: username,
 					token: token,
 				});
@@ -290,7 +290,7 @@ const ProfileInfo = defineComponent({
 				return;
 			}
 
-			const response = await axios.post('http://127.0.0.1:5000/api/updateInfo', {
+			const response = await axios.post('/api/updateInfo', {
 				username: username,
 				token: token,
 				newUsername: newUsername.value,
