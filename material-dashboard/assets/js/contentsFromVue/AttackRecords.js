@@ -89,7 +89,9 @@ const AttackRecords = defineComponent({
                                             :allowClear="false"
                                         ></a-rate>
                                         <a-button type="primary" @click="showModal(item[0])">查看详情</a-button>
-                                        <a-button danger @click="del(item[0])">删除</a-button>
+																				<a-Popconfirm title="确定删除此记录吗？" @confirm="del(item[0])" ok-text="确定" cancel-text="取消">
+                                        <a-button danger>删除</a-button>
+																				</a-Popconfirm>
                                     </div>
                                 </div>
                             </div>

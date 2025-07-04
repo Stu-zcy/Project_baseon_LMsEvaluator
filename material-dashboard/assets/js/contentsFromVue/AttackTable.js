@@ -16,10 +16,22 @@ const AttackTable = defineComponent({
 <div>
     <a-table v-if="responseData.AdversarialAttack.length > 0" v-bind="$attrs" 
         :columns="AdvColumns" :dataSource="responseData.AdversarialAttack" 
-        :pagination="false">
+        :pagination="false" class="outer-table">
+									<template #headerCell="{ column }">
+            <template v-if="column.dataIndex === 'index'">
+                <span style="display: inline-flex; align-items: center; margin-top: 5px">
+                    <i class="material-icons" style=" font-size: 24px;">list</i>
+                    <span>实验配置</span>
+                </span>
+            </template>
+
+						<template v-else>
+            {{ column.title }}
+						</template>
+        	</template>
         <template #title>
             <div class="flex justify-between pr-4">
-                <h4>AdversarialAttack Results</h4>
+                <h4>对抗攻击</h4>
             </div>
         </template>
         <template #bodyCell="{ column, record }">
@@ -66,10 +78,22 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.PoisoningAttack.length > 0" v-bind="$attrs" 
         :columns="PoisoningColumns" :dataSource="responseData.PoisoningAttack" 
-        :pagination="false">
+        :pagination="false" class="outer-table">
+									<template #headerCell="{ column }">
+            <template v-if="column.dataIndex === 'index'">
+                <span style="display: inline-flex; align-items: center; margin-top: 5px">
+                    <i class="material-icons" style=" font-size: 24px;">list</i>
+                    <span>实验配置</span>
+                </span>
+            </template>
+
+						<template v-else>
+            {{ column.title }}
+						</template>
+        	</template>
         <template #title>
             <div class="flex justify-between pr-4">
-                <h4>PoisoningAttack Results</h4>
+                <h4>数据投毒</h4>
             </div>
         </template>
         <template #bodyCell="{ column, record }">
@@ -96,10 +120,22 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.BackDoorAttack.length > 0" v-bind="$attrs" 
         :columns="BackDoorColumns" :dataSource="responseData.BackDoorAttack" 
-        :pagination="false">
+        :pagination="false" class="outer-table">
+									<template #headerCell="{ column }">
+            <template v-if="column.dataIndex === 'index'">
+                <span style="display: inline-flex; align-items: center; margin-top: 5px">
+                    <i class="material-icons" style=" font-size: 24px;">list</i>
+                    <span>实验配置</span>
+                </span>
+            </template>
+
+						<template v-else>
+            {{ column.title }}
+						</template>
+        	</template>
         <template #title>
             <div class="flex justify-between pr-4">
-                <h4>BackDoorAttack Results</h4>
+                <h4>后门攻击</h4>
             </div>
         </template>
         <template #bodyCell="{ column, record }">
@@ -151,10 +187,22 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.RLMI.length > 0" v-bind="$attrs" 
         :columns="RLMIAttackColumns" :dataSource="responseData.RLMI" 
-        :pagination="false">
+        :pagination="false" class="outer-table">
+									<template #headerCell="{ column }">
+            <template v-if="column.dataIndex === 'index'">
+                <span style="display: inline-flex; align-items: center; margin-top: 5px">
+                    <i class="material-icons" style=" font-size: 24px;">list</i>
+                    <span>实验配置</span>
+                </span>
+            </template>
+
+						<template v-else>
+            {{ column.title }}
+						</template>
+        	</template>
         <template #title>
             <div class="flex justify-between pr-4">
-                <h4>RLMI_Attack Results</h4>
+                <h4>强化学习攻击</h4>
             </div>
         </template>
         <template #bodyCell="{ column, record }">
@@ -191,16 +239,28 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.SWAT.length > 0" v-bind="$attrs" 
         :columns="SWATAttackColumns" :dataSource="responseData.SWAT" 
-        :pagination="false" @expand="getInnerData">
+        :pagination="false" @expand="getInnerData" class="outer-table">
+									<template #headerCell="{ column }">
+            <template v-if="column.dataIndex === 'index'">
+                <span style="display: inline-flex; align-items: center; margin-top: 5px">
+                    <i class="material-icons" style=" font-size: 24px;">list</i>
+                    <span>实验配置</span>
+                </span>
+            </template>
+
+						<template v-else-if="typeof column.title === 'string'">
+            {{ column.title }}
+						</template>
+        	</template>
         <template #title>
             <div class="flex justify-between pr-4">
-                <h4>SWAT_Attack Results</h4>
+                <h4>快速评估测试</h4>
             </div>
         </template>
         <template #bodyCell="{ column, record }">
             <div class="" v-if="column.dataIndex === 'index'">
                 <div class="text-subtext">
-                    {{ record.at(-1) && record.at(-1)[0] }}
+                    实验配置{{ record.at(-1) && record.at(-1)[0] }}
                 </div>
             </div>
             <div class="" v-else-if="column.dataIndex === 'rouge1'">
@@ -240,7 +300,7 @@ const AttackTable = defineComponent({
         <template #expandedRowRender>
             <a-table v-if="responseData.SWAT.length > 0"
                 :columns="SWATInnoColumns" :data-source="SWATInnerData" 
-                :pagination="false">
+                :pagination="false" class="inner-table">
                 <template #bodyCell="{ column, record }">
                     <div class="" v-if="column.dataIndex === 'rouge1'">
                         <div class="text-subtext">
@@ -282,10 +342,22 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.ModelStealingAttack.length > 0" v-bind="$attrs" 
         :columns="ModelStealingAttackColumns" :dataSource="responseData.ModelStealingAttack" 
-        :pagination="false">
-        <template #title>
+        :pagination="false" class="outer-table">
+					<template #headerCell="{ column }">
+            <template v-if="column.dataIndex === 'index'">
+                <span style="display: inline-flex; align-items: center; margin-top: 5px">
+                    <i class="material-icons" style=" font-size: 24px;">list</i>
+                    <span>实验配置</span>
+                </span>
+            </template>
+
+						<template v-else>
+            {{ column.title }}
+						</template>
+        	</template>
+        	<template #title>
             <div class="flex justify-between pr-4">
-                <h4>ModelStealingAttack Results</h4>
+                <h4>模型窃取攻击</h4>
             </div>
         </template>
         <template #bodyCell="{ column, record }">
@@ -332,7 +404,7 @@ const AttackTable = defineComponent({
     setup(props) { // `props` is automatically passed here
         // Constants for columns
 				const AdvColumns = [
-						{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
+						{ title: '实验配置', dataIndex: 'index', width: '12%', align: 'center' },
 						{ title: '成功攻击次数', dataIndex: 'success', align: 'center' },
 						{ title: '失败攻击次数', dataIndex: 'fail', align: 'center' },
 						{ title: '跳过攻击次数', dataIndex: 'skip', align: 'center' },
@@ -341,12 +413,12 @@ const AttackTable = defineComponent({
 						{ title: '成功率', dataIndex: 'rate', align: 'center' },
 				];
 				const PoisoningColumns = [
-						{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
+						{ title: '实验配置', dataIndex: 'index', width: '12%', align: 'center' },
 						{ title: '准确率（攻击前）', dataIndex: 'before', align: 'center' },
 						{ title: '准确率（攻击后）', dataIndex: 'after', align: 'center' },
 				];
 				const BackDoorColumns = [
-						{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
+						{ title: '实验配置', dataIndex: 'index', width: '12%', align: 'center' },
 						{ title: '数据集', dataIndex: 'dataset', align: 'center' },
 						{ title: '投毒方', dataIndex: 'Poisoner', align: 'center' },
 						{ title: '准确率（原始数据集）', dataIndex: 'before', align: 'center' },
@@ -356,31 +428,31 @@ const AttackTable = defineComponent({
 						{ title: 'GRAMMAR', dataIndex: 'GRAMMAR', align: 'center' },
 				];
 				const RLMIAttackColumns = [
-						{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
-						{ title: 'average ASR(Attack)', dataIndex: 'ASR_Attack', align: 'center' },
-						{ title: 'average WER(Attack)', dataIndex: 'WER_Attack', align: 'center' },
-						{ title: 'average ASR(inference)', dataIndex: 'ASR_Inference', align: 'center' },
-						{ title: 'average WER(inference)', dataIndex: 'WER_Inference', align: 'center' },
+						{ title: '实验配置', dataIndex: 'index', width: '12%', align: 'center' },
+						{ title: 'ASR(Attack,均值)', dataIndex: 'ASR_Attack', align: 'center' },
+						{ title: 'WER(Attack,均值)', dataIndex: 'WER_Attack', align: 'center' },
+						{ title: 'ASR(inference,均值)', dataIndex: 'ASR_Inference', align: 'center' },
+						{ title: 'WER(inference,均值)', dataIndex: 'WER_Inference', align: 'center' },
 				];
 				const SWATAttackColumns = [
-						{ title: '轮', dataIndex: 'index', align: 'center' },
-						{ title: 'average rouge1', dataIndex: 'rouge1', align: 'center' },
-						{ title: 'average rouge2', dataIndex: 'rouge2', align: 'center' },
-						{ title: 'average rougeL', dataIndex: 'rougeL', align: 'center' },
-						{ title: 'average Word recovery rate', dataIndex: 'wrr', align: 'center' },
-						{ title: 'average Edit distance', dataIndex: 'distance', align: 'center' },
-						{ title: 'full recovery rate', dataIndex: 'fr', align: 'center' },
+						{ title: '实验配置', dataIndex: 'index', width: '12%', align: 'center' },
+						{ title: 'rouge1(均值)', dataIndex: 'rouge1', align: 'center' },
+						{ title: 'rouge2(均值)', dataIndex: 'rouge2', align: 'center' },
+						{ title: 'rougeL(均值)', dataIndex: 'rougeL', align: 'center' },
+						{ title: '词汇恢复率(均值)', dataIndex: 'wrr', align: 'center' },
+						{ title: '编辑距离(均值)', dataIndex: 'distance', align: 'center' },
+						{ title: '完全恢复率', dataIndex: 'fr', align: 'center' },
 				];
 				const SWATInnoColumns = [
 						{ title: 'rouge1', dataIndex: 'rouge1', align: 'center' },
 						{ title: 'rouge2', dataIndex: 'rouge2', align: 'center' },
 						{ title: 'rougeL', dataIndex: 'rougeL', align: 'center' },
-						{ title: 'Word recovery rate', dataIndex: 'wrr', align: 'center' },
-						{ title: 'Edit distance', dataIndex: 'distance', align: 'center' },
-						{ title: 'if full recovery', dataIndex: 'fr', align: 'center' },
+						{ title: '词汇恢复率', dataIndex: 'wrr', align: 'center' },
+						{ title: '编辑距离', dataIndex: 'distance', align: 'center' },
+						{ title: '完全恢复率', dataIndex: 'fr', align: 'center' },
 				];
 				const ModelStealingAttackColumns = [
-						{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
+						{ title: '实验配置', dataIndex: 'index', width: '12%', align: 'center' },
 						{ title: '损失函数（最终）', dataIndex: 'train_loss', align: 'center' },
 						{ title: '训练集准确率（最终）', dataIndex: 'train_acc', align: 'center' },
 						{ title: '验证集准确率（最终）', dataIndex: 'valid_acc', align: 'center' },

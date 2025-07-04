@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from utils.database_helper import extractResult
 lmsDir = os.path.dirname(os.path.abspath(__file__))
 # 使用os.path.join来正确拼接路径
-data_path = os.path.join(lmsDir, 'web_databse', 'users.db')
+data_path = os.path.join(lmsDir, 'users.db')
 # 创建数据库和表
 def create_database():
     conn = sqlite3.connect(data_path)
@@ -183,11 +183,12 @@ def print_log_records():
 
 # 运行示例
 if __name__ == '__main__':
-    create_database()
-    
+    print("找到数据库：", data_path)
+    # create_database()
+		
     # add_user('admin', '888888', 'admin', 30, 1, "'edit', 'delete', 'add'", 'admin@example.com', 'https://gitee.com/topiza/image/raw/master/file_3.png')
     # # 示例用户操作，带邮箱
-    add_user('zcy', '123', 'user', 25, 0, "'edit', 'delete', 'add'", 'zcy@example.com', 'https://gitee.com/topiza/image/raw/master/file_1.png')
+    # add_user('zcy', '123', 'user', 25, 0, "'edit', 'delete', 'add'", 'zcy@example.com', 'https://gitee.com/topiza/image/raw/master/file_1.png')
     # add_user('admin', '888888', 'admin', 30, 1, "'edit', 'delete', 'add'", 'admin@example.com', 'https://gitee.com/topiza/image/raw/master/file_3.png')
     # update_user_token('zcy', 'sample_token')
     # print_users()
@@ -201,13 +202,13 @@ if __name__ == '__main__':
     # print_attack_records()
     
     # 向数据库中添加攻击记录
-    #lmsDir = os.path.dirname(os.path.abspath(__file__))
-    #filename = "u1h_single_1737727113_2025-01-24.txt"
-    #info = filename.split('_')
-    #username = 'admin'
-    #initTime = eval(info[2])
-    #result = extractResult(lmsDir + "\\..\\logs\\" + filename)
-    #add_attack_record(username, initTime, json.dumps(result))
+    lmsDir = os.path.dirname(os.path.abspath(__file__))
+    filename = "u1h_single_1737727113_2025-01-24.txt"
+    info = filename.split('_')
+    username = 'admin'
+    initTime = eval(info[2])
+    result = extractResult(lmsDir + "\\..\\logs\\" + filename)
+    add_attack_record(username, initTime, json.dumps(result))
     
 
     # # 示例日志操作

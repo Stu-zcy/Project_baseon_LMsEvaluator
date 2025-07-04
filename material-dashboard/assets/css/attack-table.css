@@ -1,13 +1,16 @@
 .ant-table {
+	background-color: #fafafa !important;
+}
+
+.outer-table > .ant-spin-nested-loading > .ant-spin-container > .ant-table {
 	border: 4px solid #E8EBF1;
 	border-radius: 10px !important;
 
 	position: relative;
 	padding-top:  4em !important;
-	background-color: #fafafa !important;
 }
 
-.ant-spin-container {
+.outer-table > .ant-spin-nested-loading > .ant-spin-container {
 	margin-top: 5em;
 }
 
@@ -41,3 +44,17 @@
 
 
 }
+
+.flex {
+	display: flex;
+	align-items: center;
+}
+
+.justify-between {
+	justify-content: space-between;
+}
+
+
+/* .pr-4 {
+	padding-right: 1rem;
+} */

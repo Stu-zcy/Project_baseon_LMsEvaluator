@@ -61,6 +61,18 @@ main.main-content>#background {
 	margin-bottom: 20px;
 }
 
+.page-title h1 {
+	font-size: 1.8rem;
+	font-weight: 700;
+	color: #000;
+	margin-bottom: 5px;
+}
+
+.page-title p {
+	color: var(--gray);
+	margin: 0;
+}
+
 /* 基础样式 */
 .nav-link {
 	transition: all 0.3s ease;

@@ -1,6 +1,8 @@
 ant-card {
-	width: 100%;
+	width: 100% !important;
 	height: 300px;
+	/* flex-grow: 1 !important; */
+	/* min-width: 250px; */
 }
 
 /* 头像居中 */
@@ -165,7 +167,7 @@ ant-card {
 /* 字段对齐 */
 .infoList {
 	padding-left: 0;
-	margin-left: 1rem;
+	margin-left: 4px;
 }
 
 .infoItem {

@@ -623,10 +623,10 @@ def deleteRecord():
         fileName = username + '_single_' + str(createTime) + '_' + str(datetime.now())[:10] + '.txt'
         filePath = os.path.join(project_path, 'logs', fileName)
         os.remove(filePath)
-        if (count == 0) or (os.path.exists(filePath)):
-            return jsonify({'status': 'error', 'message': 'failed to delete record'}), 500
-        else:
+        if (count == 1):
             return jsonify({'status': 'success', 'message': 'Delete executed successfully!'}), 200
+        else:
+            return jsonify({'status': 'error', 'message': 'failed to delete record'}), 500
     except Exception as e:
         print(f"Error fetching log: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
