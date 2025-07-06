@@ -3,13 +3,13 @@ import copy  # 引入 copy 模块
 # 全局攻击策略
 AdvAttack = {
     "attack": True,
-    "attack_type": "AdvAttack",
+    "attack_type": "AdversarialAttack",
     "attack_recipe": "TextFoolerJin2019",
     "use_local_model": True,
     "use_local_tokenizer": True,
     "use_local_dataset": True,
-    "model_name_or_path": "LMs/bert_base_uncased_english",
-    "tokenizer_name_or_path": "LMs/bert_base_uncased_english",
+    "model_name_or_path": "LMs/bert_base_uncased",
+    "tokenizer_name_or_path": "LMs/bert_base_uncased",
     "dataset_name_or_path": "datasets/imdb/train.txt",
     "attack_nums": 2,
     "display_full_info": True
@@ -30,8 +30,8 @@ FET = {
     "halloffame_size": 30,
     "use_local_model": True,
     "use_local_tokenizer": True,
-    "model_name_or_path": "LMs/bert_base_uncased_english",
-    "tokenizer_name_or_path": "LMs/bert_base_uncased_english",
+    "model_name_or_path": "LMs/bert_base_uncased",
+    "tokenizer_name_or_path": "LMs/bert_base_uncased",
     "dataset_name_or_path": "cola",
     "display_full_info": True
 }
@@ -41,7 +41,7 @@ BackDoorAttack = {
     "attack_type": "BackDoorAttack",
     "use_local_model": True,
     "model": "bert",
-    "model_name_or_path": "LMs/bert_base_uncased_english",
+    "model_name_or_path": "LMs/bert_base_uncased",
     "poison_dataset": "sst-2",
     "target_dataset": "sst-2",
     "poisoner": {"name": "badnets"},
@@ -89,15 +89,31 @@ GIAforNLP={
     "attack_iters": 10,                # int: 一次攻击中的迭代轮次
     "display_full_info": True         # boolean: 是否显示全部过程信息
 }
-
+ModelStealingAttack = {
+    "attack": True,
+    "attack_type": "ModelStealingAttack",
+    "method": "RS",
+    "query_num": 320,
+    "run_seed_arr": [56],
+    "pool_data_type": "whole",
+    "pool_data_source": "wiki",
+    "pool_subsize": -1,
+    "prompt": None,
+    "epsilon": -1,
+    "initial_sample_method": "random_sentence",
+    "initial_drk_model": None,
+    "al_sample_batch_num": -1,
+    "al_sample_method": None
+}
 # 攻击策略字典
 attack_strategies = {
-    "AdvAttack": AdvAttack,
+    "AdversarialAttack": AdvAttack,
     "FET": FET,
     "BackDoorAttack": BackDoorAttack,
     "PoisoningAttack": PoisoningAttack,
     "RLMI": RLMI,
-    "GIAforNLP": GIAforNLP
+    "GIAforNLP": GIAforNLP,
+    "ModelStealingAttack": ModelStealingAttack
 }
 
 
@@ -109,7 +125,7 @@ def generate_config(username, attack_types):
             "use_gpu": True
         },
         "LM_config": {
-            "model": "bert_base_uncased_english"
+            "model": "bert_base_uncased"
         },
         "task_config": {
             "task": "TaskForSingleSentenceClassification",
@@ -129,7 +145,8 @@ def generate_config(username, attack_types):
     # 遍历输入的 attack_types，修改配置
     for index, attack_info in enumerate(attack_types):
         attack_type = attack_info.get('type')
-
+        if attack_info.get('status')!='active':
+            break  # 如果攻击类型状态不是 'active'，则跳过
         # 检查攻击类型是否在已定义的策略中
         if attack_type in attack_strategies:
             attack_config = copy.deepcopy(attack_strategies[attack_type])  # 深度复制攻击策略

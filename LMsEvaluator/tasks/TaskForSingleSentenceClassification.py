@@ -270,6 +270,6 @@ class TaskForSingleSentenceClassification(BaseTask):
 
 
 if __name__ == "__main__":
-    task = TaskForSingleSentenceClassification("imdb", "bert_base_uncased_english",
+    task = TaskForSingleSentenceClassification("imdb", "bert_base_uncased",
                                                ".txt", True, '_!_', None)
     task.run()

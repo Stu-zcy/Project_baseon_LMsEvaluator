@@ -70,7 +70,7 @@
 /attack/BackdoorAttack/models
 /attack/BackdoorAttack/openbackdoor
 /LMs/bert_base_chinese/*
-/LMs/bert_base_uncased_english/*
+/LMs/bert_base_uncased/*
 !/LMs/.gitkeep
 /LMs/internlm2-chat-7b
 *.bin
@@ -78,7 +78,7 @@
 *.ot
 *.safetensors
 *.onnx
-/LMs/bert_base_uncased_english/coreml/*
+/LMs/bert_base_uncased/coreml/*
 
 
 /logs

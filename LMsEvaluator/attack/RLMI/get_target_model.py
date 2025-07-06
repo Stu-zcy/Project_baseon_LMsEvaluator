@@ -63,7 +63,7 @@ def get_target_model(model_name="tinybert4", dataset_name="emotion", device=torc
     if model_name == 'tinybert4':
         num_epochs = 10
         # model_path = 'huawei-noah/TinyBERT_General_4L_312D' # if online
-    elif model_name == 'bert_base_uncased_english':
+    elif model_name == 'bert_base_uncased':
         num_epochs = 5
         # model_path = 'bert-base-uncased' # if online
 
@@ -133,7 +133,7 @@ def get_target_model(model_name="tinybert4", dataset_name="emotion", device=torc
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_name', type=str, choices=['tinybert4', 'bert_base_uncased_english'],
+    parser.add_argument('--model_name', type=str, choices=['tinybert4', 'bert_base_uncased'],
                         default='tinybert4')
     parser.add_argument('--dataset_name', type=str, choices=['emotion', 'yelp'], default='emotion')
     args = parser.parse_args()

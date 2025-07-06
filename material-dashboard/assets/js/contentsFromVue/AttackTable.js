@@ -202,7 +202,7 @@ const AttackTable = defineComponent({
         	</template>
         <template #title>
             <div class="flex justify-between pr-4">
-                <h4>强化学习攻击</h4>
+                <h4>模型反演</h4>
             </div>
         </template>
         <template #bodyCell="{ column, record }">
@@ -254,7 +254,7 @@ const AttackTable = defineComponent({
         	</template>
         <template #title>
             <div class="flex justify-between pr-4">
-                <h4>快速评估测试</h4>
+                <h4>梯度反演</h4>
             </div>
         </template>
         <template #bodyCell="{ column, record }">

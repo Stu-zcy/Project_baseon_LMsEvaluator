@@ -258,7 +258,7 @@ class TaskForPairSentenceClassification(BaseTask):
 
 
 if __name__ == '__main__':
-    task = TaskForPairSentenceClassification("PairSentenceClassification", "bert_base_uncased_english", ".txt", True,
+    task = TaskForPairSentenceClassification("PairSentenceClassification", "bert_base_uncased", ".txt", True,
                                              '_!_')
     task.run()
 

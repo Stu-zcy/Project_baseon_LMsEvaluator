@@ -186,10 +186,10 @@ if __name__ == "__main__":
     # model_config = ModelConfig("SingleSentenceClassification", "bert_base_chinese", ".txt", True)
     # model_config = ModelTaskForSingleSentenceClassification("SingleSentenceClassification", "bert_base_chinese",
     #                                                         ".txt", True, '_!_')
-    # model_config = ModelTaskForSQuADQuestionAnswering("SQuAD", "bert_base_uncased_english", "v1-", ".json", True)
+    # model_config = ModelTaskForSQuADQuestionAnswering("SQuAD", "bert_base_uncased", "v1-", ".json", True)
     # model_config = ModelTaskForChineseNER("ChineseNER", "bert_base_chinese", ".txt", True, ' ')
-    # model_config = ModelTaskForMultipleChoice("MultipleChoice", "bert_base_uncased_english", ".csv", True)
-    # model_config = ModelTaskForPairSentenceClassification("PairSentenceClassification", "bert_base_uncased_english",
+    # model_config = ModelTaskForMultipleChoice("MultipleChoice", "bert_base_uncased", ".csv", True)
+    # model_config = ModelTaskForPairSentenceClassification("PairSentenceClassification", "bert_base_uncased",
     #                                                       ".txt", True, '_!_')
     # model_config = ModelTaskForPretraining("SongCi", "bert_base_chinese", ".txt", True, "songci")
-    model_config = ModelTaskForPretraining("WikiText", "bert_base_uncased_english", ".tokens", True, "wiki2")
+    model_config = ModelTaskForPretraining("WikiText", "bert_base_uncased", ".tokens", True, "wiki2")

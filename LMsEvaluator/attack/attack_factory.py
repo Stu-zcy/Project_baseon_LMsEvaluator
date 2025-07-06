@@ -9,7 +9,7 @@ from attack.GIAforNLP.my_GIA_for_NLP import MyGIAforNLP
 from attack.AdversarialAttack.my_textattack import MyTextAttack
 from attack.BackdoorAttack.main import MyBackDoorAttack
 from attack.PoisoningAttack.main import PoisoningAttack
-#from attack.MeaeQ.my_meaeq import MyMeaeQ
+from attack.MeaeQ.my_meaeq import MyMeaeQ
 
 class AttackFactory:
     def __init__(self, attack_type, config_parser, attack_config, device, **kwargs):
@@ -256,8 +256,8 @@ class AttackFactory:
         ]
         if self.attack_type == "GIAforNLP":
             temp_config = GIAforNLP_config
-        elif self.attack_type == "AdvAttack":
-            temp_config = AdvAttack_config
+        elif self.attack_type == "AdversarialAttack":
+            temp_config = AdversarialAttack_config
         elif self.attack_type == "FET":
             temp_config = FET_config
         elif self.attack_type == "BackdoorAttack":
@@ -271,7 +271,7 @@ class AttackFactory:
         elif self.attack_type == "NOP":
             temp_config = NOP_config
         else:
-            print_red("AttackTypeError: The " + self.attack_type + "is not implemented yet.")
+            print_red("AttackTypeError: The " + self.attack_type + " is not implemented yet.")
             raise SystemError
 
         for config in temp_config:

@@ -4,10 +4,14 @@ import ast
 import csv
 import torch
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')  # 必须在import matplotlib.pyplot之前
 import matplotlib.pyplot as plt
 from datasets import load_dataset
 from utils.my_prettytable import MyPrettyTable
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
+
 
 project_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 rlmi_attack_path = os.path.dirname(os.path.abspath(__file__))

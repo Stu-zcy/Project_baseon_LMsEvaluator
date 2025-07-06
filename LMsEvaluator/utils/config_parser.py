@@ -166,7 +166,7 @@ def check_attack_config(attack_list, project_path):
     :param project_path: 项目根目录
     :return: attack_list: 删除无效信息后的attack_list
     """
-    attack_type_list, del_index = ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'FET', 'RLMI', 'GIAforNLP',
+    attack_type_list, del_index = ['AdversarialAttack', 'BackdoorAttack', 'PoisoningAttack', 'FET', 'RLMI', 'GIAforNLP',
                                    'ModelStealingAttack', 'NOP'], []
     for index in range(len(attack_list)):
         # 读取攻击模块配置

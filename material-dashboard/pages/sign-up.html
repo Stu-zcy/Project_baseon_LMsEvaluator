@@ -417,13 +417,13 @@
       if (countdown > 0) return;
 
       try {
-        const response = await fetch('/api/send_verification_code', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ email })
+        const axios = await import('../assets/js/utils/axiosConfig.js');
+        const response = await axios.default.post('/api/send_verification_code', {
+          'email': email
         });
         
-        const data = await response.json();
+        // ✅ 正确：axios 使用 response.data，不是 response.json()
+        const data = response.data;
         if (data.code === 200) {
           alert('成功发送验证码');
         } else {
@@ -442,7 +442,7 @@
           }
         }, 1000);
       } catch (error) {
-        alert(error.message);
+        //alert(error.message);
       }
     }
 
@@ -462,31 +462,32 @@
       e.preventDefault();
 
       const formData = {
-        username: document.getElementById('username').value,
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value,
-        confirmPassword: document.getElementById('confirmPassword').value,
-        verificationCode: document.getElementById('verificationCode').value,
-        avatar: document.querySelector('.avatar-item.selected img').src
+      username: document.getElementById('username').value,
+      email: document.getElementById('email').value,
+      password: document.getElementById('password').value,
+      confirmPassword: document.getElementById('confirmPassword').value,
+      verificationCode: document.getElementById('verificationCode').value,
+      avatar: document.querySelector('.avatar-item.selected img').src
       };
 
       if (formData.password !== formData.confirmPassword) {
-        alert('两次密码输入不一致');
-        return;
+      alert('两次密码输入不一致');
+      return;
       }
 
       try {
-        const response = await fetch('/api/register', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(formData)
-        });
+      const axios = await import('../assets/js/utils/axiosConfig.js');
+      const response = await axios.default.post('/api/register', formData);
 
-        if (!response.ok) throw await response.json();
+      const data = response.data;
+      if (data.code === 200) {
         alert('注册成功！');
         window.location.href = '../pages/sign-in.html';
+      } else {
+        throw new Error(data.message || '注册失败');
+      }
       } catch (error) {
-        alert(error.message || '注册失败');
+      alert(error.message || '注册失败');
       }
     }
 

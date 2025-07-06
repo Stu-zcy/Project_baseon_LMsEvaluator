@@ -107,7 +107,7 @@ if __name__ == '__main__':
     import openbackdoor as ob
     from openbackdoor import load_dataset
 
-    victim = ob.PLMVictim(model="bert", path="../../LMs/bert_base_uncased_english")
+    victim = ob.PLMVictim(model="bert", path="../../LMs/bert_base_uncased")
     attacker = ob.Attacker(poisoner={"name": "badnets"}, train={"name": "base", "batch_size": 32})
     poison_dataset = load_dataset(name="sst-2")
 

@@ -7,8 +7,8 @@ from transformers import pipeline, pipelines
 if __name__ == '__main__':
     # tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B")
     # model = AutoModelForCausalLM.from_pretrained("meta-llama/Meta-Llama-3-8B")
-    tokenizer = AutoTokenizer.from_pretrained("LMs/bert_base_uncased_english")
-    model = AutoModelForMaskedLM.from_pretrained("LMs/bert_base_uncased_english")
+    tokenizer = AutoTokenizer.from_pretrained("LMs/bert_base_uncased")
+    model = AutoModelForMaskedLM.from_pretrained("LMs/bert_base_uncased")
     # print(f"model: \n {model}")
     # examples = "Who was Jim Henson? Jim Henson was a [MASK]."
     # indexed_tokens = tokenizer.encode(examples)

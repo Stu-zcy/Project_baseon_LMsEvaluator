@@ -7,7 +7,7 @@ from attack.base_attack import BaseAttack
 from utils.my_exception import print_red
 
 
-# bert_base_uncased_english + Huggingface("imdb")
+# bert_base_uncased + Huggingface("imdb")
 # +-------------------------------+--------+
 # | Attack Results                |        |
 # +-------------------------------+--------+
@@ -265,8 +265,8 @@ if __name__ == "__main__":
     projectPath = os.path.dirname(os.path.abspath(__file__))
     projectPath = "/".join(projectPath.split("/")[:-2])
 
-    model = transformers.AutoModelForSequenceClassification.from_pretrained("../../LMs/bert_base_uncased_english")
-    tokenizer = transformers.AutoTokenizer.from_pretrained("../../LMs/bert_base_uncased_english")
+    model = transformers.AutoModelForSequenceClassification.from_pretrained("../../LMs/bert_base_uncased")
+    tokenizer = transformers.AutoTokenizer.from_pretrained("../../LMs/bert_base_uncased")
     model_wrapper = textattack.models.wrappers.HuggingFaceModelWrapper(model, tokenizer)
 
     datasetPath = os.path.join(projectPath, "datasets", "imdb/test.txt")

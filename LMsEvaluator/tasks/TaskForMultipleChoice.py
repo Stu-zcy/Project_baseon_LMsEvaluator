@@ -166,5 +166,5 @@ class TaskForMultipleChoice(BaseTask):
 
 
 if __name__ == '__main__':
-    task = TaskForMultipleChoice("MultipleChoice", "bert_base_uncased_english", "", ".csv", True)
+    task = TaskForMultipleChoice("MultipleChoice", "bert_base_uncased", "", ".csv", True)
     task.run()

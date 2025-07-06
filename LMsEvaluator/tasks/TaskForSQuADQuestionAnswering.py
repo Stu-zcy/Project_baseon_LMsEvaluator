@@ -205,5 +205,5 @@ class TaskForSQuADQuestionAnswering(BaseTask):
 
 
 if __name__ == "__main__":
-    task = TaskForSQuADQuestionAnswering("SQuAD", "bert_base_uncased_english", "v1-", ".json", True)
+    task = TaskForSQuADQuestionAnswering("SQuAD", "bert_base_uncased", "v1-", ".json", True)
     task.run()

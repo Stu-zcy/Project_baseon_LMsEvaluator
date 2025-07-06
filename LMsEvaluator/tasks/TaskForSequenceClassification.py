@@ -13,7 +13,7 @@ class TaskForSequenceClassification:
         print(dataset_loader)
 
         # model = AutoModelForSequenceClassification.from_pretrained(
-        #     '/Users/zkzhu/Project/PycharmProjects/LMsEvaluator/LMs/bert_base_uncased_english')
+        #     '/Users/zkzhu/Project/PycharmProjects/LMsEvaluator/LMs/bert_base_uncased')
         #
         # metric = load_metric("accuracy")
         # training_args = TrainingArguments(evaluation_strategy="epoch")

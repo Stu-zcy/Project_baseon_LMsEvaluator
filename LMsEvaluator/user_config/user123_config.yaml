@@ -1,5 +1,5 @@
 LM_config:
-  model: bert_base_uncased_english
+  model: bert_base_uncased
 attack_list: []
 general:
   random_seed: 0

@@ -6,15 +6,17 @@ from functools import wraps
 import jwt
 import os
 import json
+import string
 from utils.config_parser import parse_config
 from werkzeug.security import generate_password_hash, check_password_hash
-import random, time
-import string
+import random, time, secrets
+import torch
 from datetime import datetime, timedelta
 from utils.database_helper import extractResult
 from jwt_token import sign
 from user_config.config_gen import generate_config
-
+os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
+torch.backends.mps.is_available = lambda: False
 app = Flask(__name__)
 CORS(app)
 
@@ -195,6 +197,7 @@ def refresh_token():
 
 @app.route('/api/send_verification_code', methods=['POST'])
 def send_verification_code():
+    print("send_verification_code")
     email = request.json.get('email')
 
     # 验证邮箱格式
@@ -204,11 +207,12 @@ def send_verification_code():
             "message": "无效的邮箱地址"
         }), 400
 
-    # 生成验证码，排除易混淆字符
+    # 生成验证码，排除易混淆字符  
     characters = string.ascii_letters + string.digits
     characters = characters.replace('O', '').replace('0', '').replace('I', '').replace('1', '')
-    verification_code = ''.join(random.choices(characters, k=6))
 
+    # 使用secrets模块生成密码学安全的随机验证码
+    verification_code = ''.join(secrets.choice(characters) for _ in range(6))
     # 检查数据库中是否已经有该邮箱的验证码
     existing_code = VerificationCode.query.filter_by(email=email).first()
 

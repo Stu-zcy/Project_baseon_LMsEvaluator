@@ -1,201 +1,85 @@
-general:
-  random_seed: 42
-  use_gpu: True
-
 LM_config:
-#  model: bert_base_chinese
-  model: bert_base_uncased_english
-#  model: Llama-2-7b-hf
-
-task_config:
-  task: TaskForSingleSentenceClassification
-  dataset: GLUE/sst2
-  num_labels: 2
-  dataset_type: ".txt"
-  split_sep: "_!_"
-  epochs: 1
-#  task: TaskForSQuADQuestionAnswering
-#  dataset: SQuAD
-#  dataset_type: ".json"
-
+  model: bert_base_uncased
 attack_list:
-  - attack_args:
-      attack: True
-      attack_type: RLMI
-      dataset_name: "emotion"
-      model_name: "tinybert4"
-      seed: 42
-      ppo_config:
-        mini_batch_size: 16
-        batch_size: 16
-#        log_with: "wandb" # tensorboard, wandb
-        log_with: None
-        learning_rate: 1e-5
-      seq_length: 20
-      target_label: 0
-      max_iterations: 2000
-      min_input_length: 2
-      max_input_length: 5
-      num_generation: 1000
-  - attack_args:
-      attack: False
-      attack_type: AdvAttack
-      attack_recipe: BERTAttackLi2020
-      use_local_model: True
-      use_local_tokenizer: True
-      use_local_dataset: True
-      model_name_or_path: "LMs/bert_base_uncased_english"
-      tokenizer_name_or_path: "LMs/bert_base_uncased_english"
-      dataset_name_or_path: "datasets/imdb/train.txt"
-      attack_nums: 2
-      display_full_info: True
-  - attack_args:
-      attack: False
-      attack_type: FET
-      seed: 42
-      attack_batch: 2
-      attack_nums: 1
-      distance_func: l2
-      population_size: 300
-      tournsize: 5
-      crossover_rate: 0.9
-      mutation_rate: 0.1
-      max_generations: 2 #100
-      halloffame_size: 30
-      use_local_model: True
-      use_local_tokenizer: True
-      model_name_or_path: "LMs/bert_base_uncased_english"
-      tokenizer_name_or_path: "LMs/bert_base_uncased_english"
-      dataset_name_or_path: "cola"
-      display_full_info: True
-  - attack_args:
-      attack: False
-      attack_type: BackdoorAttack
-      use_local_model: True
-      model: "bert"
-      model_name_or_path: "LMs/bert_base_uncased_english"
-      poison_dataset: "sst-2"
-      target_dataset: "sst-2"
-      poisoner:
-        "name": "badnets"
-      train:
-        "name": "base"
-        "batch_size": 32
-        "epochs": 1
-      defender: "None"
-      sample_metrics: ['ppl', 'use']
-      display_full_info: True
-  - attack_args:
-      attack: True
-      attack_type: PoisoningAttack
-      poisoning_rate: 0.1
-      epochs: 10
-      display_full_info: True
-  - attack_args:
-      attack: False
-      attack_type: NOP
-      nop_config0: "nop_config0"
-      nop_config1: "nop_config1"
-
-#attack_args:
-#  attack: True
-#  attack_type: AdvAttack
-#  attack_recipe: TextFoolerJin2019
-#  use_local_model: True
-#  use_local_tokenizer: True
-#  use_local_dataset: True
-#  model_name_or_path: "LMs/bert_base_chinese"
-#  tokenizer_name_or_path: "LMs/bert_base_chinese"
-#  dataset_name_or_path: "data/imdb/test.txt"
-#  attack_nums: 2
-
-## GIAforNLP攻击配置文件示例
-#attack_args:
-#  attack: True                         # boolean: 表示是否开启攻击
-#  attack_type: GIAforNLP               # str: 攻击方法,'GIAforNLP'代表梯度反转攻击
-#  attack_data: None                    # str: 攻击方法所使用的数据集路径
-#  optimizer: Adam                      # str: 攻击方法所使用的优化器
-#  attack_batch: 2                      # int: 一次攻击中数据的Batch size
-#  attack_nums: 1                       # int: 攻击次数
-#  distance_func: l2                    # str: 攻击方法中的距离函数, 'l2' or 'cos'
-#  attack_lr: 0.01                      # float: 攻击方法中的学习率
-#  attack_iters: 10                     # int: 一次攻击中的迭代轮次
-
-## SWAT攻击配置文件示例
-#attack_args:
-#  attack: True                         # boolean: 表示是否开启攻击
-#  attack_type: FET                    # str: 攻击方法,'GIAforNLP'代表梯度反转攻击
-#  seed: 42
-#  attack_batch: 2                      # int: 一次攻击中数据的Batch size
-#  attack_nums: 1                       # int: 攻击次数
-#  distance_func: l2                    # str: 攻击方法中的距离函数, 'l2' or 'cos'
-#  population_size: 300
-#  tournsize: 10
-#  crossover_rate: 0.9
-#  mutation_rate: 0.1
-#  max_generations: 100
-#  halloffame_size: 30
-#  use_local_model: True                # boolean: 是否使用本地model
-#  use_local_tokenizer: True            # boolean: 是否使用本地tokenizer
-#  model_name_or_path: "LMs/bert_base_uncased_english"      # modelNameOrPath: str, 攻击所用model在Huggingface的名称或本地路径
-#  tokenizer_name_or_path: "LMs/bert_base_uncased_english"  # tokenizerNameOrPath: str, 攻击所用tokenizer在Huggingface的名称或本地路径
-#  dataset_name_or_path: "cola"         # datasetNameOrPath: str, 攻击所用dataset在Huggingface的名称或本地路径
-
-## 对抗性文本攻击配置文件示例
-#attack_args:
-#  attack: True                         # boolean: 是否开启攻击
-#  attack_type: AdvAttack               # attackType: str, 攻击方法, ‘AdvAttack’代表对抗性文本攻击
-#  attack_recipe: TextFoolerJin2019     # str: 具体攻击策略
-#  use_local_model: True                # boolean: 是否使用本地model
-#  use_local_tokenizer: True            # boolean: 是否使用本地tokenizer
-#  use_local_dataset: True              # boolean: 是否使用本地dataset
-#  model_name_or_path: "LMs/bert_base_uncased_english"      # modelNameOrPath: str, 攻击所用model在Huggingface的名称或本地路径
-#  tokenizer_name_or_path: "LMs/bert_base_uncased_english"  # tokenizerNameOrPath: str, 攻击所用tokenizer在Huggingface的名称或本地路径
-#  dataset_name_or_path: "data/imdb/test.txt"               # datasetNameOrPath: str, 攻击所用dataset在Huggingface的名称或本地路径
-#  attack_nums: 2                       # int: 攻击次数
-
+- attack_args:
+    attack: true
+    attack_nums: 3
+    attack_recipe: TextFoolerJin2019
+    attack_type: AdvAttack
+    dataset_name_or_path: datasets/imdb/train.txt
+    display_full_info: true
+    model_name_or_path: LMs/bert_base_uncased
+    tokenizer_name_or_path: LMs/bert_base_uncased
+    use_local_dataset: true
+    use_local_model: true
+    use_local_tokenizer: true
+- attack_args:
+    attack: true
+    attack_type: BackDoorAttack
+    defender: None
+    display_full_info: true
+    model: bert
+    model_name_or_path: LMs/bert_base_uncased
+    poison_dataset: sst-2
+    poisoner:
+      name: badnets
+    sample_metrics:
+    - accuracy
+    target_dataset: sst-2
+    train:
+      batch_size: 16
+      epochs: 1
+      name: base
+    use_local_model: true
+- attack_args:
+    attack: true
+    attack_type: PoisoningAttack
+    display_full_info: true
+    epochs: 15
+    poisoning_rate: 0.15
+- attack_args:
+    al_sample_batch_num: -1
+    al_sample_method: null
+    attack: true
+    attack_type: ModelStealingAttack
+    epsilon: -1
+    initial_drk_model: null
+    initial_sample_method: random_sentence
+    method: MeaeQ
+    pool_data_source: wiki
+    pool_data_type: whole
+    pool_subsize: -1
+    prompt: null
+    query_num: 500
+    run_seed_arr:
+    - 56
+- attack_args:
+    attack: false
+    attack_type: RLMI
+    dataset_name: emotion
+    max_input_length: 5
+    max_iterations: 2500
+    min_input_length: 2
+    model_name: tinybert4
+    num_generation: 1000
+    ppo_config:
+      batch_size: 16
+      learning_rate: 1.0e-05
+      log_with: None
+      mini_batch_size: 16
+    seed: 123
+    seq_length: 20
+    target_label: 0
+general:
+  random_seed: 0
+  use_gpu: true
 output:
-  base_path: "output"
-  model_output: "modelOutput"
-  evaluation_result: "evaluationResult"
-
-#下游任务参考配置(更加具体的配置可以在utlis/model_config里进行修改)，下面是一些配置示例：
-#TaskForSingleSentenceClassification:
-#  model: bert_base_chinese
-#  dataset: SingleSentenceClassification
-#  dataset: imdb
-#  dataset: GLUE/cola
-#  dataset: GLUE/sst2
-#  dataset_type: ".txt"
-#
-#TaskForSQuADQuestionAnswering:
-#  model: bert_base_uncased_english
-#  dataset: SQuAD
-#  dataset_type: ".json"
-#
-#TaskForChineseNER:
-#  model: bert_base_chinese
-#  dataset: ChineseNER
-#  dataset_type: ".txt"
-#  split_sep: " "
-#
-#TaskForMultipleChoice:
-#  model: bert_base_uncased_english
-#  dataset: MultipleChoice
-#  dataset_type: ".csv"
-#
-#TaskForPairSentenceClassification:
-#  model: bert_base_uncased_english
-#  dataset: GLUE/mnli
-#  dataset: PairSentenceClassification
-#  dataset_type: ".txt"
-#  split_sep: "_!_"
-#
-#TaskForPretraining:
-#  model: bert_base_chinese
-#  dataset: SongCi
-#  dataset_type: ".txt"
-#
-#  model: bert_base_uncased_english
-#  dataset: WikiText
-#  dataset_type: ".tokens"
+  base_path: output
+  evaluation_result: evaluationResult
+  model_output: modelOutput
+task_config:
+  dataset: imdb
+  dataset_type: .txt
+  epochs: 1
+  split_sep: _!_
+  task: TaskForSingleSentenceClassification
