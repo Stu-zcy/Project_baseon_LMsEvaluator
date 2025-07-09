@@ -1,5 +1,7 @@
-import yaml, os
-import copy  # 引入 copy 模块
+import yaml
+import os
+import copy
+
 # 全局攻击策略
 AdvAttack = {
     "attack": True,
@@ -46,9 +48,9 @@ BackDoorAttack = {
     "target_dataset": "sst-2",
     "poisoner": {"name": "badnets"},
     "train": {"name": "base", "batch_size": 16, "epochs": 1},
-    "sample_metrics": [],# ['ppl', 'use', 'grammar']
+    "sample_metrics": [],  # ['ppl', 'use', 'grammar']
     "display_full_info": True,
-    "defender": "None" # str: 所选择的防御方法[BKI,ONION,STRIP,RAP,CUBE]
+    "defender": "None"  # str: 所选择的防御方法[BKI,ONION,STRIP,RAP,CUBE]
 }
 
 PoisoningAttack = {
@@ -58,16 +60,17 @@ PoisoningAttack = {
     "epochs": 10,
     "display_full_info": True
 }
-RLMI={
+
+RLMI = {
     "attack": False,
     "attack_type": "RLMI",
     "dataset_name": "emotion",
     "model_name": "tinybert4",
     "seed": 42,
-    "ppo_config":{
+    "ppo_config": {
         "mini_batch_size": 16,
         "batch_size": 16,
-        "log_with": "None", #log_with: "wandb" # tensorboard, wandb
+        "log_with": "None",  # log_with: "wandb" # tensorboard, wandb
         "learning_rate": 1e-5
     },
     "seq_length": 20,
@@ -77,18 +80,20 @@ RLMI={
     "max_input_length": 5,
     "num_generation": 1000
 }
-GIAforNLP={
+
+GIAforNLP = {
     "attack": True,
     "attack_type": "GIAforNLP",
     "attack_data": "None",
     "optimizer": "Adam",
     "attack_batch": 2,
     "attack_nums": 1,
-    "distance_func": "l2",             # str: 攻击方法中的距离函数，'l2' or 'cos'
-    "attack_lr": 0.01,                 # float: 攻击方法中的学习率
-    "attack_iters": 10,                # int: 一次攻击中的迭代轮次
-    "display_full_info": True         # boolean: 是否显示全部过程信息
+    "distance_func": "l2",  # str: 攻击方法中的距离函数，'l2' or 'cos'
+    "attack_lr": 0.01,  # float: 攻击方法中的学习率
+    "attack_iters": 10,  # int: 一次攻击中的迭代轮次
+    "display_full_info": True  # boolean: 是否显示全部过程信息
 }
+
 ModelStealingAttack = {
     "attack": True,
     "attack_type": "ModelStealingAttack",
@@ -105,6 +110,7 @@ ModelStealingAttack = {
     "al_sample_batch_num": -1,
     "al_sample_method": None
 }
+
 # 攻击策略字典
 attack_strategies = {
     "AdversarialAttack": AdvAttack,
@@ -117,7 +123,14 @@ attack_strategies = {
 }
 
 
-def generate_config(username, attack_types):
+def generate_config(username, attack_list):
+    """
+    生成配置文件
+    
+    参数:
+    username (str): 用户名
+    attack_list (list): 攻击配置列表，每个元素是一个字典
+    """
     # 初始化配置字典
     config = {
         "general": {
@@ -142,75 +155,145 @@ def generate_config(username, attack_types):
         }
     }
 
-    # 遍历输入的 attack_types，修改配置
-    for index, attack_info in enumerate(attack_types):
-        attack_type = attack_info.get('type')
-        if attack_info.get('status')!='active':
-            break  # 如果攻击类型状态不是 'active'，则跳过
+    # 存储攻击名称和时间的列表
+    attack_info = []
+
+    # 遍历输入的攻击列表，修改配置
+    for attack in attack_list:
+        if attack.get('status') != 'active':
+            continue  # 跳过非活跃配置
+
+        attack_type = attack.get('type')
+        attack_name = attack.get('name')
+        created_at = attack.get('createdAt')
+        
+        # 记录攻击名称和时间
+        attack_info.append({
+            "name": attack_name,
+            "createdAt": created_at
+        })
+
         # 检查攻击类型是否在已定义的策略中
         if attack_type in attack_strategies:
-            attack_config = copy.deepcopy(attack_strategies[attack_type])  # 深度复制攻击策略
+            # 深度复制攻击策略
+            attack_config = copy.deepcopy(attack_strategies[attack_type])
+            
+            # 更新攻击策略
             if "attack_recipe" in attack_config:
-                attack_config['attack_recipe']=attack_info['strategy']
-            for key in attack_config:
-                if key in attack_info['params']:
-                    attack_config[key] = attack_info['params'][key]
-
+                attack_config['attack_recipe'] = attack.get('strategy', 'default')
+            
+            # 更新参数
+            params = attack.get('params', {})
+            for key in params:
+                if key in attack_config:
+                    attack_config[key] = params[key]
+            
             # 将修改后的配置添加到 attack_list
-            if len(config["attack_list"]) <= index:
-                config["attack_list"].append({"attack_args": attack_config})
-            else:
-                config["attack_list"][index]["attack_args"] = attack_config
+            config["attack_list"].append({
+                "attack_args": attack_config
+            })
 
     # 获取当前脚本的绝对路径，并保存到当前目录
-    output_dir = os.path.dirname(os.path.abspath(__file__))  # 获取当前脚本所在的目录
+    output_dir = os.path.dirname(os.path.abspath(__file__))
     if not os.path.exists(output_dir):
-        os.makedirs(output_dir)  # 确保输出目录存在
+        os.makedirs(output_dir)
 
     # 生成配置文件的路径
-    file_name = os.path.join(output_dir, f"{username}_config.yaml")
-
+    config_file = os.path.join(output_dir, f"{username}_config.yaml")
+    
     # 将配置保存到 YAML 文件
-
-    with open(file_name, 'w') as file:
+    with open(config_file, 'w') as file:
         yaml.dump(config, file, default_flow_style=False, allow_unicode=True)
 
-    print(f"Config file for {username} generated: {file_name}")
+    # 生成攻击信息文件
+    info_file = os.path.join(output_dir, f"{username}_attack_info.yaml")
+    with open(info_file, 'w') as file:
+        yaml.dump(attack_info, file, default_flow_style=False, allow_unicode=True)
+    print(f"配置文件已生成: {config_file}")
+    print(f"攻击信息文件已生成: {info_file}")
+
+def get_attack_info(username):
+    """
+    根据用户名获取攻击信息
+    
+    参数:
+    username (str): 用户名
+    
+    返回:
+    list: 攻击信息列表，如果文件不存在则返回空列表
+    """
+    output_dir = os.path.dirname(os.path.abspath(__file__))
+    info_file = os.path.join(output_dir, f"{username}_attack_info.yaml")
+    
+    if not os.path.exists(info_file):
+        print(f"攻击信息文件不存在: {info_file}")
+        return []
+    
+    try:
+        with open(info_file, 'r') as file:
+            attack_info = yaml.safe_load(file)
+            return attack_info if attack_info else []
+    except Exception as e:
+        print(f"读取攻击信息文件失败: {e}")
+        return []
+
+    
 
 
-# 示例输入
 if __name__ == '__main__':
-
-    username = "test_user"
-    attack_types = [
+    # 示例输入数据
+    attack_list = [
         {
-            "type": "AdvAttack",
-            "strategy": "TextFoolerJin2019",
-            "params": {
-                "attack_nums": 2,
-                "display_full_info": True
-            }
+            'id': 1,
+            'name': '文本对抗攻击配置',
+            'type': 'AdversarialAttack',
+            'strategy': 'TextFoolerJin2019',
+            'description': '针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型',
+            'status': 'active',
+            'sent': True,
+            'executed': True,
+            'createdAt': '2025-05-15 10:30',
+            'params': {'use_local_model': True, 'attack_nums': 3}
         },
         {
-            "type": "FET",
-            "strategy": "FETStrategy",
-            "params": {
-                "population_size": 300,
-                "max_generations": 2
-            }
+            'id': 3,
+            'name': '数据投毒配置',
+            'type': 'PoisoningAttack',
+            'strategy': 'default',
+            'description': '针对训练数据的投毒攻击，污染训练集以降低模型性能',
+            'status': 'active',
+            'sent': True,
+            'executed': False,
+            'createdAt': '2025-05-20 09:45',
+            'params': {'poisoning_rate': 0.15, 'epochs': 15}
         },
         {
-            "type": "BackDoorAttack",
-            "strategy": "",
-            "params": {
-                "poisoning_rate": 0.1,
-                "epochs": 10
-            }
+            'id': 4,
+            'name': '模型窃取攻击',
+            'type': 'ModelStealingAttack',
+            'strategy': 'default',
+            'description': '通过查询目标模型来窃取其结构和参数',
+            'status': 'active',
+            'sent': True,
+            'executed': True,
+            'createdAt': '2025-06-10 14:30',
+            'params': {'attack_nums': 3, 'query_num': 500, 'method': 'MeaeQ'}
+        },
+        {
+            'id': 5,
+            'name': '模型反演配置',
+            'type': 'RLMI',
+            'strategy': 'default',
+            'description': '使用强化学习优化攻击策略',
+            'status': 'active',
+            'sent': True,
+            'executed': False,
+            'createdAt': '2025-06-12 11:20',
+            'params': {'seed': 123, 'max_iterations': 2500}
         }
     ]
 
-    generate_config(username, attack_types)
-
-
-
-
+    username = "test_user"
+    generate_config(username, attack_list)
+    
+   

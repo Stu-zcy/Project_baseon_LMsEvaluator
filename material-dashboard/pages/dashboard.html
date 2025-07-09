@@ -630,6 +630,33 @@
 		.feature-card p {
 			color: var(--gray);
 		}
+    /* 执行攻击模态框样式 */
+    #executeAttackModal .modal-content {
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    #executeAttackModal .modal-header {
+      background: linear-gradient(120deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    #executeAttackModal .modal-title i {
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    #executeAttackModal .modal-body {
+      padding: 25px;
+    }
+
+    #executeAttackModal .modal-footer {
+      border-top: 1px solid #eee;
+      padding: 15px 25px;
+    }
+
 	</style>
 </head>
 
@@ -833,250 +860,279 @@
 			</div>
 		</nav>
 		<!-- End Navbar -->
-		<!-- 渐变背景区域 -->
-		<div class="gradient-bg">
-			<div class="container">
-			<div class="row g-4">
-				<div class="col-md-4">
-				<div class="feature-card text-center">
-					<i class="material-icons">tune</i>
-					<h3>高级配置管理</h3>
-					<p>轻松创建、编辑和管理复杂的攻击配置，支持多种攻击类型和策略</p>
-				</div>
-				</div>
-				<div class="col-md-4">
-				<div class="feature-card text-center">
-					<i class="material-icons">analytics</i>
-					<h3>实时数据统计</h3>
-					<p>通过直观的统计卡片监控系统状态，包括配置数量、活跃状态和执行次数</p>
-				</div>
-				</div>
-				<div class="col-md-4">
-				<div class="feature-card text-center">
-					<i class="material-icons">bolt</i>
-					<h3>快速执行攻击</h3>
-					<p>一键发送配置并执行攻击，高效完成安全测试任务</p>
-				</div>
-				</div>
-			</div>
-			</div>
-		</div>
+		    
+        <!-- 渐变背景区域 -->
+        <div class="gradient-bg">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="feature-card text-center">
+                            <i class="material-icons">tune</i>
+                            <h3>高级配置管理</h3>
+                            <p>轻松创建、编辑和管理复杂的攻击配置，支持多种攻击类型和策略</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card text-center">
+                            <i class="material-icons">analytics</i>
+                            <h3>实时数据统计</h3>
+                            <p>通过直观的统计卡片监控系统状态，包括配置数量、活跃状态和执行次数</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card text-center">
+                            <i class="material-icons">bolt</i>
+                            <h3>快速执行攻击</h3>
+                            <p>一键发送配置并执行攻击，高效完成安全测试任务</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<div class="container-fluid">
-			<!-- 主内容区 -->
-			<main class="main-content">
-			<!-- 页面标题和操作按钮 -->
-			<div class="page-header">
-				<div class="page-title">
-				<h1>攻击配置管理</h1>
-				<p>管理您的攻击类型、策略和高级设置</p>
-				</div>
-				<div class="action-buttons">
-				<button class="btn btn-light" id="addNewConfigBtn">
-					<i class="material-icons">add</i> 添加配置
-				</button>
-				<button class="btn btn-outline-primary" id="sendConfigBtn">
-					<i class="material-icons">send</i> 发送配置
-				</button>
-				<button class="btn btn-outline-success" id="executeAttackBtn">
-					<i class="material-icons">play_arrow</i> 执行攻击
-				</button>
-				</div>
-			</div>
-			
-			<!-- 统计卡片 -->
-			<div class="stats-container">
-				<div class="stats-card primary">
-				<div class="stats-header">
-					<div class="stats-icon">
-					<i class="material-icons">list_alt</i>
-					</div>
-				</div>
-				<div class="stats-content">
-					<h3 id="totalConfigs">0</h3>
-					<p>总配置数</p>
-				</div>
-				</div>
-				
-				<div class="stats-card success">
-				<div class="stats-header">
-					<div class="stats-icon">
-					<i class="material-icons">check_circle</i>
-					</div>
-				</div>
-				<div class="stats-content">
-					<h3 id="activeConfigs">0</h3>
-					<p>活跃配置</p>
-				</div>
-				</div>
-				
-				<div class="stats-card warning">
-				<div class="stats-header">
-					<div class="stats-icon">
-					<i class="material-icons">schedule</i>
-					</div>
-				</div>
-				<div class="stats-content">
-					<h3 id="attackTypes">0</h3>
-					<p>攻击类型</p>
-				</div>
-				</div>
-				
-				<div class="stats-card danger">
-				<div class="stats-header">
-					<div class="stats-icon">
-					<i class="material-icons">bolt</i>
-					</div>
-				</div>
-				<div class="stats-content">
-					<h3 id="executedAttacks">0</h3>
-					<p>已执行攻击</p>
-				</div>
-				</div>
-			</div>
-			
-			<!-- 配置列表 -->
-			<div class="config-card">
-				<div class="card-header">
-				<h2>
-					<i class="material-icons">list</i>
-					攻击配置列表
-					<span class="badge bg-primary" id="configCounter">0</span>
-				</h2>
-				<div class="card-tools">
-					<div class="search-box">
-					<i class="material-icons">search</i>
-					<input type="text" id="searchInput" placeholder="搜索配置...">
-					</div>
-					<div class="dropdown">
-					<button class="btn btn-light dropdown-toggle" type="button" id="statusFilterDropdown" data-bs-toggle="dropdown">
-						<i class="material-icons">filter_list</i> 状态筛选
-					</button>
-					<ul class="dropdown-menu">
-						<li><a class="dropdown-item filter-option" href="#" data-filter="all">全部状态</a></li>
-						<li><a class="dropdown-item filter-option" href="#" data-filter="active">活跃配置</a></li>
-						<li><a class="dropdown-item filter-option" href="#" data-filter="inactive">已禁用</a></li>
-						<li><a class="dropdown-item filter-option" href="#" data-filter="sent">已发送</a></li>
-						<li><a class="dropdown-item filter-option" href="#" data-filter="not_sent">未发送</a></li>
-						<li><a class="dropdown-item filter-option" href="#" data-filter="executed">已执行</a></li>
-						<li><a class="dropdown-item filter-option" href="#" data-filter="not_executed">未执行</a></li>
-					</ul>
-					</div>
-					<div class="dropdown">
-					<button class="btn btn-light dropdown-toggle" type="button" id="typeFilterDropdown" data-bs-toggle="dropdown">
-						<i class="material-icons">label</i> 类型筛选
-					</button>
-					<ul class="dropdown-menu" id="typeFilterMenu">
-						<li><a class="dropdown-item type-filter-option" href="#" data-type="all">全部类型</a></li>
-						<!-- 动态生成攻击类型选项 -->
-					</ul>
-					</div>
-				</div>
-				</div>
-				
-				<div id="filterTags" class="filter-container"></div>
-				
-				<div class="table-container">
-				<table>
-					<thead>
-					<tr>
-						<th>配置名称</th>
-						<th>攻击类型</th>
-						<th>攻击策略</th>
-						<th>状态</th>
-						<th>创建时间</th>
-						<th>操作</th>
-					</tr>
-					</thead>
-					<tbody id="configTableBody">
-					<!-- 配置列表会动态填充 -->
-					</tbody>
-				</table>
-				</div>
-				
-				<div id="noConfigsMessage" class="no-configs d-none">
-				<i class="material-icons">folder_off</i>
-				<h4>暂无配置</h4>
-				<p>点击"添加新配置"按钮创建您的第一个攻击配置</p>
-				<button class="btn btn-primary mt-3" id="addFirstConfigBtn">
-					<i class="material-icons">add</i> 添加配置
-				</button>
-				</div>
-			</div>
-			</main>
-		</div>
-		
-		<!-- 配置弹窗 -->
-		<div class="modal fade" id="configModal" tabindex="-1">
-			<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-				<h5 class="modal-title">
-					<i class="material-icons">settings</i>
-					<span id="modalTitle">添加新攻击配置</span>
-				</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-				</div>
-				<div class="modal-body">
-				<form id="attackConfigForm">
-					<div class="row">
-					<div class="col-md-6">
-						<div class="form-group">
-						<label for="attackType">攻击类型</label>
-						<select class="form-control" id="attackType" name="attackType">
-							<option value="AdversarialAttack">对抗攻击</option>
-							<option value="FET">梯度反演</option>
-							<option value="BackDoorAttack">后门攻击</option>
-							<option value="PoisoningAttack">数据投毒</option>
-							<option value="RLMI">模型反演</option>
-							<option value="GIAforNLP">通用NLP攻击</option>
-							<option value="ModelStealingAttack">模型窃取攻击</option>
-						</select>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-						<label for="attackStrategy">攻击策略</label>
-						<select class="form-control" id="attackStrategy" name="attackStrategy"></select>
-						</div>
-					</div>
-					</div>
-					
-					<div class="form-group">
-					<label for="configName">配置名称 <span class="text-danger">*</span></label>
-					<input type="text" class="form-control" id="configName" placeholder="输入配置名称" required>
-					</div>
-					
-					<div class="form-group">
-					<label for="description">攻击描述</label>
-					<textarea class="form-control" id="description" rows="3" placeholder="输入攻击描述..."></textarea>
-					</div>
-					
-					<div class="accordion" id="advancedSettingsAccordion">
-					<div class="accordion-item">
-						<h2 class="accordion-header" id="headingAdvanced">
-						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdvanced">
-							<i class="material-icons me-2">tune</i> 高级设置
-						</button>
-						</h2>
-						<div id="collapseAdvanced" class="accordion-collapse collapse show">
-						<div class="accordion-body">
-							<div class="param-group" id="advancedSettingsContent">
-							<!-- 动态生成的高级设置字段将在这里显示 -->
-							</div>
-						</div>
-						</div>
-					</div>
-					</div>
-				</form>
-				</div>
-				<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-				<button type="button" class="btn btn-primary" id="saveConfigBtn">保存配置</button>
-				</div>
-			</div>
-			</div>
-		</div>
+        <div class="container-fluid py-4">
+            <!-- 主内容区 -->
+            <main class="main-content">
+                <!-- 页面标题和操作按钮 -->
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>攻击配置管理</h1>
+                        <p>管理您的攻击类型、策略和高级设置</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-light" id="addNewConfigBtn">
+                            <i class="material-icons">add</i> 添加配置
+                        </button>
+                        <button class="btn btn-outline-primary" id="sendConfigBtn">
+                            <i class="material-icons">send</i> 发送配置
+                        </button>
+                        <button class="btn btn-outline-success" id="executeAttackBtn">
+                            <i class="material-icons">play_arrow</i> 执行攻击
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 执行攻击名称模态框 -->
+                <div class="modal fade" id="executeAttackModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="material-icons">play_arrow</i>
+                                    执行攻击
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="executeAttackForm">
+                                    <div class="form-group">
+                                        <label for="attackName">攻击名称 <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="attackName" placeholder="输入此次攻击执行的名称" required>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-primary" id="confirmExecuteBtn">执行</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 统计卡片 -->
+                <div class="stats-container">
+                    <div class="stats-card primary">
+                        <div class="stats-header">
+                            <div class="stats-icon">
+                                <i class="material-icons">list_alt</i>
+                            </div>
+                        </div>
+                        <div class="stats-content">
+                            <h3 id="totalConfigs">0</h3>
+                            <p>总配置数</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card success">
+                        <div class="stats-header">
+                            <div class="stats-icon">
+                                <i class="material-icons">check_circle</i>
+                            </div>
+                        </div>
+                        <div class="stats-content">
+                            <h3 id="activeConfigs">0</h3>
+                            <p>活跃配置</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card warning">
+                        <div class="stats-header">
+                            <div class="stats-icon">
+                                <i class="material-icons">schedule</i>
+                            </div>
+                        </div>
+                        <div class="stats-content">
+                            <h3 id="attackTypes">0</h3>
+                            <p>攻击类型</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card danger">
+                        <div class="stats-header">
+                            <div class="stats-icon">
+                                <i class="material-icons">bolt</i>
+                            </div>
+                        </div>
+                        <div class="stats-content">
+                            <h3 id="executedAttacks">0</h3>
+                            <p>已执行攻击</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 配置列表 -->
+                <div class="config-card">
+                    <div class="card-header">
+                        <h2>
+                            <i class="material-icons">list</i>
+                            攻击配置列表
+                            <span class="badge bg-primary" id="configCounter">0</span>
+                        </h2>
+                        <div class="card-tools">
+                            <div class="search-box">
+                                <i class="material-icons">search</i>
+                                <input type="text" id="searchInput" placeholder="搜索配置...">
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle" type="button" id="statusFilterDropdown" data-bs-toggle="dropdown">
+                                    <i class="material-icons">filter_list</i> 状态筛选
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="all">全部状态</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="active">活跃配置</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="inactive">已禁用</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="sent">已发送</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="not_sent">未发送</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="executed">已执行</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="not_executed">未执行</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle" type="button" id="typeFilterDropdown" data-bs-toggle="dropdown">
+                                    <i class="material-icons">label</i> 类型筛选
+                                </button>
+                                <ul class="dropdown-menu" id="typeFilterMenu">
+                                    <li><a class="dropdown-item type-filter-option" href="#" data-type="all">全部类型</a></li>
+                                    <!-- 动态生成攻击类型选项 -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="filterTags" class="filter-container"></div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>配置名称</th>
+                                    <th>攻击类型</th>
+                                    <th>攻击策略</th>
+                                    <th>状态</th>
+                                    <th>创建时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="configTableBody">
+                                <!-- 配置列表会动态填充 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="noConfigsMessage" class="no-configs d-none">
+                        <i class="material-icons">folder_off</i>
+                        <h4>暂无配置</h4>
+                        <p>点击"添加新配置"按钮创建您的第一个攻击配置</p>
+                        <button class="btn btn-primary mt-3" id="addFirstConfigBtn">
+                            <i class="material-icons">add</i> 添加配置
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <!-- 配置弹窗 -->
+        <div class="modal fade" id="configModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="material-icons">settings</i>
+                            <span id="modalTitle">添加新攻击配置</span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="attackConfigForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="attackType">攻击类型</label>
+                                        <select class="form-control" id="attackType" name="attackType">
+                                            <option value="AdversarialAttack">对抗攻击</option>
+                                            <option value="FET">梯度反演</option>
+                                            <option value="BackDoorAttack">后门攻击</option>
+                                            <option value="PoisoningAttack">数据投毒</option>
+                                            <option value="RLMI">模型反演</option>
+                                            <option value="GIAforNLP">通用NLP攻击</option>
+                                            <option value="ModelStealingAttack">模型窃取攻击</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="attackStrategy">攻击策略</label>
+                                        <select class="form-control" id="attackStrategy" name="attackStrategy"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="configName">配置名称 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="configName" placeholder="输入配置名称" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="description">攻击描述</label>
+                                <textarea class="form-control" id="description" rows="3" placeholder="输入攻击描述..."></textarea>
+                            </div>
+                            
+                            <div class="accordion" id="advancedSettingsAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingAdvanced">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdvanced">
+                                            <i class="material-icons me-2">tune</i> 高级设置
+                                        </button>
+                                    </h2>
+                                    <div id="collapseAdvanced" class="accordion-collapse collapse show">
+                                        <div class="accordion-body">
+                                            <div class="param-group" id="advancedSettingsContent">
+                                                <!-- 动态生成的高级设置字段将在这里显示 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="saveConfigBtn">保存配置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 		<footer class="footer py-4  ">
 			<div class="container-fluid">
 				<div class="row align-items-center justify-content-lg-between">
@@ -1150,984 +1206,1016 @@
 			</div>
 		</div>
 	</div> -->
-	<!-- JavaScript 库 -->
-	<div id="toastContainer"></div>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- JavaScript 库 -->
+    <div id="toastContainer"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-
-	<script>
-    // 攻击配置数据
-    const attackConfigs = {
-      attackTypes: ['AdversarialAttack', 'FET', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'GIAforNLP', 'ModelStealingAttack'],
-      recipes: {
-        AdversarialAttack: [
-          'A2TYoo2021', 'BAEGarg2019', 'BERTAttackLi2020', 'GeneticAlgorithmAlzantot2018',
-          'FasterGeneticAlgorithmJia2019', 'DeepWordBugGao2018', 'HotFlipEbrahimi2017',
-          'InputReductionFeng2018', 'Kuleshov2017', 'MorpheusTan2020', 'Seq2SickCheng2018BlackBox',
-          'TextBuggerLi2018', 'TextFoolerJin2019', 'PWWSRen2019', 'IGAWang2019', 'Pruthi2019',
-          'PSOZang2020', 'CheckList2020', 'CLARE2020', 'FrenchRecipe', 'SpanishRecipe', 'ChineseRecipe'
-        ],
-        FET: ['default'],
-        BackDoorAttack: ['BadNets','AddSent','SynBkd','StyleBkd','POR','TrojanLM','SOS','LWP','EP','NeuBA','LWS','RIPPLES'],
-        PoisoningAttack: ['default'],
-        RLMI: ['default'],
-        GIAforNLP: ['default'],
-        ModelStealingAttack: ['default']
-      },
-      defaults: {
-        AdversarialAttack: {
-          use_local_model: true,
-          use_local_tokenizer: true,
-          use_local_dataset: false,
-          attack_nums: 2
-        },
-        FET: {
-          seed: 42,
-          attack_batch: 2,
-          attack_nums: 1,
-          distance_func: 'l2',
-          population_size: 300,
-          tournsize: 5,
-          crossover_rate: 0.9,
-          mutation_rate: 0.1,
-          max_generations: 2,
-          halloffame_size: 30
-        },
-        BackDoorAttack: {
-          sample_metrics: [],
-          defender: 'None'
-        },
-        PoisoningAttack: {
-          poisoning_rate: 0.1,
-          epochs: 10
-        },
-        RLMI: {
-          seed: 42,
-          seq_length: 20,
-          target_label: 0,
-          max_iterations: 2000,
-          min_input_length: 2,
-          max_input_length: 5,
-          num_generation: 1000
-        },
-        GIAforNLP: {
-          optimizer: 'Adam',
-          attack_batch: 2,
-          attack_nums: 1,
-          distance_func: 'l2',
-          attack_lr: 0.01,
-          attack_iters: 10
-        },
-        ModelStealingAttack: {
-          attack_nums: 2,
-          query_num: 320,
-          prompt: "This is a movie review.",
-          pool_subsize: 1766,
-          method: "MeaeQ",
-          al_sample_method: "uncertainty",
-          al_sample_batch_num: 20
-        }
-      },
-      descriptions: {
-        AdversarialAttack: "通过微小的、难以察觉的扰动来欺骗模型，使其做出错误的预测",
-        FET: "梯度反演",
-        BackDoorAttack: "在训练数据中植入后门，使模型在特定触发条件下表现出异常行为",
-        PoisoningAttack: "通过污染训练数据来降低模型性能或植入后门",
-        RLMI: "模型反演",
-        GIAforNLP: "梯度反演-NLP",
-        ModelStealingAttack: "通过查询目标模型来窃取其结构和参数"
-      },
-      typeNames: {
-        AdversarialAttack: "对抗攻击",
-        FET: "梯度反演",
-        BackDoorAttack: "后门攻击",
-        PoisoningAttack: "数据投毒",
-        RLMI: "模型反演",
-        GIAforNLP: "通用NLP攻击",
-        ModelStealingAttack: "模型窃取"
-      }
-    };
-    
-    // 存储配置数据
-    let configList = [];
-    let send_configs = [];
-    let currentConfigId = null;
-    let executedAttacks = 0;
-    let currentFilter = 'all';
-    let currentTypeFilter = 'all';
-    
-    // DOM 加载完成后执行
-    document.addEventListener('DOMContentLoaded', function() {
-      // 初始化攻击策略下拉菜单
-      updateAttackStrategies();
-      
-      // 初始化类型筛选菜单
-      initTypeFilter();
-      
-      // 加载示例配置
-      loadSampleConfigs();
-      renderConfigTable();
-      updateStats();
-      
-      // 添加新配置按钮点击事件
-      document.getElementById('addNewConfigBtn').addEventListener('click', showAddConfigModal);
-      document.getElementById('addFirstConfigBtn').addEventListener('click', showAddConfigModal);
-      
-      // 攻击类型改变事件
-      document.getElementById('attackType').addEventListener('change', function() {
-        updateAttackStrategies();
-        updateAdvancedSettings(this.value);
+    <script>
+        // 攻击配置数据
+        const attackConfigs = {
+            attackTypes: ['AdversarialAttack', 'FET', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'GIAforNLP', 'ModelStealingAttack'],
+            recipes: {
+                AdversarialAttack: [
+                    'A2TYoo2021', 'BAEGarg2019', 'BERTAttackLi2020', 'GeneticAlgorithmAlzantot2018',
+                    'FasterGeneticAlgorithmJia2019', 'DeepWordBugGao2018', 'HotFlipEbrahimi2017',
+                    'InputReductionFeng2018', 'Kuleshov2017', 'MorpheusTan2020', 'Seq2SickCheng2018BlackBox',
+                    'TextBuggerLi2018', 'TextFoolerJin2019', 'PWWSRen2019', 'IGAWang2019', 'Pruthi2019',
+                    'PSOZang2020', 'CheckList2020', 'CLARE2020', 'FrenchRecipe', 'SpanishRecipe', 'ChineseRecipe'
+                ],
+                FET: ['default'],
+                BackDoorAttack: ['BadNets','AddSent','SynBkd','StyleBkd','POR','TrojanLM','SOS','LWP','EP','NeuBA','LWS','RIPPLES'],
+                PoisoningAttack: ['default'],
+                RLMI: ['default'],
+                GIAforNLP: ['default'],
+                ModelStealingAttack: ['default']
+            },
+            defaults: {
+                AdversarialAttack: {
+                    use_local_model: true,
+                    use_local_tokenizer: true,
+                    use_local_dataset: false,
+                    attack_nums: 2
+                },
+                FET: {
+                    seed: 42,
+                    attack_batch: 2,
+                    attack_nums: 1,
+                    distance_func: 'l2',
+                    population_size: 300,
+                    tournsize: 5,
+                    crossover_rate: 0.9,
+                    mutation_rate: 0.1,
+                    max_generations: 2,
+                    halloffame_size: 30
+                },
+                BackDoorAttack: {
+                    sample_metrics: [],
+                    defender: 'None'
+                },
+                PoisoningAttack: {
+                    poisoning_rate: 0.1,
+                    epochs: 10
+                },
+                RLMI: {
+                    seed: 42,
+                    seq_length: 20,
+                    target_label: 0,
+                    max_iterations: 2000,
+                    min_input_length: 2,
+                    max_input_length: 5,
+                    num_generation: 1000
+                },
+                GIAforNLP: {
+                    optimizer: 'Adam',
+                    attack_batch: 2,
+                    attack_nums: 1,
+                    distance_func: 'l2',
+                    attack_lr: 0.01,
+                    attack_iters: 10
+                },
+                ModelStealingAttack: {
+                    attack_nums: 2,
+                    query_num: 320,
+                    prompt: "This is a movie review.",
+                    pool_subsize: 1766,
+                    method: "MeaeQ",
+                    al_sample_method: "uncertainty",
+                    al_sample_batch_num: 20
+                }
+            },
+            descriptions: {
+                AdversarialAttack: "通过微小的、难以察觉的扰动来欺骗模型，使其做出错误的预测",
+                FET: "梯度反演",
+                BackDoorAttack: "在训练数据中植入后门，使模型在特定触发条件下表现出异常行为",
+                PoisoningAttack: "通过污染训练数据来降低模型性能或植入后门",
+                RLMI: "模型反演",
+                GIAforNLP: "梯度反演-NLP",
+                ModelStealingAttack: "通过查询目标模型来窃取其结构和参数"
+            },
+            typeNames: {
+                AdversarialAttack: "对抗攻击",
+                FET: "梯度反演",
+                BackDoorAttack: "后门攻击",
+                PoisoningAttack: "数据投毒",
+                RLMI: "模型反演",
+                GIAforNLP: "通用NLP攻击",
+                ModelStealingAttack: "模型窃取"
+            }
+        };
         
-        // 更新描述
-        const type = this.value;
-        document.getElementById('description').value = attackConfigs.descriptions[type] || '';
-      });
-      
-      // 保存配置按钮点击事件
-      document.getElementById('saveConfigBtn').addEventListener('click', saveConfig);
-      
-      // 发送配置按钮点击事件
-      document.getElementById('sendConfigBtn').addEventListener('click', sendConfigs);
-      
-      // 执行攻击按钮点击事件
-      document.getElementById('executeAttackBtn').addEventListener('click', executeAttack);
-      
-      // 搜索配置事件
-      document.getElementById('searchInput').addEventListener('input', searchConfigs);
-      
-      // 筛选配置事件
-      document.querySelectorAll('.filter-option').forEach(item => {
-        item.addEventListener('click', function(e) {
-          e.preventDefault();
-          const filter = this.getAttribute('data-filter');
-          currentFilter = filter;
-          renderConfigTable();
-          updateFilterTags();
-        });
-      });
-      
-      // 类型筛选事件
-      document.querySelectorAll('.type-filter-option').forEach(item => {
-        item.addEventListener('click', function(e) {
-          e.preventDefault();
-          const type = this.getAttribute('data-type');
-          currentTypeFilter = type;
-          renderConfigTable();
-          updateFilterTags();
-        });
-      });
-    });
-    
-    // 初始化类型筛选菜单
-    function initTypeFilter() {
-      const typeFilterMenu = document.getElementById('typeFilterMenu');
-      
-      // 添加全部类型选项
-      const allOption = document.createElement('li');
-      allOption.innerHTML = '<a class="dropdown-item type-filter-option active" href="#" data-type="all">全部类型</a>';
-      typeFilterMenu.appendChild(allOption);
-      
-      // 添加具体攻击类型选项
-      Object.entries(attackConfigs.typeNames).forEach(([key, value]) => {
-        const option = document.createElement('li');
-        option.innerHTML = `<a class="dropdown-item type-filter-option" href="#" data-type="${key}">${value}</a>`;
-        typeFilterMenu.appendChild(option);
-      });
-    }
-    
-    // 显示添加配置模态框
-    function showAddConfigModal() {
-      currentConfigId = null;
-      document.getElementById('modalTitle').textContent = '添加新攻击配置';
-      document.getElementById('configName').value = '';
-      document.getElementById('description').value = '';
-      document.getElementById('attackType').value = 'AdversarialAttack';
-      
-      updateAttackStrategies();
-      updateAdvancedSettings('AdversarialAttack');
-      
-      // 显示模态框
-      const modal = new bootstrap.Modal(document.getElementById('configModal'));
-      modal.show();
-    }
-    
-    // 显示Toast通知
-    function showToast(message, type) {
-      const toastContainer = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = `toast toast-${type}`;
-      toast.innerHTML = `
-        <i class="material-icons">${type === 'success' ? 'check_circle' : 'error'}</i>
-        <div>${message}</div>
-      `;
-      
-      toastContainer.appendChild(toast);
-      toast.classList.add('show');
-      
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-          toastContainer.removeChild(toast);
-        }, 300);
-      }, 3000);
-    }
-    
-    // 更新统计数据
-    function updateStats() {
-      const totalConfigs = configList.length;
-      const activeConfigs = configList.filter(config => config.status === 'active').length;
-      
-      // 计算不同攻击类型数量
-      const uniqueTypes = new Set(configList.map(config => config.type));
-      
-      document.getElementById('totalConfigs').textContent = totalConfigs;
-      document.getElementById('activeConfigs').textContent = activeConfigs;
-      document.getElementById('configCounter').textContent = totalConfigs;
-      document.getElementById('executedAttacks').textContent = executedAttacks;
-      document.getElementById('attackTypes').textContent = uniqueTypes.size;
-    }
-    
-    // 加载示例配置
-    function loadSampleConfigs() {
-      configList = [
-        {
-          id: 1,
-          name: "文本对抗攻击配置",
-          type: "AdversarialAttack",
-          strategy: "TextFoolerJin2019",
-          description: "针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型",
-          status: "active",
-          sent: true,
-          executed: true,
-          createdAt: "2025-05-15 10:30",
-          params: {
-            use_local_model: true,
-            attack_nums: 3
-          }
-        },
-        {
-          id: 2,
-          name: "后门攻击配置",
-          type: "BackDoorAttack",
-          strategy: "TrojanLM",
-          description: "植入后门的攻击配置，在特定触发词出现时改变模型行为",
-          status: "inactive",
-          sent: false,
-          executed: false,
-          createdAt: "2025-05-18 14:20",
-          params: {
-            sample_metrics: ["accuracy"],
-            defender: "None"
-          }
-        },
-        {
-          id: 3,
-          name: "数据投毒配置",
-          type: "PoisoningAttack",
-          strategy: "default",
-          description: "针对训练数据的投毒攻击，污染训练集以降低模型性能",
-          status: "active",
-          sent: true,
-          executed: false,
-          createdAt: "2023-05-20 09:45",
-          params: {
-            poisoning_rate: 0.15,
-            epochs: 15
-          }
-        },
-        {
-          id: 4,
-          name: "模型窃取攻击",
-          type: "ModelStealingAttack",
-          strategy: "default",
-          description: "通过查询目标模型来窃取其结构和参数",
-          status: "active",
-          sent: true,
-          executed: true,
-          createdAt: "2025-06-10 14:30",
-          params: {
-            attack_nums: 3,
-            query_num: 500,
-            method: "MeaeQ"
-          }
-        },
-        {
-          id: 5,
-          name: "模型反演配置",
-          type: "RLMI",
-          strategy: "default",
-          description: "使用强化学习优化攻击策略",
-          status: "active",
-          sent: false,
-          executed: false,
-          createdAt: "2023-06-12 11:20",
-          params: {
-            seed: 123,
-            max_iterations: 2500
-          }
-        }
-      ];
-    }
-    
-    // 渲染配置表格
-    function renderConfigTable() {
-      const tbody = document.getElementById('configTableBody');
-      const noConfigsMessage = document.getElementById('noConfigsMessage');
-      
-      // 应用筛选
-      let filteredConfigs = configList;
-      
-      // 应用状态筛选
-      if (currentFilter !== 'all') {
-        if (currentFilter === 'active') {
-          filteredConfigs = filteredConfigs.filter(config => config.status === 'active');
-        } else if (currentFilter === 'inactive') {
-          filteredConfigs = filteredConfigs.filter(config => config.status === 'inactive');
-        } else if (currentFilter === 'sent') {
-          filteredConfigs = filteredConfigs.filter(config => config.sent);
-        } else if (currentFilter === 'not_sent') {
-          filteredConfigs = filteredConfigs.filter(config => !config.sent);
-        } else if (currentFilter === 'executed') {
-          filteredConfigs = filteredConfigs.filter(config => config.executed);
-        } else if (currentFilter === 'not_executed') {
-          filteredConfigs = filteredConfigs.filter(config => !config.executed);
-        }
-      }
-      
-      // 应用类型筛选
-      if (currentTypeFilter !== 'all') {
-        filteredConfigs = filteredConfigs.filter(config => config.type === currentTypeFilter);
-      }
-      
-      if (filteredConfigs.length === 0) {
-        noConfigsMessage.classList.remove('d-none');
-        tbody.innerHTML = '';
-        updateStats();
-        return;
-      }
-      
-      noConfigsMessage.classList.add('d-none');
-      tbody.innerHTML = '';
-      
-      filteredConfigs.forEach(config => {
-        // 获取类型显示名称
-        const typeName = attackConfigs.typeNames[config.type] || config.type;
+        // 存储配置数据
+        let configList = [];
+        let currentConfigId = null;
+        let executedAttacks = 0;
+        let currentFilter = 'all';
+        let currentTypeFilter = 'all';
         
-        // 生成状态徽章
-        const statusBadges = [];
-        
-        // 启用状态
-        if (config.status === 'active') {
-          statusBadges.push('<span class="status-badge status-active status-indicator"><span class="status-dot"></span>活跃</span>');
-        } else {
-          statusBadges.push('<span class="status-badge status-inactive status-indicator"><span class="status-dot"></span>已禁用</span>');
-        }
-        
-        // 发送状态
-        if (config.sent) {
-          statusBadges.push('<span class="status-badge status-sent status-indicator"><span class="status-dot"></span>已发送</span>');
-        } else {
-          statusBadges.push('<span class="status-badge status-indicator"><span class="status-dot"></span>未发送</span>');
-        }
-        
-        // 执行状态
-        if (config.executed) {
-          statusBadges.push('<span class="status-badge status-executed status-indicator"><span class="status-dot"></span>已执行</span>');
-        } else {
-          statusBadges.push('<span class="status-badge status-indicator"><span class="status-dot"></span>未执行</span>');
-        }
-        
-        // 生成类型徽章
-        let badgeClass = 'badge-primary';
-        if (config.type === 'BackDoorAttack') badgeClass = 'badge-danger';
-        if (config.type === 'ModelStealingAttack') badgeClass = 'badge-info';
-        if (config.type === 'PoisoningAttack') badgeClass = 'badge-warning';
-        if (config.type === 'RLMI') badgeClass = 'badge-purple';
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${config.name}</td>
-          <td><span class="badge ${badgeClass}">${typeName}</span></td>
-          <td><span class="badge badge-success">${config.strategy}</span></td>
-          <td>
-            <div class="d-flex flex-wrap gap-2">
-              ${statusBadges.join('')}
-            </div>
-          </td>
-          <td>${config.createdAt}</td>
-          <td>
-            <div class="action-buttons">
-              <button class="btn btn-sm btn-outline-primary btn-icon edit-config-btn" data-id="${config.id}">
-                <i class="material-icons">edit</i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger btn-icon delete-config-btn" data-id="${config.id}">
-                <i class="material-icons">delete</i>
-              </button>
-              <button class="btn btn-sm btn-outline-secondary btn-icon toggle-status-btn" data-id="${config.id}">
-                <i class="material-icons">${config.status === 'active' ? 'toggle_off' : 'toggle_on'}</i>
-              </button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      
-      // 绑定事件
-      tbody.querySelectorAll('.edit-config-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const configId = parseInt(this.getAttribute('data-id'));
-          editConfig(configId);
-        });
-      });
-      
-      tbody.querySelectorAll('.delete-config-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const configId = parseInt(this.getAttribute('data-id'));
-          deleteConfig(configId);
-        });
-      });
-      
-      tbody.querySelectorAll('.toggle-status-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const configId = parseInt(this.getAttribute('data-id'));
-          toggleConfigStatus(configId);
-        });
-      });
-      
-      updateStats();
-    }
-    
-    // 更新筛选标签
-    function updateFilterTags() {
-      const filterTags = document.getElementById('filterTags');
-      filterTags.innerHTML = '';
-      
-      // 添加状态筛选标签
-      if (currentFilter !== 'all') {
-        const filterText = getFilterText(currentFilter);
-        const tag = document.createElement('div');
-        tag.className = 'filter-tag';
-        tag.innerHTML = `
-          <span>状态: ${filterText}</span>
-          <span class="close" data-filter="all">&times;</span>
-        `;
-        filterTags.appendChild(tag);
-      }
-      
-      // 添加类型筛选标签
-      if (currentTypeFilter !== 'all') {
-        const typeName = attackConfigs.typeNames[currentTypeFilter] || currentTypeFilter;
-        const tag = document.createElement('div');
-        tag.className = 'filter-tag';
-        tag.innerHTML = `
-          <span>类型: ${typeName}</span>
-          <span class="close" data-type="all">&times;</span>
-        `;
-        filterTags.appendChild(tag);
-      }
-      
-      // 添加清除所有筛选按钮
-      if (currentFilter !== 'all' || currentTypeFilter !== 'all') {
-        const clearTag = document.createElement('div');
-        clearTag.className = 'filter-tag';
-        clearTag.innerHTML = `
-          <span>清除所有筛选</span>
-          <span class="close" data-clear="all">&times;</span>
-        `;
-        filterTags.appendChild(clearTag);
-      }
-      
-      // 绑定关闭事件
-      filterTags.querySelectorAll('.close').forEach(close => {
-        close.addEventListener('click', function() {
-          if (this.getAttribute('data-clear')) {
-            currentFilter = 'all';
-            currentTypeFilter = 'all';
-          } else if (this.getAttribute('data-filter')) {
-            currentFilter = this.getAttribute('data-filter');
-          } else if (this.getAttribute('data-type')) {
-            currentTypeFilter = this.getAttribute('data-type');
-          }
-          
-          renderConfigTable();
-          updateFilterTags();
-        });
-      });
-    }
-    
-    // 获取筛选文本
-    function getFilterText(filter) {
-      const filterTexts = {
-        'all': '全部状态',
-        'active': '活跃配置',
-        'inactive': '已禁用',
-        'sent': '已发送',
-        'not_sent': '未发送',
-        'executed': '已执行',
-        'not_executed': '未执行'
-      };
-      
-      return filterTexts[filter] || filter;
-    }
-    
-    // 编辑配置
-    function editConfig(configId) {
-      const config = configList.find(c => c.id === configId);
-      if (!config) return;
-      
-      currentConfigId = configId;
-      document.getElementById('modalTitle').textContent = '编辑攻击配置';
-      document.getElementById('configName').value = config.name;
-      document.getElementById('description').value = config.description;
-      document.getElementById('attackType').value = config.type;
-      
-      updateAttackStrategies();
-      document.getElementById('attackStrategy').value = config.strategy;
-      updateAdvancedSettings(config.type);
-      
-      // 填充高级设置
-      for (const [key, value] of Object.entries(config.params)) {
-        const input = document.getElementById(key);
-        if (input) {
-          if (input.type === 'checkbox') {
-            input.checked = value;
-          } else if (input.type === 'select-multiple') {
-            // 处理多选字段
-            Array.from(input.options).forEach(option => {
-              option.selected = value.includes(option.value);
+        // DOM 加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化攻击策略下拉菜单
+            updateAttackStrategies();
+            
+            // 初始化类型筛选菜单
+            initTypeFilter();
+            
+            // 加载示例配置
+            loadSampleConfigs();
+            renderConfigTable();
+            updateStats();
+            
+            // 添加新配置按钮点击事件
+            document.getElementById('addNewConfigBtn').addEventListener('click', showAddConfigModal);
+            document.getElementById('addFirstConfigBtn').addEventListener('click', showAddConfigModal);
+            
+            // 攻击类型改变事件
+            document.getElementById('attackType').addEventListener('change', function() {
+                updateAttackStrategies();
+                updateAdvancedSettings(this.value);
+                
+                // 更新描述
+                const type = this.value;
+                document.getElementById('description').value = attackConfigs.descriptions[type] || '';
             });
-          } else {
-            input.value = value;
-          }
-        }
-      }
-      
-      // 显示模态框
-      const modal = new bootstrap.Modal(document.getElementById('configModal'));
-      modal.show();
-    }
-    
-    // 删除配置
-    function deleteConfig(configId) {
-      if (confirm('确定要删除此配置吗？此操作不可撤销。')) {
-        configList = configList.filter(c => c.id !== configId);
-        renderConfigTable();
-        showToast('配置删除成功！', 'success');
-      }
-    }
-    
-    // 切换配置状态
-    function toggleConfigStatus(configId) {
-      const config = configList.find(c => c.id === configId);
-      if (config) {
-        config.status = config.status === 'active' ? 'inactive' : 'active';
-        renderConfigTable();
-        showToast(`配置状态已${config.status === 'active' ? '激活' : '禁用'}`, 'success');
-      }
-    }
-    
-    // 更新攻击策略下拉菜单
-    function updateAttackStrategies() {
-      const attackType = document.getElementById('attackType').value;
-      const strategies = attackConfigs.recipes[attackType] || ['default'];
-      const strategySelect = document.getElementById('attackStrategy');
-      
-      strategySelect.innerHTML = '';
-      strategies.forEach(strategy => {
-        const option = document.createElement('option');
-        option.value = strategy;
-        option.textContent = strategy;
-        strategySelect.appendChild(option);
-      });
-      
-      // 更新描述
-      document.getElementById('description').value = attackConfigs.descriptions[attackType] || '';
-    }
-    
-    // 更新高级设置区域
-    function updateAdvancedSettings(attackType) {
-      const settings = attackConfigs.defaults[attackType] || {};
-      const container = document.getElementById('advancedSettingsContent');
-      
-      container.innerHTML = '';
-      
-      for (const [key, value] of Object.entries(settings)) {
-        const label = key.replace(/_/g, ' ')
-                        .replace(/\b\w/g, l => l.toUpperCase());
-        
-        const col = document.createElement('div');
-        col.className = 'param-item';
-        
-        if (attackType === 'BackDoorAttack') {
-          // 后门攻击特殊字段处理
-          if (key === 'sample_metrics') {
-            col.innerHTML = `
-              <label class="form-label">样本指标</label>
-              <div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="ppl" value="ppl">
-                  <label class="form-check-label" for="ppl">PPL</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="use" value="use">
-                  <label class="form-check-label" for="use">USE</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="grammar" value="grammar">
-                  <label class="form-check-label" for="grammar">语法</label>
-                </div>
-              </div>
-            `;
-          } else if (key === 'defender') {
-            col.innerHTML = `
-              <label class="form-label">防御机制</label>
-              <select class="form-control" id="defender">
-                <option value="None">无</option>
-                <option value="BKI">BKI</option>
-                <option value="ONION">ONION</option>
-                <option value="STRIP">STRIP</option>
-                <option value="RAP">RAP</option>
-                <option value="CUBE">CUBE</option>
-              </select>
-            `;
-          } else {
-            col.innerHTML = `
-              <label class="form-label">${label}</label>
-              <input type="text" class="form-control" id="${key}" value="${value}">
-            `;
-          }
-        } else if (attackType === 'ModelStealingAttack') {
-          // 模型窃取攻击特殊字段处理
-          if (key === 'method') {
-            col.innerHTML = `
-              <label class="form-label">方法</label>
-              <select class="form-control" id="method">
-                <option value="RS">随机抽样 (RS)</option>
-                <option value="TRF">基于转换 (TRF)</option>
-                <option value="DRC">数据重构 (DRC)</option>
-                <option value="MeaeQ">MeaeQ</option>
-                <option value="AL-RS">主动学习-RS</option>
-                <option value="AL-US">主动学习-US</option>
-              </select>
-            `;
-          } else if (key === 'al_sample_method') {
-            col.innerHTML = `
-              <label class="form-label">主动学习方法</label>
-              <select class="form-control" id="al_sample_method">
-                <option value="random">随机</option>
-                <option value="uncertainty">不确定性</option>
-                <option value="dr-greedy-select-min-max">最小-最大贪婪选择</option>
-                <option value="dr-greedy-select-max-sum">最大和贪婪选择</option>
-              </select>
-            `;
-          } else {
-            col.innerHTML = `
-              <label class="form-label">${label}</label>
-              <input type="text" class="form-control" id="${key}" value="${value}">
-            `;
-          }
-        } else {
-          // 通用处理
-          if (typeof value === 'boolean') {
-            col.innerHTML = `
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="${key}" ${value ? 'checked' : ''}>
-                <label class="form-check-label" for="${key}">${label}</label>
-              </div>
-            `;
-          } else if (Array.isArray(value)) {
-            col.innerHTML = `
-              <label class="form-label">${label}</label>
-              <input type="text" class="form-control" id="${key}" value="${value.join(', ')}">
-            `;
-          } else if (typeof value === 'number') {
-            col.innerHTML = `
-              <label class="form-label">${label}</label>
-              <input type="number" class="form-control" id="${key}" value="${value}">
-            `;
-          } else {
-            col.innerHTML = `
-              <label class="form-label">${label}</label>
-              <input type="text" class="form-control" id="${key}" value="${value}">
-            `;
-          }
-        }
-        
-        container.appendChild(col);
-      }
-    }
-    
-    // 保存配置
-    function saveConfig() {
-      const configName = document.getElementById('configName').value;
-      if (!configName) {
-        showToast('请填写配置名称', 'error');
-        return;
-      }
-      
-      const attackType = document.getElementById('attackType').value;
-      const attackStrategy = document.getElementById('attackStrategy').value;
-      const description = document.getElementById('description').value;
-      
-      // 收集高级设置
-      const params = {};
-      const settings = attackConfigs.defaults[attackType] || {};
-      
-      for (const key of Object.keys(settings)) {
-        const input = document.getElementById(key);
-        
-        if (input) {
-          if (attackType === 'BackDoorAttack' && key === 'sample_metrics') {
-            // 处理后门攻击的样本指标多选框
-            params[key] = [];
-            if (document.getElementById('ppl').checked) params[key].push('ppl');
-            if (document.getElementById('use').checked) params[key].push('use');
-            if (document.getElementById('grammar').checked) params[key].push('grammar');
-          } else if (input.type === 'checkbox') {
-            params[key] = input.checked;
-          } else if (input.type === 'number') {
-            params[key] = parseFloat(input.value);
-          } else {
-            params[key] = input.value;
-          }
-        }
-      }
-      
-      const newConfig = {
-        id: currentConfigId || Date.now(),
-        name: configName,
-        type: attackType,
-        strategy: attackStrategy,
-        description: description,
-        status: 'active',
-        sent: false,
-        executed: false,
-        createdAt: new Date().toLocaleString('zh-CN', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit'
-        }),
-        params: params
-      };
-      
-      if (currentConfigId) {
-        // 更新现有配置
-        const index = configList.findIndex(c => c.id === currentConfigId);
-        if (index !== -1) {
-          configList[index] = newConfig;
-        }
-      } else {
-        // 添加新配置
-        configList.push(newConfig);
-      }
-      
-      // 更新表格
-      renderConfigTable();
-      
-      // 关闭模态框
-      const modal = bootstrap.Modal.getInstance(document.getElementById('configModal'));
-      modal.hide();
-      
-      // 显示成功消息
-      showToast(`配置"${configName}"保存成功！`, 'success');
-    }
-    
-    // 发送配置
-    async function sendConfigs() {
-      // 过滤出活跃状态的配置
-      configList.forEach(config => {
-        if(config.status === 'inactive') config.sent = false; // 重置发送状态
-      });
-      const activeConfigs = configList.filter(config => config.status === 'active');
-      if (activeConfigs.length === 0) {
-        showToast('没有可发送的配置', 'error');
-        return;
-      }
-      
-      try {
-        activeConfigs.forEach(config => {
-          config.sent = true;
+            
+            // 保存配置按钮点击事件
+            document.getElementById('saveConfigBtn').addEventListener('click', saveConfig);
+            
+            // 发送配置按钮点击事件
+            document.getElementById('sendConfigBtn').addEventListener('click', sendConfigs);
+            
+            // 执行攻击按钮点击事件 - 绑定到显示模态框函数
+            document.getElementById('executeAttackBtn').addEventListener('click', showExecuteAttackModal);
+            
+            // 确认执行按钮点击事件
+            document.getElementById('confirmExecuteBtn').addEventListener('click', confirmExecuteAttack);
+            
+            // 搜索配置事件
+            document.getElementById('searchInput').addEventListener('input', searchConfigs);
+            
+            // 筛选配置事件
+            document.querySelectorAll('.filter-option').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const filter = this.getAttribute('data-filter');
+                    currentFilter = filter;
+                    renderConfigTable();
+                    updateFilterTags();
+                });
+            });
+            
+            // 类型筛选事件
+            document.querySelectorAll('.type-filter-option').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const type = this.getAttribute('data-type');
+                    currentTypeFilter = type;
+                    renderConfigTable();
+                    updateFilterTags();
+                });
+            });
         });
-        const module = await import('../assets/js/utils/authStore.js');
-				const axios =await import('../assets/js/utils/axiosConfig.js');
-				const authStore = module.default;
-				const response = await axios.default.post('/api/attack_list', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${authStore.token}`
-					},
-					username: authStore.username,
-					attack_list: activeConfigs
-				});
-        console.log('发送配置:', activeConfigs);
-        if (response.status ===200) {
-					showToast('配置已发送到服务器', 'success');
-          renderConfigTable();
-				} else {
-					showToast('发送配置失败', 'error');
-				}
-      } catch (err) {
-        console.error('发送失败:', err);
-      }
-    }
-    
-    // 执行攻击
-    async function executeAttack() {
-      const activeConfigs = configList.filter(config => config.status === 'active');
-      if (activeConfigs.length === 0) {
-        showToast('没有可执行的活跃配置', 'error');
-        return;
-      }
-      
-      try {
-        activeConfigs.forEach(config => {
-          config.executed = true;
-        });
-        const module = await import('../assets/js/utils/authStore.js');
-				const axios =await import('../assets/js/utils/axiosConfig.js');
-				const authStore = module.default;
-				const response = await axios.default.post('/api/execute_attack', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${authStore.token}`
-					},
-					username: authStore.username,
-				});
-        executedAttacks++;
-        renderConfigTable();
-        showToast('攻击执行成功！', 'success');
-      } catch (err) {
-        console.error('执行失败:', err);
-      }
-    }
-    
-    // 搜索配置
-    function searchConfigs() {
-      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-      
-      if (!searchTerm) {
-        renderConfigTable();
-        return;
-      }
-      
-      const filteredConfigs = configList.filter(config => 
-        config.name.toLowerCase().includes(searchTerm) || 
-        config.type.toLowerCase().includes(searchTerm) || 
-        config.strategy.toLowerCase().includes(searchTerm) || 
-        config.description.toLowerCase().includes(searchTerm)
-      );
-      
-      renderFilteredConfigs(filteredConfigs);
-    }
-    
-    // 渲染筛选后的配置
-    function renderFilteredConfigs(filteredConfigs) {
-      const tbody = document.getElementById('configTableBody');
-      const noConfigsMessage = document.getElementById('noConfigsMessage');
-      
-      if (filteredConfigs.length === 0) {
-        noConfigsMessage.classList.remove('d-none');
-        tbody.innerHTML = '';
-        return;
-      }
-      
-      noConfigsMessage.classList.add('d-none');
-      tbody.innerHTML = '';
-      
-      filteredConfigs.forEach(config => {
-        // 获取类型显示名称
-        const typeName = attackConfigs.typeNames[config.type] || config.type;
         
-        // 生成状态徽章
-        const statusBadges = [];
-        
-        // 启用状态
-        if (config.status === 'active') {
-          statusBadges.push('<span class="status-badge status-active status-indicator"><span class="status-dot"></span>活跃</span>');
-        } else {
-          statusBadges.push('<span class="status-badge status-inactive status-indicator"><span class="status-dot"></span>已禁用</span>');
+        // 初始化类型筛选菜单
+        function initTypeFilter() {
+            const typeFilterMenu = document.getElementById('typeFilterMenu');
+            
+            // 添加具体攻击类型选项
+            Object.entries(attackConfigs.typeNames).forEach(([key, value]) => {
+                const option = document.createElement('li');
+                option.innerHTML = `<a class="dropdown-item type-filter-option" href="#" data-type="${key}">${value}</a>`;
+                typeFilterMenu.appendChild(option);
+            });
         }
         
-        // 发送状态
-        if (config.sent) {
-          statusBadges.push('<span class="status-badge status-sent status-indicator"><span class="status-dot"></span>已发送</span>');
-        } else {
-          statusBadges.push('<span class="status-badge status-indicator"><span class="status-dot"></span>未发送</span>');
+        // 显示添加配置模态框
+        function showAddConfigModal() {
+            currentConfigId = null;
+            document.getElementById('modalTitle').textContent = '添加新攻击配置';
+            document.getElementById('configName').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('attackType').value = 'AdversarialAttack';
+            
+            updateAttackStrategies();
+            updateAdvancedSettings('AdversarialAttack');
+            
+            // 显示模态框
+            const modal = new bootstrap.Modal(document.getElementById('configModal'));
+            modal.show();
         }
         
-        // 执行状态
-        if (config.executed) {
-          statusBadges.push('<span class="status-badge status-executed status-indicator"><span class="status-dot"></span>已执行</span>');
-        } else {
-          statusBadges.push('<span class="status-badge status-indicator"><span class="status-dot"></span>未执行</span>');
+        // 显示Toast通知
+        function showToast(message, type) {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <i class="material-icons">${type === 'success' ? 'check_circle' : 'error'}</i>
+                <div>${message}</div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toastContainer.removeChild(toast);
+                }, 300);
+            }, 3000);
         }
         
-        // 生成类型徽章
-        let badgeClass = 'badge-primary';
-        if (config.type === 'BackDoorAttack') badgeClass = 'badge-danger';
-        if (config.type === 'ModelStealingAttack') badgeClass = 'badge-info';
-        if (config.type === 'PoisoningAttack') badgeClass = 'badge-warning';
-        if (config.type === 'RLMI') badgeClass = 'badge-purple';
+        // 更新统计数据
+        function updateStats() {
+            const totalConfigs = configList.length;
+            const activeConfigs = configList.filter(config => config.status === 'active').length;
+            
+            // 计算不同攻击类型数量
+            const uniqueTypes = new Set(configList.map(config => config.type));
+            
+            document.getElementById('totalConfigs').textContent = totalConfigs;
+            document.getElementById('activeConfigs').textContent = activeConfigs;
+            document.getElementById('configCounter').textContent = totalConfigs;
+            document.getElementById('executedAttacks').textContent = executedAttacks;
+            document.getElementById('attackTypes').textContent = uniqueTypes.size;
+        }
         
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${config.name}</td>
-          <td><span class="badge ${badgeClass}">${typeName}</span></td>
-          <td><span class="badge badge-success">${config.strategy}</span></td>
-          <td>
-            <div class="d-flex flex-wrap gap-2">
-              ${statusBadges.join('')}
-            </div>
-          </td>
-          <td>${config.createdAt}</td>
-          <td>
-            <div class="action-buttons">
-              <button class="btn btn-sm btn-outline-primary btn-icon edit-config-btn" data-id="${config.id}">
-                <i class="material-icons">edit</i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger btn-icon delete-config-btn" data-id="${config.id}">
-                <i class="material-icons">delete</i>
-              </button>
-              <button class="btn btn-sm btn-outline-secondary btn-icon toggle-status-btn" data-id="${config.id}">
-                <i class="material-icons">${config.status === 'active' ? 'toggle_off' : 'toggle_on'}</i>
-              </button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      
-      // 绑定事件
-      tbody.querySelectorAll('.edit-config-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const configId = parseInt(this.getAttribute('data-id'));
-          editConfig(configId);
-        });
-      });
-      
-      tbody.querySelectorAll('.delete-config-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const configId = parseInt(this.getAttribute('data-id'));
-          deleteConfig(configId);
-        });
-      });
-      
-      tbody.querySelectorAll('.toggle-status-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const configId = parseInt(this.getAttribute('data-id'));
-          toggleConfigStatus(configId);
-        });
-      });
-    }
-	</script>
-	<!-- Github buttons -->
-	<script async defer src="https://buttons.github.io/buttons.js"></script>
-	<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-	<script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+        // 加载示例配置
+        function loadSampleConfigs() {
+            configList = [
+                {
+                    id: 1,
+                    name: "文本对抗攻击配置",
+                    type: "AdversarialAttack",
+                    strategy: "TextFoolerJin2019",
+                    description: "针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型",
+                    status: "active",
+                    sent: true,
+                    executed: true,
+                    createdAt: "2025-05-15 10:30",
+                    params: {
+                        use_local_model: true,
+                        attack_nums: 3
+                    }
+                },
+                {
+                    id: 2,
+                    name: "后门攻击配置",
+                    type: "BackDoorAttack",
+                    strategy: "TrojanLM",
+                    description: "植入后门的攻击配置，在特定触发词出现时改变模型行为",
+                    status: "inactive",
+                    sent: false,
+                    executed: false,
+                    createdAt: "2025-05-18 14:20",
+                    params: {
+                        sample_metrics: ["accuracy"],
+                        defender: "None"
+                    }
+                },
+                {
+                    id: 3,
+                    name: "数据投毒配置",
+                    type: "PoisoningAttack",
+                    strategy: "default",
+                    description: "针对训练数据的投毒攻击，污染训练集以降低模型性能",
+                    status: "active",
+                    sent: true,
+                    executed: false,
+                    createdAt: "2025-05-20 09:45",
+                    params: {
+                        poisoning_rate: 0.15,
+                        epochs: 15
+                    }
+                },
+                {
+                    id: 4,
+                    name: "模型窃取攻击",
+                    type: "ModelStealingAttack",
+                    strategy: "default",
+                    description: "通过查询目标模型来窃取其结构和参数",
+                    status: "active",
+                    sent: true,
+                    executed: true,
+                    createdAt: "2025-06-10 14:30",
+                    params: {
+                        attack_nums: 3,
+                        query_num: 500,
+                        method: "MeaeQ"
+                    }
+                },
+                {
+                    id: 5,
+                    name: "模型反演配置",
+                    type: "RLMI",
+                    strategy: "default",
+                    description: "使用强化学习优化攻击策略",
+                    status: "active",
+                    sent: false,
+                    executed: false,
+                    createdAt: "2025-06-12 11:20",
+                    params: {
+                        seed: 123,
+                        max_iterations: 2500
+                    }
+                }
+            ];
+        }
+        
+        // 渲染配置表格
+        function renderConfigTable() {
+            const tbody = document.getElementById('configTableBody');
+            const noConfigsMessage = document.getElementById('noConfigsMessage');
+            
+            // 应用筛选
+            let filteredConfigs = configList;
+            
+            // 应用状态筛选
+            if (currentFilter !== 'all') {
+                if (currentFilter === 'active') {
+                    filteredConfigs = filteredConfigs.filter(config => config.status === 'active');
+                } else if (currentFilter === 'inactive') {
+                    filteredConfigs = filteredConfigs.filter(config => config.status === 'inactive');
+                } else if (currentFilter === 'sent') {
+                    filteredConfigs = filteredConfigs.filter(config => config.sent);
+                } else if (currentFilter === 'not_sent') {
+                    filteredConfigs = filteredConfigs.filter(config => !config.sent);
+                } else if (currentFilter === 'executed') {
+                    filteredConfigs = filteredConfigs.filter(config => config.executed);
+                } else if (currentFilter === 'not_executed') {
+                    filteredConfigs = filteredConfigs.filter(config => !config.executed);
+                }
+            }
+            
+            // 应用类型筛选
+            if (currentTypeFilter !== 'all') {
+                filteredConfigs = filteredConfigs.filter(config => config.type === currentTypeFilter);
+            }
+            
+            if (filteredConfigs.length === 0) {
+                noConfigsMessage.classList.remove('d-none');
+                tbody.innerHTML = '';
+                updateStats();
+                return;
+            }
+            
+            noConfigsMessage.classList.add('d-none');
+            tbody.innerHTML = '';
+            
+            filteredConfigs.forEach(config => {
+                // 获取类型显示名称
+                const typeName = attackConfigs.typeNames[config.type] || config.type;
+                
+                // 生成状态徽章
+                const statusBadges = [];
+                
+                // 启用状态
+                if (config.status === 'active') {
+                    statusBadges.push('<span class="status-badge status-active status-indicator"><span class="status-dot"></span>活跃</span>');
+                } else {
+                    statusBadges.push('<span class="status-badge status-inactive status-indicator"><span class="status-dot"></span>已禁用</span>');
+                }
+                
+                // 发送状态
+                if (config.sent) {
+                    statusBadges.push('<span class="status-badge status-sent status-indicator"><span class="status-dot"></span>已发送</span>');
+                } else {
+                    statusBadges.push('<span class="status-badge status-indicator"><span class="status-dot"></span>未发送</span>');
+                }
+                
+                // 执行状态
+                if (config.executed) {
+                    statusBadges.push('<span class="status-badge status-executed status-indicator"><span class="status-dot"></span>已执行</span>');
+                } else {
+                    statusBadges.push('<span class="status-badge status-indicator"><span class="status-dot"></span>未执行</span>');
+                }
+                
+                // 生成类型徽章
+                let badgeClass = 'badge-primary';
+                if (config.type === 'BackDoorAttack') badgeClass = 'badge-danger';
+                if (config.type === 'ModelStealingAttack') badgeClass = 'badge-info';
+                if (config.type === 'PoisoningAttack') badgeClass = 'badge-warning';
+                if (config.type === 'RLMI') badgeClass = 'badge-purple';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${config.name}</td>
+                    <td><span class="badge ${badgeClass}">${typeName}</span></td>
+                    <td><span class="badge badge-success">${config.strategy}</span></td>
+                    <td>
+                        <div class="d-flex flex-wrap gap-2">
+                            ${statusBadges.join('')}
+                        </div>
+                    </td>
+                    <td>${config.createdAt}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-outline-primary btn-icon edit-config-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
+                            <i class="material-icons" style="font-size: 18px;">edit</i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger btn-icon delete-config-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
+                            <i class="material-icons" style="font-size: 18px;">delete</i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary btn-icon toggle-status-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
+                            <i class="material-icons" style="font-size: 18px;">${config.status === 'active' ? 'toggle_off' : 'toggle_on'}</i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // 绑定事件
+            tbody.querySelectorAll('.edit-config-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const configId = parseInt(this.getAttribute('data-id'));
+                    editConfig(configId);
+                });
+            });
+            
+            tbody.querySelectorAll('.delete-config-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const configId = parseInt(this.getAttribute('data-id'));
+                    deleteConfig(configId);
+                });
+            });
+            
+            tbody.querySelectorAll('.toggle-status-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const configId = parseInt(this.getAttribute('data-id'));
+                    toggleConfigStatus(configId);
+                });
+            });
+            
+            updateStats();
+        }
+        
+        // 更新筛选标签
+        function updateFilterTags() {
+            const filterTags = document.getElementById('filterTags');
+            filterTags.innerHTML = '';
+            
+            // 添加状态筛选标签
+            if (currentFilter !== 'all') {
+                const filterText = getFilterText(currentFilter);
+                const tag = document.createElement('div');
+                tag.className = 'filter-tag';
+                tag.innerHTML = `
+                    <span>状态: ${filterText}</span>
+                    <span class="close" data-filter="all">&times;</span>
+                `;
+                filterTags.appendChild(tag);
+            }
+            
+            // 添加类型筛选标签
+            if (currentTypeFilter !== 'all') {
+                const typeName = attackConfigs.typeNames[currentTypeFilter] || currentTypeFilter;
+                const tag = document.createElement('div');
+                tag.className = 'filter-tag';
+                tag.innerHTML = `
+                    <span>类型: ${typeName}</span>
+                    <span class="close" data-type="all">&times;</span>
+                `;
+                filterTags.appendChild(tag);
+            }
+            
+            // 添加清除所有筛选按钮
+            if (currentFilter !== 'all' || currentTypeFilter !== 'all') {
+                const clearTag = document.createElement('div');
+                clearTag.className = 'filter-tag';
+                clearTag.innerHTML = `
+                    <span>清除所有筛选</span>
+                    <span class="close" data-clear="all">&times;</span>
+                `;
+                filterTags.appendChild(clearTag);
+            }
+            
+            // 绑定关闭事件
+            filterTags.querySelectorAll('.close').forEach(close => {
+                close.addEventListener('click', function() {
+                    if (this.getAttribute('data-clear')) {
+                        currentFilter = 'all';
+                        currentTypeFilter = 'all';
+                    } else if (this.getAttribute('data-filter')) {
+                        currentFilter = this.getAttribute('data-filter');
+                    } else if (this.getAttribute('data-type')) {
+                        currentTypeFilter = this.getAttribute('data-type');
+                    }
+                    
+                    renderConfigTable();
+                    updateFilterTags();
+                });
+            });
+        }
+        
+        // 获取筛选文本
+        function getFilterText(filter) {
+            const filterTexts = {
+                'all': '全部状态',
+                'active': '活跃配置',
+                'inactive': '已禁用',
+                'sent': '已发送',
+                'not_sent': '未发送',
+                'executed': '已执行',
+                'not_executed': '未执行'
+            };
+            
+            return filterTexts[filter] || filter;
+        }
+        
+        // 编辑配置
+        function editConfig(configId) {
+            const config = configList.find(c => c.id === configId);
+            if (!config) return;
+            
+            currentConfigId = configId;
+            document.getElementById('modalTitle').textContent = '编辑攻击配置';
+            document.getElementById('configName').value = config.name;
+            document.getElementById('description').value = config.description;
+            document.getElementById('attackType').value = config.type;
+            
+            updateAttackStrategies();
+            document.getElementById('attackStrategy').value = config.strategy;
+            updateAdvancedSettings(config.type);
+            
+            // 填充高级设置
+            for (const [key, value] of Object.entries(config.params)) {
+                const input = document.getElementById(key);
+                if (input) {
+                    if (input.type === 'checkbox') {
+                        input.checked = value;
+                    } else if (input.type === 'select-multiple') {
+                        // 处理多选字段
+                        Array.from(input.options).forEach(option => {
+                            option.selected = value.includes(option.value);
+                        });
+                    } else {
+                        input.value = value;
+                    }
+                }
+            }
+            
+            // 显示模态框
+            const modal = new bootstrap.Modal(document.getElementById('configModal'));
+            modal.show();
+        }
+        
+        // 删除配置
+        function deleteConfig(configId) {
+            if (confirm('确定要删除此配置吗？此操作不可撤销。')) {
+                configList = configList.filter(c => c.id !== configId);
+                renderConfigTable();
+                showToast('配置删除成功！', 'success');
+            }
+        }
+        
+        // 切换配置状态
+        function toggleConfigStatus(configId) {
+            const config = configList.find(c => c.id === configId);
+            if (config) {
+                config.status = config.status === 'active' ? 'inactive' : 'active';
+                renderConfigTable();
+                showToast(`配置状态已${config.status === 'active' ? '激活' : '禁用'}`, 'success');
+            }
+        }
+        
+        // 更新攻击策略下拉菜单
+        function updateAttackStrategies() {
+            const attackType = document.getElementById('attackType').value;
+            const strategies = attackConfigs.recipes[attackType] || ['default'];
+            const strategySelect = document.getElementById('attackStrategy');
+            
+            strategySelect.innerHTML = '';
+            strategies.forEach(strategy => {
+                const option = document.createElement('option');
+                option.value = strategy;
+                option.textContent = strategy;
+                strategySelect.appendChild(option);
+            });
+            
+            // 更新描述
+            document.getElementById('description').value = attackConfigs.descriptions[attackType] || '';
+        }
+        
+        // 更新高级设置区域
+        function updateAdvancedSettings(attackType) {
+            const settings = attackConfigs.defaults[attackType] || {};
+            const container = document.getElementById('advancedSettingsContent');
+            
+            container.innerHTML = '';
+            
+            for (const [key, value] of Object.entries(settings)) {
+                const label = key.replace(/_/g, ' ')
+                                .replace(/\b\w/g, l => l.toUpperCase());
+                
+                const col = document.createElement('div');
+                col.className = 'param-item';
+                
+                if (attackType === 'BackDoorAttack') {
+                    // 后门攻击特殊字段处理
+                    if (key === 'sample_metrics') {
+                        col.innerHTML = `
+                            <label class="form-label">样本指标</label>
+                            <div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="ppl" value="ppl">
+                                    <label class="form-check-label" for="ppl">PPL</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="use" value="use">
+                                    <label class="form-check-label" for="use">USE</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="grammar" value="grammar">
+                                    <label class="form-check-label" for="grammar">语法</label>
+                                </div>
+                            </div>
+                        `;
+                    } else if (key === 'defender') {
+                        col.innerHTML = `
+                            <label class="form-label">防御机制</label>
+                            <select class="form-control" id="defender">
+                                <option value="None">无</option>
+                                <option value="BKI">BKI</option>
+                                <option value="ONION">ONION</option>
+                                <option value="STRIP">STRIP</option>
+                                <option value="RAP">RAP</option>
+                                <option value="CUBE">CUBE</option>
+                            </select>
+                        `;
+                    } else {
+                        col.innerHTML = `
+                            <label class="form-label">${label}</label>
+                            <input type="text" class="form-control" id="${key}" value="${value}">
+                        `;
+                    }
+                } else if (attackType === 'ModelStealingAttack') {
+                    // 模型窃取攻击特殊字段处理
+                    if (key === 'method') {
+                        col.innerHTML = `
+                            <label class="form-label">方法</label>
+                            <select class="form-control" id="method">
+                                <option value="RS">随机抽样 (RS)</option>
+                                <option value="TRF">基于转换 (TRF)</option>
+                                <option value="DRC">数据重构 (DRC)</option>
+                                <option value="MeaeQ">MeaeQ</option>
+                                <option value="AL-RS">主动学习-RS</option>
+                                <option value="AL-US">主动学习-US</option>
+                            </select>
+                        `;
+                    } else if (key === 'al_sample_method') {
+                        col.innerHTML = `
+                            <label class="form-label">主动学习方法</label>
+                            <select class="form-control" id="al_sample_method">
+                                <option value="random">随机</option>
+                                <option value="uncertainty">不确定性</option>
+                                <option value="dr-greedy-select-min-max">最小-最大贪婪选择</option>
+                                <option value="dr-greedy-select-max-sum">最大和贪婪选择</option>
+                            </select>
+                        `;
+                    } else {
+                        col.innerHTML = `
+                            <label class="form-label">${label}</label>
+                            <input type="text" class="form-control" id="${key}" value="${value}">
+                        `;
+                    }
+                } else {
+                    // 通用处理
+                    if (typeof value === 'boolean') {
+                        col.innerHTML = `
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="${key}" ${value ? 'checked' : ''}>
+                                <label class="form-check-label" for="${key}">${label}</label>
+                            </div>
+                        `;
+                    } else if (Array.isArray(value)) {
+                        col.innerHTML = `
+                            <label class="form-label">${label}</label>
+                            <input type="text" class="form-control" id="${key}" value="${value.join(', ')}">
+                        `;
+                    } else if (typeof value === 'number') {
+                        col.innerHTML = `
+                            <label class="form-label">${label}</label>
+                            <input type="number" class="form-control" id="${key}" value="${value}">
+                        `;
+                    } else {
+                        col.innerHTML = `
+                            <label class="form-label">${label}</label>
+                            <input type="text" class="form-control" id="${key}" value="${value}">
+                        `;
+                    }
+                }
+                
+                container.appendChild(col);
+            }
+        }
+        
+        // 保存配置
+        function saveConfig() {
+            const configName = document.getElementById('configName').value;
+            if (!configName) {
+                showToast('请填写配置名称', 'error');
+                return;
+            }
+            
+            const attackType = document.getElementById('attackType').value;
+            const attackStrategy = document.getElementById('attackStrategy').value;
+            const description = document.getElementById('description').value;
+            
+            // 收集高级设置
+            const params = {};
+            const settings = attackConfigs.defaults[attackType] || {};
+            
+            for (const key of Object.keys(settings)) {
+                const input = document.getElementById(key);
+                
+                if (input) {
+                    if (attackType === 'BackDoorAttack' && key === 'sample_metrics') {
+                        // 处理后门攻击的样本指标多选框
+                        params[key] = [];
+                        if (document.getElementById('ppl').checked) params[key].push('ppl');
+                        if (document.getElementById('use').checked) params[key].push('use');
+                        if (document.getElementById('grammar').checked) params[key].push('grammar');
+                    } else if (input.type === 'checkbox') {
+                        params[key] = input.checked;
+                    } else if (input.type === 'number') {
+                        params[key] = parseFloat(input.value);
+                    } else {
+                        params[key] = input.value;
+                    }
+                }
+            }
+            
+            const newConfig = {
+                id: currentConfigId || Date.now(),
+                name: configName,
+                type: attackType,
+                strategy: attackStrategy,
+                description: description,
+                status: 'active',
+                sent: false,
+                executed: false,
+                createdAt: new Date().toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                params: params
+            };
+            
+            if (currentConfigId) {
+                // 更新现有配置
+                const index = configList.findIndex(c => c.id === currentConfigId);
+                if (index !== -1) {
+                    configList[index] = newConfig;
+                }
+            } else {
+                // 添加新配置
+                configList.push(newConfig);
+            }
+            
+            // 更新表格
+            renderConfigTable();
+            
+            // 关闭模态框
+            const modal = bootstrap.Modal.getInstance(document.getElementById('configModal'));
+            modal.hide();
+            
+            // 显示成功消息
+            showToast(`配置"${configName}"保存成功！`, 'success');
+        }
+        
+        // 发送配置
+        async function sendConfigs() {
+            // 过滤出活跃状态的配置
+            configList.forEach(config => {
+                if(config.status === 'inactive') config.sent = false; // 重置发送状态
+            });
+            const activeConfigs = configList.filter(config => config.status === 'active');
+            if (activeConfigs.length === 0) {
+                showToast('没有可发送的配置', 'error');
+                return;
+            }
+            
+            try {
+                activeConfigs.forEach(config => {
+                    config.sent = true;
+                });
+                  const module = await import('../assets/js/utils/authStore.js');
+                  const axios =await import('../assets/js/utils/axiosConfig.js');
+                  const authStore = module.default;
+                  const response = await axios.default.post('/api/attack_list', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${authStore.token}`
+                    },
+                    username: authStore.username,
+                    attack_list: activeConfigs
+                  });
+                  console.log('发送配置:', activeConfigs);
+                  if (response.status ===200) {
+                    showToast('配置已发送到服务器', 'success');
+                    renderConfigTable();
+                  } else {
+                    showToast('发送配置失败', 'error');
+                  }
+                
+            } catch (err) {
+                console.error('发送失败:', err);
+                showToast('发送配置失败', 'error');
+            }
+        }
+        
+        // 显示执行攻击模态框
+        function showExecuteAttackModal() {
+            const activeConfigs = configList.filter(config => config.status === 'active');
+            if (activeConfigs.length === 0) {
+                showToast('没有可执行的活跃配置', 'error');
+                return;
+            }
+            
+            const modal = new bootstrap.Modal(document.getElementById('executeAttackModal'));
+            modal.show();
+        }
+        
+        // 确认执行攻击
+        function confirmExecuteAttack() {
+            const attackName = document.getElementById('attackName').value;
+            if (!attackName) {
+                showToast('请输入攻击名称', 'error');
+                return;
+            }
+            
+            // 关闭模态框
+            const modal = bootstrap.Modal.getInstance(document.getElementById('executeAttackModal'));
+            modal.hide();
+            
+            // 执行攻击
+            executeAttack(attackName);
+        }
+        
+        // 执行攻击
+        async function executeAttack(attackName) {
+            const activeConfigs = configList.filter(config => config.status === 'active');
+            
+            try {
+                activeConfigs.forEach(config => {
+                    config.executed = true;
+                });
+                
+                // 模拟执行攻击请求
+                console.log('执行攻击:', attackName);
+                const module = await import('../assets/js/utils/authStore.js');
+                const axios = await import('../assets/js/utils/axiosConfig.js');
+                const authStore = module.default;
+                
+                // 发送攻击名称到后端
+                const response = await axios.default.post('/api/execute_attack', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authStore.token}`
+                  },
+                  username: authStore.username,
+                  attack_name: attackName  // 添加攻击名称
+                });
+                executedAttacks++;
+                renderConfigTable();
+                showToast(`攻击"${attackName}"执行成功！`, 'success');
+                
+            } catch (err) {
+                console.error('执行失败:', err);
+                showToast('攻击执行失败', 'error');
+            }
+        }
+        
+        // 搜索配置
+        function searchConfigs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                renderConfigTable();
+                return;
+            }
+            
+            const filteredConfigs = configList.filter(config => 
+                config.name.toLowerCase().includes(searchTerm) || 
+                config.type.toLowerCase().includes(searchTerm) || 
+                config.strategy.toLowerCase().includes(searchTerm) || 
+                config.description.toLowerCase().includes(searchTerm)
+            );
+            
+            renderFilteredConfigs(filteredConfigs);
+        }
+        
+        // 渲染筛选后的配置
+        function renderFilteredConfigs(filteredConfigs) {
+            const tbody = document.getElementById('configTableBody');
+            const noConfigsMessage = document.getElementById('noConfigsMessage');
+            
+            if (filteredConfigs.length === 0) {
+                noConfigsMessage.classList.remove('d-none');
+                tbody.innerHTML = '';
+                return;
+            }
+            
+            noConfigsMessage.classList.add('d-none');
+            tbody.innerHTML = '';
+            
+            filteredConfigs.forEach(config => {
+                // 获取类型显示名称
+                const typeName = attackConfigs.typeNames[config.type] || config.type;
+                
+                // 生成状态徽章
+                const statusBadges = [];
+                
+                // 启用状态
+                if (config.status === 'active') {
+                    statusBadges.push('<span class="status-badge status-active status-indicator"><span class="status-dot"></span>活跃</span>');
+                } else {
+                    statusBadges.push('<span class="status-badge status-inactive status-indicator"><span class="status-dot"></span>已禁用</span>');
+                }
+                
+                // 发送状态
+                if (config.sent) {
+                    statusBadges.push('<span class="status-badge status-sent status-indicator"><span class="status-dot"></span>已发送</span>');
+                } else {
+                    statusBadges.push('<span class="status-badge status-indicator"><span class="status-dot"></span>未发送</span>');
+                }
+                
+                // 执行状态
+                if (config.executed) {
+                    statusBadges.push('<span class="status-badge status-executed status-indicator"><span class="status-dot"></span>已执行</span>');
+                } else {
+                    statusBadges.push('<span class="status-badge status-indicator"><span class="status-dot"></span>未执行</span>');
+                }
+                
+                // 生成类型徽章
+                let badgeClass = 'badge-primary';
+                if (config.type === 'BackDoorAttack') badgeClass = 'badge-danger';
+                if (config.type === 'ModelStealingAttack') badgeClass = 'badge-info';
+                if (config.type === 'PoisoningAttack') badgeClass = 'badge-warning';
+                if (config.type === 'RLMI') badgeClass = 'badge-purple';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${config.name}</td>
+                    <td><span class="badge ${badgeClass}">${typeName}</span></td>
+                    <td><span class="badge badge-success">${config.strategy}</span></td>
+                    <td>
+                        <div class="d-flex flex-wrap gap-2">
+                            ${statusBadges.join('')}
+                        </div>
+                    </td>
+                    <td>${config.createdAt}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-outline-primary btn-icon edit-config-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
+                            <i class="material-icons" style="font-size: 18px;">edit</i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger btn-icon delete-config-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
+                            <i class="material-icons" style="font-size: 18px;">delete</i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary btn-icon toggle-status-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
+                            <i class="material-icons" style="font-size: 18px;">${config.status === 'active' ? 'toggle_off' : 'toggle_on'}</i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // 绑定事件
+            tbody.querySelectorAll('.edit-config-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const configId = parseInt(this.getAttribute('data-id'));
+                    editConfig(configId);
+                });
+            });
+            
+            tbody.querySelectorAll('.delete-config-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const configId = parseInt(this.getAttribute('data-id'));
+                    deleteConfig(configId);
+                });
+            });
+            
+            tbody.querySelectorAll('.toggle-status-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const configId = parseInt(this.getAttribute('data-id'));
+                    toggleConfigStatus(configId);
+                });
+            });
+        }
+    </script>
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 </body>
 
 </html>

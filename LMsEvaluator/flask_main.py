@@ -14,7 +14,7 @@ import torch
 from datetime import datetime, timedelta
 from utils.database_helper import extractResult
 from jwt_token import sign
-from user_config.config_gen import generate_config
+from user_config.config_gen import generate_config, get_attack_info
 os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
 torch.backends.mps.is_available = lambda: False
 app = Flask(__name__)
@@ -501,10 +501,13 @@ def receive_attack_list():
     data = request.json
     attack_list = data.get('attack_list', [])
     username = data.get('username', None).strip('"')
-
+    
+    
     print(f"Received data from user: {username}")
     print("Received attack list:", attack_list)  # 输出接收到的数据
     generate_config(username, attack_list)
+    attack_info = get_attack_info(username)
+    print("Attack info:", attack_info)  # 输出攻击信息
     return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': attack_list})
 
 
@@ -515,11 +518,15 @@ def execute_attack():
         data = request.json
         username = data.get('username', None).strip('"')
         print(f"Executing attack for user: {username}")
-
+        attackName = data.get('attack_name', None).strip('"')
+        print(f"Attack name: {attackName}")
+        attack_info = get_attack_info(username)
+        print("Attack info:", attack_info)  # 输出攻击信息
         # 下游任务执行代码
         initTime = int(time.time())
         date = str(datetime.now())[:10]
         attack = AttackRecord(createUserName=username, createTime=initTime, attackResult=json.dumps("RUNNING"))
+
         initTime = str(initTime)
         db.session.add(attack)
         db.session.commit()
