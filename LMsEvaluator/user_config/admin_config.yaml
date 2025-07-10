@@ -5,7 +5,7 @@ attack_list:
     attack: true
     attack_nums: 3
     attack_recipe: TextFoolerJin2019
-    attack_type: AdvAttack
+    attack_type: AdversarialAttack
     dataset_name_or_path: datasets/imdb/train.txt
     display_full_info: true
     model_name_or_path: LMs/bert_base_uncased
@@ -13,24 +13,6 @@ attack_list:
     use_local_dataset: true
     use_local_model: true
     use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_type: BackDoorAttack
-    defender: None
-    display_full_info: true
-    model: bert
-    model_name_or_path: LMs/bert_base_uncased
-    poison_dataset: sst-2
-    poisoner:
-      name: badnets
-    sample_metrics:
-    - accuracy
-    target_dataset: sst-2
-    train:
-      batch_size: 16
-      epochs: 1
-      name: base
-    use_local_model: true
 - attack_args:
     attack: true
     attack_type: PoisoningAttack

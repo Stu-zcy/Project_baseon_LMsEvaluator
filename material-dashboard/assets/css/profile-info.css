@@ -1,6 +1,6 @@
-ant-card {
-	width: 100% !important;
-	height: 300px;
+.ant-card {
+	width: 100%;
+	/* height: 400px; */
 	/* flex-grow: 1 !important; */
 	/* min-width: 250px; */
 }
@@ -202,4 +202,11 @@ ant-card {
 .no-border {
 	border: none;
 	outline: none;
+}
+
+#app-content {
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+	align-items: flex-start;
 }

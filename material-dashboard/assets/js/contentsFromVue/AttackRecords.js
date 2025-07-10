@@ -63,6 +63,11 @@ const AttackRecords = defineComponent({
                     <div class="records-list">
                         <div v-for="item in responseData" :key="item[0]" class="card shadow">
                             <div class="card-body">
+																<!-- 0.名称（item[3]） -->
+																<div class="record-name">
+																	<h4>{{ item[3] }}</h4>
+																</div>
+
                                 <!-- 1. 时间 -->
                                 <div class="record-time">
                                     {{ formatTime(item[0]) }}
@@ -70,8 +75,8 @@ const AttackRecords = defineComponent({
 
                                 <!-- 2. 状态图标 -->
                                 <div class="status-container">
-                                    <a-spin :indicator="indicator" v-if="item[1] === 0"></a-spin>
-                                    <div v-else-if="item[1] === 2" class="status-icon">
+                                    <a-spin :indicator="indicator" v-if="(item[1] == 0)"></a-spin>
+                                    <div v-else-if="(item[1] == 2)" class="status-icon">
                                         <img src="../assets/icons/fail.png" alt="Fail">
                                     </div>
                                     <div v-else class="status-icon">
@@ -88,7 +93,7 @@ const AttackRecords = defineComponent({
                                             @change="(value) => treasure(item[0], value)"
                                             :allowClear="false"
                                         ></a-rate>
-                                        <a-button type="primary" @click="showModal(item[0])">查看详情</a-button>
+                                        <a-button type="primary" @click="showModal(item[0], item[1])">查看详情</a-button>
 																				<a-Popconfirm title="确定删除此记录吗？" @confirm="del(item[0])" ok-text="确定" cancel-text="取消">
                                         <a-button danger>删除</a-button>
 																				</a-Popconfirm>
@@ -118,8 +123,8 @@ const AttackRecords = defineComponent({
                 <a-modal
                     v-if="OPEN"
                     :open="OPEN"
-                    title="攻击详情"
-                    width="80%"
+                    title="攻击执行详情"
+                    width="90%"
                     wrap-class-name="full-modal-custom"
                     :footer="null"
                     :destroyOnClose="true"
@@ -140,13 +145,14 @@ const AttackRecords = defineComponent({
 		const OPEN = ref(false);
 		const targetCreateTime = ref(null);
 		const starValues = ref({}); // Should be an object
-
 		// Ensure LoadingOutlined is available, or provide a fallback
-		const indicator = h(window.LoadingOutlined || 'div', { // Use window.LoadingOutlined
+		const indicator = h('img', {
+			src: '../assets/icons/loading.gif',
+			alt: 'Loading',
 			style: {
-				fontSize: '24px',
+				fontSize: '40px',
+				color: '#e22f2f'
 			},
-			spin: true,
 		});
 
 		async function fetchData() {
@@ -156,7 +162,7 @@ const AttackRecords = defineComponent({
 				return;
 			}
 			try {
-				
+
 				const response = await axios.post('/api/attackRecords', {
 					username: username,
 					token: token,
@@ -166,6 +172,7 @@ const AttackRecords = defineComponent({
 				});
 				if (response.data && response.data.records) {
 					responseData.value = response.data.records;
+					console.log("Fetched records:", responseData.value);
 					totalRecordsNum.value = response.data.pagination.totalRecordsNum;
 					const newStarValues = {};
 					responseData.value.forEach(item => {
@@ -198,10 +205,19 @@ const AttackRecords = defineComponent({
 			return time.toLocaleString();
 		}
 
-		function showModal(createTimeVal) {
-			targetCreateTime.value = createTimeVal;
-			OPEN.value = true;
-			console.log("展示对话框 (Showing modal for createTime):", createTimeVal);
+		function showModal(createTimeVal, state) {
+			if (state == 1) {
+				targetCreateTime.value = createTimeVal;
+				OPEN.value = true;
+				console.log("展示对话框 (Showing modal for createTime):", createTimeVal);
+			} else if (state == 2) {
+				// 执行失败
+				antd.message.error("执行失败，无法查看详情。");
+			} else {
+				// 执行中
+				antd.message.warning("当前实验正在执行中，请稍后再试。");
+			}
+
 		}
 
 		function handleCancel() { // Changed from handleOK to handleCancel for clarity
@@ -216,11 +232,11 @@ const AttackRecords = defineComponent({
 					token: token,
 					createTime: createTimeVal
 				});
-				// Assuming successful deletion, re-fetch data
+				antd.message.success("记录删除成功。");
 				fetchData();
 			} catch (error) {
 				console.error("Error deleting record:", error);
-				// Optionally show an error message to the user
+				antd.message.error("删除记录失败，请稍后再试。");
 			}
 		}
 
@@ -252,7 +268,7 @@ const AttackRecords = defineComponent({
 			// 只注入分页器的样式
 			const styleToInject = props.theme === 'light' ? lightPaginationStyle : darkPaginationStyle;
 			const styleId = `pagination-style-${props.theme}`; // 使用动态ID以防万一
-			
+
 			injectGlobalStyle(styleToInject, styleId);
 		});
 

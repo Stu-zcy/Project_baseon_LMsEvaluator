@@ -68,10 +68,12 @@ class VerificationCode(db.Model):
 
 class AttackRecord(db.Model):
     attackID = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    attackName = db.Column(db.String(40), nullable=False)
     createUserName = db.Column(db.String, db.ForeignKey(User.username), nullable=False)
     createTime = db.Column(db.BigInteger, default=int(time.time()), nullable=False)
-    attackResult = db.Column(db.String, nullable=False)
     isTreasure = db.Column(db.Boolean, default=False)
+    # attackInfo = db.Column(db.String, nullable=True)  # 攻击信息，存储为JSON字符串
+    attackResult = db.Column(db.String, nullable=False) # 攻击结果，JSON字符串
 
 
 # def afterInsertListener_AttackRecord
@@ -525,7 +527,11 @@ def execute_attack():
         # 下游任务执行代码
         initTime = int(time.time())
         date = str(datetime.now())[:10]
-        attack = AttackRecord(createUserName=username, createTime=initTime, attackResult=json.dumps("RUNNING"))
+        attack = AttackRecord(attackName=attackName, 
+                              createUserName=username, 
+															createTime=initTime, 
+															# attackInfo=json.dumps(attack_info),  # 将攻击信息转换为JSON字符串
+															attackResult=json.dumps("RUNNING"))
 
         initTime = str(initTime)
         db.session.add(attack)
@@ -534,17 +540,19 @@ def execute_attack():
         try:
             model_class = parse_config(project_path, initTime, str(username))
             model_class.run()
-
+            print("执行成功！")
             fileName = username + '_single_' + initTime + '_' + date + '.txt'
             result = extractResult(os.path.join(project_path, 'logs', fileName))
             AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update(
                 {AttackRecord.attackResult: json.dumps(result)})
             db.session.commit()
             return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
-        except Exception as executeError:
+        except Exception as e:
+            print("执行失败，捕获到错误")
             AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update(
                 {AttackRecord.attackResult: json.dumps("FAILED")})
-            raise executeError
+            db.session.commit()
+            raise e
 
     except Exception as e:
         print("Error executing attack:", e)
@@ -608,7 +616,7 @@ def attackRecords():
                     currentPageSize).all())
             records = list(map(
                 lambda r: (r.createTime, 0 if r.attackResult == json.dumps("RUNNING") else (
-                    2 if r.attackResult == json.dumps("FAILED") else 1), r.isTreasure),
+                    2 if r.attackResult == json.dumps("FAILED") else 1), r.isTreasure, r.attackName),
                 records))
         else:
             records = []
@@ -619,7 +627,7 @@ def attackRecords():
         return jsonify({"status": 'error', "message": "Failed to fetch records"}), 500
 
 
-'''删除一条记录，同时删除日志文件与数据库记录。不存在日志文件时会报错。'''
+'''删除一条记录，同时删除日志文件与数据库记录。'''
 @app.route('/api/deleteRecord', methods=['POST'])
 @auth
 def deleteRecord():
@@ -631,10 +639,14 @@ def deleteRecord():
 
         count = AttackRecord.query.filter_by(createUserName=username, createTime=createTime).delete()
         db.session.commit()
-        fileName = username + '_single_' + str(createTime) + '_' + str(datetime.now())[:10] + '.txt'
-        filePath = os.path.join(project_path, 'logs', fileName)
-        os.remove(filePath)
-        if (count == 1):
+        try:
+          fileName = username + '_single_' + str(createTime) + '_' + str(datetime.now())[:10] + '.txt'
+          filePath = os.path.join(project_path, 'logs', fileName)
+          os.remove(filePath)
+          print(f"Deleting file: {filePath}")
+        except Exception:
+          print(f"File not found: {filePath}, skipping file deletion.")
+        if (count > 0):
             return jsonify({'status': 'success', 'message': 'Delete executed successfully!'}), 200
         else:
             return jsonify({'status': 'error', 'message': 'failed to delete record'}), 500
@@ -664,4 +676,4 @@ def treasure():
 
 
 if __name__ == '__main__':
-    app.run(port=46666, debug=True)
+    app.run(port=5000, debug=True)

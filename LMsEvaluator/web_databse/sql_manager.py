@@ -48,6 +48,7 @@ def create_database():
     cursor.execute(''' 
     CREATE TABLE IF NOT EXISTS attack_record (
         attackID INTEGER PRIMARY KEY AUTOINCREMENT,
+				attackName TEXT NOT NULL,
         createUserName TEXT NOT NULL,
         createTime BIGINT DEFAULT (CAST(strftime('%s', 'now') AS BIGINT)) NOT NULL,
         attackResult TEXT,
@@ -138,11 +139,11 @@ def print_verification_codes():
 
 
 # 添加攻击记录
-def add_attack_record(createUserName, createTime, attackResult, isTreasure=False):
+def add_attack_record(attackName, createUserName, createTime, attackResult, isTreasure=False):
     conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO attack_record (createUserName, createTime, attackResult, isTreasure) VALUES (?, ?, ?, ?)',
-                   (createUserName, createTime, str(attackResult), isTreasure))
+    cursor.execute('INSERT INTO attack_record (attackName, createUserName, createTime, attackResult, isTreasure) VALUES (?, ?, ?, ?, ?)',
+                   (attackName, createUserName, createTime, str(attackResult), isTreasure))
     conn.commit()
     print(f"Attack record added for user '{createUserName}'.")
     conn.close()
@@ -184,7 +185,7 @@ def print_log_records():
 # 运行示例
 if __name__ == '__main__':
     print("找到数据库：", data_path)
-    # create_database()
+    create_database()
 		
     # add_user('admin', '888888', 'admin', 30, 1, "'edit', 'delete', 'add'", 'admin@example.com', 'https://gitee.com/topiza/image/raw/master/file_3.png')
     # # 示例用户操作，带邮箱
@@ -208,7 +209,7 @@ if __name__ == '__main__':
     username = 'admin'
     initTime = eval(info[2])
     result = extractResult(lmsDir + "\\..\\logs\\" + filename)
-    add_attack_record(username, initTime, json.dumps(result))
+    add_attack_record('ForDEBUG', username, initTime, json.dumps(result))
     
 
     # # 示例日志操作

@@ -393,7 +393,7 @@ def get_pool_data(args):
         thief_dataset = args.imdb_path
     elif args.pool_data_source == 'sst2':
         thief_dataset = args.sst2_path
-    with open(thief_dataset, "r") as f:
+    with open(thief_dataset, "r", encoding='utf-8') as f:
         thief_data = f.read().strip().split("\n")
     #     thief_data = thief_data[:200]
     subsize = args.pool_subsize
