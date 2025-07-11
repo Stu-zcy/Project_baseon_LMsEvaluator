@@ -347,16 +347,16 @@
 	<!--   Core JS Files   -->
 	<script type="module">
 		import AttackRecords from "../assets/js/contentsFromVue/AttackRecords.js"
-		document.querySelectorAll('.nav-link').forEach(link => {
-			link.addEventListener('click', function () {
-				// 移除所有active类
-				document.querySelectorAll('.nav-link').forEach(el => {
-					el.classList.remove('active');
-				});
-				// 为当前点击的链接添加active类
-				this.classList.add('active');
-			});
-		});
+		// document.querySelectorAll('.nav-link').forEach(link => {
+		// 	link.addEventListener('click', function () {
+		// 		// 移除所有active类
+		// 		document.querySelectorAll('.nav-link').forEach(el => {
+		// 			el.classList.remove('active');
+		// 		});
+		// 		// 为当前点击的链接添加active类
+		// 		this.classList.add('active');
+		// 	});
+		// });
 		const { createApp } = Vue;
 
 		const app = createApp({

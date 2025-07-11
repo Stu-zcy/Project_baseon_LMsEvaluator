@@ -907,7 +907,7 @@
                             <i class="material-icons">send</i> 发送配置
                         </button>
                         <button class="btn btn-outline-success" id="executeAttackBtn">
-                            <i class="material-icons">play_arrow</i> 执行攻击
+                            <i class="material-icons">play_arrow</i> 执行评估
                         </button>
                     </div>
                 </div>
@@ -919,7 +919,7 @@
                             <div class="modal-header">
                                 <h5 class="modal-title">
                                     <i class="material-icons">play_arrow</i>
-                                    执行攻击
+                                    执行评估
                                 </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
@@ -2054,11 +2054,11 @@
             const modal = bootstrap.Modal.getInstance(document.getElementById('executeAttackModal'));
             modal.hide();
             
-            // 执行攻击
+            // 执行评估
             executeAttack(attackName);
         }
         
-        // 执行攻击
+        // 执行评估
         async function executeAttack(attackName) {
             const activeConfigs = configList.filter(config => config.status === 'active');
             
@@ -2068,7 +2068,7 @@
                 });
                 
                 // 模拟执行攻击请求
-                console.log('执行攻击:', attackName);
+                console.log('执行评估:', attackName);
                 const module = await import('../assets/js/utils/authStore.js');
                 const axios = await import('../assets/js/utils/axiosConfig.js');
                 const authStore = module.default;

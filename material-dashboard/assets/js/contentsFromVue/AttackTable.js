@@ -429,10 +429,10 @@ const AttackTable = defineComponent({
 				];
 				const RLMIAttackColumns = [
 						{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
-						{ title: '攻击阶段成功率\n(Attack Success Rate (Attack Phase)，%)', dataIndex: 'ASR_Attack', align: 'center' },
-						{ title: '攻击阶段词错误率\n(Word Error Rate (Attack Phase)，%)', dataIndex: 'WER_Attack', align: 'center' },
-						{ title: '推理阶段成功率\n(Attack Success Rate (Inference Phase)，%)', dataIndex: 'ASR_Inference', align: 'center' },
-						{ title: '推理阶段词错误率\n(Word Error Rate (Inference Phase)，%)', dataIndex: 'WER_Inference', align: 'center' },
+						{ title: '攻击阶段成功率\n(Attack Success Rate(Attack Phase), %)', dataIndex: 'ASR_Attack', align: 'center' },
+						{ title: '攻击阶段词错误率\n(Word Error Rate (Attack Phase), %)', dataIndex: 'WER_Attack', align: 'center' },
+						{ title: '推理阶段成功率\n(Attack Success Rate (Inference Phase), %)', dataIndex: 'ASR_Inference', align: 'center' },
+						{ title: '推理阶段词错误率\n(Word Error Rate (Inference Phase), %)', dataIndex: 'WER_Inference', align: 'center' },
 				];
 				const SWATAttackColumns = [
 						{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
