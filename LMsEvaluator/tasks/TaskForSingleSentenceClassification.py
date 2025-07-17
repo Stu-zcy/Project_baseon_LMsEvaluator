@@ -37,16 +37,20 @@ class TaskForSingleSentenceClassification(BaseTask):
 
     def train(self):
         model = BertForSentenceClassification(self.config, self.config.pretrained_model_dir)
+				# FIXME: Line 85. RuntimeError: output with shape [346, 12, 1, 1] doesn't match the broadcast shape [346, 12, 1, 346]
+        # model = transformers.AutoModelForSequenceClassification.from_pretrained('./LMs/bert_base_uncased')
         # model = AutoModelForCausalLM.from_pretrained('../LMs/Llama-2-7b-hf')
-        model_save_path = os.path.join(self.config.model_save_dir, 'task4sst_model.pt')
-        #model_load_path = os.path.join(self.config.model_load_dir, 'task4sst_model.pt')
-        model_load_path=" "
+        model_save_path = os.path.join('./', self.config.config_parser['LM_config']['model_save_dir'])
+        model_load_path = os.path.join('./', self.config.config_parser['LM_config']['model_save_dir'])
+        # model_load_path=" "
         min_loss, max_acc = float('inf'), 0
         if os.path.exists(model_load_path):
             loaded_paras = torch.load(model_load_path, map_location=self.config.device, weights_only=True)
             model.load_state_dict(loaded_paras['model_state_dict'])
-            min_loss = loaded_paras['min_loss']
-            max_acc = loaded_paras['max_acc']
+            if 'min_loss' in loaded_paras:
+                min_loss = loaded_paras['min_loss']
+            if 'max_acc' in loaded_paras:
+                max_acc = loaded_paras['max_acc']
             logging.info("## 已有模型存储路径: " + str(model_load_path))
             logging.info("## 成功载入已有模型，进行追加训练......")
         model = model.to(self.config.device)
@@ -264,7 +268,8 @@ class TaskForSingleSentenceClassification(BaseTask):
                 logging.info("=" * 50)
 
     def run(self):
-        self.train()
+        if self.config.config_parser['task_config']['normal_training']:
+            self.train()
         self.inference()
         self.attack()
 

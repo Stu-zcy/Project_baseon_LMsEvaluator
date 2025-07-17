@@ -117,7 +117,7 @@ def check_base_config(config_parser):
         'general',
         'LM_config',
         'task_config',
-        'output',
+        # 'output',
     ]
     general_config_list = [
         'use_gpu',
@@ -125,12 +125,15 @@ def check_base_config(config_parser):
     ]
     LMConfig_config_list = [
         'model',
+        'model_save_dir',
     ]
     taskConfig_config_list = [
         'task',
         'dataset',
+        'num_labels'
         'dataset_type',
         'split_sep',
+        'normal_training',
         'epochs',
     ]
     base_config_item_list = [general_config_list, LMConfig_config_list, taskConfig_config_list, []]

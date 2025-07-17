@@ -5,7 +5,7 @@ import transformers
 from utils.my_prettytable import MyPrettyTable
 from attack.base_attack import BaseAttack
 from utils.my_exception import print_red
-
+from utils.model_config import model_load, detect_model_type
 
 # bert_base_uncased + Huggingface("imdb")
 # +-------------------------------+--------+
@@ -25,12 +25,13 @@ from utils.my_exception import print_red
 class MyTextAttack(BaseAttack):
     def __init__(self, config_parser, attack_config, use_local_model=False, use_local_tokenizer=False,
                  use_local_dataset=False, model_name_or_path=None, tokenizer_name_or_path=None,
-                 dataset_name_or_path=None, display_full_info=False):
+                 dataset_name_or_path=None, display_full_info=False, defender=None):
         super().__init__(config_parser, attack_config)
         self.use_local_model = use_local_model
         self.use_local_tokenizer = use_local_tokenizer
         self.use_local_dataset = use_local_dataset
         self.display_full_info = display_full_info
+        self.defender = defender
         self.my_handlers = logging.getLogger().handlers
 
         # 项目路径获取 + 检查
@@ -45,7 +46,7 @@ class MyTextAttack(BaseAttack):
     def attack(self):
         import textattack
         from textattack import attack_recipes
-        model = transformers.AutoModelForSequenceClassification.from_pretrained(self.model_name_or_path)
+        model = transformers.AutoModelForSequenceClassification.from_pretrained(self.model_name_or_path, local_files_only=True)
         tokenizer = transformers.AutoTokenizer.from_pretrained(self.tokenizer_name_or_path)
         self.model_wrapper = textattack.models.wrappers.HuggingFaceModelWrapper(model, tokenizer)
         self.dataset = self.get_local_dataset()
@@ -105,7 +106,7 @@ class MyTextAttack(BaseAttack):
             num_examples=self.attack_config['attack_nums'],
             log_to_csv=os.path.join(self.project_path, "attack/AdversarialAttack/log.csv"),
             checkpoint_interval=5,
-            checkpoint_dir="checkpoints",
+            checkpoint_dir="attack/AdvAttack/checkpoints",
             disable_stdout=True,
         )
         attacker = textattack.Attacker(attack_model, self.dataset, attack_args)
@@ -116,40 +117,54 @@ class MyTextAttack(BaseAttack):
         attacker.attack_dataset()
         self.__result_show()
 
-        # TODO 对抗训练算法实现
-        # train_dataset = self.dataset
-        # eval_dataset = self.dataset
-        # # train_dataset = textattack.datasets.HuggingFaceDataset("imdb", split="train")
-        # # eval_dataset = textattack.datasets.HuggingFaceDataset("imdb", split="test")
-        # training_args = textattack.TrainingArgs(
-        #     num_epochs=3,
-        #     num_clean_epochs=1,
-        #     num_train_adv_examples=1000,
-        #     learning_rate=5e-5,
-        #     per_device_train_batch_size=8,
-        #     gradient_accumulation_steps=4,
-        #     log_to_tb=False,
-        # )
+        # 对抗训练
+        if self.defender:
+            logging.info("*" * 25)
+            logging.info('对抗训练开始：')
+            train_dataset = self.dataset
+            eval_dataset = self.dataset
+            # print(self.defender['learning_rate'])
+            # print(type(self.defender['learning_rate']))
+            # raise SystemError
+            training_args = textattack.TrainingArgs(
+                num_epochs=self.defender['num_epochs'],
+                num_clean_epochs=self.defender['num_clean_epochs'],
+                num_train_adv_examples=self.defender['num_train_adv_examples'],
+                learning_rate=float(self.defender['learning_rate']),
+                per_device_train_batch_size=self.defender['per_device_train_batch_size'],
+                gradient_accumulation_steps=self.defender['gradient_accumulation_steps'],
+                log_to_tb=self.defender['log_to_tb'],
+            )
+            # model = transformers.AutoModelForSequenceClassification.from_pretrained("bert-base-uncased")
+            # tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
+            # model_wrapper = textattack.models.wrappers.HuggingFaceModelWrapper(model, tokenizer)
 
-        # model = transformers.AutoModelForSequenceClassification.from_pretrained("bert-base-uncased")
-        # tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
-        # model_wrapper = textattack.models.wrappers.HuggingFaceModelWrapper(model, tokenizer)
+            # model = transformers.AutoModelForSequenceClassification.from_pretrained(self.model_name_or_path)
+            # tokenizer = transformers.AutoTokenizer.from_pretrained(self.tokenizer_name_or_path)
+            # self.model_wrapper = textattack.models.wrappers.HuggingFaceModelWrapper(model, tokenizer)
 
-        # model = transformers.AutoModelForSequenceClassification.from_pretrained(self.model_name_or_path)
-        # tokenizer = transformers.AutoTokenizer.from_pretrained(self.tokenizer_name_or_path)
-        # self.model_wrapper = textattack.models.wrappers.HuggingFaceModelWrapper(model, tokenizer)
-        #
-        # attack_model = attack_recipes.TextFoolerJin2019.build(self.model_wrapper)
-        #
-        # trainer = textattack.Trainer(
-        #     self.model_wrapper,
-        #     "classification",
-        #     attack_model,
-        #     train_dataset,
-        #     eval_dataset,
-        #     training_args,
-        # )
-        # trainer.train()
+            attack_model = attack_recipes.TextFoolerJin2019.build(self.model_wrapper)
+
+            trainer = textattack.Trainer(
+                self.model_wrapper,
+                "classification",
+                attack_model,
+                train_dataset,
+                eval_dataset,
+                training_args,
+            )
+            trainer.train()
+            logging.info('对抗训练结束')
+            logging.info("*" * 25)
+            logging.info('对抗训练后，重新开始对抗攻击：')
+
+            attacker = textattack.Attacker(attack_model, self.dataset, attack_args)
+
+            if self.display_full_info:
+                logging.getLogger().handlers = self.my_handlers
+
+            attacker.attack_dataset()
+            self.__result_show()
 
     def __result_show(self):
         with open('attack/AdversarialAttack/log.csv', 'r', encoding='utf-8') as file:

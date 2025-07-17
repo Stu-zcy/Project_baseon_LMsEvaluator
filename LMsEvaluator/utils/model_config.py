@@ -2,6 +2,8 @@ import os
 import time
 import torch
 import logging
+import tensorflow as tf
+from transformers import PreTrainedModel, TFPreTrainedModel
 from model.BasicBert import BertConfig
 from torch.utils.tensorboard import SummaryWriter
 from utils.log_helper import logger_init
@@ -179,6 +181,38 @@ class ModelTaskForSQuADQuestionAnswering(ModelConfig):
         self.log_init(log_file_name=username + '_qa' + '_' + initTime)
         self.bert_import()
         self.log_config()
+
+def model_load(base_model, map_location=torch.device('cpu'), model_dir='/cache/modelOutput/task4sst_model.pt'):
+    '''默认读取为预训练后模型，默认路径"/cache/modelOutput/task4sst_model.pt"'''
+    model = base_model
+    if model_dir is None or not os.path.exists(model_dir):
+        torch.save({
+            'model_state_dict': model.state_dict(),
+        }, model_dir)
+        logging.info("## 新建模型存储路径: " + str(model_dir))
+        logging.info("## 成功存储输入模型")
+        return model
+    loaded_paras = torch.load(model_dir, map_location=map_location, weights_only=True)
+    model.load_state_dict(loaded_paras['model_state_dict'], strict=False)
+    # model = torch.load(model_dir)
+    logging.info("## 已有模型存储路径: " + str(model_dir))
+    logging.info("## 成功载入已有模型")
+    return model
+
+
+def detect_model_type(model):
+    """检测模型框架类型"""
+    if isinstance(model, torch.nn.Module):
+        return "PyTorch"
+    elif isinstance(model, tf.Module) or isinstance(model, tf.keras.Model):
+        return "TensorFlow"
+    elif isinstance(model, PreTrainedModel):
+        return "HuggingFace PyTorch"
+    elif isinstance(model, TFPreTrainedModel):
+        return "HuggingFace TensorFlow"
+    else:
+        return "Unknown"
+
 
 
 if __name__ == "__main__":

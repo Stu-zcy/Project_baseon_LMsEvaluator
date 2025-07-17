@@ -42,6 +42,7 @@ class AttackFactory:
                 tokenizer_name_or_path=self.attack_config['tokenizer_name_or_path'],
                 dataset_name_or_path=self.attack_config['dataset_name_or_path'],
                 display_full_info=self.attack_config['display_full_info'],
+								defender=self.attack_config['defender'],
             )
         elif self.attack_type == "FET":
             self.attack_mode = FET(
@@ -173,6 +174,7 @@ class AttackFactory:
             'dataset_name_or_path',
             'attack_nums',
             'display_full_info',
+            'defender',
         ]
         FET_config = [
             'use_local_model',
