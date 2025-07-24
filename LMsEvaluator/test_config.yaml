@@ -1,6 +1,8 @@
 general:
   random_seed: 42
   use_gpu: True
+  log_file_name: 'single'
+  logs_save_dir: './logs'
 
 LM_config:
   model: bert_base_uncased
@@ -8,14 +10,61 @@ LM_config:
 
 task_config:
   task: TaskForSingleSentenceClassification
-  dataset: sst2
+  dataset: imdb
   local_dataset: True
+  normal_training: True
+  save_path: './cache/model_output'
   train_config:
-    output_dir: './outputs'
+    output_dir: './cache'
     num_train_epochs: 1
     per_device_train_batch_size: 16
     per_device_eval_batch_size: 64
-    warmup_steps: 500
+    warmup_steps: 1000
     weight_decay: 0.01
     logging_dir: './logs'
     logging_steps: 1000
+    run_name: 'my_experiment'
+    report_to: "none"
+
+attack_list:
+  - attack_args:
+      attack: True
+      attack_type: AdvAttack
+      attack_recipe: TextFoolerJin2019
+      use_local_model: True
+      use_local_tokenizer: True
+      use_local_dataset: True
+      model_name_or_path: "LMs/bert_base_uncased"
+      #      model_name_or_path: "/cache/modelOutput/task4sst_model.pt"
+      tokenizer_name_or_path: "LMs/bert_base_uncased"
+      dataset_name_or_path: "datasets/imdb/train.txt"
+      #      model_name_or_path: "LMs/bert_base_chinese"
+      #      tokenizer_name_or_path: "LMs/bert_base_chinese"
+      #      dataset_name_or_path: "datasets/ChineseNER/train.txt"
+      attack_nums: 20
+      display_full_info: True
+      #      defender: None
+      defender:
+        num_epochs: 1
+        num_clean_epochs: 1
+        num_train_adv_examples: 1000
+        learning_rate: 5e-5
+        per_device_train_batch_size: 8
+        gradient_accumulation_steps: 4
+        log_to_tb: False
+  - attack_args:
+      attack: True
+      attack_type: PoisoningAttack
+      poisoning_rate: 0.1
+      save_path: './attack/PoisoningAttack/model_output'
+      train_config:
+        output_dir: './attack/PoisoningAttack/cache'
+        num_train_epochs: 1
+        per_device_train_batch_size: 16
+        per_device_eval_batch_size: 64
+        warmup_steps: 1000
+        weight_decay: 0.01
+        logging_dir: './logs'
+        logging_steps: 1000
+        run_name: 'my_experiment'
+        report_to: "none"

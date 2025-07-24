@@ -5,6 +5,7 @@ general:
 LM_config:
 #  model: bert_base_chinese
   model: bert_base_uncased
+  model_save_dir: "cache/modelOutput/task4sst_model.pt"
 #  model: Llama-2-7b-hf
 
 task_config:
@@ -13,6 +14,7 @@ task_config:
   num_labels: 2
   dataset_type: ".txt"
   split_sep: "_!_"
+  normal_training: False
   epochs: 1
 #  task: TaskForChineseNER
 #  dataset: ChineseNER
@@ -54,6 +56,7 @@ attack_list:
       use_local_tokenizer: True
       use_local_dataset: True
       model_name_or_path: "LMs/bert_base_uncased"
+#      model_name_or_path: "/cache/modelOutput/task4sst_model.pt"
       tokenizer_name_or_path: "LMs/bert_base_uncased"
       dataset_name_or_path: "datasets/imdb/train.txt"
 #      model_name_or_path: "LMs/bert_base_chinese"
@@ -61,6 +64,15 @@ attack_list:
 #      dataset_name_or_path: "datasets/ChineseNER/train.txt"
       attack_nums: 20
       display_full_info: True
+#      defender: None
+      defender:
+        num_epochs: 1
+        num_clean_epochs: 1
+        num_train_adv_examples: 1000
+        learning_rate: 5e-5
+        per_device_train_batch_size: 8
+        gradient_accumulation_steps: 4
+        log_to_tb: False
   - attack_args:
       attack: False
       attack_type: ModelStealingAttack
@@ -195,8 +207,8 @@ attack_list:
 #  halloffame_size: 30
 #  use_local_model: True                # boolean: 是否使用本地model
 #  use_local_tokenizer: True            # boolean: 是否使用本地tokenizer
-#  model_name_or_path: "LMs/bert_base_uncased"      # modelNameOrPath: str, 攻击所用model在Huggingface的名称或本地路径
-#  tokenizer_name_or_path: "LMs/bert_base_uncased"  # tokenizerNameOrPath: str, 攻击所用tokenizer在Huggingface的名称或本地路径
+#  model_name_or_path: "LMs/bert_base_uncased_english"      # modelNameOrPath: str, 攻击所用model在Huggingface的名称或本地路径
+#  tokenizer_name_or_path: "LMs/bert_base_uncased_english"  # tokenizerNameOrPath: str, 攻击所用tokenizer在Huggingface的名称或本地路径
 #  dataset_name_or_path: "cola"         # datasetNameOrPath: str, 攻击所用dataset在Huggingface的名称或本地路径
 
 ## 对抗性文本攻击配置文件示例
@@ -207,8 +219,8 @@ attack_list:
 #  use_local_model: True                # boolean: 是否使用本地model
 #  use_local_tokenizer: True            # boolean: 是否使用本地tokenizer
 #  use_local_dataset: True              # boolean: 是否使用本地dataset
-#  model_name_or_path: "LMs/bert_base_uncased"      # modelNameOrPath: str, 攻击所用model在Huggingface的名称或本地路径
-#  tokenizer_name_or_path: "LMs/bert_base_uncased"  # tokenizerNameOrPath: str, 攻击所用tokenizer在Huggingface的名称或本地路径
+#  model_name_or_path: "LMs/bert_base_uncased_english"      # modelNameOrPath: str, 攻击所用model在Huggingface的名称或本地路径
+#  tokenizer_name_or_path: "LMs/bert_base_uncased_english"  # tokenizerNameOrPath: str, 攻击所用tokenizer在Huggingface的名称或本地路径
 #  dataset_name_or_path: "data/imdb/test.txt"               # datasetNameOrPath: str, 攻击所用dataset在Huggingface的名称或本地路径
 #  attack_nums: 2                       # int: 攻击次数
 
@@ -223,7 +235,7 @@ attack_list:
 #  dataset_type: ".txt"
 #
 #TaskForSQuADQuestionAnswering:
-#  model: bert_base_uncased
+#  model: bert_base_uncased_english
 #  dataset: SQuAD
 #  dataset_type: ".json"
 #
@@ -234,12 +246,12 @@ attack_list:
 #  split_sep: " "
 #
 #TaskForMultipleChoice:
-#  model: bert_base_uncased
+#  model: bert_base_uncased_english
 #  dataset: MultipleChoice
 #  dataset_type: ".csv"
 #
 #TaskForPairSentenceClassification:
-#  model: bert_base_uncased
+#  model: bert_base_uncased_english
 #  dataset: GLUE/mnli
 #  dataset: PairSentenceClassification
 #  dataset_type: ".txt"
@@ -250,6 +262,6 @@ attack_list:
 #  dataset: SongCi
 #  dataset_type: ".txt"
 #
-#  model: bert_base_uncased
+#  model: bert_base_uncased_english
 #  dataset: WikiText
 #  dataset_type: ".tokens"

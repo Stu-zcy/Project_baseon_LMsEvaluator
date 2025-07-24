@@ -1,5 +1,5 @@
 LM_config:
-  model: bert_base_uncased
+  model: ''
 attack_list:
 - attack_args:
     attack: true
@@ -10,9 +10,26 @@ attack_list:
     display_full_info: true
     model_name_or_path: LMs/bert_base_uncased
     tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
+    use_local_dataset: false
     use_local_model: true
     use_local_tokenizer: true
+- attack_args:
+    attack: true
+    attack_type: BackDoorAttack
+    defender: BKI
+    display_full_info: true
+    model: bert
+    model_name_or_path: LMs/bert_base_uncased
+    poison_dataset: sst-2
+    poisoner:
+      name: badnets
+    sample_metrics: []
+    target_dataset: sst-2
+    train:
+      batch_size: 16
+      epochs: 1
+      name: base
+    use_local_model: true
 - attack_args:
     attack: true
     attack_type: PoisoningAttack
@@ -21,7 +38,7 @@ attack_list:
     poisoning_rate: 0.15
 - attack_args:
     al_sample_batch_num: -1
-    al_sample_method: null
+    al_sample_method: random
     attack: true
     attack_type: ModelStealingAttack
     epsilon: -1
@@ -53,15 +70,15 @@ attack_list:
     seq_length: 20
     target_label: 0
 general:
-  random_seed: 0
+  random_seed: 42
   use_gpu: true
 output:
   base_path: output
   evaluation_result: evaluationResult
   model_output: modelOutput
 task_config:
-  dataset: imdb
+  dataset: ''
   dataset_type: .txt
   epochs: 1
   split_sep: _!_
-  task: TaskForSingleSentenceClassification
+  task: ''

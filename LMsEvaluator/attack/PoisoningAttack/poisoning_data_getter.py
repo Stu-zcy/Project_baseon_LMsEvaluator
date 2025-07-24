@@ -1,15 +1,15 @@
 import csv
 
 """
-该文件利用文本对抗攻击所生成的对抗样本来构建投毒样本，即利用"attack/AdversarialAttack/log.csv"中的数据生成投毒数据
-注：使用前请确保"attack/AdversarialAttack/log.csv"中含有满足投毒攻击需要的样本，本文件默认已经执行完文本对抗攻击
+该文件利用文本对抗攻击所生成的对抗样本来构建投毒样本，即利用"attack/AdvAttack/log.csv"中的数据生成投毒数据
+注：使用前请确保"attack/AdvAttack/log.csv"中含有满足投毒攻击需要的样本，本文件默认已经执行完文本对抗攻击
 """
 
 if __name__ == "__main__":
 
     poisoning_data = []
 
-    with open('../AdversarialAttack/log.csv', 'r', encoding='utf-8') as csvfile:
+    with open('../AdvAttack/log.csv', 'r', encoding='utf-8') as csvfile:
         reader = csv.reader(csvfile)
         header = next(reader)
         print("header: " + str(header))

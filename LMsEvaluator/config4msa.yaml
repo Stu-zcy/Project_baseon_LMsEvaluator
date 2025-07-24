@@ -5,7 +5,7 @@ general:
 
 # 语言模型配置
 LM_config:
-  model: bert_base_uncased    # bert_base_chinese, bert_base_uncased, Llama-2-7b-hf
+  model: bert_base_uncased_english    # bert_base_chinese, bert_base_uncased_english, Llama-2-7b-hf
 
 # 任务配置
 task_config:
@@ -27,8 +27,8 @@ attack_list:
       use_local_model: True
       use_local_tokenizer: True
       use_local_dataset: True
-      model_name_or_path: "LMs/bert_base_uncased"
-      tokenizer_name_or_path: "LMs/bert_base_uncased"
+      model_name_or_path: "LMs/bert_base_uncased_english"
+      tokenizer_name_or_path: "LMs/bert_base_uncased_english"
       dataset_name_or_path: "datasets/imdb/train.txt"
 
       query_num: 320    # IMDB: 320, SST-2: 536, AGNEWS: 960, HATESPEECH: 574

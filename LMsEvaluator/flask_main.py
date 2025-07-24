@@ -14,7 +14,8 @@ import torch
 from datetime import datetime, timedelta
 from utils.database_helper import extractResult
 from jwt_token import sign
-from user_config.config_gen import generate_config, get_attack_info
+from user_config.config_gen import generate_config, get_attack_info,update_log_file_name
+from test4transformers import run_pipeline
 os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
 torch.backends.mps.is_available = lambda: False
 app = Flask(__name__)
@@ -503,13 +504,17 @@ def receive_attack_list():
     data = request.json
     attack_list = data.get('attack_list', [])
     username = data.get('username', None).strip('"')
-    
+    globalConfig = data.get('globalConfig', [])
     
     print(f"Received data from user: {username}")
     print("Received attack list:", attack_list)  # 输出接收到的数据
-    generate_config(username, attack_list)
+    print("Received global config:", globalConfig)  # 输出接收到的全局配置
+
+    # 生成配置文件
+
+    generate_config(username, attack_list,globalConfig)
     attack_info = get_attack_info(username)
-    print("Attack info:", attack_info)  # 输出攻击信息
+    #print("Attack info:", attack_info)  # 输出攻击信息
     return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': attack_list})
 
 
@@ -538,11 +543,16 @@ def execute_attack():
         db.session.commit()
         project_path = os.path.dirname(os.path.abspath(__file__))
         try:
-            model_class = parse_config(project_path, initTime, str(username))
-            model_class.run()
+            #model_class = parse_config(project_path, initTime, str(username))
+            #model_class.run()
+            
+            fileName = username + '_single_' + initTime
+            update_log_file_name(username, fileName)
+            run_pipeline(os.path.join(project_path, 'user_config', username + '.yaml'))
+
             print("执行成功！")
-            fileName = username + '_single_' + initTime + '_' + date + '.txt'
-            result = extractResult(os.path.join(project_path, 'logs', fileName))
+
+            result = extractResult(os.path.join(project_path, 'logs', fileName + '_' + date + '.txt'))
             AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update(
                 {AttackRecord.attackResult: json.dumps(result)})
             db.session.commit()

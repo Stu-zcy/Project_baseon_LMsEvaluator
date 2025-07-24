@@ -4,14 +4,10 @@ import ast
 import csv
 import torch
 import pandas as pd
-import matplotlib
-matplotlib.use('Agg')  # 必须在import matplotlib.pyplot之前
 import matplotlib.pyplot as plt
 from datasets import load_dataset
 from utils.my_prettytable import MyPrettyTable
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
-
-
 
 project_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 rlmi_attack_path = os.path.dirname(os.path.abspath(__file__))
@@ -120,7 +116,7 @@ def similarity_plot_show(evaluate_model_path=None, private_train_dataset_path=No
     #                                                        "tinybert4_emotion_final_attack.csv")
 
     tinybert4_emotion_final_attack_path = os.path.join(rlmi_attack_path, "result", "tinybert4_emotion_final_attack.csv")
-    with open(tinybert4_emotion_final_attack_path, 'w',encoding='utf-8') as f:
+    with open(tinybert4_emotion_final_attack_path, 'w') as f:
         writer = csv.writer(f)
         writer.writerow(['target text', 'reconstructed text', 'similarity'])
 
@@ -146,7 +142,7 @@ def similarity_plot_show(evaluate_model_path=None, private_train_dataset_path=No
             if similarity > best_similarity:
                 best_similarity = similarity
                 best_target_text = target_text
-        with open(tinybert4_emotion_final_attack_path, 'a',encoding='utf-8') as f:
+        with open(tinybert4_emotion_final_attack_path, 'a') as f:
             writer = csv.writer(f)
             writer.writerow([best_target_text, generated_text, best_similarity])
         similarities.append(best_similarity)
@@ -203,7 +199,7 @@ def similarity_plot_show(evaluate_model_path=None, private_train_dataset_path=No
             if similarity > best_similarity:
                 best_similarity = similarity
                 best_target_text = target_text
-        with open(result_final_infer_path, 'a',encoding='utf-8') as f:
+        with open(result_final_infer_path, 'a') as f:
             writer = csv.writer(f)
             writer.writerow([best_target_text, generated_text, best_similarity])
         similarities.append(best_similarity)

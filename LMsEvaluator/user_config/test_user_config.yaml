@@ -3,9 +3,9 @@ LM_config:
 attack_list:
 - attack_args:
     attack: true
-    attack_nums: 2
+    attack_nums: 3
     attack_recipe: TextFoolerJin2019
-    attack_type: AdvAttack
+    attack_type: AdversarialAttack
     dataset_name_or_path: datasets/imdb/train.txt
     display_full_info: true
     model_name_or_path: LMs/bert_base_uncased
@@ -15,40 +15,43 @@ attack_list:
     use_local_tokenizer: true
 - attack_args:
     attack: true
-    attack_batch: 2
-    attack_nums: 1
-    attack_type: FET
-    crossover_rate: 0.9
-    dataset_name_or_path: cola
+    attack_type: PoisoningAttack
     display_full_info: true
-    distance_func: l2
-    halloffame_size: 30
-    max_generations: 2
-    model_name_or_path: LMs/bert_base_uncased
-    mutation_rate: 0.1
-    population_size: 300
-    seed: 42
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    tournsize: 5
-    use_local_model: true
-    use_local_tokenizer: true
+    epochs: 15
+    poisoning_rate: 0.15
 - attack_args:
+    al_sample_batch_num: -1
+    al_sample_method: random
     attack: true
-    attack_type: BackDoorAttack
-    defender: None
-    display_full_info: true
-    model: bert
-    model_name_or_path: LMs/bert_base_uncased
-    poison_dataset: sst-2
-    poisoner:
-      name: badnets
-    sample_metrics: []
-    target_dataset: sst-2
-    train:
+    attack_type: ModelStealingAttack
+    epsilon: -1
+    initial_drk_model: null
+    initial_sample_method: random_sentence
+    method: MeaeQ
+    pool_data_source: wiki
+    pool_data_type: whole
+    pool_subsize: -1
+    prompt: null
+    query_num: 500
+    run_seed_arr:
+    - 56
+- attack_args:
+    attack: false
+    attack_type: RLMI
+    dataset_name: emotion
+    max_input_length: 5
+    max_iterations: 2500
+    min_input_length: 2
+    model_name: tinybert4
+    num_generation: 1000
+    ppo_config:
       batch_size: 16
-      epochs: 1
-      name: base
-    use_local_model: true
+      learning_rate: 1.0e-05
+      log_with: None
+      mini_batch_size: 16
+    seed: 123
+    seq_length: 20
+    target_label: 0
 general:
   random_seed: 0
   use_gpu: true
@@ -58,7 +61,7 @@ output:
   model_output: modelOutput
 task_config:
   dataset: imdb
-  dataset_type: '''.txt'''
+  dataset_type: .txt
   epochs: 1
   split_sep: _!_
   task: TaskForSingleSentenceClassification

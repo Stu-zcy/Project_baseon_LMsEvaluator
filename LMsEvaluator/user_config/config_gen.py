@@ -14,7 +14,16 @@ AdvAttack = {
     "tokenizer_name_or_path": "LMs/bert_base_uncased",
     "dataset_name_or_path": "datasets/imdb/train.txt",
     "attack_nums": 2,
-    "display_full_info": True
+    "display_full_info": True,
+    "defender": {
+        "num_epochs": 1,
+        "num_clean_epochs": 1,
+        "num_train_adv_examples": 1000,
+        "learning_rate": 5e-5,
+        "per_device_train_batch_size": 8,
+        "gradient_accumulation_steps": 4,
+        "log_to_tb": False
+    }
 }
 
 FET = {
@@ -108,7 +117,7 @@ ModelStealingAttack = {
     "initial_sample_method": "random_sentence",
     "initial_drk_model": None,
     "al_sample_batch_num": -1,
-    "al_sample_method": None
+    "al_sample_method": "random"
 }
 
 # 攻击策略字典
@@ -118,12 +127,11 @@ attack_strategies = {
     "BackDoorAttack": BackDoorAttack,
     "PoisoningAttack": PoisoningAttack,
     "RLMI": RLMI,
-    "GIAforNLP": GIAforNLP,
     "ModelStealingAttack": ModelStealingAttack
 }
 
 
-def generate_config(username, attack_list):
+def generate_config(username, attack_list, globalConfig=None):
     """
     生成配置文件
     
@@ -135,17 +143,32 @@ def generate_config(username, attack_list):
     config = {
         "general": {
             "random_seed": 0,
-            "use_gpu": True
+            "use_gpu": True,
+            "log_file_name": 'single',
+            "logs_save_dir": './logs'
         },
         "LM_config": {
-            "model": "bert_base_uncased"
+            "model": "bert_base_uncased",
+            "local_model": True
         },
         "task_config": {
             "task": "TaskForSingleSentenceClassification",
             "dataset": "imdb",
-            "dataset_type": '.txt',
-            "split_sep": '_!_',
-            "epochs": 1
+            "local_dataset": True,
+            "normal_training": False,
+            "save_path": './cache/model_output',
+            "train_config": {
+                "output_dir": './cache',
+                "num_train_epochs": 1,
+                "per_device_train_batch_size": 16,
+                "per_device_eval_batch_size": 64,
+                "warmup_steps": 1000,
+                "weight_decay": 0.01,
+                "logging_dir": './logs',
+                "logging_steps": 1000,
+                "run_name": 'my_experiment',
+                "report_to": "none"
+            },
         },
         "attack_list": [],
         "output": {
@@ -154,9 +177,23 @@ def generate_config(username, attack_list):
             "evaluation_result": "evaluationResult"
         }
     }
-
-    # 存储攻击名称和时间的列表
-    attack_info = []
+    # 如果提供了全局配置，则合并到配置中
+    if globalConfig:
+        # 合并 general
+        if 'general' in globalConfig:
+            config['general']['random_seed'] = globalConfig['general']['random_seed']
+            config['general']['use_gpu'] = globalConfig['general']['use_gpu']
+            config['general']['log_file_name'] = globalConfig['general']['log_file_name']
+        # 合并模型配置
+        if 'model' in globalConfig:
+            config['LM_config']['model'] = globalConfig['model']['predefined']
+            config['LM_config']['local_model'] = globalConfig['model']['local_model']
+        # 合并任务配置
+        if 'task' in globalConfig:
+            config['task_config']['task'] = globalConfig['task']['task']
+            config['task_config']['dataset'] = globalConfig['task']['dataset']
+            config['task_config']['local_dataset'] = globalConfig['task']['local_dataset']
+            config['task_config']['normal_training'] = globalConfig['task']['normal_training']
 
     # 遍历输入的攻击列表，修改配置
     for attack in attack_list:
@@ -167,12 +204,7 @@ def generate_config(username, attack_list):
         attack_name = attack.get('name')
         created_at = attack.get('createdAt')
         
-        # 记录攻击名称和时间
-        attack_info.append({
-            "name": attack_name,
-            "createdAt": created_at
-        })
-
+       
         # 检查攻击类型是否在已定义的策略中
         if attack_type in attack_strategies:
             # 深度复制攻击策略
@@ -204,7 +236,7 @@ def generate_config(username, attack_list):
     # 将配置保存到 YAML 文件
     with open(config_file, 'w') as file:
         yaml.dump(config, file, default_flow_style=False, allow_unicode=True)
-
+    attack_info=[attack_list,globalConfig]
     # 生成攻击信息文件
     info_file = os.path.join(output_dir, f"{username}_attack_info.yaml")
     with open(info_file, 'w') as file:
@@ -238,7 +270,33 @@ def get_attack_info(username):
         return []
 
     
-
+def update_log_file_name(username, new_log_file_name):
+    """
+    更新日志文件名
+    
+    参数:
+    username (str): 用户名
+    new_log_file_name (str): 新的日志文件名
+    """
+    output_dir = os.path.dirname(os.path.abspath(__file__))
+    config_file = os.path.join(output_dir, f"{username}_config.yaml")
+    
+    if not os.path.exists(config_file):
+        print(f"配置文件不存在: {config_file}")
+        return
+    
+    try:
+        with open(config_file, 'r') as file:
+            config = yaml.safe_load(file)
+        
+        config['general']['log_file_name'] = new_log_file_name
+        
+        with open(config_file, 'w') as file:
+            yaml.dump(config, file, default_flow_style=False, allow_unicode=True)
+        
+        print(f"日志文件名已更新为: {new_log_file_name}")
+    except Exception as e:
+        print(f"更新日志文件名失败: {e}")
 
 if __name__ == '__main__':
     # 示例输入数据

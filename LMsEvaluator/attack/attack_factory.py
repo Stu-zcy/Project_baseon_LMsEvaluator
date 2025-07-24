@@ -5,11 +5,13 @@ from attack.FET.main import FET
 from attack.RLMI.main import RLMI
 from utils.my_exception import print_red
 from attack.base_attack import BaseAttack
-from attack.GIAforNLP.my_GIA_for_NLP import MyGIAforNLP
-from attack.AdversarialAttack.my_textattack import MyTextAttack
-from attack.BackdoorAttack.main import MyBackDoorAttack
-from attack.PoisoningAttack.main import PoisoningAttack
 from attack.MeaeQ.my_meaeq import MyMeaeQ
+from attack.GIAforNLP.my_GIA_for_NLP import MyGIAforNLP
+from attack.AdvAttack.my_textattack import MyTextAttack
+from attack.BackdoorAttack.main import MyBackDoorAttack
+# from attack.PoisoningAttack.main import PoisoningAttack
+from attack.PoisoningAttack.my_poisoning_attack import MyPoisoningAttack
+
 
 class AttackFactory:
     def __init__(self, attack_type, config_parser, attack_config, device, **kwargs):
@@ -18,7 +20,7 @@ class AttackFactory:
         self.attack_config = attack_config
         self.device = device
         self.attack_mode = BaseAttack(self.config_parser, self.attack_config)
-        logging.info(f"Checking the config of {self.attack_config['attack_type']}.")
+        logging.info(f"Checking the config of {self.attack_type}.")
         self.__config_check()
         if self.attack_type == "GIAforNLP":
             self.attack_mode = MyGIAforNLP(
@@ -31,10 +33,12 @@ class AttackFactory:
                 config_parser=self.config_parser,
                 data_loader=kwargs['data_loader'],
             )
-        elif self.attack_type == "AdversarialAttack":
+        elif self.attack_type == "AdvAttack":
             self.attack_mode = MyTextAttack(
                 config_parser=self.config_parser,
                 attack_config=self.attack_config,
+                model=kwargs['model'],
+                tokenizer=kwargs['tokenizer'],
                 use_local_model=self.attack_config['use_local_model'],
                 use_local_tokenizer=self.attack_config['use_local_tokenizer'],
                 use_local_dataset=self.attack_config['use_local_dataset'],
@@ -42,7 +46,7 @@ class AttackFactory:
                 tokenizer_name_or_path=self.attack_config['tokenizer_name_or_path'],
                 dataset_name_or_path=self.attack_config['dataset_name_or_path'],
                 display_full_info=self.attack_config['display_full_info'],
-								defender=self.attack_config['defender'],
+                defender=self.attack_config['defender'],
             )
         elif self.attack_type == "FET":
             self.attack_mode = FET(
@@ -71,16 +75,23 @@ class AttackFactory:
                 sample_metrics=self.attack_config['sample_metrics'],
             )
         elif self.attack_type == "PoisoningAttack":
-            self.attack_mode = PoisoningAttack(
+            # self.attack_mode = PoisoningAttack(
+            #     config_parser=self.config_parser,
+            #     attack_config=self.attack_config,
+            #     poisoning_rate=self.attack_config['poisoning_rate'],
+            #     epochs=self.attack_config['epochs'],
+            #     task_config=kwargs['task_config'],
+            #     model=kwargs['model'],
+            #     optimizer=kwargs['optimizer'],
+            #     bert_tokenize=kwargs['bert_tokenize'],
+            #     display_full_info=self.attack_config['display_full_info'],
+            # )
+            self.attack_mode = MyPoisoningAttack(
                 config_parser=self.config_parser,
                 attack_config=self.attack_config,
-                poisoning_rate=self.attack_config['poisoning_rate'],
-                epochs=self.attack_config['epochs'],
-                task_config=kwargs['task_config'],
+                tokenized_datasets=kwargs['tokenized_datasets'],
                 model=kwargs['model'],
-                optimizer=kwargs['optimizer'],
-                bert_tokenize=kwargs['bert_tokenize'],
-                display_full_info=self.attack_config['display_full_info'],
+                tokenizer=kwargs['tokenizer'],
             )
         elif self.attack_type == "RLMI":
             ppo_config = {}
@@ -164,7 +175,7 @@ class AttackFactory:
             'attack_lr',
             'attack_iters',
         ]
-        AdversarialAttack_config = [
+        AdvAttack_config = [
             'attack_recipe',
             'use_local_model',
             'use_local_tokenizer',
@@ -198,8 +209,10 @@ class AttackFactory:
         ]
         PoisoningAttack_config = [
             'poisoning_rate',
-            'epochs',
-            'display_full_info',
+            # 'epochs',
+            # 'display_full_info',
+            'save_path',
+            'train_config',
         ]
         RLMI_config = [
             'dataset_name',
@@ -258,8 +271,8 @@ class AttackFactory:
         ]
         if self.attack_type == "GIAforNLP":
             temp_config = GIAforNLP_config
-        elif self.attack_type == "AdversarialAttack":
-            temp_config = AdversarialAttack_config
+        elif self.attack_type == "AdvAttack":
+            temp_config = AdvAttack_config
         elif self.attack_type == "FET":
             temp_config = FET_config
         elif self.attack_type == "BackdoorAttack":
@@ -273,7 +286,7 @@ class AttackFactory:
         elif self.attack_type == "NOP":
             temp_config = NOP_config
         else:
-            print_red("AttackTypeError: The " + self.attack_type + " is not implemented yet.")
+            print_red("AttackTypeError: The " + self.attack_type + "is not implemented yet.")
             raise SystemError
 
         for config in temp_config:

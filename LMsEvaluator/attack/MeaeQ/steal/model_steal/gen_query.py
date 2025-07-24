@@ -7,7 +7,7 @@ from attack.MeaeQ.utils.tools import *
 from transformers import BertTokenizer, BertConfig, BertForSequenceClassification, RobertaTokenizer, XLNetTokenizer
 from attack.MeaeQ.models.victim_models import BFSC, RFSC, XFSC
 
-args = ArgParser().get_parser()
+# args = ArgParser().get_parser()
 rate_label = 0.0
 label_result = ''
 
