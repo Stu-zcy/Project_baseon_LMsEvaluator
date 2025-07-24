@@ -587,13 +587,18 @@ def getRecord():
 
         attackType = ['AdversarialAttack', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']
         counters = [0, 0, 0, 0, 0, 0]
+        globalConfig = attackInfo[1]
+        attackInfo = attackInfo[0]
         for info in attackInfo:
+            print("info:", info)
             tp = info['type']
+            print("tp:", tp)
             index = attackType.index(tp)
+            print("counters:", counters[index])
             result[tp][counters[index]] = {'info': info, 'resultData': result[tp][counters[index]]}
             counters[index] += 1
 
-        return jsonify(result), 200
+        return jsonify({"result": result, "globalConfig": globalConfig}), 200
     except Exception as e:
         print(f"Error fetching log: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500

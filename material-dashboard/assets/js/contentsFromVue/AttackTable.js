@@ -550,14 +550,15 @@ const AttackTable = defineComponent({
 					createTime: props.targetCreateTime
 				});
 				// It's safer to check if response.data exists and is an object
+				console.log("API response:", response);
 				if (response && response.data && typeof response.data === 'object') {
 					// Assign specific keys if they exist, or default to empty arrays
-					responseData.value.AdversarialAttack = response.data.AdversarialAttack || [];
-					responseData.value.BackDoorAttack = response.data.BackDoorAttack || [];
-					responseData.value.PoisoningAttack = response.data.PoisoningAttack || [];
-					responseData.value.RLMI = response.data.RLMI || [];
-					responseData.value.FET = response.data.FET || [];
-					responseData.value.ModelStealingAttack = response.data.ModelStealingAttack || [];
+					responseData.value.AdversarialAttack = response.data.result.AdversarialAttack || [];
+					responseData.value.BackDoorAttack = response.data.result.BackDoorAttack || [];
+					responseData.value.PoisoningAttack = response.data.result.PoisoningAttack || [];
+					responseData.value.RLMI = response.data.result.RLMI || [];
+					responseData.value.FET = response.data.result.FET || [];
+					responseData.value.ModelStealingAttack = response.data.result.ModelStealingAttack || [];
 				} else {
 					console.error("Invalid API response structure:", response);
 				}
