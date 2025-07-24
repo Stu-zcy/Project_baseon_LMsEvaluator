@@ -9,6 +9,7 @@ LMsEvaluator/OpenBackdoor/
 /LMsEvaluator/attack/MeaeQ/steal/query_and_poolseed=56
 /LMsEvaluator/attack/MeaeQ/steal/query_and_pool
 /LMsEvaluator/attack/PoisoningAttack/cache
+LMsEvaluator/attack/RLMI/results
 #FILE
 *.db
 components.d.ts
