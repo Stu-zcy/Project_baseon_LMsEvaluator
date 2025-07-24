@@ -2043,68 +2043,76 @@
             updateAttackStrategies();
             document.getElementById('attackStrategy').value = config.strategy;
             updateAdvancedSettings(config.type);
+
+            // 先异步渲染防御设置，再填充表单
             updateDefenseSettings(config.type);
-            
-            // 填充高级设置
-            for (const [key, value] of Object.entries(config.params)) {
-                if (key === 'defender') continue; // 跳过防御配置，单独处理
-                
-                const input = document.getElementById(key);
-                if (input) {
-                    if (input.type === 'checkbox') {
-                        input.checked = value;
-                    } else if (input.type === 'select-multiple') {
-                        // 处理多选字段
-                        Array.from(input.options).forEach(option => {
-                            option.selected = value.includes(option.value);
-                        });
-                    } else {
-                        input.value = value;
+
+            // 等待 DOM 渲染完成再操作防御相关元素
+            setTimeout(() => {
+                // 填充高级设置
+                for (const [key, value] of Object.entries(config.params)) {
+                    if (key === 'defender') continue; // 跳过防御配置，单独处理
+
+                    const input = document.getElementById(key);
+                    if (input) {
+                        if (input.type === 'checkbox') {
+                            input.checked = value;
+                        } else if (input.type === 'select-multiple') {
+                            // 处理多选字段
+                            Array.from(input.options).forEach(option => {
+                                option.selected = value.includes(option.value);
+                            });
+                        } else {
+                            input.value = value;
+                        }
                     }
                 }
-            }
-            
-            // 填充防御设置
-            const defenseEnabled = config.defenderEnabled || false;
-            document.getElementById('defenderSwitch').checked = defenseEnabled;
-            toggleDefenseOptions();
-            
-            // 填充防御配置
-            if (config.defenderEnabled && config.params.defender) {
-                const defenderParams = config.params.defender;
-                
-                // 对抗攻击防御参数
-                if (config.type === 'AdversarialAttack') {
-                    if (defenderParams.num_epochs !== undefined) {
-                        document.getElementById('defense_num_epochs').value = defenderParams.num_epochs;
+
+                // 填充防御设置
+                const defenseEnabled = config.defenderEnabled || false;
+                const defenderSwitch = document.getElementById('defenderSwitch');
+                if (defenderSwitch) {
+                    defenderSwitch.checked = defenseEnabled;
+                    toggleDefenseOptions();
+                }
+
+                // 填充防御配置
+                if (defenseEnabled && config.params.defender) {
+                    const defenderParams = config.params.defender;
+
+                    // 对抗攻击防御参数
+                    if (config.type === 'AdversarialAttack') {
+                        if (defenderParams.num_epochs !== undefined && document.getElementById('defense_num_epochs')) {
+                            document.getElementById('defense_num_epochs').value = defenderParams.num_epochs;
+                        }
+                        if (defenderParams.num_clean_epochs !== undefined && document.getElementById('defense_num_clean_epochs')) {
+                            document.getElementById('defense_num_clean_epochs').value = defenderParams.num_clean_epochs;
+                        }
+                        if (defenderParams.num_train_adv_examples !== undefined && document.getElementById('defense_num_train_adv_examples')) {
+                            document.getElementById('defense_num_train_adv_examples').value = defenderParams.num_train_adv_examples;
+                        }
+                        if (defenderParams.learning_rate !== undefined && document.getElementById('defense_learning_rate')) {
+                            document.getElementById('defense_learning_rate').value = defenderParams.learning_rate;
+                        }
+                        if (defenderParams.per_device_train_batch_size !== undefined && document.getElementById('defense_per_device_train_batch_size')) {
+                            document.getElementById('defense_per_device_train_batch_size').value = defenderParams.per_device_train_batch_size;
+                        }
+                        if (defenderParams.gradient_accumulation_steps !== undefined && document.getElementById('defense_gradient_accumulation_steps')) {
+                            document.getElementById('defense_gradient_accumulation_steps').value = defenderParams.gradient_accumulation_steps;
+                        }
+                        if (defenderParams.log_to_tb !== undefined && document.getElementById('defense_log_to_tb')) {
+                            document.getElementById('defense_log_to_tb').checked = defenderParams.log_to_tb;
+                        }
                     }
-                    if (defenderParams.num_clean_epochs !== undefined) {
-                        document.getElementById('defense_num_clean_epochs').value = defenderParams.num_clean_epochs;
-                    }
-                    if (defenderParams.num_train_adv_examples !== undefined) {
-                        document.getElementById('defense_num_train_adv_examples').value = defenderParams.num_train_adv_examples;
-                    }
-                    if (defenderParams.learning_rate !== undefined) {
-                        document.getElementById('defense_learning_rate').value = defenderParams.learning_rate;
-                    }
-                    if (defenderParams.per_device_train_batch_size !== undefined) {
-                        document.getElementById('defense_per_device_train_batch_size').value = defenderParams.per_device_train_batch_size;
-                    }
-                    if (defenderParams.gradient_accumulation_steps !== undefined) {
-                        document.getElementById('defense_gradient_accumulation_steps').value = defenderParams.gradient_accumulation_steps;
-                    }
-                    if (defenderParams.log_to_tb !== undefined) {
-                        document.getElementById('defense_log_to_tb').checked = defenderParams.log_to_tb;
+                    // 后门攻击防御参数
+                    else if (config.type === 'BackDoorAttack') {
+                        if (defenderParams.strategy !== undefined && document.getElementById('defenderStrategy')) {
+                            document.getElementById('defenderStrategy').value = defenderParams.strategy;
+                        }
                     }
                 }
-                // 后门攻击防御参数
-                else if (config.type === 'BackDoorAttack') {
-                    if (defenderParams.strategy !== undefined) {
-                        document.getElementById('defenderStrategy').value = defenderParams.strategy;
-                    }
-                }
-            }
-            
+            }, 0);
+
             // 显示模态框
             const modal = new bootstrap.Modal(document.getElementById('configModal'));
             modal.show();
