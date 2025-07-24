@@ -1,4 +1,5 @@
 {
+  "_name_or_path": "/Volumes/D/Project/LMsEvaluator/LMs/bert_base_uncased",
   "architectures": [
     "BertForSequenceClassification"
   ],
@@ -20,7 +21,7 @@
   "position_embedding_type": "absolute",
   "problem_type": "single_label_classification",
   "torch_dtype": "float32",
-  "transformers_version": "4.52.4",
+  "transformers_version": "4.46.2",
   "type_vocab_size": 2,
   "use_cache": true,
   "vocab_size": 30522

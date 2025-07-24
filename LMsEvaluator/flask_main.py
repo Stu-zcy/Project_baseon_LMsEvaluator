@@ -548,7 +548,7 @@ def execute_attack():
             
             fileName = username + '_single_' + initTime
             update_log_file_name(username, fileName)
-            run_pipeline(os.path.join(project_path, 'user_config', username + '.yaml'))
+            run_pipeline(os.path.join(project_path, 'user_config', username + '_config.yaml'))
 
             print("执行成功！")
 

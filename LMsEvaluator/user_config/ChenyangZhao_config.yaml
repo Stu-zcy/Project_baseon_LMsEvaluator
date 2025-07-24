@@ -1,5 +1,6 @@
 LM_config:
-  model: ''
+  local_model: true
+  model: bert_base_uncased
 attack_list:
 - attack_args:
     attack: true
@@ -7,35 +8,36 @@ attack_list:
     attack_recipe: TextFoolerJin2019
     attack_type: AdversarialAttack
     dataset_name_or_path: datasets/imdb/train.txt
+    defender:
+      gradient_accumulation_steps: 4
+      learning_rate: 5.0e-05
+      log_to_tb: false
+      num_clean_epochs: 1
+      num_epochs: 1
+      num_train_adv_examples: 1000
+      per_device_train_batch_size: 8
     display_full_info: true
     model_name_or_path: LMs/bert_base_uncased
     tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: false
+    use_local_dataset: true
     use_local_model: true
     use_local_tokenizer: true
 - attack_args:
     attack: true
-    attack_type: BackDoorAttack
-    defender: BKI
-    display_full_info: true
-    model: bert
-    model_name_or_path: LMs/bert_base_uncased
-    poison_dataset: sst-2
-    poisoner:
-      name: badnets
-    sample_metrics: []
-    target_dataset: sst-2
-    train:
-      batch_size: 16
-      epochs: 1
-      name: base
-    use_local_model: true
-- attack_args:
-    attack: true
     attack_type: PoisoningAttack
-    display_full_info: true
-    epochs: 15
     poisoning_rate: 0.15
+    save_path: ./attack/PoisoningAttack/model_output
+    train_config:
+      logging_dir: ./logs
+      logging_steps: 1000
+      num_train_epochs: 1
+      output_dir: ./attack/PoisoningAttack/cache
+      per_device_eval_batch_size: 64
+      per_device_train_batch_size: 16
+      report_to: none
+      run_name: my_experiment
+      warmup_steps: 1000
+      weight_decay: 0.01
 - attack_args:
     al_sample_batch_num: -1
     al_sample_method: random
@@ -70,15 +72,28 @@ attack_list:
     seq_length: 20
     target_label: 0
 general:
+  log_file_name: ChenyangZhao_single_1753350259
+  logs_save_dir: ./logs
   random_seed: 42
-  use_gpu: true
+  use_gpu: false
 output:
   base_path: output
   evaluation_result: evaluationResult
   model_output: modelOutput
 task_config:
-  dataset: ''
-  dataset_type: .txt
-  epochs: 1
-  split_sep: _!_
-  task: ''
+  dataset: imdb
+  local_dataset: true
+  normal_training: true
+  save_path: ./cache/model_output
+  task: TaskForSingleSentenceClassification
+  train_config:
+    logging_dir: ./logs
+    logging_steps: 1000
+    num_train_epochs: 1
+    output_dir: ./cache
+    per_device_eval_batch_size: 64
+    per_device_train_batch_size: 16
+    report_to: none
+    run_name: my_experiment
+    warmup_steps: 1000
+    weight_decay: 0.01

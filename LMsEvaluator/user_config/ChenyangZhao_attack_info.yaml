@@ -1,41 +1,28 @@
-- - createdAt: 2025/07/24 02:10
+- - createdAt: 2025-05-15 10:30
     defenderEnabled: true
-    description: 通过微小的、难以察觉的扰动来欺骗模型，使其做出错误的预测
-    executed: false
+    description: 针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型
+    executed: true
     id: 1
     name: 文本对抗攻击配置
     params:
       attack_nums: 3
-      defense_gradient_accumulation_steps: 4
-      defense_learning_rate: 5.0e-05
-      defense_log_to_tb: false
-      defense_num_clean_epochs: 1
-      defense_num_epochs: 1
-      defense_num_train_adv_examples: 1000
-      defense_per_device_train_batch_size: 8
-      use_local_dataset: false
+      defender:
+        gradient_accumulation_steps: 4
+        learning_rate: 5.0e-05
+        log_to_tb: false
+        num_clean_epochs: 1
+        num_epochs: 1
+        num_train_adv_examples: 1000
+        per_device_train_batch_size: 8
       use_local_model: true
-      use_local_tokenizer: true
     sent: true
     status: active
     strategy: TextFoolerJin2019
     type: AdversarialAttack
-  - createdAt: 2025/07/24 02:12
-    defenderEnabled: true
-    description: 在训练数据中植入后门，使模型在特定触发条件下表现出异常行为
-    executed: false
-    id: 2
-    name: 后门攻击配置
-    params:
-      defender: BKI
-    sent: true
-    status: active
-    strategy: TrojanLM
-    type: BackDoorAttack
   - createdAt: 2025-05-20 09:45
     defenderEnabled: false
     description: 针对训练数据的投毒攻击，污染训练集以降低模型性能
-    executed: false
+    executed: true
     id: 3
     name: 数据投毒配置
     params:
@@ -62,7 +49,7 @@
   - createdAt: 2025-06-12 11:20
     defenderEnabled: false
     description: 使用强化学习优化攻击策略
-    executed: false
+    executed: true
     id: 5
     name: 模型反演配置
     params:
@@ -72,13 +59,15 @@
     status: active
     strategy: RLMI
     type: RLMI
-- dataset:
-    name: ''
+- LM_config:
+    local_model: true
+    model: bert_base_uncased
   general:
+    log_file_name: single
     random_seed: 42
-    use_gpu: true
-  model:
-    custom_url: ''
-    predefined: ''
-  task:
-    type: ''
+    use_gpu: false
+  task_config:
+    dataset: imdb
+    local_dataset: true
+    normal_training: false
+    task: TaskForSingleSentenceClassification

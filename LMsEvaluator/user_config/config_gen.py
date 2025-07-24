@@ -66,8 +66,19 @@ PoisoningAttack = {
     "attack": True,
     "attack_type": "PoisoningAttack",
     "poisoning_rate": 0.1,
-    "epochs": 10,
-    "display_full_info": True
+    "save_path": './attack/PoisoningAttack/model_output',
+    "train_config": {
+        "output_dir": './attack/PoisoningAttack/cache',
+        "num_train_epochs": 1,
+        "per_device_train_batch_size": 16,
+        "per_device_eval_batch_size": 64,
+        "warmup_steps": 1000,
+        "weight_decay": 0.01,
+        "logging_dir": './logs',
+        "logging_steps": 1000,
+        "run_name": 'my_experiment',
+        "report_to": "none"
+    }
 }
 
 RLMI = {
@@ -90,18 +101,7 @@ RLMI = {
     "num_generation": 1000
 }
 
-GIAforNLP = {
-    "attack": True,
-    "attack_type": "GIAforNLP",
-    "attack_data": "None",
-    "optimizer": "Adam",
-    "attack_batch": 2,
-    "attack_nums": 1,
-    "distance_func": "l2",  # str: 攻击方法中的距离函数，'l2' or 'cos'
-    "attack_lr": 0.01,  # float: 攻击方法中的学习率
-    "attack_iters": 10,  # int: 一次攻击中的迭代轮次
-    "display_full_info": True  # boolean: 是否显示全部过程信息
-}
+
 
 ModelStealingAttack = {
     "attack": True,
