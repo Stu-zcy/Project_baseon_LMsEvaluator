@@ -139,7 +139,7 @@
   - `BackDoorAttack`：后门攻击实现；
   - `GIAforNLP`：梯度反转攻击实现；
   - `PoisoningAttack`：投毒攻击实现；
-  - `SWAT`：基于遗传算法的梯度反演攻击实现；
+  - `FET`：基于遗传算法的梯度反演攻击实现；
   - `RLMI`：模型反演攻击实现；
   
 - `test`目录中是各个模块的测试文件；
@@ -432,7 +432,7 @@ output:
   
 * #### FET
 
-  > 源仓库地址：https://github.com/isa8888/swat
+  > 源仓库地址：https://github.com/isa8888/FET
 
   配置文件说明：
   

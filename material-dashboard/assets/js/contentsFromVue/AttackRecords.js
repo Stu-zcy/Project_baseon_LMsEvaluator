@@ -59,8 +59,7 @@ const AttackRecords = defineComponent({
 	template: `
         <div>
             <div class="history-container">
-                <div v-if="responseData && responseData.length > 0">
-                    <div class="records-list">
+                <div v-if="responseData && responseData.length > 0" class="records-list">
                         <div v-for="item in responseData" :key="item[0]" class="card shadow">
                             <div class="card-body">
 																<!-- 0.名称（item[3]） -->
@@ -101,7 +100,6 @@ const AttackRecords = defineComponent({
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </div>
                 
                 <div v-else class="empty-message">

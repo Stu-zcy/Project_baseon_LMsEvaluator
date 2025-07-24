@@ -9,7 +9,7 @@ def extractResult(path):
 	f = open(path, "r", encoding='utf-8')
 	content = iter(f.readlines())
 	f.close()
-	result = {k: [] for k in ['AdversarialAttack', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'SWAT', 'ModelStealingAttack']}
+	result = {k: [] for k in ['AdversarialAttack', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']}
 	# def GetPair(s: str):
 	# 	ret = re.match(r'\|\s*([a-zA-Z][a-zA-Z ]*[a-zA-Z]):?\s*\|\s*([\d.]+%?)\s*\|', s)
 	# 	return ret.group(1,2)
@@ -103,7 +103,7 @@ def extractResult(path):
 					row = next(content)
 					ls.append(getContent(row))
 				result['RLMI'].append(ls)
-			elif (re.search('SWAT 攻击开始', row)):
+			elif (re.search('FET 攻击开始', row)):
 				row = next(content)
 				ret = re.search(r'n_attacks=(\d)', row)
 				n_attacks = eval(ret.group(1))
@@ -131,7 +131,7 @@ def extractResult(path):
 					row = next(content)
 					subList.append(getData(row))
 				attackList.append(subList)
-				result['SWAT'].append(attackList)
+				result['FET'].append(attackList)
 			elif (re.search('ModelStealingAttack攻击开始', row)):
 				# 采用了字典的方式进行存储和通讯。
 				# 一个配置的结果为一个字典，包含以下键值对：

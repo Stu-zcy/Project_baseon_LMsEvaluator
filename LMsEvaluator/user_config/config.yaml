@@ -179,7 +179,7 @@ attack_list:
 #  attack_lr: 0.01                      # float: 攻击方法中的学习率
 #  attack_iters: 10                     # int: 一次攻击中的迭代轮次
 
-## SWAT攻击配置文件示例
+## FET攻击配置文件示例
 #attack_args:
 #  attack: True                         # boolean: 表示是否开启攻击
 #  attack_type: FET                    # str: 攻击方法,'GIAforNLP'代表梯度反转攻击

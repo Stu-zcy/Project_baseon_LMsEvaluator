@@ -364,14 +364,14 @@
 				AttackRecords: AttackRecords
 			},
 			template: `
-   <div style="width: 80%; margin: 2em auto 0; display: flex; flex-direction: column; align-items: center;">
+   <div style="width: 80%; margin: 2em auto 0; display: flex; flex-direction: column; align-items: center; flex-grow: 1;">
 		<div class="page-header">
 			<div class="page-title">
 				<h1>攻击数据分析</h1>
 				<p>快速展示、分析您的实验记录与结果</p>
 			</div>
 		</div>
-    <AttackRecords :default-current-page-size="5" :only-treasure="false" theme="light" style="width: 100%;"/>
+    <AttackRecords :default-current-page-size="5" :only-treasure="false" theme="light" style="width: 100%; flex-grow: 1;"/>
    </div>
    `
 		});

@@ -1,6 +1,6 @@
-# SWAT: Text reconstruction attack in federated learning by optimizing word permutation and combination
+# FET: Text reconstruction attack in federated learning by optimizing word permutation and combination
 
-The codes support our paper "SWAT: Text reconstruction attack in federated learning by optimizing word permutation and combination".
+The codes support our paper "FET: Text reconstruction attack in federated learning by optimizing word permutation and combination".
 
 ## Experimental Environment
 

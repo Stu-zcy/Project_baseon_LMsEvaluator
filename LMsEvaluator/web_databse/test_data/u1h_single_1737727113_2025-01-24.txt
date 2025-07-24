@@ -1,0 +1,649 @@
+[2024-04-25 01:30:17] - INFO: 成功导入BERT配置文件 /home/zhuzukun/LMsEvaluation/LMs/bert_base_uncased_english/config.json
+[2024-04-25 01:30:17] - INFO:  ### 将当前配置打印到日志文件中 
+[2024-04-25 01:30:17] - INFO: ###  project_dir = /home/zhuzukun/LMsEvaluation
+[2024-04-25 01:30:17] - INFO: ###  dataset_dir = /home/zhuzukun/LMsEvaluation/datasets/imdb
+[2024-04-25 01:30:17] - INFO: ###  pretrained_model_dir = /home/zhuzukun/LMsEvaluation/LMs/bert_base_uncased_english
+[2024-04-25 01:30:17] - INFO: ###  vocab_path = /home/zhuzukun/LMsEvaluation/LMs/bert_base_uncased_english/vocab.txt
+[2024-04-25 01:30:17] - INFO: ###  device = cuda
+[2024-04-25 01:30:17] - INFO: ###  train_file_path = /home/zhuzukun/LMsEvaluation/datasets/imdb/train.txt
+[2024-04-25 01:30:17] - INFO: ###  val_file_path = /home/zhuzukun/LMsEvaluation/datasets/imdb/val.txt
+[2024-04-25 01:30:17] - INFO: ###  test_file_path = /home/zhuzukun/LMsEvaluation/datasets/imdb/test.txt
+[2024-04-25 01:30:17] - INFO: ###  model_save_dir = /home/zhuzukun/LMsEvaluation/cache
+[2024-04-25 01:30:17] - INFO: ###  logs_save_dir = /home/zhuzukun/LMsEvaluation/logs
+[2024-04-25 01:30:17] - INFO: ###  model_save_path = /home/zhuzukun/LMsEvaluation/cache/model.pt
+[2024-04-25 01:30:17] - INFO: ###  config_parser = {'general': {'random_seed': 0, 'use_gpu': True}, 'LM_config': {'model': 'bert_base_uncased_english'}, 'task_config': {'task': 'TaskForSingleSentenceClassification', 'dataset': 'imdb', 'dataset_type': '.txt', 'split_sep': '_!_', 'epochs': 20}, 'attack_list': [{'attack_args': {'attack': True, 'attack_type': 'AdvAttack', 'attack_recipe': 'TextFoolerJin2019', 'use_local_model': True, 'use_local_tokenizer': True, 'use_local_dataset': True, 'model_name_or_path': 'LMs/bert_base_uncased_english', 'tokenizer_name_or_path': 'LMs/bert_base_uncased_english', 'dataset_name_or_path': 'datasets/imdb/train.txt', 'attack_nums': 20, 'display_full_info': True}}, {'attack_args': {'attack': False, 'attack_type': 'FET', 'seed': 42, 'attack_batch': 2, 'attack_nums': 1, 'distance_func': 'l2', 'population_size': 300, 'tournsize': 5, 'crossover_rate': 0.9, 'mutation_rate': 0.1, 'max_generations': 2, 'halloffame_size': 30, 'use_local_model': True, 'use_local_tokenizer': True, 'model_name_or_path': 'LMs/bert_base_uncased_english', 'tokenizer_name_or_path': 'LMs/bert_base_uncased_english', 'dataset_name_or_path': 'cola', 'display_full_info': True}}, {'attack_args': {'attack': True, 'attack_type': 'BackDoorAttack', 'use_local_model': True, 'model': 'bert', 'model_name_or_path': 'LMs/bert_base_uncased_english', 'poison_dataset': 'sst-2', 'target_dataset': 'sst-2', 'poisoner': {'name': 'badnets'}, 'train': {'name': 'base', 'batch_size': 32, 'epochs': 5}, 'defender': 'None', 'display_full_info': True}}, {'attack_args': {'attack': True, 'attack_type': 'PoisoningAttack', 'poisoning_rate': 0.7, 'epochs': 10, 'display_full_info': True}}], 'output': {'base_path': 'output', 'model_output': 'modelOutput', 'evaluation_result': 'evaluationResult'}}
+[2024-04-25 01:30:17] - INFO: ###  log_level = 20
+[2024-04-25 01:30:17] - INFO: ###  vocab_size = 30522
+[2024-04-25 01:30:17] - INFO: ###  hidden_size = 768
+[2024-04-25 01:30:17] - INFO: ###  num_hidden_layers = 12
+[2024-04-25 01:30:17] - INFO: ###  num_attention_heads = 12
+[2024-04-25 01:30:17] - INFO: ###  intermediate_size = 3072
+[2024-04-25 01:30:17] - INFO: ###  pad_token_id = 0
+[2024-04-25 01:30:17] - INFO: ###  hidden_act = gelu
+[2024-04-25 01:30:17] - INFO: ###  hidden_dropout_prob = 0.1
+[2024-04-25 01:30:17] - INFO: ###  attention_probs_dropout_prob = 0.1
+[2024-04-25 01:30:17] - INFO: ###  max_position_embeddings = 512
+[2024-04-25 01:30:17] - INFO: ###  type_vocab_size = 2
+[2024-04-25 01:30:17] - INFO: ###  initializer_range = 0.02
+[2024-04-25 01:30:17] - INFO: ###  split_sep = _!_
+[2024-04-25 01:30:17] - INFO: ###  is_sample_shuffle = True
+[2024-04-25 01:30:17] - INFO: ###  batch_size = 1
+[2024-04-25 01:30:17] - INFO: ###  max_sen_len = None
+[2024-04-25 01:30:17] - INFO: ###  num_labels = 15
+[2024-04-25 01:30:17] - INFO: ###  epochs = 20
+[2024-04-25 01:30:17] - INFO: ###  model_val_per_epoch = 2
+[2024-04-25 01:30:17] - INFO: ###  gradient_checkpointing = False
+[2024-04-25 01:30:17] - INFO: ###  layer_norm_eps = 1e-12
+[2024-04-25 01:30:17] - INFO: ###  model_type = bert
+[2024-04-25 01:30:17] - INFO: ###  pooler_type = first_token_transform
+[2024-04-25 01:30:19] - INFO: ## 注意，正在使用本地MyTransformer中的MyMultiHeadAttention实现，如需使用torch框架中的MultiHeadAttention模块可通过config.__dict__['use_torch_multi_head'] = True实现
+[2024-04-25 01:30:20] - INFO: ## 已有模型存储路径: /home/zhuzukun/LMsEvaluation/cache/model.pt
+[2024-04-25 01:30:20] - INFO: ## 成功载入已有模型，进行追加训练......
+[2024-04-25 01:30:20] - INFO:  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[2024-04-25 01:30:20] - INFO: 缓存文件 /home/zhuzukun/LMsEvaluation/datasets/imdb/cache_test_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[2024-04-25 01:30:22] - INFO: 数据预处理一共耗时1.934s
+[2024-04-25 01:30:22] - INFO:  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[2024-04-25 01:30:22] - INFO: 缓存文件 /home/zhuzukun/LMsEvaluation/datasets/imdb/cache_train_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[2024-04-25 01:30:23] - INFO: 数据预处理一共耗时1.653s
+[2024-04-25 01:30:23] - INFO:  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[2024-04-25 01:30:23] - INFO: 缓存文件 /home/zhuzukun/LMsEvaluation/datasets/imdb/cache_val_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[2024-04-25 01:30:25] - INFO: 数据预处理一共耗时1.813s
+[2024-04-25 01:30:26] - INFO: Epoch: 0, Batch[0/25000], Train loss :0.880, Train acc: 0.000
+[2024-04-25 01:34:36] - INFO: Epoch: 0, Batch[5000/25000], Train loss :0.810, Train acc: 0.000
+[2024-04-25 01:38:40] - INFO: Epoch: 0, Batch[10000/25000], Train loss :0.501, Train acc: 1.000
+[2024-04-25 01:42:45] - INFO: Epoch: 0, Batch[15000/25000], Train loss :0.559, Train acc: 1.000
+[2024-04-25 01:46:51] - INFO: Epoch: 0, Batch[20000/25000], Train loss :0.742, Train acc: 0.000
+[2024-04-25 01:50:55] - INFO: Epoch: 0, Train loss: 0.655, Epoch time = 1229.565s
+[2024-04-25 01:53:54] - INFO: Accuracy on val 0.500
+[2024-04-25 01:53:54] - INFO: Epoch: 1, Batch[0/25000], Train loss :0.620, Train acc: 1.000
+[2024-04-25 01:57:54] - INFO: Epoch: 1, Batch[5000/25000], Train loss :0.669, Train acc: 1.000
+[2024-04-25 02:01:55] - INFO: Epoch: 1, Batch[10000/25000], Train loss :0.592, Train acc: 1.000
+[2024-04-25 02:05:54] - INFO: Epoch: 1, Batch[15000/25000], Train loss :0.747, Train acc: 0.000
+[2024-04-25 02:09:55] - INFO: Epoch: 1, Batch[20000/25000], Train loss :0.687, Train acc: 1.000
+[2024-04-25 02:13:56] - INFO: Epoch: 1, Train loss: 0.697, Epoch time = 1202.377s
+[2024-04-25 02:16:56] - INFO: Accuracy on val 0.500
+[2024-04-25 02:16:56] - INFO: Epoch: 2, Batch[0/25000], Train loss :0.768, Train acc: 0.000
+[2024-04-25 02:20:53] - INFO: Epoch: 2, Batch[5000/25000], Train loss :0.743, Train acc: 0.000
+[2024-04-25 02:24:51] - INFO: Epoch: 2, Batch[10000/25000], Train loss :0.667, Train acc: 1.000
+[2024-04-25 02:28:47] - INFO: Epoch: 2, Batch[15000/25000], Train loss :0.686, Train acc: 1.000
+[2024-04-25 02:32:47] - INFO: Epoch: 2, Batch[20000/25000], Train loss :0.693, Train acc: 0.000
+[2024-04-25 02:36:45] - INFO: Epoch: 2, Train loss: 0.696, Epoch time = 1189.317s
+[2024-04-25 02:39:45] - INFO: Accuracy on val 0.500
+[2024-04-25 02:39:45] - INFO: Epoch: 3, Batch[0/25000], Train loss :0.613, Train acc: 1.000
+[2024-04-25 02:43:41] - INFO: Epoch: 3, Batch[5000/25000], Train loss :0.659, Train acc: 1.000
+[2024-04-25 02:47:41] - INFO: Epoch: 3, Batch[10000/25000], Train loss :0.722, Train acc: 0.000
+[2024-04-25 02:51:41] - INFO: Epoch: 3, Batch[15000/25000], Train loss :0.708, Train acc: 0.000
+[2024-04-25 02:55:42] - INFO: Epoch: 3, Batch[20000/25000], Train loss :0.717, Train acc: 0.000
+[2024-04-25 02:59:43] - INFO: Epoch: 3, Train loss: 0.696, Epoch time = 1197.850s
+[2024-04-25 03:02:43] - INFO: Accuracy on val 0.500
+[2024-04-25 03:02:43] - INFO: Epoch: 4, Batch[0/25000], Train loss :0.673, Train acc: 1.000
+[2024-04-25 03:06:43] - INFO: Epoch: 4, Batch[5000/25000], Train loss :0.684, Train acc: 1.000
+[2024-04-25 03:10:42] - INFO: Epoch: 4, Batch[10000/25000], Train loss :0.791, Train acc: 0.000
+[2024-04-25 03:14:40] - INFO: Epoch: 4, Batch[15000/25000], Train loss :0.748, Train acc: 0.000
+[2024-04-25 03:18:39] - INFO: Epoch: 4, Batch[20000/25000], Train loss :0.670, Train acc: 1.000
+[2024-04-25 03:22:38] - INFO: Epoch: 4, Train loss: 0.695, Epoch time = 1194.955s
+[2024-04-25 03:25:38] - INFO: Accuracy on val 0.500
+[2024-04-25 03:25:38] - INFO: Epoch: 5, Batch[0/25000], Train loss :0.665, Train acc: 1.000
+[2024-04-25 03:29:43] - INFO: Epoch: 5, Batch[5000/25000], Train loss :0.599, Train acc: 1.000
+[2024-04-25 03:33:46] - INFO: Epoch: 5, Batch[10000/25000], Train loss :0.761, Train acc: 0.000
+[2024-04-25 03:37:48] - INFO: Epoch: 5, Batch[15000/25000], Train loss :0.696, Train acc: 0.000
+[2024-04-25 03:41:47] - INFO: Epoch: 5, Batch[20000/25000], Train loss :0.671, Train acc: 1.000
+[2024-04-25 03:45:49] - INFO: Epoch: 5, Train loss: 0.695, Epoch time = 1210.896s
+[2024-04-25 03:48:49] - INFO: Accuracy on val 0.500
+[2024-04-25 03:48:49] - INFO: Epoch: 6, Batch[0/25000], Train loss :0.821, Train acc: 0.000
+[2024-04-25 03:52:48] - INFO: Epoch: 6, Batch[5000/25000], Train loss :0.717, Train acc: 0.000
+[2024-04-25 03:56:52] - INFO: Epoch: 6, Batch[10000/25000], Train loss :0.712, Train acc: 0.000
+[2024-04-25 04:00:53] - INFO: Epoch: 6, Batch[15000/25000], Train loss :0.672, Train acc: 1.000
+[2024-04-25 04:04:53] - INFO: Epoch: 6, Batch[20000/25000], Train loss :0.737, Train acc: 0.000
+[2024-04-25 04:08:56] - INFO: Epoch: 6, Train loss: 0.695, Epoch time = 1207.417s
+[2024-04-25 04:11:56] - INFO: Accuracy on val 0.500
+[2024-04-25 04:11:56] - INFO: Epoch: 7, Batch[0/25000], Train loss :0.632, Train acc: 1.000
+[2024-04-25 04:15:57] - INFO: Epoch: 7, Batch[5000/25000], Train loss :0.729, Train acc: 0.000
+[2024-04-25 04:19:57] - INFO: Epoch: 7, Batch[10000/25000], Train loss :0.691, Train acc: 1.000
+[2024-04-25 04:23:56] - INFO: Epoch: 7, Batch[15000/25000], Train loss :0.663, Train acc: 1.000
+[2024-04-25 04:27:55] - INFO: Epoch: 7, Batch[20000/25000], Train loss :0.682, Train acc: 1.000
+[2024-04-25 04:31:56] - INFO: Epoch: 7, Train loss: 0.694, Epoch time = 1199.763s
+[2024-04-25 04:34:56] - INFO: Accuracy on val 0.500
+[2024-04-25 04:34:56] - INFO: Epoch: 8, Batch[0/25000], Train loss :0.712, Train acc: 0.000
+[2024-04-25 04:38:55] - INFO: Epoch: 8, Batch[5000/25000], Train loss :0.693, Train acc: 1.000
+[2024-04-25 04:42:55] - INFO: Epoch: 8, Batch[10000/25000], Train loss :0.694, Train acc: 0.000
+[2024-04-25 04:46:56] - INFO: Epoch: 8, Batch[15000/25000], Train loss :0.678, Train acc: 1.000
+[2024-04-25 04:50:59] - INFO: Epoch: 8, Batch[20000/25000], Train loss :0.705, Train acc: 0.000
+[2024-04-25 04:55:00] - INFO: Epoch: 8, Train loss: 0.695, Epoch time = 1203.821s
+[2024-04-25 04:58:01] - INFO: Accuracy on val 0.500
+[2024-04-25 04:58:01] - INFO: Epoch: 9, Batch[0/25000], Train loss :0.691, Train acc: 1.000
+[2024-04-25 05:02:02] - INFO: Epoch: 9, Batch[5000/25000], Train loss :0.707, Train acc: 0.000
+[2024-04-25 05:06:04] - INFO: Epoch: 9, Batch[10000/25000], Train loss :0.637, Train acc: 1.000
+[2024-04-25 05:10:06] - INFO: Epoch: 9, Batch[15000/25000], Train loss :0.700, Train acc: 0.000
+[2024-04-25 05:14:07] - INFO: Epoch: 9, Batch[20000/25000], Train loss :0.699, Train acc: 0.000
+[2024-04-25 05:18:08] - INFO: Epoch: 9, Train loss: 0.694, Epoch time = 1207.545s
+[2024-04-25 05:21:10] - INFO: Accuracy on val 0.500
+[2024-04-25 05:21:10] - INFO: Epoch: 10, Batch[0/25000], Train loss :0.741, Train acc: 0.000
+[2024-04-25 05:25:13] - INFO: Epoch: 10, Batch[5000/25000], Train loss :0.701, Train acc: 0.000
+[2024-04-25 05:29:11] - INFO: Epoch: 10, Batch[10000/25000], Train loss :0.762, Train acc: 0.000
+[2024-04-25 05:33:14] - INFO: Epoch: 10, Batch[15000/25000], Train loss :0.631, Train acc: 1.000
+[2024-04-25 05:37:15] - INFO: Epoch: 10, Batch[20000/25000], Train loss :0.662, Train acc: 1.000
+[2024-04-25 05:41:16] - INFO: Epoch: 10, Train loss: 0.694, Epoch time = 1206.126s
+[2024-04-25 05:44:19] - INFO: Accuracy on val 0.500
+[2024-04-25 05:44:19] - INFO: Epoch: 11, Batch[0/25000], Train loss :0.713, Train acc: 0.000
+[2024-04-25 05:48:23] - INFO: Epoch: 11, Batch[5000/25000], Train loss :0.670, Train acc: 1.000
+[2024-04-25 05:52:25] - INFO: Epoch: 11, Batch[10000/25000], Train loss :0.659, Train acc: 1.000
+[2024-04-25 05:56:28] - INFO: Epoch: 11, Batch[15000/25000], Train loss :0.668, Train acc: 1.000
+[2024-04-25 06:00:32] - INFO: Epoch: 11, Batch[20000/25000], Train loss :0.679, Train acc: 1.000
+[2024-04-25 06:04:35] - INFO: Epoch: 11, Train loss: 0.694, Epoch time = 1215.974s
+[2024-04-25 06:07:36] - INFO: Accuracy on val 0.500
+[2024-04-25 06:07:36] - INFO: Epoch: 12, Batch[0/25000], Train loss :0.708, Train acc: 0.000
+[2024-04-25 06:11:40] - INFO: Epoch: 12, Batch[5000/25000], Train loss :0.701, Train acc: 0.000
+[2024-04-25 06:15:44] - INFO: Epoch: 12, Batch[10000/25000], Train loss :0.669, Train acc: 1.000
+[2024-04-25 06:19:52] - INFO: Epoch: 12, Batch[15000/25000], Train loss :0.663, Train acc: 1.000
+[2024-04-25 06:23:56] - INFO: Epoch: 12, Batch[20000/25000], Train loss :0.668, Train acc: 1.000
+[2024-04-25 06:27:58] - INFO: Epoch: 12, Train loss: 0.695, Epoch time = 1222.528s
+[2024-04-25 06:31:00] - INFO: Accuracy on val 0.500
+[2024-04-25 06:31:00] - INFO: Epoch: 13, Batch[0/25000], Train loss :0.709, Train acc: 0.000
+[2024-04-25 06:35:03] - INFO: Epoch: 13, Batch[5000/25000], Train loss :0.663, Train acc: 1.000
+[2024-04-25 06:39:10] - INFO: Epoch: 13, Batch[10000/25000], Train loss :0.683, Train acc: 1.000
+[2024-04-25 06:43:11] - INFO: Epoch: 13, Batch[15000/25000], Train loss :0.710, Train acc: 0.000
+[2024-04-25 06:47:19] - INFO: Epoch: 13, Batch[20000/25000], Train loss :0.685, Train acc: 1.000
+[2024-04-25 06:51:21] - INFO: Epoch: 13, Train loss: 0.694, Epoch time = 1220.946s
+[2024-04-25 06:54:23] - INFO: Accuracy on val 0.500
+[2024-04-25 06:54:23] - INFO: Epoch: 14, Batch[0/25000], Train loss :0.670, Train acc: 1.000
+[2024-04-25 06:58:20] - INFO: Epoch: 14, Batch[5000/25000], Train loss :0.673, Train acc: 1.000
+[2024-04-25 07:02:22] - INFO: Epoch: 14, Batch[10000/25000], Train loss :0.689, Train acc: 1.000
+[2024-04-25 07:06:24] - INFO: Epoch: 14, Batch[15000/25000], Train loss :0.686, Train acc: 1.000
+[2024-04-25 07:10:25] - INFO: Epoch: 14, Batch[20000/25000], Train loss :0.658, Train acc: 1.000
+[2024-04-25 07:14:28] - INFO: Epoch: 14, Train loss: 0.694, Epoch time = 1204.382s
+[2024-04-25 07:17:29] - INFO: Accuracy on val 0.500
+[2024-04-25 07:17:29] - INFO: Epoch: 15, Batch[0/25000], Train loss :0.731, Train acc: 0.000
+[2024-04-25 07:21:24] - INFO: Epoch: 15, Batch[5000/25000], Train loss :0.699, Train acc: 0.000
+[2024-04-25 07:25:25] - INFO: Epoch: 15, Batch[10000/25000], Train loss :0.714, Train acc: 0.000
+[2024-04-25 07:29:26] - INFO: Epoch: 15, Batch[15000/25000], Train loss :0.713, Train acc: 0.000
+[2024-04-25 07:33:22] - INFO: Epoch: 15, Batch[20000/25000], Train loss :0.689, Train acc: 1.000
+[2024-04-25 07:37:18] - INFO: Epoch: 15, Train loss: 0.694, Epoch time = 1188.848s
+[2024-04-25 07:40:21] - INFO: Accuracy on val 0.500
+[2024-04-25 07:40:21] - INFO: Epoch: 16, Batch[0/25000], Train loss :0.699, Train acc: 0.000
+[2024-04-25 07:44:20] - INFO: Epoch: 16, Batch[5000/25000], Train loss :0.656, Train acc: 1.000
+[2024-04-25 07:48:21] - INFO: Epoch: 16, Batch[10000/25000], Train loss :0.598, Train acc: 1.000
+[2024-04-25 07:52:22] - INFO: Epoch: 16, Batch[15000/25000], Train loss :0.735, Train acc: 0.000
+[2024-04-25 07:56:24] - INFO: Epoch: 16, Batch[20000/25000], Train loss :0.689, Train acc: 1.000
+[2024-04-25 08:00:25] - INFO: Epoch: 16, Train loss: 0.694, Epoch time = 1204.073s
+[2024-04-25 08:03:27] - INFO: Accuracy on val 0.500
+[2024-04-25 08:03:27] - INFO: Epoch: 17, Batch[0/25000], Train loss :0.692, Train acc: 1.000
+[2024-04-25 08:07:25] - INFO: Epoch: 17, Batch[5000/25000], Train loss :0.686, Train acc: 1.000
+[2024-04-25 08:11:24] - INFO: Epoch: 17, Batch[10000/25000], Train loss :0.747, Train acc: 0.000
+[2024-04-25 08:15:22] - INFO: Epoch: 17, Batch[15000/25000], Train loss :0.685, Train acc: 1.000
+[2024-04-25 08:19:21] - INFO: Epoch: 17, Batch[20000/25000], Train loss :0.717, Train acc: 0.000
+[2024-04-25 08:23:20] - INFO: Epoch: 17, Train loss: 0.694, Epoch time = 1193.420s
+[2024-04-25 08:26:22] - INFO: Accuracy on val 0.500
+[2024-04-25 08:26:22] - INFO: Epoch: 18, Batch[0/25000], Train loss :0.688, Train acc: 1.000
+[2024-04-25 08:30:21] - INFO: Epoch: 18, Batch[5000/25000], Train loss :0.639, Train acc: 1.000
+[2024-04-25 08:34:19] - INFO: Epoch: 18, Batch[10000/25000], Train loss :0.691, Train acc: 1.000
+[2024-04-25 08:38:17] - INFO: Epoch: 18, Batch[15000/25000], Train loss :0.793, Train acc: 0.000
+[2024-04-25 08:42:44] - INFO: Epoch: 18, Batch[20000/25000], Train loss :0.854, Train acc: 0.000
+[2024-04-25 08:46:53] - INFO: Epoch: 18, Train loss: 0.694, Epoch time = 1230.869s
+[2024-04-25 08:50:53] - INFO: Accuracy on val 0.500
+[2024-04-25 08:50:53] - INFO: Epoch: 19, Batch[0/25000], Train loss :0.628, Train acc: 1.000
+[2024-04-25 08:56:58] - INFO: Epoch: 19, Batch[5000/25000], Train loss :0.661, Train acc: 1.000
+[2024-04-25 09:01:14] - INFO: Epoch: 19, Batch[10000/25000], Train loss :0.708, Train acc: 0.000
+[2024-04-25 09:05:11] - INFO: Epoch: 19, Batch[15000/25000], Train loss :0.669, Train acc: 1.000
+[2024-04-25 09:09:09] - INFO: Epoch: 19, Batch[20000/25000], Train loss :0.714, Train acc: 0.000
+[2024-04-25 09:13:28] - INFO: Epoch: 19, Train loss: 0.694, Epoch time = 1355.805s
+[2024-04-25 09:17:30] - INFO: Accuracy on val 0.500
+[2024-04-25 09:21:17] - INFO: ## 已有模型存储路径: /home/zhuzukun/LMsEvaluation/cache/model.pt
+[2024-04-25 09:21:17] - INFO: ## 成功载入已有模型，进行预测......
+[2024-04-25 09:25:53] - INFO: Acc on test:0.500
+[2024-04-25 09:25:53] - INFO: 
++----------+---------+
+| Results  |         |
++----------+---------+
+| Accuracy | 50.000% |
++----------+---------+
+[2024-04-25 09:25:53] - INFO: ==================================================
+[2024-04-25 09:25:53] - INFO: 模型正常训练结束
+[2024-04-25 09:25:53] - INFO: ==================================================
+[2024-04-25 09:25:53] - INFO: ==================================================
+[2024-04-25 09:25:53] - INFO: 攻击模块配置检查
+[2024-04-25 09:25:53] - INFO: Checking the config of AdvAttack.
+[2024-04-25 09:25:53] - INFO: AdvAttack 攻击开始
+[2024-04-25 09:26:02] - INFO: Using /tmp/tfhub_modules to cache modules.
+[2024-04-25 09:26:04] - INFO: Fingerprint not found. Saved model loading will continue.
+[2024-04-25 09:26:04] - INFO: path_and_singleprint metric could not be logged. Saved model loading will continue.
+[2024-04-25 09:38:39] - INFO: 
++-------------------------------+--------+
+| Attack Results                |        |
++-------------------------------+--------+
+| Number of successful attacks: | 13     |
+| Number of failed attacks:     | 7      |
+| Number of skipped attacks:    | 0      |
+| Original accuracy:            | 100.0% |
+| Accuracy under attack:        | 35.0%  |
+| Attack success rate:          | 65.0%  |
++-------------------------------+--------+
+[2024-04-25 09:38:39] - INFO: AdvAttack攻击结束
+[2024-04-25 09:38:39] - INFO: ==================================================
+[2024-04-25 09:38:39] - INFO: ==================================================
++-------------------------------+---------+
+| RLMI Attack Results           |         |
++-------------------------------+---------+
+| Aver ASR During Attack:       | 100.00% |
+| Aver WER During Attack:       | 0.79411 |
+| Aver ASR During Inference:    | 100.00% |
+| Aver WER During Inference:    | 0.71951 |
++-------------------------------+---------+
+
+[2025-06-22 07:43:08] - INFO: ModelStealingAttack攻击开始
+[2025-06-22 07:43:14] - INFO: original thief_data len: 3706197
+[2025-06-22 07:43:14] - INFO: generating query and geting labels with api......
+[2025-06-22 07:43:18] - INFO: sample finish.
+[2025-06-22 07:43:18] - INFO: 0 label count: 32
+[2025-06-22 07:43:18] - INFO: 1 label count: 288
+[2025-06-22 07:43:18] - INFO: bert_base_uncased
+[2025-06-22 07:43:18] - INFO: CUDA
+[2025-06-22 07:43:19] - INFO: 0 label count: 8
+[2025-06-22 07:43:19] - INFO: 1 label count: 87
+[2025-06-22 07:43:20] - INFO: training steal models
+[2025-06-22 07:43:20] - INFO: active learning begin...
+[2025-06-22 07:43:20] - INFO: CUDA
+[2025-06-22 07:43:20] - INFO: 0 label count: 7
+[2025-06-22 07:43:20] - INFO: 1 label count: 78
+[2025-06-22 07:43:20] - INFO: -----------------------it: 0------------------------
+[2025-06-22 07:43:21] - INFO: Epoch [1/10],  train_loss: 0.4808, train_acc: 0.8625, vali_acc: 0.9000
+[2025-06-22 07:43:22] - INFO: epoch 1 train done
+[2025-06-22 07:43:22] - INFO: Epoch [2/10],  train_loss: 0.3446, train_acc: 0.9042, vali_acc: 0.9000
+[2025-06-22 07:43:22] - INFO: epoch 2 train done
+[2025-06-22 07:43:23] - INFO: Epoch [3/10],  train_loss: 0.2738, train_acc: 0.9271, vali_acc: 0.9000
+[2025-06-22 07:43:23] - INFO: epoch 3 train done
+[2025-06-22 07:43:24] - INFO: Epoch [4/10],  train_loss: 0.2602, train_acc: 0.9271, vali_acc: 0.9000
+[2025-06-22 07:43:24] - INFO: epoch 4 train done
+[2025-06-22 07:43:24] - INFO: Epoch [5/10],  train_loss: 0.2679, train_acc: 0.9042, vali_acc: 0.9000
+[2025-06-22 07:43:24] - INFO: epoch 5 train done
+[2025-06-22 07:43:25] - INFO: Epoch [6/10],  train_loss: 0.2134, train_acc: 0.9271, vali_acc: 0.9000
+[2025-06-22 07:43:25] - INFO: epoch 6 train done
+[2025-06-22 07:43:26] - INFO: Epoch [7/10],  train_loss: 0.2391, train_acc: 0.9042, vali_acc: 0.9000
+[2025-06-22 07:43:26] - INFO: epoch 7 train done
+[2025-06-22 07:43:27] - INFO: Epoch [8/10],  train_loss: 0.2555, train_acc: 0.8813, vali_acc: 0.9000
+[2025-06-22 07:43:27] - INFO: epoch 8 train done
+[2025-06-22 07:43:27] - INFO: Epoch [9/10],  train_loss: 0.1756, train_acc: 0.9271, vali_acc: 0.9000
+[2025-06-22 07:43:27] - INFO: epoch 9 train done
+[2025-06-22 07:43:28] - INFO: Epoch [10/10],  train_loss: 0.1456, train_acc: 0.9271, vali_acc: 0.9000
+[2025-06-22 07:43:28] - INFO: epoch 10 train done
+[2025-06-22 07:43:28] - INFO: clean the sentence  existed in train set from thief data...
+[2025-06-22 07:43:33] - INFO: clean finish.
+[2025-06-22 07:43:33] - INFO: ---------------------------------
+[2025-06-22 07:43:34] - INFO: preparing the next iteration data...
+[2025-06-22 07:43:34] - INFO: None begin...
+[2025-06-22 07:43:34] - INFO: oversample after
+[2025-06-22 07:43:34] - INFO: 0 label count: 0
+[2025-06-22 07:43:34] - INFO: 1 label count: 0
+[2025-06-22 07:43:34] - INFO: --------------------------------------------------------------
+[2025-06-22 07:43:34] - INFO:  
+[2025-06-22 07:43:34] - INFO: CUDA
+[2025-06-22 07:43:34] - INFO: testing steal models on original dataset...
+[2025-06-22 07:48:10] - INFO: seed: 31
+[2025-06-22 07:48:10] - INFO: Evaluation Result on IMDB: victim acc 0.8862, steal acc 0.5020, agreement 0.5284
+[2025-06-22 07:48:10] - INFO: ModelStealingAttack攻击结束
+[2025-06-22 07:48:10] - INFO: ==================================================
+
+[2024—10—26 21：30：13] — INFO： 攻击模块配置检查
+[2024-10-26 21:30:13] - INFO: Checking the config of FET.
+[2024-10-26 21:30:13] - INFO: FET 攻击开始
+[2024-10-26 21:30:13] - INFO: Namespace(seed=42, dataset='cola', model='tinybert', batch_size=2, n_attacks=1, distance)
+[2024-10-26 21:30:15] - INFO: -----------------------------------------------------------------------------------------
+[2024-10-26 21:30:15] - INFO: Attack No.1:
+[2024-10-26 21:30:18] - INFO: Reference = ['[CLS] i acknowledged that my father, he was tight as an owL. [SEP]', [CLS]]
+[2024-10-26 21:31:49] - INFO: Prediction = ['[CLS] tight for my i to, as acknowledged mistake owl father father was [SE]]
+[2024-10-26 21:31:49] - INFO: Generations = 3
+[2024-10-26 21:31:49] - INFO: Using default tokenizer.
+[2024-10-26 21:31:49] - INFO: Rouge scores: f'rouge1': 0.7275132275132276, 'rouge2': 0.0, 'rougeL': 0.4365079365079365,
+[2024-10-26 21:31:49] - INFO: Word recovery rate: 1.0
+[2024-10-26 21:31:49] - INFO: Edit distance: 85
+[2024-10-26 21:31:49] - INFO: If full recovery: False
+[2024-10-26 21:31:49] - INFO: Using default tokenizer.
+[2024-10-26 21:31:49] - INFO: Aggregate rouge scores: f'rouge1': 0.7275132275132276, 'rouge2': 0.0, 'rougeL': 0.4365079
+[2024-10-26 21:31:49] - INFO: Full recovery rate: 0.0
+[2024-10-26 21:31:49] - INFO: Average word recovery rate: 1.0
+[2024-10-26 21:31:49] - INFO: Average edit distance: 85.0
+[2024-10-26 21:31:49] - INFO: FET攻击结束
+
+[2025-01-17 08:30:27] - INFO: ==================================================
+[2025-01-17 08:30:27] - INFO: ����ģ�����ü��
+[2025-01-17 08:30:27] - INFO: Checking the config of BackDoorAttack.
+[2025-01-17 08:30:27] - INFO: BackDoorAttack 攻击开始
+[2025-01-17 08:31:08] - INFO: ***** Training *****
+[2025-01-17 08:31:08] - INFO:   Num Epochs = 1
+[2025-01-17 08:31:08] - INFO:   Instantaneous batch size per GPU = 16
+[2025-01-17 08:31:08] - INFO:   Gradient Accumulation steps = 1
+[2025-01-17 08:31:08] - INFO:   Total optimization steps = 433
+[2025-01-17 08:38:30] - INFO: Epoch: 1, avg loss: 0.564542586237674
+[2025-01-17 08:38:30] - INFO: ***** Running evaluation on dev-clean *****
+[2025-01-17 08:38:40] - INFO:   Num examples = 872
+[2025-01-17 08:38:40] - INFO:   accuracy on dev-clean: 0.8692660550458715
+[2025-01-17 08:38:40] - INFO: ***** Running evaluation on dev-poison *****
+[2025-01-17 08:38:44] - INFO:   Num examples = 444
+[2025-01-17 08:38:44] - INFO:   accuracy on dev-poison: 0.24324324324324326
+[2025-01-17 08:38:45] - INFO: Training finished.
+[2025-01-17 08:38:46] - INFO: sst-2 dataset loaded, train: 6920, dev: 872, test: 1821
+[2025-01-17 08:38:46] - INFO: ***** Running evaluation on test-clean *****
+[2025-01-17 08:39:05] - INFO:   Num examples = 1821
+[2025-01-17 08:39:05] - INFO:   accuracy on test-clean: 0.8830313014827018
+[2025-01-17 08:39:05] - INFO: ***** Running evaluation on test-poison *****
+[2025-01-17 08:39:15] - INFO:   Num examples = 909
+[2025-01-17 08:39:15] - INFO:   accuracy on test-poison: 0.27722772277227725
+[2025-01-17 08:39:15] - INFO: 
++-------------------------------+---------+
+| BackDoorAttack Attack Results |         |
++-------------------------------+---------+
+| Poison Dataset:               | sst-2   |
+| Poisoner:                     | badnets |
+| Test Clean Accuracy:          | 0.883%  |
+| Test Poison Accuracy:         | 0.277%  |
+| PPL:                          | nan     |
+| USE:                          | nan     |
+| GRAMMAR:                      | nan     |
++-------------------------------+---------+
+[2025-01-17 08:39:15] - INFO: BackDoorAttack��������
+[2025-01-17 08:39:15] - INFO: ==================================================
+
+[2024-04-24 20:56:49] - INFO: ==================================================
+[2024-04-24 20:56:49] - INFO: 攻击模块配置检查
+[2024-04-24 20:56:49] - INFO: Checking the config of PoisoningAttack
+[2024-04-24 20:56:49] - INFO: 生在生成投毒数据
+[2024-04-24 20:56:49] - INFO: 原始数据集路径: /home/zhuzukun/LMsEvaluation/datasets/imdb/train.txt
+[2024-04-24 20:56:49] - INFO: 投毒数据集路径: /home/zhuzukun/LMsEvaluation/datasets/imdb/poisoning_train.txt
+[2024-04-24 20:56:51] - INFO: 投毒数据生成完毕
+[2024-04-24 20:56:51] - INFO: PoisoningAttack 攻击开始
+[2024-04-24 20:56:51] - INFO:  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[2024-04-24 20:56:51] - INFO: 缓存文件 /home/zhuzukun/LMsEvaluation/datasets/imdb/cache_test_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[2024-04-24 20:56:53] - INFO: 数据预处理一共耗时1.801s
+[2024-04-24 20:56:53] - INFO:  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[2024-04-24 20:56:53] - INFO: 缓存文件 /home/zhuzukun/LMsEvaluation/datasets/imdb/cache_poisoning_train_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[2024-04-24 20:56:55] - INFO: 数据预处理一共耗时1.836s
+[2024-04-24 20:56:55] - INFO:  ## 索引预处理缓存文件的参数为：['max_sen_len']
+[2024-04-24 20:56:55] - INFO: 缓存文件 /home/zhuzukun/LMsEvaluation/datasets/imdb/cache_val_max_sen_lenNone.pt 存在，直接载入缓存文件！
+[2024-04-24 20:56:57] - INFO: 数据预处理一共耗时1.883s
+[2024-04-24 20:56:57] - INFO: Epoch: 0, Batch[0/25000], Train loss :0.814, Train acc: 0.000
+[2024-04-24 20:57:42] - INFO: Epoch: 0, Batch[1000/25000], Train loss :1.004, Train acc: 0.000
+[2024-04-24 20:58:28] - INFO: Epoch: 0, Batch[2000/25000], Train loss :0.631, Train acc: 1.000
+[2024-04-24 20:59:13] - INFO: Epoch: 0, Batch[3000/25000], Train loss :0.800, Train acc: 0.000
+[2024-04-24 20:59:59] - INFO: Epoch: 0, Batch[4000/25000], Train loss :0.648, Train acc: 1.000
+[2024-04-24 21:00:46] - INFO: Epoch: 0, Batch[5000/25000], Train loss :0.713, Train acc: 0.000
+[2024-04-24 21:01:32] - INFO: Epoch: 0, Batch[6000/25000], Train loss :0.729, Train acc: 0.000
+[2024-04-24 21:02:17] - INFO: Epoch: 0, Batch[7000/25000], Train loss :0.774, Train acc: 0.000
+[2024-04-24 21:03:03] - INFO: Epoch: 0, Batch[8000/25000], Train loss :0.696, Train acc: 0.000
+[2024-04-24 21:03:48] - INFO: Epoch: 0, Batch[9000/25000], Train loss :0.810, Train acc: 0.000
+[2024-04-24 21:04:33] - INFO: Epoch: 0, Batch[10000/25000], Train loss :0.758, Train acc: 0.000
+[2024-04-24 21:05:18] - INFO: Epoch: 0, Batch[11000/25000], Train loss :0.592, Train acc: 1.000
+[2024-04-24 21:06:04] - INFO: Epoch: 0, Batch[12000/25000], Train loss :0.721, Train acc: 0.000
+[2024-04-24 21:06:49] - INFO: Epoch: 0, Batch[13000/25000], Train loss :0.571, Train acc: 1.000
+[2024-04-24 21:07:34] - INFO: Epoch: 0, Batch[14000/25000], Train loss :0.596, Train acc: 1.000
+[2024-04-24 21:08:18] - INFO: Epoch: 0, Batch[15000/25000], Train loss :0.657, Train acc: 1.000
+[2024-04-24 21:09:03] - INFO: Epoch: 0, Batch[16000/25000], Train loss :0.730, Train acc: 0.000
+[2024-04-24 21:09:48] - INFO: Epoch: 0, Batch[17000/25000], Train loss :0.778, Train acc: 0.000
+[2024-04-24 21:10:33] - INFO: Epoch: 0, Batch[18000/25000], Train loss :0.594, Train acc: 1.000
+[2024-04-24 21:11:18] - INFO: Epoch: 0, Batch[19000/25000], Train loss :0.716, Train acc: 0.000
+[2024-04-24 21:12:03] - INFO: Epoch: 0, Batch[20000/25000], Train loss :0.830, Train acc: 0.000
+[2024-04-24 21:12:49] - INFO: Epoch: 0, Batch[21000/25000], Train loss :0.693, Train acc: 1.000
+[2024-04-24 21:13:34] - INFO: Epoch: 0, Batch[22000/25000], Train loss :0.583, Train acc: 1.000
+[2024-04-24 21:14:19] - INFO: Epoch: 0, Batch[23000/25000], Train loss :0.608, Train acc: 1.000
+[2024-04-24 21:15:04] - INFO: Epoch: 0, Batch[24000/25000], Train loss :0.697, Train acc: 0.000
+[2024-04-24 21:15:49] - INFO: Epoch: 0, Train loss: 0.696, Epoch time = 1132.678s
+[2024-04-24 21:18:50] - INFO: Accuracy on val 0.500
+[2024-04-24 21:18:50] - INFO: ## 进行已有模型的更新，更新模型路径为：/home/zhuzukun/LMsEvaluation/cache/poisoning_model.pt
+[2024-04-24 21:18:51] - INFO: Epoch: 1, Batch[0/25000], Train loss :0.773, Train acc: 0.000
+[2024-04-24 21:19:36] - INFO: Epoch: 1, Batch[1000/25000], Train loss :0.571, Train acc: 1.000
+[2024-04-24 21:20:22] - INFO: Epoch: 1, Batch[2000/25000], Train loss :0.658, Train acc: 1.000
+[2024-04-24 21:21:07] - INFO: Epoch: 1, Batch[3000/25000], Train loss :0.643, Train acc: 1.000
+[2024-04-24 21:21:53] - INFO: Epoch: 1, Batch[4000/25000], Train loss :0.729, Train acc: 0.000
+[2024-04-24 21:22:38] - INFO: Epoch: 1, Batch[5000/25000], Train loss :0.681, Train acc: 1.000
+[2024-04-24 21:23:24] - INFO: Epoch: 1, Batch[6000/25000], Train loss :0.707, Train acc: 0.000
+[2024-04-24 21:24:10] - INFO: Epoch: 1, Batch[7000/25000], Train loss :0.606, Train acc: 1.000
+[2024-04-24 21:24:55] - INFO: Epoch: 1, Batch[8000/25000], Train loss :0.572, Train acc: 1.000
+[2024-04-24 21:25:41] - INFO: Epoch: 1, Batch[9000/25000], Train loss :0.787, Train acc: 0.000
+[2024-04-24 21:26:27] - INFO: Epoch: 1, Batch[10000/25000], Train loss :0.647, Train acc: 1.000
+[2024-04-24 21:27:12] - INFO: Epoch: 1, Batch[11000/25000], Train loss :0.598, Train acc: 1.000
+[2024-04-24 21:27:58] - INFO: Epoch: 1, Batch[12000/25000], Train loss :0.711, Train acc: 0.000
+[2024-04-24 21:28:44] - INFO: Epoch: 1, Batch[13000/25000], Train loss :0.685, Train acc: 1.000
+[2024-04-24 21:29:29] - INFO: Epoch: 1, Batch[14000/25000], Train loss :0.735, Train acc: 0.000
+[2024-04-24 21:30:15] - INFO: Epoch: 1, Batch[15000/25000], Train loss :0.650, Train acc: 1.000
+[2024-04-24 21:31:00] - INFO: Epoch: 1, Batch[16000/25000], Train loss :0.691, Train acc: 1.000
+[2024-04-24 21:31:46] - INFO: Epoch: 1, Batch[17000/25000], Train loss :0.753, Train acc: 0.000
+[2024-04-24 21:32:31] - INFO: Epoch: 1, Batch[18000/25000], Train loss :0.867, Train acc: 0.000
+[2024-04-24 21:33:17] - INFO: Epoch: 1, Batch[19000/25000], Train loss :0.783, Train acc: 0.000
+[2024-04-24 21:34:02] - INFO: Epoch: 1, Batch[20000/25000], Train loss :0.545, Train acc: 1.000
+[2024-04-24 21:34:48] - INFO: Epoch: 1, Batch[21000/25000], Train loss :0.660, Train acc: 1.000
+[2024-04-24 21:35:35] - INFO: Epoch: 1, Batch[22000/25000], Train loss :0.643, Train acc: 1.000
+[2024-04-24 21:36:20] - INFO: Epoch: 1, Batch[23000/25000], Train loss :0.679, Train acc: 1.000
+[2024-04-24 21:37:07] - INFO: Epoch: 1, Batch[24000/25000], Train loss :0.712, Train acc: 0.000
+[2024-04-24 21:37:52] - INFO: Epoch: 1, Train loss: 0.696, Epoch time = 1141.597s
+[2024-04-24 21:40:52] - INFO: Accuracy on val 0.500
+[2024-04-24 21:40:52] - INFO: Epoch: 2, Batch[0/25000], Train loss :0.720, Train acc: 0.000
+[2024-04-24 21:41:40] - INFO: Epoch: 2, Batch[1000/25000], Train loss :0.670, Train acc: 1.000
+[2024-04-24 21:42:25] - INFO: Epoch: 2, Batch[2000/25000], Train loss :0.666, Train acc: 1.000
+[2024-04-24 21:43:12] - INFO: Epoch: 2, Batch[3000/25000], Train loss :0.783, Train acc: 0.000
+[2024-04-24 21:43:58] - INFO: Epoch: 2, Batch[4000/25000], Train loss :0.783, Train acc: 0.000
+[2024-04-24 21:44:43] - INFO: Epoch: 2, Batch[5000/25000], Train loss :0.659, Train acc: 1.000
+[2024-04-24 21:45:29] - INFO: Epoch: 2, Batch[6000/25000], Train loss :0.667, Train acc: 1.000
+[2024-04-24 21:46:14] - INFO: Epoch: 2, Batch[7000/25000], Train loss :0.667, Train acc: 1.000
+[2024-04-24 21:47:00] - INFO: Epoch: 2, Batch[8000/25000], Train loss :0.697, Train acc: 0.000
+[2024-04-24 21:47:45] - INFO: Epoch: 2, Batch[9000/25000], Train loss :0.732, Train acc: 0.000
+[2024-04-24 21:48:31] - INFO: Epoch: 2, Batch[10000/25000], Train loss :0.654, Train acc: 1.000
+[2024-04-24 21:49:16] - INFO: Epoch: 2, Batch[11000/25000], Train loss :0.662, Train acc: 1.000
+[2024-04-24 21:50:02] - INFO: Epoch: 2, Batch[12000/25000], Train loss :0.640, Train acc: 1.000
+[2024-04-24 21:50:47] - INFO: Epoch: 2, Batch[13000/25000], Train loss :0.608, Train acc: 1.000
+[2024-04-24 21:51:33] - INFO: Epoch: 2, Batch[14000/25000], Train loss :0.710, Train acc: 0.000
+[2024-04-24 21:52:19] - INFO: Epoch: 2, Batch[15000/25000], Train loss :0.628, Train acc: 1.000
+[2024-04-24 21:53:04] - INFO: Epoch: 2, Batch[16000/25000], Train loss :0.749, Train acc: 0.000
+[2024-04-24 21:53:50] - INFO: Epoch: 2, Batch[17000/25000], Train loss :0.831, Train acc: 0.000
+[2024-04-24 21:54:35] - INFO: Epoch: 2, Batch[18000/25000], Train loss :0.740, Train acc: 0.000
+[2024-04-24 21:55:21] - INFO: Epoch: 2, Batch[19000/25000], Train loss :0.661, Train acc: 1.000
+[2024-04-24 21:56:07] - INFO: Epoch: 2, Batch[20000/25000], Train loss :0.909, Train acc: 0.000
+[2024-04-24 21:56:52] - INFO: Epoch: 2, Batch[21000/25000], Train loss :0.787, Train acc: 0.000
+[2024-04-24 21:57:38] - INFO: Epoch: 2, Batch[22000/25000], Train loss :0.753, Train acc: 0.000
+[2024-04-24 21:58:23] - INFO: Epoch: 2, Batch[23000/25000], Train loss :0.684, Train acc: 1.000
+[2024-04-24 21:59:09] - INFO: Epoch: 2, Batch[24000/25000], Train loss :0.680, Train acc: 1.000
+[2024-04-24 21:59:54] - INFO: Epoch: 2, Train loss: 0.695, Epoch time = 1142.113s
+[2024-04-24 22:02:53] - INFO: Accuracy on val 0.500
+[2024-04-24 22:02:53] - INFO: Epoch: 3, Batch[0/25000], Train loss :0.712, Train acc: 0.000
+[2024-04-24 22:03:40] - INFO: Epoch: 3, Batch[1000/25000], Train loss :0.693, Train acc: 0.000
+[2024-04-24 22:04:26] - INFO: Epoch: 3, Batch[2000/25000], Train loss :0.737, Train acc: 0.000
+[2024-04-24 22:05:12] - INFO: Epoch: 3, Batch[3000/25000], Train loss :0.759, Train acc: 0.000
+[2024-04-24 22:05:58] - INFO: Epoch: 3, Batch[4000/25000], Train loss :0.645, Train acc: 1.000
+[2024-04-24 22:06:44] - INFO: Epoch: 3, Batch[5000/25000], Train loss :0.685, Train acc: 1.000
+[2024-04-24 22:07:30] - INFO: Epoch: 3, Batch[6000/25000], Train loss :0.818, Train acc: 0.000
+[2024-04-24 22:08:15] - INFO: Epoch: 3, Batch[7000/25000], Train loss :0.692, Train acc: 1.000
+[2024-04-24 22:09:01] - INFO: Epoch: 3, Batch[8000/25000], Train loss :0.658, Train acc: 1.000
+[2024-04-24 22:09:47] - INFO: Epoch: 3, Batch[9000/25000], Train loss :0.552, Train acc: 1.000
+[2024-04-24 22:10:32] - INFO: Epoch: 3, Batch[10000/25000], Train loss :0.720, Train acc: 0.000
+[2024-04-24 22:11:18] - INFO: Epoch: 3, Batch[11000/25000], Train loss :0.635, Train acc: 1.000
+[2024-04-24 22:12:03] - INFO: Epoch: 3, Batch[12000/25000], Train loss :0.709, Train acc: 0.000
+[2024-04-24 22:12:49] - INFO: Epoch: 3, Batch[13000/25000], Train loss :0.682, Train acc: 1.000
+[2024-04-24 22:13:35] - INFO: Epoch: 3, Batch[14000/25000], Train loss :0.587, Train acc: 1.000
+[2024-04-24 22:14:20] - INFO: Epoch: 3, Batch[15000/25000], Train loss :0.597, Train acc: 1.000
+[2024-04-24 22:15:06] - INFO: Epoch: 3, Batch[16000/25000], Train loss :0.857, Train acc: 0.000
+[2024-04-24 22:15:52] - INFO: Epoch: 3, Batch[17000/25000], Train loss :0.742, Train acc: 0.000
+[2024-04-24 22:16:38] - INFO: Epoch: 3, Batch[18000/25000], Train loss :0.698, Train acc: 0.000
+[2024-04-24 22:17:24] - INFO: Epoch: 3, Batch[19000/25000], Train loss :0.662, Train acc: 1.000
+[2024-04-24 22:18:09] - INFO: Epoch: 3, Batch[20000/25000], Train loss :0.724, Train acc: 0.000
+[2024-04-24 22:18:56] - INFO: Epoch: 3, Batch[21000/25000], Train loss :0.777, Train acc: 0.000
+[2024-04-24 22:19:41] - INFO: Epoch: 3, Batch[22000/25000], Train loss :0.760, Train acc: 0.000
+[2024-04-24 22:20:27] - INFO: Epoch: 3, Batch[23000/25000], Train loss :0.693, Train acc: 0.000
+[2024-04-24 22:21:13] - INFO: Epoch: 3, Batch[24000/25000], Train loss :0.748, Train acc: 0.000
+[2024-04-24 22:21:59] - INFO: Epoch: 3, Train loss: 0.695, Epoch time = 1145.368s
+[2024-04-24 22:24:58] - INFO: Accuracy on val 0.500
+[2024-04-24 22:24:58] - INFO: Epoch: 4, Batch[0/25000], Train loss :0.675, Train acc: 1.000
+[2024-04-24 22:25:44] - INFO: Epoch: 4, Batch[1000/25000], Train loss :0.631, Train acc: 1.000
+[2024-04-24 22:26:30] - INFO: Epoch: 4, Batch[2000/25000], Train loss :0.770, Train acc: 0.000
+[2024-04-24 22:27:17] - INFO: Epoch: 4, Batch[3000/25000], Train loss :0.698, Train acc: 0.000
+[2024-04-24 22:28:02] - INFO: Epoch: 4, Batch[4000/25000], Train loss :0.650, Train acc: 1.000
+[2024-04-24 22:28:48] - INFO: Epoch: 4, Batch[5000/25000], Train loss :0.617, Train acc: 1.000
+[2024-04-24 22:29:35] - INFO: Epoch: 4, Batch[6000/25000], Train loss :0.532, Train acc: 1.000
+[2024-04-24 22:30:21] - INFO: Epoch: 4, Batch[7000/25000], Train loss :0.699, Train acc: 0.000
+[2024-04-24 22:31:08] - INFO: Epoch: 4, Batch[8000/25000], Train loss :0.722, Train acc: 0.000
+[2024-04-24 22:31:54] - INFO: Epoch: 4, Batch[9000/25000], Train loss :0.645, Train acc: 1.000
+[2024-04-24 22:32:40] - INFO: Epoch: 4, Batch[10000/25000], Train loss :0.758, Train acc: 0.000
+[2024-04-24 22:33:28] - INFO: Epoch: 4, Batch[11000/25000], Train loss :0.671, Train acc: 1.000
+[2024-04-24 22:34:14] - INFO: Epoch: 4, Batch[12000/25000], Train loss :0.671, Train acc: 1.000
+[2024-04-24 22:34:59] - INFO: Epoch: 4, Batch[13000/25000], Train loss :0.643, Train acc: 1.000
+[2024-04-24 22:35:45] - INFO: Epoch: 4, Batch[14000/25000], Train loss :0.767, Train acc: 0.000
+[2024-04-24 22:36:31] - INFO: Epoch: 4, Batch[15000/25000], Train loss :0.668, Train acc: 1.000
+[2024-04-24 22:37:17] - INFO: Epoch: 4, Batch[16000/25000], Train loss :0.720, Train acc: 0.000
+[2024-04-24 22:38:02] - INFO: Epoch: 4, Batch[17000/25000], Train loss :0.660, Train acc: 1.000
+[2024-04-24 22:38:48] - INFO: Epoch: 4, Batch[18000/25000], Train loss :0.738, Train acc: 0.000
+[2024-04-24 22:39:34] - INFO: Epoch: 4, Batch[19000/25000], Train loss :0.665, Train acc: 1.000
+[2024-04-24 22:40:20] - INFO: Epoch: 4, Batch[20000/25000], Train loss :0.737, Train acc: 0.000
+[2024-04-24 22:41:06] - INFO: Epoch: 4, Batch[21000/25000], Train loss :0.720, Train acc: 0.000
+[2024-04-24 22:41:51] - INFO: Epoch: 4, Batch[22000/25000], Train loss :0.687, Train acc: 1.000
+[2024-04-24 22:42:37] - INFO: Epoch: 4, Batch[23000/25000], Train loss :0.732, Train acc: 0.000
+[2024-04-24 22:43:22] - INFO: Epoch: 4, Batch[24000/25000], Train loss :0.654, Train acc: 1.000
+[2024-04-24 22:44:08] - INFO: Epoch: 4, Train loss: 0.695, Epoch time = 1150.377s
+[2024-04-24 22:47:07] - INFO: Accuracy on val 0.500
+[2024-04-24 22:47:07] - INFO: Epoch: 5, Batch[0/25000], Train loss :0.655, Train acc: 1.000
+[2024-04-24 22:47:59] - INFO: Epoch: 5, Batch[1000/25000], Train loss :0.717, Train acc: 0.000
+[2024-04-24 22:48:54] - INFO: Epoch: 5, Batch[2000/25000], Train loss :0.630, Train acc: 1.000
+[2024-04-24 22:49:48] - INFO: Epoch: 5, Batch[3000/25000], Train loss :0.716, Train acc: 0.000
+[2024-04-24 22:50:34] - INFO: Epoch: 5, Batch[4000/25000], Train loss :0.653, Train acc: 1.000
+[2024-04-24 22:51:20] - INFO: Epoch: 5, Batch[5000/25000], Train loss :0.670, Train acc: 1.000
+[2024-04-24 22:52:06] - INFO: Epoch: 5, Batch[6000/25000], Train loss :0.625, Train acc: 1.000
+[2024-04-24 22:52:52] - INFO: Epoch: 5, Batch[7000/25000], Train loss :0.680, Train acc: 1.000
+[2024-04-24 22:53:38] - INFO: Epoch: 5, Batch[8000/25000], Train loss :0.684, Train acc: 1.000
+[2024-04-24 22:54:24] - INFO: Epoch: 5, Batch[9000/25000], Train loss :0.708, Train acc: 0.000
+[2024-04-24 22:55:11] - INFO: Epoch: 5, Batch[10000/25000], Train loss :0.662, Train acc: 1.000
+[2024-04-24 22:55:57] - INFO: Epoch: 5, Batch[11000/25000], Train loss :0.697, Train acc: 0.000
+[2024-04-24 22:56:43] - INFO: Epoch: 5, Batch[12000/25000], Train loss :0.679, Train acc: 1.000
+[2024-04-24 22:57:29] - INFO: Epoch: 5, Batch[13000/25000], Train loss :0.714, Train acc: 0.000
+[2024-04-24 22:58:15] - INFO: Epoch: 5, Batch[14000/25000], Train loss :0.770, Train acc: 0.000
+[2024-04-24 22:59:01] - INFO: Epoch: 5, Batch[15000/25000], Train loss :0.658, Train acc: 1.000
+[2024-04-24 22:59:47] - INFO: Epoch: 5, Batch[16000/25000], Train loss :0.752, Train acc: 0.000
+[2024-04-24 23:00:33] - INFO: Epoch: 5, Batch[17000/25000], Train loss :0.717, Train acc: 0.000
+[2024-04-24 23:01:19] - INFO: Epoch: 5, Batch[18000/25000], Train loss :0.634, Train acc: 1.000
+[2024-04-24 23:02:05] - INFO: Epoch: 5, Batch[19000/25000], Train loss :0.724, Train acc: 0.000
+[2024-04-24 23:02:51] - INFO: Epoch: 5, Batch[20000/25000], Train loss :0.675, Train acc: 1.000
+[2024-04-24 23:03:36] - INFO: Epoch: 5, Batch[21000/25000], Train loss :0.695, Train acc: 0.000
+[2024-04-24 23:04:22] - INFO: Epoch: 5, Batch[22000/25000], Train loss :0.701, Train acc: 0.000
+[2024-04-24 23:05:07] - INFO: Epoch: 5, Batch[23000/25000], Train loss :0.685, Train acc: 1.000
+[2024-04-24 23:05:53] - INFO: Epoch: 5, Batch[24000/25000], Train loss :0.673, Train acc: 1.000
+[2024-04-24 23:06:39] - INFO: Epoch: 5, Train loss: 0.695, Epoch time = 1171.399s
+[2024-04-24 23:09:37] - INFO: Accuracy on val 0.500
+[2024-04-24 23:09:37] - INFO: Epoch: 6, Batch[0/25000], Train loss :0.685, Train acc: 1.000
+[2024-04-24 23:10:22] - INFO: Epoch: 6, Batch[1000/25000], Train loss :0.692, Train acc: 1.000
+[2024-04-24 23:11:08] - INFO: Epoch: 6, Batch[2000/25000], Train loss :0.707, Train acc: 0.000
+[2024-04-24 23:11:53] - INFO: Epoch: 6, Batch[3000/25000], Train loss :0.714, Train acc: 0.000
+[2024-04-24 23:12:37] - INFO: Epoch: 6, Batch[4000/25000], Train loss :0.724, Train acc: 0.000
+[2024-04-24 23:13:22] - INFO: Epoch: 6, Batch[5000/25000], Train loss :0.732, Train acc: 0.000
+[2024-04-24 23:14:07] - INFO: Epoch: 6, Batch[6000/25000], Train loss :0.672, Train acc: 1.000
+[2024-04-24 23:14:53] - INFO: Epoch: 6, Batch[7000/25000], Train loss :0.675, Train acc: 1.000
+[2024-04-24 23:15:38] - INFO: Epoch: 6, Batch[8000/25000], Train loss :0.684, Train acc: 1.000
+[2024-04-24 23:16:23] - INFO: Epoch: 6, Batch[9000/25000], Train loss :0.772, Train acc: 0.000
+[2024-04-24 23:17:08] - INFO: Epoch: 6, Batch[10000/25000], Train loss :0.823, Train acc: 0.000
+[2024-04-24 23:17:53] - INFO: Epoch: 6, Batch[11000/25000], Train loss :0.718, Train acc: 0.000
+[2024-04-24 23:18:38] - INFO: Epoch: 6, Batch[12000/25000], Train loss :0.729, Train acc: 0.000
+[2024-04-24 23:19:23] - INFO: Epoch: 6, Batch[13000/25000], Train loss :0.692, Train acc: 1.000
+[2024-04-24 23:20:08] - INFO: Epoch: 6, Batch[14000/25000], Train loss :0.694, Train acc: 0.000
+[2024-04-24 23:20:53] - INFO: Epoch: 6, Batch[15000/25000], Train loss :0.684, Train acc: 1.000
+[2024-04-24 23:21:38] - INFO: Epoch: 6, Batch[16000/25000], Train loss :0.692, Train acc: 1.000
+[2024-04-24 23:22:23] - INFO: Epoch: 6, Batch[17000/25000], Train loss :0.656, Train acc: 1.000
+[2024-04-24 23:23:08] - INFO: Epoch: 6, Batch[18000/25000], Train loss :0.616, Train acc: 1.000
+[2024-04-24 23:23:52] - INFO: Epoch: 6, Batch[19000/25000], Train loss :0.677, Train acc: 1.000
+[2024-04-24 23:24:38] - INFO: Epoch: 6, Batch[20000/25000], Train loss :0.694, Train acc: 0.000
+[2024-04-24 23:25:22] - INFO: Epoch: 6, Batch[21000/25000], Train loss :0.682, Train acc: 1.000
+[2024-04-24 23:26:07] - INFO: Epoch: 6, Batch[22000/25000], Train loss :0.717, Train acc: 0.000
+[2024-04-24 23:26:52] - INFO: Epoch: 6, Batch[23000/25000], Train loss :0.646, Train acc: 1.000
+[2024-04-24 23:27:37] - INFO: Epoch: 6, Batch[24000/25000], Train loss :0.717, Train acc: 0.000
+[2024-04-24 23:28:22] - INFO: Epoch: 6, Train loss: 0.694, Epoch time = 1124.951s
+[2024-04-24 23:31:22] - INFO: Accuracy on val 0.500
+[2024-04-24 23:31:22] - INFO: Epoch: 7, Batch[0/25000], Train loss :0.728, Train acc: 0.000
+[2024-04-24 23:32:03] - INFO: Epoch: 7, Batch[1000/25000], Train loss :0.692, Train acc: 1.000
+[2024-04-24 23:32:44] - INFO: Epoch: 7, Batch[2000/25000], Train loss :0.707, Train acc: 0.000
+[2024-04-24 23:33:25] - INFO: Epoch: 7, Batch[3000/25000], Train loss :0.693, Train acc: 1.000
+[2024-04-24 23:34:07] - INFO: Epoch: 7, Batch[4000/25000], Train loss :0.588, Train acc: 1.000
+[2024-04-24 23:34:48] - INFO: Epoch: 7, Batch[5000/25000], Train loss :0.699, Train acc: 0.000
+[2024-04-24 23:35:29] - INFO: Epoch: 7, Batch[6000/25000], Train loss :0.692, Train acc: 1.000
+[2024-04-24 23:36:10] - INFO: Epoch: 7, Batch[7000/25000], Train loss :0.658, Train acc: 1.000
+[2024-04-24 23:36:52] - INFO: Epoch: 7, Batch[8000/25000], Train loss :0.685, Train acc: 1.000
+[2024-04-24 23:37:35] - INFO: Epoch: 7, Batch[9000/25000], Train loss :0.771, Train acc: 0.000
+[2024-04-24 23:38:16] - INFO: Epoch: 7, Batch[10000/25000], Train loss :0.656, Train acc: 1.000
+[2024-04-24 23:38:57] - INFO: Epoch: 7, Batch[11000/25000], Train loss :0.617, Train acc: 1.000
+[2024-04-24 23:39:38] - INFO: Epoch: 7, Batch[12000/25000], Train loss :0.879, Train acc: 0.000
+[2024-04-24 23:40:19] - INFO: Epoch: 7, Batch[13000/25000], Train loss :0.690, Train acc: 1.000
+[2024-04-24 23:40:59] - INFO: Epoch: 7, Batch[14000/25000], Train loss :0.689, Train acc: 1.000
+[2024-04-24 23:41:40] - INFO: Epoch: 7, Batch[15000/25000], Train loss :0.633, Train acc: 1.000
+[2024-04-24 23:42:21] - INFO: Epoch: 7, Batch[16000/25000], Train loss :0.664, Train acc: 1.000
+[2024-04-24 23:43:02] - INFO: Epoch: 7, Batch[17000/25000], Train loss :0.652, Train acc: 1.000
+[2024-04-24 23:43:43] - INFO: Epoch: 7, Batch[18000/25000], Train loss :0.720, Train acc: 0.000
+[2024-04-24 23:44:24] - INFO: Epoch: 7, Batch[19000/25000], Train loss :0.690, Train acc: 1.000
+[2024-04-24 23:45:06] - INFO: Epoch: 7, Batch[20000/25000], Train loss :0.726, Train acc: 0.000
+[2024-04-24 23:45:47] - INFO: Epoch: 7, Batch[21000/25000], Train loss :0.705, Train acc: 0.000
+[2024-04-24 23:46:28] - INFO: Epoch: 7, Batch[22000/25000], Train loss :0.675, Train acc: 1.000
+[2024-04-24 23:47:09] - INFO: Epoch: 7, Batch[23000/25000], Train loss :0.680, Train acc: 1.000
+[2024-04-24 23:47:50] - INFO: Epoch: 7, Batch[24000/25000], Train loss :0.674, Train acc: 1.000
+[2024-04-24 23:48:31] - INFO: Epoch: 7, Train loss: 0.695, Epoch time = 1028.955s
+[2024-04-24 23:51:30] - INFO: Accuracy on val 0.500
+[2024-04-24 23:51:30] - INFO: Epoch: 8, Batch[0/25000], Train loss :0.645, Train acc: 1.000
+[2024-04-24 23:52:16] - INFO: Epoch: 8, Batch[1000/25000], Train loss :0.862, Train acc: 0.000
+[2024-04-24 23:53:00] - INFO: Epoch: 8, Batch[2000/25000], Train loss :0.577, Train acc: 1.000
+[2024-04-24 23:53:45] - INFO: Epoch: 8, Batch[3000/25000], Train loss :0.689, Train acc: 1.000
+[2024-04-24 23:54:30] - INFO: Epoch: 8, Batch[4000/25000], Train loss :0.718, Train acc: 0.000
+[2024-04-24 23:55:15] - INFO: Epoch: 8, Batch[5000/25000], Train loss :0.656, Train acc: 1.000
+[2024-04-24 23:56:00] - INFO: Epoch: 8, Batch[6000/25000], Train loss :0.660, Train acc: 1.000
+[2024-04-24 23:56:44] - INFO: Epoch: 8, Batch[7000/25000], Train loss :0.712, Train acc: 0.000
+[2024-04-24 23:57:29] - INFO: Epoch: 8, Batch[8000/25000], Train loss :0.666, Train acc: 1.000
+[2024-04-24 23:58:14] - INFO: Epoch: 8, Batch[9000/25000], Train loss :0.691, Train acc: 1.000
+[2024-04-24 23:58:58] - INFO: Epoch: 8, Batch[10000/25000], Train loss :0.717, Train acc: 0.000
+[2024-04-24 23:59:43] - INFO: Epoch: 8, Batch[11000/25000], Train loss :0.711, Train acc: 0.000
+[2024-04-25 00:00:28] - INFO: Epoch: 8, Batch[12000/25000], Train loss :0.679, Train acc: 1.000
+[2024-04-25 00:01:13] - INFO: Epoch: 8, Batch[13000/25000], Train loss :0.708, Train acc: 0.000
+[2024-04-25 00:01:58] - INFO: Epoch: 8, Batch[14000/25000], Train loss :0.690, Train acc: 1.000
+[2024-04-25 00:02:42] - INFO: Epoch: 8, Batch[15000/25000], Train loss :0.683, Train acc: 1.000
+[2024-04-25 00:03:27] - INFO: Epoch: 8, Batch[16000/25000], Train loss :0.677, Train acc: 1.000
+[2024-04-25 00:04:12] - INFO: Epoch: 8, Batch[17000/25000], Train loss :0.723, Train acc: 0.000
+[2024-04-25 00:04:56] - INFO: Epoch: 8, Batch[18000/25000], Train loss :0.721, Train acc: 0.000
+[2024-04-25 00:05:41] - INFO: Epoch: 8, Batch[19000/25000], Train loss :0.668, Train acc: 1.000
+[2024-04-25 00:06:26] - INFO: Epoch: 8, Batch[20000/25000], Train loss :0.611, Train acc: 1.000
+[2024-04-25 00:07:11] - INFO: Epoch: 8, Batch[21000/25000], Train loss :0.741, Train acc: 0.000
+[2024-04-25 00:07:56] - INFO: Epoch: 8, Batch[22000/25000], Train loss :0.676, Train acc: 1.000
+[2024-04-25 00:08:41] - INFO: Epoch: 8, Batch[23000/25000], Train loss :0.720, Train acc: 0.000
+[2024-04-25 00:09:26] - INFO: Epoch: 8, Batch[24000/25000], Train loss :0.627, Train acc: 1.000
+[2024-04-25 00:10:11] - INFO: Epoch: 8, Train loss: 0.694, Epoch time = 1120.370s
+[2024-04-25 00:13:10] - INFO: Accuracy on val 0.500
+[2024-04-25 00:13:10] - INFO: Epoch: 9, Batch[0/25000], Train loss :0.712, Train acc: 0.000
+[2024-04-25 00:13:57] - INFO: Epoch: 9, Batch[1000/25000], Train loss :0.718, Train acc: 0.000
+[2024-04-25 00:14:42] - INFO: Epoch: 9, Batch[2000/25000], Train loss :0.709, Train acc: 0.000
+[2024-04-25 00:15:28] - INFO: Epoch: 9, Batch[3000/25000], Train loss :0.807, Train acc: 0.000
+[2024-04-25 00:16:14] - INFO: Epoch: 9, Batch[4000/25000], Train loss :0.745, Train acc: 0.000
+[2024-04-25 00:17:00] - INFO: Epoch: 9, Batch[5000/25000], Train loss :0.662, Train acc: 1.000
+[2024-04-25 00:17:46] - INFO: Epoch: 9, Batch[6000/25000], Train loss :0.705, Train acc: 0.000
+[2024-04-25 00:18:32] - INFO: Epoch: 9, Batch[7000/25000], Train loss :0.699, Train acc: 0.000
+[2024-04-25 00:19:18] - INFO: Epoch: 9, Batch[8000/25000], Train loss :0.681, Train acc: 1.000
+[2024-04-25 00:20:03] - INFO: Epoch: 9, Batch[9000/25000], Train loss :0.707, Train acc: 0.000
+[2024-04-25 00:20:49] - INFO: Epoch: 9, Batch[10000/25000], Train loss :0.643, Train acc: 1.000
+[2024-04-25 00:21:35] - INFO: Epoch: 9, Batch[11000/25000], Train loss :0.676, Train acc: 1.000
+[2024-04-25 00:22:21] - INFO: Epoch: 9, Batch[12000/25000], Train loss :0.697, Train acc: 0.000
+[2024-04-25 00:23:07] - INFO: Epoch: 9, Batch[13000/25000], Train loss :0.699, Train acc: 0.000
+[2024-04-25 00:23:53] - INFO: Epoch: 9, Batch[14000/25000], Train loss :0.705, Train acc: 0.000
+[2024-04-25 00:24:38] - INFO: Epoch: 9, Batch[15000/25000], Train loss :0.696, Train acc: 0.000
+[2024-04-25 00:25:24] - INFO: Epoch: 9, Batch[16000/25000], Train loss :0.681, Train acc: 1.000
+[2024-04-25 00:26:10] - INFO: Epoch: 9, Batch[17000/25000], Train loss :0.661, Train acc: 1.000
+[2024-04-25 00:26:56] - INFO: Epoch: 9, Batch[18000/25000], Train loss :0.688, Train acc: 1.000
+[2024-04-25 00:27:42] - INFO: Epoch: 9, Batch[19000/25000], Train loss :0.711, Train acc: 0.000
+[2024-04-25 00:28:28] - INFO: Epoch: 9, Batch[20000/25000], Train loss :0.610, Train acc: 1.000
+[2024-04-25 00:29:14] - INFO: Epoch: 9, Batch[21000/25000], Train loss :0.768, Train acc: 0.000
+[2024-04-25 00:29:59] - INFO: Epoch: 9, Batch[22000/25000], Train loss :0.669, Train acc: 1.000
+[2024-04-25 00:30:45] - INFO: Epoch: 9, Batch[23000/25000], Train loss :0.691, Train acc: 1.000
+[2024-04-25 00:31:31] - INFO: Epoch: 9, Batch[24000/25000], Train loss :0.678, Train acc: 1.000
+[2024-04-25 00:32:17] - INFO: Epoch: 9, Train loss: 0.694, Epoch time = 1146.621s
+[2024-04-25 00:35:16] - INFO: Accuracy on val 0.500
+[2024-04-25 00:35:18] - INFO: ## 注意，正在使用本地MyTransformer中的MyMultiHeadAttention实现，如需使用torch框架中的MultiHeadAttention模块可通过config.__dict__['use_torch_multi_head'] = True实现
+[2024-04-25 00:35:18] - INFO: ## 已有被攻击后模型存储路径: /home/zhuzukun/LMsEvaluation/cache/poisoning_model.pt
+[2024-04-25 00:35:18] - INFO: ## 成功载入已有被攻击后模型，进行预测......
+[2024-04-25 00:38:19] - INFO: Acc on test:0.500
+[2024-04-25 00:38:19] - INFO: ## 对原始模型性能进行检测
+[2024-04-25 00:38:20] - INFO: ## 已有干净模型存储路径: /home/zhuzukun/LMsEvaluation/cache/model.pt
+[2024-04-25 00:38:20] - INFO: ## 成功载入干净模型，进行预测......
+[2024-04-25 00:41:18] - INFO: 
++---------------------------------+---------+
+|             Results             |         |
++---------------------------------+---------+
+|        Original accuracy        | 50.000% |
+| Accuracy under poisoning attack | 50.000% |
++---------------------------------+---------+
+[2024-04-25 00:42:57] - INFO: PoisoningAttack攻击结束
+[2024-04-25 00:42:57] - INFO: ==================================================

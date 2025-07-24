@@ -1,6 +1,8 @@
 import sqlite3
+import yaml
 from werkzeug.security import generate_password_hash
 from datetime import datetime
+
 
 # 添加数据用
 import sys
@@ -51,8 +53,9 @@ def create_database():
 				attackName TEXT NOT NULL,
         createUserName TEXT NOT NULL,
         createTime BIGINT DEFAULT (CAST(strftime('%s', 'now') AS BIGINT)) NOT NULL,
-        attackResult TEXT,
         isTreasure BOOLEAN DEFAULT FALSE,
+				attackInfo TEXT,  
+        attackResult TEXT,
         FOREIGN KEY (createUserName) REFERENCES user (username)
     )
     ''')
@@ -139,11 +142,11 @@ def print_verification_codes():
 
 
 # 添加攻击记录
-def add_attack_record(attackName, createUserName, createTime, attackResult, isTreasure=False):
+def add_attack_record(attackName, createUserName, createTime, attackResult, attackInfo=None, isTreasure=False):
     conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO attack_record (attackName, createUserName, createTime, attackResult, isTreasure) VALUES (?, ?, ?, ?, ?)',
-                   (attackName, createUserName, createTime, str(attackResult), isTreasure))
+    cursor.execute('INSERT INTO attack_record (attackName, createUserName, createTime, isTreasure, attackInfo, attackResult) VALUES (?, ?, ?, ?, ?, ?)',
+                   (attackName, createUserName, createTime, isTreasure, json.dumps(attackInfo), str(attackResult)))
     conn.commit()
     print(f"Attack record added for user '{createUserName}'.")
     conn.close()
@@ -180,6 +183,21 @@ def print_log_records():
     for log in logs:
         print(f"LogID: {log[0]}, Username: {log[1]}, Log Filename: {log[2]}, Status: {log[3]}, Log Time: {log[4]}")
     conn.close()
+    
+# 解析配置信息
+def get_attack_info(username):
+    output_dir = os.path.dirname(os.path.abspath(__file__))
+    info_file = os.path.join(output_dir, "test_data", f"{username}_attack_info.yaml")
+    if not os.path.exists(info_file):
+        print(f"攻击信息文件不存在: {info_file}")
+        return []
+    try:
+        with open(info_file, 'r') as file:
+            attack_info = yaml.safe_load(file)
+            return attack_info if attack_info else []
+    except Exception as e:
+        print(f"读取攻击信息文件失败: {e}")
+        return []
 
 
 # 运行示例
@@ -208,8 +226,8 @@ if __name__ == '__main__':
     info = filename.split('_')
     username = 'admin'
     initTime = eval(info[2])
-    result = extractResult(lmsDir + "\\..\\logs\\" + filename)
-    add_attack_record('ForDEBUG', username, initTime, json.dumps(result))
+    result = extractResult("./test_data/" + filename)
+    add_attack_record('ForDEBUG', username, initTime, json.dumps(result), attackInfo=get_attack_info(username), isTreasure=False)
     
 
     # # 示例日志操作

@@ -15,13 +15,31 @@ attack_list:
     use_local_tokenizer: true
 - attack_args:
     attack: true
+    attack_type: BackDoorAttack
+    defender: None
+    display_full_info: true
+    model: bert
+    model_name_or_path: LMs/bert_base_uncased
+    poison_dataset: sst-2
+    poisoner:
+      name: badnets
+    sample_metrics:
+    - accuracy
+    target_dataset: sst-2
+    train:
+      batch_size: 16
+      epochs: 1
+      name: base
+    use_local_model: true
+- attack_args:
+    attack: true
     attack_type: PoisoningAttack
     display_full_info: true
     epochs: 15
     poisoning_rate: 0.15
 - attack_args:
     al_sample_batch_num: -1
-    al_sample_method: null
+    al_sample_method: random
     attack: true
     attack_type: ModelStealingAttack
     epsilon: -1
@@ -52,6 +70,25 @@ attack_list:
     seed: 123
     seq_length: 20
     target_label: 0
+- attack_args:
+    attack: true
+    attack_batch: 2
+    attack_nums: 1
+    attack_type: FET
+    crossover_rate: 0.9
+    dataset_name_or_path: cola
+    display_full_info: true
+    distance_func: l2
+    halloffame_size: 30
+    max_generations: 2
+    model_name_or_path: LMs/bert_base_uncased
+    mutation_rate: 0.1
+    population_size: 300
+    seed: 42
+    tokenizer_name_or_path: LMs/bert_base_uncased
+    tournsize: 5
+    use_local_model: true
+    use_local_tokenizer: true
 general:
   random_seed: 0
   use_gpu: true

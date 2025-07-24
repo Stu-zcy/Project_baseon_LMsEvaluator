@@ -40,7 +40,7 @@ const RLMIAttackColumns = [
 	{ title: 'average ASR(inference)', dataIndex: 'ASR_Inference' },
 	{ title: 'average WER(inference)', dataIndex: 'WER_Inference' },
 ]
-const SWATAttackColumns = [
+const FETAttackColumns = [
 	{ title: '轮', dataIndex: 'index'},
 	{ title: 'average rouge1', dataIndex: 'rouge1' },
 	{ title: 'average rouge2', dataIndex: 'rouge2' },
@@ -49,7 +49,7 @@ const SWATAttackColumns = [
 	{ title: 'average Edit distance', dataIndex: 'distance' },
 	{ title: 'full recovery rate', dataIndex: 'fr' },
 ];
-const SWATInnoColumns = [
+const FETInnoColumns = [
 	{ title: 'rouge1', dataIndex: 'rouge1' },
 	{ title: 'rouge2', dataIndex: 'rouge2' },
 	{ title: 'rougeL', dataIndex: 'rougeL' },
@@ -63,11 +63,11 @@ const responseData = ref({
 	BackDoorAttack: [],
 	PoisoningAttack: [],
 	RLMI: [],
-	SWAT: [],
+	FET: [],
 });
 
 const BackDoorAttack = ref([])
-const SWATInnerData = ref([])
+const FETInnerData = ref([])
 
 const username = localStorage.getItem('Global_username');  // 从 localStorage 获取用户名
 const token = localStorage.getItem('Global_token');
@@ -76,7 +76,7 @@ const props = defineProps({
 })
 function getInnerData(expanded, record) {
 	if (expanded) {
-		SWATInnerData.value = record.slice(0, -1);
+		FETInnerData.value = record.slice(0, -1);
 		console.log(record.slice(0, -1));
 	}
 }
@@ -113,8 +113,8 @@ onMounted(async () => {
 			return [index + 1, ...item];
 		});
 	}
-	if (responseData.value.SWAT) {
-		responseData.value.SWAT = responseData.value.SWAT.map((item, index) => {
+	if (responseData.value.FET) {
+		responseData.value.FET = responseData.value.FET.map((item, index) => {
 			return item.map((element) => {
 				if (element.length == 6) {
 					return [index+1, ...element]
@@ -325,10 +325,10 @@ onMounted(async () => {
 		</template>
 	</a-table>
 
-	<a-table v-bind="$attrs" :columns="SWATAttackColumns" :dataSource="responseData.SWAT" :pagination="false" @expand="getInnerData">
+	<a-table v-bind="$attrs" :columns="FETAttackColumns" :dataSource="responseData.FET" :pagination="false" @expand="getInnerData">
 		<template #title>
 			<div class="flex justify-between pr-4">
-				<h4>SWAT_Attack Results</h4>
+				<h4>FET_Attack Results</h4>
 			</div>
 		</template>
 		<template #bodyCell="{ column, text, record }">
@@ -369,7 +369,7 @@ onMounted(async () => {
 			</div>
 		</template>
 		<template #expandedRowRender>
-			<a-table :columns="SWATInnoColumns" :data-source="SWATInnerData" :pagination="false">
+			<a-table :columns="FETInnoColumns" :data-source="FETInnerData" :pagination="false">
 				<template #bodyCell="{ column, text, record }">
 					<div class="" v-if="column.dataIndex === 'rouge1'">
 				<div class="text-subtext">

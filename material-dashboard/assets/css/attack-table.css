@@ -4,6 +4,7 @@
 
 .ant-table-thead > tr > th {
 	white-space: pre-line;
+	padding: 12px !important; 
 }
 
 .outer-table > .ant-spin-nested-loading > .ant-spin-container > .ant-table {

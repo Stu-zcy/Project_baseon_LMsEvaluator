@@ -37,9 +37,8 @@ project_path = os.path.dirname(os.path.abspath(__file__))
 # 数据库配置
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
-lmsDir = os.path.dirname(os.path.abspath(__file__))
 # 使用os.path.join来正确拼接路径
-data_path = os.path.join(lmsDir, 'web_databse', 'users.db')
+data_path = os.path.join(project_path, 'web_databse', 'users.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' +f"{data_path}"
 db = SQLAlchemy(app)
 
@@ -73,11 +72,10 @@ class AttackRecord(db.Model):
     createUserName = db.Column(db.String, db.ForeignKey(User.username), nullable=False)
     createTime = db.Column(db.BigInteger, default=int(time.time()), nullable=False)
     isTreasure = db.Column(db.Boolean, default=False)
-    # attackInfo = db.Column(db.String, nullable=True)  # 攻击信息，存储为JSON字符串
+    attackInfo = db.Column(db.String, nullable=True)  # 攻击信息，存储为JSON字符串
     attackResult = db.Column(db.String, nullable=False) # 攻击结果，JSON字符串
 
 
-# def afterInsertListener_AttackRecord
 
 @app.before_request
 def create_tables():
@@ -535,7 +533,7 @@ def execute_attack():
         attack = AttackRecord(attackName=attackName, 
                               createUserName=username, 
 															createTime=initTime, 
-															# attackInfo=json.dumps(attack_info),  # 将攻击信息转换为JSON字符串
+															attackInfo=json.dumps(attack_info),  # 将攻击信息转换为JSON字符串
 															attackResult=json.dumps("RUNNING"))
 
         initTime = str(initTime)
@@ -585,6 +583,16 @@ def getRecord():
         #     attackRecord = AttackRecord.query.filter_by(attackID=attackID, createUserName=username).first()
         # result = attackRecord.attackResult
         result = json.loads(attackRecord.attackResult)
+        attackInfo = json.loads(attackRecord.attackInfo)
+
+        attackType = ['AdversarialAttack', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']
+        counters = [0, 0, 0, 0, 0, 0]
+        for info in attackInfo:
+            tp = info['type']
+            index = attackType.index(tp)
+            result[tp][counters[index]] = {'info': info, 'resultData': result[tp][counters[index]]}
+            counters[index] += 1
+
         return jsonify(result), 200
     except Exception as e:
         print(f"Error fetching log: {e}")

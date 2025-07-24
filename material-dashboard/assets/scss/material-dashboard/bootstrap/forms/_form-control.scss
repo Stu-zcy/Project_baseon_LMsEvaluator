@@ -199,12 +199,12 @@ textarea {
     cursor: pointer;
   }
 
-  &::-moz-color-swatch {
+  &::-moz-color-FETch {
     border: 0 !important; // stylelint-disable-line declaration-no-important
     @include border-radius($input-border-radius);
   }
 
-  &::-webkit-color-swatch {
+  &::-webkit-color-FETch {
     border: 0 !important; // stylelint-disable-line declaration-no-important
     @include border-radius($input-border-radius);
   }

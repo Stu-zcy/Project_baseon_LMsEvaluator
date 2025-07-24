@@ -11,11 +11,14 @@ main.main-content>#app {
 	flex: 1;
 	overflow: auto;
 	margin: 0 auto;
+	scrollbar-gutter: stable;
 }
 
 main.main-content>#background {
 	flex: 1;
 	overflow: auto;
+	display: flex;
+	flex-direction: column;
 }
 
 /* 下面修改了最上方面包屑一行的内容 </a> */
@@ -45,12 +48,27 @@ main.main-content>#background {
 	flex-direction: column;
 }
 
+#app {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	overflow: hidden;
+}
+
+#app-content {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+	align-items: flex-start;
+}
+
 #app .page-header {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center !important;
-	margin: 30px auto;
+	margin: 20px auto;
 }
 
 #app .page-title {

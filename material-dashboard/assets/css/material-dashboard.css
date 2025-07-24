@@ -605,7 +605,7 @@ legend+* {
   -webkit-appearance: none;
 }
 
-::-webkit-color-swatch-wrapper {
+::-webkit-color-FETch-wrapper {
   padding: 0;
 }
 
@@ -3001,12 +3001,12 @@ textarea.form-control-lg {
   cursor: pointer;
 }
 
-.form-control-color::-moz-color-swatch {
+.form-control-color::-moz-color-FETch {
   border: 0 !important;
   border-radius: 0.375rem;
 }
 
-.form-control-color::-webkit-color-swatch {
+.form-control-color::-webkit-color-FETch {
   border: 0 !important;
   border-radius: 0.375rem;
 }
