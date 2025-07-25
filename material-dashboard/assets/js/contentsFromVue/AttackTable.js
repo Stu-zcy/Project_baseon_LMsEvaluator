@@ -14,9 +14,52 @@ const AttackTable = defineComponent({
 	// The <template> content goes here as a string
 	template: `
 <div>
+<a-table v-if="responseData.NormalTrain.length > 0" v-bind="$attrs" 
+        :columns="NormalTrainColumns" :dataSource="responseData.NormalTrain" 
+        :pagination="false" class="outer-table normal-train-table">
+									<template #headerCell="{ column }">
+            <template v-if="column.dataIndex === 'index'">
+                <span style="display: inline-flex; align-items: center; margin-top: 5px">
+                    <i class="material-icons" style=" font-size: 24px;">list</i>
+                    <span>实验配置</span>
+                </span>
+            </template>
+
+						<template v-else>
+            {{ column.title }}
+						</template>
+        	</template>
+        <template #title>
+            <div class="flex justify-between pr-4">
+                <h4>常规训练</h4>
+            </div>
+        </template>
+        <template #bodyCell="{ column, record }">
+            <div class="" v-if="column.dataIndex === 'index'">
+                <div class="text-subtext">
+                    常规训练
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'acc'">
+                <div class="text-subtext">
+                    {{ record[0] }}
+                </div>
+            </div>
+            <div class="" v-else-if="column.dataIndex === 'f1'">
+                <div class="text-subtext">
+                    {{ record[1] }}
+                </div>
+            </div>
+            <div v-else class="text-subtext">
+                {{ record[column.dataIndex] }}
+            </div>
+        </template>
+    </a-table>
+
+
     <a-table v-if="responseData.AdversarialAttack.length > 0" v-bind="$attrs" 
         :columns="AdvColumns" :dataSource="responseData.AdversarialAttack" 
-        :pagination="false" class="outer-table">
+        :pagination="false" class="outer-table attack-table">
 									<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
                 <span style="display: inline-flex; align-items: center; margin-top: 5px">
@@ -86,7 +129,7 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.PoisoningAttack.length > 0" v-bind="$attrs" 
         :columns="PoisoningColumns" :dataSource="responseData.PoisoningAttack" 
-        :pagination="false" class="outer-table">
+        :pagination="false" class="outer-table attack-table">
 									<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
                 <span style="display: inline-flex; align-items: center; margin-top: 5px">
@@ -118,12 +161,12 @@ const AttackTable = defineComponent({
                     {{ record.info.name }}
                 </div>
             </div>
-            <div class="" v-else-if="column.dataIndex === 'before'">
+            <div class="" v-else-if="column.dataIndex === 'acc'">
                 <div class="text-subtext">
                     {{ record.resultData[0] }}
                 </div>
             </div>
-            <div class="" v-else-if="column.dataIndex === 'after'">
+            <div class="" v-else-if="column.dataIndex === 'f1'">
                 <div class="text-subtext">
                     {{ record.resultData[1] }}
                 </div>
@@ -136,7 +179,7 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.BackDoorAttack.length > 0" v-bind="$attrs" 
         :columns="BackDoorColumns" :dataSource="responseData.BackDoorAttack" 
-        :pagination="false" class="outer-table">
+        :pagination="false" class="outer-table attack-table">
 									<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
                 <span style="display: inline-flex; align-items: center; margin-top: 5px">
@@ -211,7 +254,7 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.RLMI.length > 0" v-bind="$attrs" 
         :columns="RLMIAttackColumns" :dataSource="responseData.RLMI" 
-        :pagination="false" class="outer-table">
+        :pagination="false" class="outer-table attack-table">
 									<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
                 <span style="display: inline-flex; align-items: center; margin-top: 5px">
@@ -271,7 +314,7 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.FET.length > 0" v-bind="$attrs" 
         :columns="FETAttackColumns" :dataSource="responseData.FET" 
-        :pagination="false" @expand="getInnerData" class="outer-table">
+        :pagination="false" @expand="getInnerData" class="outer-table attack-table">
 									<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
                 <span style="display: inline-flex; align-items: center; margin-top: 5px">
@@ -337,6 +380,13 @@ const AttackTable = defineComponent({
                 {{ record.resultData[column.dataIndex] }}
             </div>
         </template>
+				<template #expandIcon="{ expanded, onExpand, record }">
+				    <a @click.stop="e => onExpand(record, e)" class="custom-expand-icon" style="margin-left: 5px;" :title="expanded ? '收起详情' : '展开详情'" >
+			<i v-if="!expanded" class="fa-solid fa-caret-down fa-xl"></i>
+			<i v-else class="fa-solid fa-caret-up fa-xl"></i>
+    </a>
+				</template>
+
         <template #expandedRowRender>
             <a-table v-if="responseData.FET.length > 0"
                 :columns="FETInnoColumns" :data-source="FETInnerData" 
@@ -382,7 +432,7 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.ModelStealingAttack.length > 0" v-bind="$attrs" 
         :columns="ModelStealingAttackColumns" :dataSource="responseData.ModelStealingAttack" 
-        :pagination="false" class="outer-table">
+        :pagination="false" class="outer-table attack-table">
 					<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
                 <span style="display: inline-flex; align-items: center; margin-top: 5px">
@@ -451,6 +501,11 @@ const AttackTable = defineComponent({
 
 	setup(props) { // `props` is automatically passed here
 		// Constants for columns
+		const NormalTrainColumns = [
+			{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
+			{ title: '毒化数据集准确率\n(Poisoned Accuracy,%)', dataIndex: 'acc', align: 'center' },
+			{ title: 'f1分数\n(f1 Score)', dataIndex: 'f1', align: 'center' },
+		];
 		const AdvColumns = [
 			{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
 			{ title: '成功攻击次数\n(Successful Attacks,次)', dataIndex: 'success', align: 'center' },
@@ -462,8 +517,8 @@ const AttackTable = defineComponent({
 		];
 		const PoisoningColumns = [
 			{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
-			{ title: '攻击前准确率\n(Clean Accuracy,%)', dataIndex: 'before', align: 'center' },
-			{ title: '攻击后准确率\n(Adversarial Accuracy,%)', dataIndex: 'after', align: 'center' },
+			{ title: '毒化数据集准确率\n(Poisoned Accuracy,%)', dataIndex: 'acc', align: 'center' },
+			{ title: 'f1分数\n(f1 Score)', dataIndex: 'f1', align: 'center' },
 		];
 		const BackDoorColumns = [
 			{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
@@ -510,6 +565,7 @@ const AttackTable = defineComponent({
 		];
 
 		const responseData = ref({
+			NormalTrain: [],
 			AdversarialAttack: [],
 			BackDoorAttack: [],
 			PoisoningAttack: [],
@@ -553,6 +609,7 @@ const AttackTable = defineComponent({
 				console.log("API response:", response);
 				if (response && response.data && typeof response.data === 'object') {
 					// Assign specific keys if they exist, or default to empty arrays
+					responseData.value.NormalTrain = response.data.result.normalTrain || [];
 					responseData.value.AdversarialAttack = response.data.result.AdversarialAttack || [];
 					responseData.value.BackDoorAttack = response.data.result.BackDoorAttack || [];
 					responseData.value.PoisoningAttack = response.data.result.PoisoningAttack || [];
@@ -567,6 +624,7 @@ const AttackTable = defineComponent({
 				console.error("请求出错 (Error fetching data):", error);
 				// Reset data or show error message to user
 				responseData.value = {
+					NormalTrain: [],
 					AdversarialAttack: [],
 					BackDoorAttack: [],
 					PoisoningAttack: [],
@@ -620,6 +678,7 @@ const AttackTable = defineComponent({
 
 		// Return everything that the template needs
 		return {
+			NormalTrainColumns,
 			AdvColumns,
 			PoisoningColumns,
 			BackDoorColumns,

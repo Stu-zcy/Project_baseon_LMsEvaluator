@@ -10,6 +10,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trai
 
 from utils.my_exception import print_red
 from utils.log_helper import logger_init
+from utils.my_prettytable import MyPrettyTable
 from attack.attack_factory import AttackFactory
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -208,6 +209,15 @@ def run_pipeline(config_path: str):
 
         eval_result = trainer.evaluate()
         logging.info(eval_result)
+        
+				#通过 prettytable 打印评估结果
+        table = MyPrettyTable()
+        table.add_field_names(['Results', ''])
+        table.add_row(['eval_accuracy', f"{(eval_result['eval_accuracy'] * 100):.3f}%"])
+        table.add_row(['eval_f1', f"{(eval_result['eval_f1']):.3f}"])
+        table.print_table()
+        table.logging_table()
+
 
     # trainer.save_model(task_config['save_path'])
 

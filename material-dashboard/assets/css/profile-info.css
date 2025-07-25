@@ -210,3 +210,8 @@
 	justify-content: space-around;
 	align-items: flex-start;
 }
+
+#background {
+	/* scrollbar-gutter: stable; */
+
+}

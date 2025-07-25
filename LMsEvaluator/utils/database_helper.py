@@ -9,7 +9,7 @@ def extractResult(path):
 	f = open(path, "r", encoding='utf-8')
 	content = iter(f.readlines())
 	f.close()
-	result = {k: [] for k in ['AdversarialAttack', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']}
+	result = {k: [] for k in ['normalTrain', 'AdversarialAttack', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']}
 	# def GetPair(s: str):
 	# 	ret = re.match(r'\|\s*([a-zA-Z][a-zA-Z ]*[a-zA-Z]):?\s*\|\s*([\d.]+%?)\s*\|', s)
 	# 	return ret.group(1,2)
@@ -165,6 +165,14 @@ def extractResult(path):
 				localResult['agreement'] = data[2]
 
 				result['ModelStealingAttack'].append(localResult)
+			elif re.match(r'\|.*Result.*\|.*\|', row):
+				rowNum = 2
+				ls = []
+				next(content)
+				for _ in range(rowNum):
+					row = next(content)
+					ls.append(getContent(row))
+				result['normalTrain'].append(ls)
 		except StopIteration:
 			break
 	return result

@@ -11,11 +11,11 @@ main.main-content>#app {
 	flex: 1;
 	overflow: auto;
 	margin: 0 auto;
-	scrollbar-gutter: stable;
+
 }
 
 main.main-content>#background {
-	flex: 1;
+	flex-grow: 1;
 	overflow: auto;
 	display: flex;
 	flex-direction: column;
@@ -52,7 +52,7 @@ main.main-content>#background {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	overflow: hidden;
+	scrollbar-gutter: stable;
 }
 
 #app-content {
