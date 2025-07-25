@@ -3,7 +3,7 @@ LM_config:
   model: bert_base_uncased
 attack_list:
 - attack_args:
-    attack: true
+    attack: false
     attack_nums: 3
     attack_recipe: TextFoolerJin2019
     attack_type: AdversarialAttack
@@ -23,7 +23,7 @@ attack_list:
     use_local_model: true
     use_local_tokenizer: true
 - attack_args:
-    attack: true
+    attack: false
     attack_type: BackDoorAttack
     defender:
       strategy: ONION
@@ -42,25 +42,59 @@ attack_list:
       name: base
     use_local_model: true
 - attack_args:
-    al_sample_batch_num: '20'
-    al_sample_method: random
     attack: true
+    attack_type: PoisoningAttack
+    poisoning_rate: 0.15
+    save_path: ./attack/PoisoningAttack/model_output
+    train_config:
+      logging_dir: ./logs
+      logging_steps: 1000
+      num_train_epochs: 1
+      output_dir: ./attack/PoisoningAttack/cache
+      per_device_eval_batch_size: 64
+      per_device_train_batch_size: 16
+      report_to: none
+      run_name: my_experiment
+      warmup_steps: 1000
+      weight_decay: 0.01
+- attack_args:
+    al_sample_batch_num: -1
+    al_sample_method: random
+    attack: false
     attack_type: ModelStealingAttack
     epsilon: -1
     initial_drk_model: null
     initial_sample_method: random_sentence
-    method: RS
+    method: MeaeQ
     pool_data_source: wiki
     pool_data_type: whole
-    pool_subsize: '1766'
-    prompt: This is a movie review.
-    query_num: '320'
-    run_seed_arr:[ 56 ]
+    pool_subsize: -1
+    prompt: null
+    query_num: 500
+    run_seed_arr:
+    - 56
+- attack_args:
+    attack: false
+    attack_type: RLMI
+    dataset_name: emotion
+    max_input_length: 5
+    max_iterations: 2500
+    min_input_length: 2
+    model_name: tinybert4
+    num_generation: 1000
+    ppo_config:
+      batch_size: 16
+      learning_rate: 1.0e-05
+      log_with: None
+      mini_batch_size: 16
+    seed: 123
+    seq_length: 20
+    target_label: 0
 general:
-  log_file_name: ChenyangZhao_single_1753351094
+  log_file_name: ChenyangZhao_single_1753357701
   logs_save_dir: ./logs
   random_seed: 42
-  use_gpu: false
+  use_gpu: true
 output:
   base_path: output
   evaluation_result: evaluationResult
@@ -68,7 +102,7 @@ output:
 task_config:
   dataset: imdb
   local_dataset: true
-  normal_training: false
+  normal_training: true
   save_path: ./cache/model_output
   task: TaskForSingleSentenceClassification
   train_config:

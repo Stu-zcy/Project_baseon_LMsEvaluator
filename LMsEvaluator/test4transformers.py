@@ -255,4 +255,4 @@ def run_pipeline(config_path: str):
 
 
 if __name__ == '__main__':
-    run_pipeline('test_config.yaml')
+    run_pipeline('user_config/ChenyangZhao_config.yaml')

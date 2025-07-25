@@ -7,7 +7,7 @@ from utils.my_prettytable import MyPrettyTable
 from attack.base_attack import BaseAttack
 from utils.my_exception import print_red
 from utils.model_config import model_load, detect_model_type
-from torch.optim import AdamW
+
 
 # bert_base_uncased_english + Huggingface("imdb")
 # +-------------------------------+--------+
@@ -125,9 +125,6 @@ class MyTextAttack(BaseAttack):
         if self.display_full_info:
             logging.getLogger().handlers = self.my_handlers
 
-        attacker.attack_dataset()
-        self.__result_show()
-
         # 对抗训练
         if self.defender:
             logging.info("-" * 50)
@@ -174,6 +171,9 @@ class MyTextAttack(BaseAttack):
             if self.display_full_info:
                 logging.getLogger().handlers = self.my_handlers
 
+            attacker.attack_dataset()
+            self.__result_show()
+        else:
             attacker.attack_dataset()
             self.__result_show()
 

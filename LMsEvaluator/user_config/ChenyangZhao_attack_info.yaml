@@ -34,23 +34,46 @@
     status: active
     strategy: TrojanLM
     type: BackDoorAttack
-  - createdAt: 2025/07/24 17:57
+  - createdAt: 2025-05-20 09:45
+    defenderEnabled: false
+    description: 针对训练数据的投毒攻击，污染训练集以降低模型性能
+    executed: false
+    id: 3
+    name: 数据投毒配置
+    params:
+      epochs: 15
+      poisoning_rate: 0.15
+    sent: true
+    status: active
+    strategy: Poisoning
+    type: PoisoningAttack
+  - createdAt: 2025-06-10 14:30
     defenderEnabled: false
     description: 通过查询目标模型来窃取其结构和参数
-    executed: false
-    id: 1753351074231
-    name: '111'
+    executed: true
+    id: 4
+    name: 模型窃取攻击
     params:
-      al_sample_batch_num: '20'
-      attack_nums: '2'
-      method: RS
-      pool_subsize: '1766'
-      prompt: This is a movie review.
-      query_num: '320'
+      attack_nums: 3
+      method: MeaeQ
+      query_num: 500
     sent: true
     status: active
     strategy: MeaeQ
     type: ModelStealingAttack
+  - createdAt: 2025-06-12 11:20
+    defenderEnabled: false
+    description: 使用强化学习优化攻击策略
+    executed: false
+    id: 5
+    name: 模型反演配置
+    params:
+      max_iterations: 2500
+      seed: 123
+    sent: true
+    status: active
+    strategy: RLMI
+    type: RLMI
 - LM_config:
     local_model: true
     model: bert_base_uncased
@@ -61,5 +84,5 @@
   task_config:
     dataset: imdb
     local_dataset: true
-    normal_training: false
+    normal_training: true
     task: TaskForSingleSentenceClassification
