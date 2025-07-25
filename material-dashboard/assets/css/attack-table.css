@@ -31,16 +31,27 @@
 	left: 20px;
 	z-index: 2;
 	/* padding: 6px; */
-	/* 渐变背景，上方是空白，下方是卡片 */
-	background: linear-gradient(45deg,
-			#00adb5,
-			#0a8754
-	);
+
 	/* background-color: #00adb5; */
 	/* background: linear-gradient(to right, 120deg, var(--success), #0a8754); */
 	border: 0px;
 	border-radius: 10px !important;
 	box-shadow: 0 4px 12px #83898d;
+}
+
+.normal-train-table .ant-table-title {
+		background: linear-gradient(45deg,
+			#1c72cf,
+			#0a9bb2
+	);
+}
+
+.attack-table .ant-table-title {
+	/* 渐变背景，上方是空白，下方是卡片 */
+	background: linear-gradient(45deg,
+			#00adb5,
+			#0a8754
+	);
 }
 
 
@@ -49,6 +60,12 @@
 	text-align: center;
 
 }
+
+/* .ant-table-cell {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+} */
 
 .flex {
 	display: flex;
@@ -63,3 +80,13 @@
 /* .pr-4 {
 	padding-right: 1rem;
 } */
+
+.ant-table-row-expand-icon-cell {
+width: 10px;
+  padding: 0 !important; /* Flexbox下可以完全移除内边距 */
+  
+  /* 使用 Flexbox 居中 */
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center;     /* 垂直居中 */
+}
