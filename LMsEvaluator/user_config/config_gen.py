@@ -183,7 +183,6 @@ def generate_config(username, attack_list, globalConfig=None):
         if 'general' in globalConfig:
             config['general']['random_seed'] = globalConfig['general']['random_seed']
             config['general']['use_gpu'] = globalConfig['general']['use_gpu']
-            config['general']['log_file_name'] = globalConfig['general']['log_file_name']
         # 合并模型配置
         if 'model' in globalConfig:
             config['LM_config']['model'] = globalConfig['model']['predefined']
@@ -199,26 +198,14 @@ def generate_config(username, attack_list, globalConfig=None):
     for attack in attack_list:
         if attack.get('status') != 'active':
             continue  # 跳过非活跃配置
-
         attack_type = attack.get('type')
-        attack_name = attack.get('name')
-        created_at = attack.get('createdAt')
-        
        
         # 检查攻击类型是否在已定义的策略中
         if attack_type in attack_strategies:
             # 深度复制攻击策略
             attack_config = copy.deepcopy(attack_strategies[attack_type])
             
-            # 更新攻击策略
-            if "attack_recipe" in attack_config:
-                attack_config['attack_recipe'] = attack.get('strategy', 'default')
             
-            # 更新参数
-            params = attack.get('params', {})
-            for key in params:
-                if key in attack_config:
-                    attack_config[key] = params[key]
             
             # 将修改后的配置添加到 attack_list
             config["attack_list"].append({

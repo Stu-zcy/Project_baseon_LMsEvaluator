@@ -192,7 +192,7 @@ def get_attack_info(username):
         print(f"攻击信息文件不存在: {info_file}")
         return []
     try:
-        with open(info_file, 'r') as file:
+        with open(info_file, 'r' ,encoding='gb2312') as file:
             attack_info = yaml.safe_load(file)
             return attack_info if attack_info else []
     except Exception as e:
@@ -224,10 +224,10 @@ if __name__ == '__main__':
     lmsDir = os.path.dirname(os.path.abspath(__file__))
     filename = "u1h_single_1737727113_2025-01-24.txt"
     info = filename.split('_')
-    username = 'admin'
+    username = 'ChenyangZhao'
     initTime = eval(info[2])
-    result = extractResult("./test_data/" + filename)
-    add_attack_record('ForDEBUG', username, initTime, json.dumps(result), attackInfo=get_attack_info(username), isTreasure=False)
+    result = extractResult(os.path.join(lmsDir, "test_data",filename))
+    add_attack_record('ForDEBUG', username, initTime, json.dumps(result), attackInfo=get_attack_info('admin'), isTreasure=False)
     
 
     # # 示例日志操作

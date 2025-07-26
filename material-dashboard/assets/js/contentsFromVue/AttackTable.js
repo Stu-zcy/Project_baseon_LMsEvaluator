@@ -503,7 +503,7 @@ const AttackTable = defineComponent({
 		// Constants for columns
 		const NormalTrainColumns = [
 			{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
-			{ title: '毒化数据集准确率\n(Poisoned Accuracy,%)', dataIndex: 'acc', align: 'center' },
+			{ title: '分类准确率\n(Classification Accuracy,%)', dataIndex: 'acc', align: 'center' },
 			{ title: 'f1分数\n(f1 Score)', dataIndex: 'f1', align: 'center' },
 		];
 		const AdvColumns = [

@@ -520,6 +520,7 @@ def receive_attack_list():
 @auth
 def execute_attack():
     try:
+        print(f"METHOD: {request.method}")
         data = request.json
         username = data.get('username', None).strip('"')
         print(f"Executing attack for user: {username}")
@@ -699,4 +700,4 @@ def treasure():
 
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=57777, debug=True)

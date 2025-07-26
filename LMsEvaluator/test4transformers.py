@@ -2,15 +2,19 @@ import logging
 import os
 import yaml
 import torch
+import random
 import evaluate
+import numpy as np
 from dataclasses import fields
 from datasets import load_from_disk, load_dataset, DatasetDict
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments, \
     DataCollatorWithPadding, AutoModelForCausalLM
 
+from utils.my_prettytable import MyPrettyTable
+
 from utils.my_exception import print_red
 from utils.log_helper import logger_init
-from utils.my_prettytable import MyPrettyTable
 from attack.attack_factory import AttackFactory
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -132,51 +136,83 @@ def check_attack_config(attack_list: list) -> list:
     ]
 
 
+def compute_metrics(eval_pred):
+    predictions, labels = eval_pred
+    predictions = np.argmax(predictions, axis=1)  # 多分类任务：取最大概率索引
+    # predictions = (predictions > 0).astype(int)  # 二分类任务使用此句代替
+
+    accuracy = accuracy_score(labels, predictions)
+    precision, recall, f1, _ = precision_recall_fscore_support(
+        labels, predictions, average='macro'  # 多分类用'macro'/'micro'，二分类用'binary'
+    )
+    return {
+        'accuracy': accuracy,
+        'f1': f1,
+        'precision': precision,
+        'recall': recall
+    }
+
 def run_pipeline(config_path: str):
     with open(config_path, 'r', encoding='utf-8') as configFile:
         config_parser = yaml.load(configFile, Loader=yaml.FullLoader)
 
-    # 检查配置文件是否完整
-    check_base_config(config_parser)
+        # 检查配置文件是否完整
+        check_base_config(config_parser)
 
-    # 读取常规训练配置
-    general_config = config_parser['general']
+        # 读取常规训练配置
+        general_config = config_parser['general']
 
-    # 读取模型配置
-    LM_config = config_parser['LM_config']
-    model_name = LM_config['model']
+        # 读取模型配置
+        LM_config = config_parser['LM_config']
+        model_name = LM_config['model']
 
-    # 读取下游任务+数据集配置
-    task_config = config_parser['task_config']
-    dataset_name = task_config['dataset']
-    train_config = task_config['train_config']
+        # 读取下游任务+数据集配置
+        task_config = config_parser['task_config']
+        dataset_name = task_config['dataset']
+        train_config = task_config['train_config']
 
-    # 读取攻击模块配置
-    attack_list = check_attack_config(config_parser['attack_list'])
+        # 读取攻击模块配置
+        attack_list = check_attack_config(config_parser['attack_list'])
 
-    logger_init(log_file_name=general_config['log_file_name'], log_level=logging.INFO,
-                log_dir=general_config['logs_save_dir'], only_file=False)
+        logger_init(log_file_name=general_config['log_file_name'], log_level=logging.INFO,
+                    log_dir=general_config['logs_save_dir'], only_file=False)
 
-    # dataset.save_to_disk('./datasets/sst2')
-    if task_config['local_dataset']:
-        dataset = load_from_disk(os.path.join(projectPath, 'datasets', dataset_name))
-    else:
-        dataset = load_dataset(dataset_name)
+        # dataset.save_to_disk('./datasets/sst2')
+        if task_config['local_dataset']:
+            dataset = load_from_disk(os.path.join(projectPath, 'datasets', dataset_name))
+        else:
+            dataset = load_dataset(dataset_name)
 
-    dataset = DatasetDict({
-        "train": dataset["train"].select(range(10)),
-        "test": dataset["test"].select(range(10)),
-        "unsupervised": dataset["unsupervised"].select(range(10))
-    })
+        if LM_config['local_model']:
+            tokenizer = AutoTokenizer.from_pretrained(os.path.join(projectPath, 'LMs', model_name))
+            model = AutoModelForSequenceClassification.from_pretrained(os.path.join(projectPath, 'LMs', model_name))
+            # tokenizer = AutoTokenizer.from_pretrained(os.path.join(local_project_path, 'models', model_name))
+            # model = AutoModelForSequenceClassification.from_pretrained(os.path.join(local_project_path, 'models', model_name))
+        else:
+            tokenizer = AutoTokenizer.from_pretrained(model_name)
+            model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
-    if LM_config['local_model']:
-        tokenizer = AutoTokenizer.from_pretrained(os.path.join(projectPath, 'LMs', model_name))
-        model = AutoModelForSequenceClassification.from_pretrained(os.path.join(projectPath, 'LMs', model_name))
-        # tokenizer = AutoTokenizer.from_pretrained(os.path.join(local_project_path, 'models', model_name))
-        # model = AutoModelForSequenceClassification.from_pretrained(os.path.join(local_project_path, 'models', model_name))
-    else:
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model = AutoModelForSequenceClassification.from_pretrained(model_name)
+    if dataset_name == 'sst2':
+        dataset = DatasetDict({
+            "train": dataset["train"].select(range(10)),
+            "test": dataset["test"].select(range(10)),
+            "validation": dataset["validation"].select(range(10)),
+        })
+    elif dataset_name == 'imdb':
+        dataset = DatasetDict({
+            "train": dataset["train"].select(range(10)),
+            "test": dataset["test"].select(range(10)),
+            "unsupervised": dataset["unsupervised"].select(range(10)),
+        })
+    elif dataset_name == 'GLUE/cola':
+        random_indices = random.sample(range(len(dataset)), 20)
+        dataset = dataset.select(random_indices)
+        train_test = dataset.train_test_split(test_size=0.5, seed=general_config['random_seed'])
+        dataset = DatasetDict({
+            "train": train_test["train"],
+            "test": train_test["test"],
+            "validation": train_test["test"],
+        })
 
     def tokenize_function(examples):
         key = ''
@@ -191,6 +227,11 @@ def run_pipeline(config_path: str):
     tokenized_datasets = dataset.map(tokenize_function, batched=True)
     data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
+    # print(dataset)
+    # print(tokenized_datasets)
+    # print(dataset['train'][0])
+    # print(tokenized_datasets['train'][0])
+
     valid_args = {f.name for f in fields(TrainingArguments)}
     filtered_config = {k: v for k, v in train_config.items() if k in valid_args}
     training_args = TrainingArguments(**filtered_config)
@@ -201,6 +242,7 @@ def run_pipeline(config_path: str):
         train_dataset=tokenized_datasets['train'],
         eval_dataset=tokenized_datasets['test'],
         data_collator=data_collator,
+        compute_metrics=compute_metrics,
     )
 
     if task_config['normal_training']:
@@ -209,13 +251,18 @@ def run_pipeline(config_path: str):
 
         eval_result = trainer.evaluate()
         logging.info(eval_result)
-        
-				#通过 prettytable 打印评估结果
+
         table = MyPrettyTable()
         table.add_field_names(['Results', ''])
-        table.add_row(['eval_accuracy', f"{(eval_result['eval_accuracy'] * 100):.3f}%"])
-        table.add_row(['eval_f1', f"{(eval_result['eval_f1']):.3f}"])
-        table.print_table()
+        if 'eval_accuracy' in eval_result:
+            table.add_row(['eval_accuracy', f"{(eval_result['eval_accuracy'] * 100):.3f}%"])
+        else:
+            table.add_row(['eval_accuracy', 'N/A'])
+        if 'eval_f1' in eval_result:
+            table.add_row(['eval_f1', f"{(eval_result['eval_f1']):.3f}"])
+        else:
+            table.add_row(['eval_f1', 'N/A'])
+        #table.print_table()
         table.logging_table()
 
 

@@ -28,7 +28,7 @@ task_config:
 
 attack_list:
   - attack_args:
-      attack: True
+      attack: false
       attack_type: AdvAttack
       attack_recipe: TextFoolerJin2019
       use_local_model: True
@@ -55,11 +55,11 @@ attack_list:
   - attack_args:
       attack: True
       attack_type: PoisoningAttack
-      poisoning_rate: 0.1
+      poisoning_rate: 0.5
       save_path: './attack/PoisoningAttack/model_output'
       train_config:
         output_dir: './attack/PoisoningAttack/cache'
-        num_train_epochs: 1
+        num_train_epochs: 10
         per_device_train_batch_size: 16
         per_device_eval_batch_size: 64
         warmup_steps: 1000

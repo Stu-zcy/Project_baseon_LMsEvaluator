@@ -1,8 +1,29 @@
+import logging
 import random
+import numpy as np
 from dataclasses import fields
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from transformers import TrainingArguments, Trainer, DataCollatorWithPadding
 
 from attack.base_attack import BaseAttack
+
+from utils.my_prettytable import MyPrettyTable
+
+def compute_metrics(eval_pred):
+    predictions, labels = eval_pred
+    predictions = np.argmax(predictions, axis=1)  # 多分类任务：取最大概率索引
+    # predictions = (predictions > 0).astype(int)  # 二分类任务使用此句代替
+
+    accuracy = accuracy_score(labels, predictions)
+    precision, recall, f1, _ = precision_recall_fscore_support(
+        labels, predictions, average='macro'  # 多分类用'macro'/'micro'，二分类用'binary'
+    )
+    return {
+        'accuracy': accuracy,
+        'f1': f1,
+        'precision': precision,
+        'recall': recall
+    }
 
 
 class MyPoisoningAttack(BaseAttack):
@@ -15,11 +36,11 @@ class MyPoisoningAttack(BaseAttack):
 
     def attack(self):
         random.seed(self.config_parser['general']['random_seed'])
-
+        poisoning_rate = self.attack_config['poisoning_rate']
         # 只对训练集进行投毒（验证集/测试集保持不变）
         train_dataset = self.tokenized_datasets["train"]
         num_train = len(train_dataset)
-        num_poison = int(0.1 * num_train)  # 计算10%的样本数量
+        num_poison = int(poisoning_rate * num_train)  # 计算10%的样本数量
 
         # 获取标签类别数量（从数据集特征或模型中）
         try:
@@ -67,10 +88,20 @@ class MyPoisoningAttack(BaseAttack):
             train_dataset=poisoned_train,
             eval_dataset=self.tokenized_datasets['test'],
             data_collator=data_collator,
+            compute_metrics=compute_metrics,
         )
 
-        trainer.train()
+        train_result = trainer.train()
+        logging.info(train_result)
 
-        trainer.evaluate()
+        eval_result = trainer.evaluate()
+        logging.info(eval_result)
+        # 通过 prettytable 打印评估结果
+        table = MyPrettyTable()
+        table.add_field_names(['Results', ''])
+        table.add_row(['eval_accuracy', f"{(eval_result['eval_accuracy'] * 100):.3f}%"])
+        table.add_row(['eval_f1', f"{(eval_result['eval_f1']):.3f}"])
+        #table.print_table()
+        table.logging_table()
 
         trainer.save_model(self.attack_config['save_path'])
