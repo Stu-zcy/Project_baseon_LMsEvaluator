@@ -57,8 +57,8 @@ const AttackTable = defineComponent({
     </a-table>
 
 
-    <a-table v-if="responseData.AdversarialAttack.length > 0" v-bind="$attrs" 
-        :columns="AdvColumns" :dataSource="responseData.AdversarialAttack" 
+    <a-table v-if="responseData.AdvAttack.length > 0" v-bind="$attrs" 
+        :columns="AdvColumns" :dataSource="responseData.AdvAttack" 
         :pagination="false" class="outer-table attack-table">
 									<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
@@ -177,8 +177,8 @@ const AttackTable = defineComponent({
         </template>
     </a-table>
 
-    <a-table v-if="responseData.BackDoorAttack.length > 0" v-bind="$attrs" 
-        :columns="BackDoorColumns" :dataSource="responseData.BackDoorAttack" 
+    <a-table v-if="responseData.BackdoorAttack.length > 0" v-bind="$attrs" 
+        :columns="BackDoorColumns" :dataSource="responseData.BackdoorAttack" 
         :pagination="false" class="outer-table attack-table">
 									<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
@@ -566,8 +566,8 @@ const AttackTable = defineComponent({
 
 		const responseData = ref({
 			NormalTrain: [],
-			AdversarialAttack: [],
-			BackDoorAttack: [],
+			AdvAttack: [],
+			BackdoorAttack: [],
 			PoisoningAttack: [],
 			RLMI: [],
 			FET: [],
@@ -610,8 +610,8 @@ const AttackTable = defineComponent({
 				if (response && response.data && typeof response.data === 'object') {
 					// Assign specific keys if they exist, or default to empty arrays
 					responseData.value.NormalTrain = response.data.result.normalTrain || [];
-					responseData.value.AdversarialAttack = response.data.result.AdversarialAttack || [];
-					responseData.value.BackDoorAttack = response.data.result.BackDoorAttack || [];
+					responseData.value.AdvAttack = response.data.result.AdvAttack || [];
+					responseData.value.BackdoorAttack = response.data.result.BackdoorAttack || [];
 					responseData.value.PoisoningAttack = response.data.result.PoisoningAttack || [];
 					responseData.value.RLMI = response.data.result.RLMI || [];
 					responseData.value.FET = response.data.result.FET || [];
@@ -625,8 +625,8 @@ const AttackTable = defineComponent({
 				// Reset data or show error message to user
 				responseData.value = {
 					NormalTrain: [],
-					AdversarialAttack: [],
-					BackDoorAttack: [],
+					AdvAttack: [],
+					BackdoorAttack: [],
 					PoisoningAttack: [],
 					RLMI: [],
 					FET: [],
@@ -635,8 +635,8 @@ const AttackTable = defineComponent({
 			}
 
 			// 预处理各个结果,添加索引什么的
-			// if (responseData.value.AdversarialAttack && Array.isArray(responseData.value.AdversarialAttack)) {
-			//     responseData.value.AdversarialAttack = responseData.value.AdversarialAttack.map((item, index) => {
+			// if (responseData.value.AdvAttack && Array.isArray(responseData.value.AdvAttack)) {
+			//     responseData.value.AdvAttack = responseData.value.AdvAttack.map((item, index) => {
 			//         return [[index + 1, ...item]];
 			//     });
 			// }
@@ -645,8 +645,8 @@ const AttackTable = defineComponent({
 			//         return [index + 1, ...item]; // This creates [index, item_val1, item_val2, ...]
 			//     });
 			// }
-			// if (responseData.value.BackDoorAttack && Array.isArray(responseData.value.BackDoorAttack)) {
-			//     responseData.value.BackDoorAttack = responseData.value.BackDoorAttack.map((item, index) => {
+			// if (responseData.value.BackdoorAttack && Array.isArray(responseData.value.BackdoorAttack)) {
+			//     responseData.value.BackdoorAttack = responseData.value.BackdoorAttack.map((item, index) => {
 			//         return [index + 1, ...item];
 			//     });
 			// }

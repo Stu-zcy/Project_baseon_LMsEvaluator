@@ -43,39 +43,33 @@
 	<link
 		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
 		rel="stylesheet" />
-	    <style>
+	      <style>
         :root {
             --primary: #4361ee;
             --secondary: #3f37c9;
-            --success: #4cc9f0;
-            --info: #4895ef;
-            --warning: #f72585;
+            --success: #06d6a0;
+            --info: #4cc9f0;
+            --warning: #ffd166;
             --danger: #ef476f;
             --light: #f8f9fa;
             --dark: #212529;
-            --purple: #7209b7;
-            --teal: #06d6a0;
-            --cyan: #3a0ca3;
-            --security-blue: #4361ee;       /* 安全攻击类主色 */
-            --security-blue-light: #4cc9f0; /* 安全攻击类辅助色 */
-            --security-blue-dark: #3f37c9;  /* 安全攻击类深色 */
-            --privacy-green: #06d6a0;       /* 隐私攻击类主色 */
-            --privacy-green-light: #4caf50; /* 隐私攻击类辅助色 */
-            --privacy-green-dark: #2e7d32; /* 隐私攻击类深色 */
+            --gradient-start: #4361ee;
+            --gradient-end: #3a0ca3;
         }
         
         body {
+            background-color: #f8fafc;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fb;
-            color: #333;
+            color: #334155;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
         
         .gradient-bg {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             padding: 3rem 0;
+            color: white;
         }
         
         .feature-card {
@@ -84,54 +78,98 @@
             border-radius: 15px;
             padding: 2rem;
             height: 100%;
-            transition: transform 0.3s;
+            transition: transform 0.3s ease;
         }
         
         .feature-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
         }
         
         .feature-card i {
             font-size: 3rem;
-            margin-bottom: 1rem;
             color: white;
+            margin-bottom: 1rem;
         }
         
         .feature-card h3 {
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 1rem;
         }
         
         .page-header {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid #eaeaea;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .page-title h1 {
-            font-weight: 700;
+            font-weight: 800;
+            color: var(--dark);
             margin-bottom: 0.5rem;
-            color: var(--primary);
-        }
-        
-        .page-title p {
-            color: #6c757d;
-            margin-bottom: 0;
         }
         
         .action-buttons .btn {
-            margin-left: 0.5rem;
-            font-weight: 500;
+            border-radius: 8px;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .global-config-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .global-config-card h3 {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .global-config-card h3 i {
+            margin-right: 10px;
+        }
+        
+        .config-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .summary-item {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+        
+        .summary-item h5 {
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .summary-item h5 i {
+            margin-right: 8px;
         }
         
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
         
         .stats-card {
@@ -140,55 +178,72 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             padding: 1.5rem;
             display: flex;
-            transition: transform 0.3s;
+            transition: transform 0.3s ease;
         }
         
         .stats-card:hover {
             transform: translateY(-5px);
         }
         
-        .stats-header {
-            margin-right: 1.5rem;
+        .stats-card.primary {
+            border-left: 4px solid var(--primary);
+        }
+        
+        .stats-card.success {
+            border-left: 4px solid var(--success);
+        }
+        
+        .stats-card.warning {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .stats-card.danger {
+            border-left: 4px solid var(--danger);
         }
         
         .stats-icon {
+            background: rgba(67, 97, 238, 0.1);
             width: 60px;
             height: 60px;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            margin-right: 1.25rem;
         }
         
         .stats-card.primary .stats-icon {
-            background: rgba(67, 97, 238, 0.15);
+            background: rgba(67, 97, 238, 0.1);
             color: var(--primary);
         }
         
         .stats-card.success .stats-icon {
-            background: rgba(76, 201, 240, 0.15);
+            background: rgba(6, 214, 160, 0.1);
             color: var(--success);
         }
         
         .stats-card.warning .stats-icon {
-            background: rgba(247, 37, 133, 0.15);
+            background: rgba(255, 209, 102, 0.1);
             color: var(--warning);
         }
         
         .stats-card.danger .stats-icon {
-            background: rgba(239, 71, 111, 0.15);
+            background: rgba(239, 71, 111, 0.1);
             color: var(--danger);
         }
         
+        .stats-icon i {
+            font-size: 28px;
+        }
+        
         .stats-content h3 {
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 0.25rem;
+            color: var(--dark);
         }
         
         .stats-content p {
-            color: #6c757d;
+            color: #64748b;
             margin-bottom: 0;
         }
         
@@ -201,170 +256,198 @@
         }
         
         .card-header {
+            background: white;
             padding: 1.5rem;
-            border-bottom: 1px solid #eaeaea;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .card-header h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-weight: 800;
+            color: var(--dark);
             margin: 0;
             display: flex;
             align-items: center;
         }
         
         .card-header h2 i {
-            margin-right: 0.75rem;
+            margin-right: 10px;
             color: var(--primary);
+        }
+        
+        .card-header .badge {
+            margin-left: 10px;
+            font-size: 0.9rem;
+            padding: 0.4rem 0.7rem;
         }
         
         .card-tools {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
         }
         
         .search-box {
-            position: relative;
-        }
-        
-        .search-box i {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-        }
-        
-        .search-box input {
-            padding-left: 40px;
-            border-radius: 30px;
-            height: 40px;
-            border: 1px solid #dee2e6;
-            min-width: 250px;
-        }
-        
-        .table-container {
-            overflow-x: auto;
-            padding: 0 1.5rem 1.5rem;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-        
-        th {
-            background: #f8f9fa;
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            color: #495057;
-            border-top: 1px solid #dee2e6;
-        }
-        
-        td {
-            padding: 1rem;
-            border-top: 1px solid #dee2e6;
-            vertical-align: middle;
-        }
-        
-        tr:hover td {
-            background: #f8f9fa;
-        }
-        
-        .badge {
-            padding: 0.5em 0.8em;
-            font-weight: 600;
-            border-radius: 30px;
-        }
-        
-        .badge-primary {
-            background: var(--primary);
-        }
-        
-        .badge-success {
-            background: var(--success);
-        }
-        
-        .badge-info {
-            background: var(--info);
-        }
-        
-        .badge-warning {
-            background: var(--warning);
-        }
-        
-        .badge-danger {
-            background: var(--danger);
-        }
-        
-        .badge-purple {
-            background: var(--purple);
-        }
-        
-        /* 安全攻击类徽章 - 蓝色系 */
-        .badge-security {
-            background: var(--security-blue);
-        }
-        
-        .badge-security-light {
-            background: var(--security-blue-light);
-        }
-        
-        .badge-security-dark {
-            background: var(--security-blue-dark);
-        }
-        
-        /* 隐私攻击类徽章 - 绿色系 */
-        .badge-privacy {
-            background: var(--privacy-green);
-        }
-        
-        .badge-privacy-light {
-            background: var(--privacy-green-light);
-        }
-        
-        .badge-privacy-dark {
-            background: var(--privacy-green-dark);
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.3em 0.8em;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            background: #f8f9fa;
-            color: #495057;
-            border: 1px solid #dee2e6;
-        }
-        
-        .status-indicator {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
             display: flex;
             align-items: center;
         }
         
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 0.5em;
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 0;
+            margin-left: 0.5rem;
         }
         
-        .status-active .status-dot {
-            background: var(--success);
+        .search-box i {
+            color: #94a3b8;
         }
         
-        .status-sent .status-dot {
-            background: var(--info);
+        .btn-light {
+            background: #f1f5f9;
+            border: none;
         }
         
-        .status-executed .status-dot {
-            background: var(--warning);
+        .filter-container {
+            padding: 0.75rem 1.5rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        
+        .filter-tag {
+            background: #e2e8f0;
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-tag .close {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead th {
+            background: #f1f5f9;
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        tbody td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .status-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: #e6f9f0;
+            border: 1.5px solid #06d6a0;
+            color: #06d6a0;
+        }
+        
+        .status-inactive {
+            background: #fdeaea;
+            border: 1.5px solid #ef476f;
+            color: #ef476f;
+        }
+        
+        .status-sent {
+            background: #e6f9f0;
+            border: 1.5px solid #06d6a0;
+            color: #06d6a0;
+        }
+        
+        .status-unsent {
+            background: #fdeaea;
+            border: 1.5px solid #ef476f;
+            color: #ef476f;
+        }
+        
+        .status-executed {
+            background: #e6f9f0;
+            border: 1.5px solid #06d6a0;
+            color: #06d6a0;
+        }
+        
+        .status-unexecuted {
+            background: #fdeaea;
+            border: 1.5px solid #ef476f;
+            color: #ef476f;
+        }
+        
+        .badge-security {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .badge-security-dark {
+            background: rgba(63, 55, 201, 0.1);
+            color: var(--secondary);
+        }
+        
+        .badge-security-light {
+            background: rgba(76, 201, 240, 0.1);
+            color: var(--info);
+        }
+        
+        .badge-privacy {
+            background: rgba(6, 214, 160, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-privacy-light {
+            background: rgba(255, 209, 102, 0.1);
+            color: var(--warning);
+        }
+        
+        .badge-privacy-dark {
+            background: rgba(239, 71, 111, 0.1);
+            color: var(--danger);
         }
         
         .action-buttons {
@@ -373,88 +456,49 @@
         }
         
         .btn-icon {
+            padding: 0;
             width: 36px;
             height: 36px;
-            padding: 0;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
+            border-radius: 8px;
         }
         
         .no-configs {
-            text-align: center;
             padding: 3rem;
+            text-align: center;
+            color: #94a3b8;
         }
         
         .no-configs i {
             font-size: 4rem;
-            color: #dee2e6;
             margin-bottom: 1rem;
+            color: #cbd5e1;
         }
         
         .no-configs h4 {
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 0.5rem;
-        }
-        
-        .filter-container {
-            display: flex;
-            gap: 0.5rem;
-            padding: 0.5rem 1.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .filter-tag {
-            background: #e9ecef;
-            padding: 0.3em 0.8em;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-        }
-        
-        .filter-tag .close {
-            margin-left: 0.5em;
-            cursor: pointer;
-            font-size: 1.2rem;
         }
         
         .modal-content {
             border-radius: 15px;
             overflow: hidden;
-            border: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
         
         .modal-header {
-            padding: 1.25rem;
-            background: #f8f9fa;
+            background: var(--primary);
+            color: white;
         }
         
         .modal-title {
-            font-weight: 600;
             display: flex;
             align-items: center;
         }
         
         .modal-title i {
-            margin-right: 0.5rem;
-            color: var(--primary);
-        }
-        
-        .modal-body {
-            padding: 1.5rem;
-        }
-        
-        .param-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .param-item {
-            margin-bottom: 1rem;
+            margin-right: 10px;
         }
         
         .accordion-button {
@@ -463,28 +507,45 @@
         }
         
         .accordion-button i {
-            margin-right: 0.5rem;
-            color: var(--primary);
+            margin-right: 8px;
+        }
+        
+        .param-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .param-item {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+        
+        .backdoor-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
         }
         
         .defense-section {
-            background: rgba(67, 97, 238, 0.05);
-            border-left: 4px solid var(--primary);
-            padding: 1rem;
-            border-radius: 0 8px 8px 0;
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 1.25rem;
             margin-top: 1.5rem;
         }
         
-        .defense-section h5 {
+        .switch-container {
             display: flex;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
-            color: var(--primary);
-            font-weight: 600;
         }
         
-        .defense-section h5 i {
-            margin-right: 0.5rem;
+        .defense-options {
+            margin-top: 1rem;
         }
         
         .defense-grid {
@@ -493,39 +554,21 @@
             gap: 1rem;
         }
         
-        .defense-toggle {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding: 0.5rem;
-            background: rgba(67, 97, 238, 0.05);
-            border-radius: 8px;
-        }
-        
-        .form-check-input:checked {
-            background-color: var(--primary);
-            border-color: var(--primary);
-        }
-        
-        .defense-enabled {
-            color: var(--primary);
-            font-weight: 600;
-        }
-        
         .toast {
             position: fixed;
             bottom: 20px;
             right: 20px;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             padding: 1rem 1.5rem;
             display: flex;
             align-items: center;
+            gap: 0.75rem;
+            z-index: 1050;
             opacity: 0;
             transform: translateY(20px);
-            transition: all 0.3s;
-            z-index: 9999;
+            transition: all 0.3s ease;
         }
         
         .toast.show {
@@ -535,104 +578,65 @@
         
         .toast i {
             font-size: 1.5rem;
-            margin-right: 1rem;
+        }
+        
+        .toast-success {
+            border-left: 4px solid var(--success);
         }
         
         .toast-success i {
             color: var(--success);
         }
         
+        .toast-error {
+            border-left: 4px solid var(--danger);
+        }
+        
         .toast-error i {
             color: var(--danger);
         }
         
-        .switch-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        
-        .switch-label {
-            margin-left: 10px;
-            font-weight: 500;
-        }
-        
-        .defense-options {
-            background: #f8f9fa;
+        .backdoor-metrics .form-check {
+            background: #e6f7ff;
+            padding: 8px 12px;
             border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-            border-left: 3px solid var(--primary);
+            border: 1px solid #bae7ff;
         }
         
-        .global-config-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+        @media (max-width: 992px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .action-buttons {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .card-tools {
+                width: 100%;
+                justify-content: space-between;
+            }
         }
         
-        .global-config-card h3 {
-            display: flex;
-            align-items: center;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .config-summary {
+                grid-template-columns: 1fr;
+            }
         }
-        
-        .global-config-card h3 i {
-            margin-right: 0.75rem;
-        }
-        
-        .global-config-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .global-config-item {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 1rem;
-        }
-        
-        .global-config-item h4 {
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-        }
-        
-        .global-config-item h4 i {
-            margin-right: 0.5rem;
-        }
-        
-        .config-summary {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-        
-        .summary-item {
-            background: white;
-            border-radius: 8px;
-            padding: 1rem;
-            flex: 1;
-            min-width: 200px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .summary-item h5 {
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-	</style>
+    </style>
 </head>
 
 
@@ -837,443 +841,444 @@
 		<!-- End Navbar -->
 		    
          <div class="container-fluid">
-            <!-- 渐变背景区域 -->
-            <div class="gradient-bg">
-                <div class="container">
-                    <div class="row g-4">
-                        <div class="col-md-4">
-                            <div class="feature-card text-center">
-                                <i class="material-icons">tune</i>
-                                <h3>高级配置管理</h3>
-                                <p>轻松创建、编辑和管理复杂的模型评估配置，支持多种评估类型和策略</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="feature-card text-center">
-                                <i class="material-icons">analytics</i>
-                                <h3>实时数据统计</h3>
-                                <p>通过直观的统计卡片监控系统状态，包括配置数量、活跃状态和执行次数</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="feature-card text-center">
-                                <i class="material-icons">bolt</i>
-                                <h3>快速执行评估</h3>
-                                <p>一键发送配置并执行评估，高效完成安全测试任务</p>
-                            </div>
+        <!-- 渐变背景区域 -->
+        <div class="gradient-bg">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="feature-card text-center">
+                            <i class="material-icons">tune</i>
+                            <h3>高级配置管理</h3>
+                            <p>轻松创建、编辑和管理复杂的模型评估配置，支持多种评估类型和策略</p>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="container-fluid py-4">
-                <!-- 主内容区 -->
-                <main class="main-content">
-                    <!-- 页面标题和操作按钮 -->
-                    <div class="page-header">
-                        <div class="page-title">
-                            <h1>模型评估配置管理</h1>
-                            <p>管理您的评估类型、策略和高级设置</p>
-                        </div>
-                        <div class="action-buttons">
-                            <div class="d-flex align-items-center gap-2">
-                                <button class="btn btn-light d-flex align-items-center" id="addNewConfigBtn">
-                                    <i class="material-icons me-1">add</i> 添加配置
-                                </button>
-                                <button class="btn btn-outline-primary d-flex align-items-center" id="globalConfigBtn">
-                                    <i class="material-icons me-1">settings_applications</i> 全局配置
-                                </button>
-                                <button class="btn btn-outline-primary d-flex align-items-center" id="sendConfigBtn">
-                                    <i class="material-icons me-1">send</i> 发送配置
-                                </button>
-                                <button class="btn btn-outline-success d-flex align-items-center" id="executeAttackBtn">
-                                    <i class="material-icons me-1">play_arrow</i> 执行评估
-                                </button>
-                            </div>
+                    <div class="col-md-4">
+                        <div class="feature-card text-center">
+                            <i class="material-icons">analytics</i>
+                            <h3>实时数据统计</h3>
+                            <p>通过直观的统计卡片监控系统状态，包括配置数量、活跃状态和执行次数</p>
                         </div>
                     </div>
-                    
-                    <!-- 全局配置摘要 -->
-                    <div class="global-config-card">
-                        <h3><i class="material-icons">settings</i> 当前全局配置</h3>
-                        <div class="config-summary" id="globalConfigSummary">
-                            <div class="summary-item">
-                                <h5><i class="material-icons">memory</i> 模型配置</h5>
-                                <div id="modelConfigSummary">未配置</div>
-                            </div>
-                            <div class="summary-item">
-                                <h5><i class="material-icons">assignment</i> 任务配置</h5>
-                                <div id="taskConfigSummary">未配置</div>
-                            </div>
-                            <div class="summary-item">
-                                <h5><i class="material-icons">storage</i> 数据集配置</h5>
-                                <div id="datasetConfigSummary">未配置</div>
-                            </div>
-                            <div class="summary-item">
-                                <h5><i class="material-icons">tune</i> 常规配置</h5>
-                                <div id="generalConfigSummary">未配置</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 执行攻击名称模态框 -->
-                    <div class="modal fade" id="executeAttackModal" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">
-                                        <i class="material-icons">play_arrow</i>
-                                        执行评估
-                                    </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="executeAttackForm">
-                                        <div class="form-group">
-                                            <label for="attackName">评估名称 <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="attackName" placeholder="输入此次任务执行的名称" required>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                    <button type="button" class="btn btn-primary" id="confirmExecuteBtn">执行</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 统计卡片 -->
-                    <div class="stats-container">
-                        <div class="stats-card primary">
-                            <div class="stats-header">
-                                <div class="stats-icon">
-                                    <i class="material-icons">list_alt</i>
-                                </div>
-                            </div>
-                            <div class="stats-content">
-                                <h3 id="totalConfigs">0</h3>
-                                <p>总配置数</p>
-                            </div>
-                        </div>
-                        
-                        <div class="stats-card success">
-                            <div class="stats-header">
-                                <div class="stats-icon">
-                                    <i class="material-icons">check_circle</i>
-                                </div>
-                            </div>
-                            <div class="stats-content">
-                                <h3 id="activeConfigs">0</h3>
-                                <p>活跃配置</p>
-                            </div>
-                        </div>
-                        
-                        <div class="stats-card warning">
-                            <div class="stats-header">
-                                <div class="stats-icon">
-                                    <i class="material-icons">schedule</i>
-                                </div>
-                            </div>
-                            <div class="stats-content">
-                                <h3 id="attackTypes">0</h3>
-                                <p>评估类型</p>
-                            </div>
-                        </div>
-                        
-                        <div class="stats-card danger">
-                            <div class="stats-header">
-                                <div class="stats-icon">
-                                    <i class="material-icons">bolt</i>
-                                </div>
-                            </div>
-                            <div class="stats-content">
-                                <h3 id="executedAttacks">0</h3>
-                                <p>已执行评估</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 配置列表 -->
-                    <div class="config-card">
-                        <div class="card-header flex-wrap flex-md-nowrap" style="gap:1rem;">
-                            <h2 class="mb-2 mb-md-0 d-flex align-items-center flex-shrink-0">
-                                <i class="material-icons">list</i>
-                                模型评估配置列表
-                                <span class="badge bg-primary" id="configCounter">0</span>
-                            </h2>
-                            <div class="card-tools d-flex flex-wrap align-items-center gap-2 ms-md-auto">
-                                <div class="search-box d-flex align-items-center flex-shrink-0" style="min-width:220px;">
-                                    <i class="material-icons me-2">search</i>
-                                    <input type="text" id="searchInput" placeholder="搜索配置...">
-                                </div>
-                                <div class="dropdown flex-shrink-0">
-                                    <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="statusFilterDropdown" data-bs-toggle="dropdown">
-                                        <i class="material-icons me-1">filter_list</i> <span>状态筛选</span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item filter-option" href="#" data-filter="all">全部状态</a></li>
-                                        <li><a class="dropdown-item filter-option" href="#" data-filter="active">活跃配置</a></li>
-                                        <li><a class="dropdown-item filter-option" href="#" data-filter="inactive">已禁用</a></li>
-                                        <li><a class="dropdown-item filter-option" href="#" data-filter="sent">已发送</a></li>
-                                        <li><a class="dropdown-item filter-option" href="#" data-filter="not_sent">未发送</a></li>
-                                        <li><a class="dropdown-item filter-option" href="#" data-filter="executed">已执行</a></li>
-                                        <li><a class="dropdown-item filter-option" href="#" data-filter="not_executed">未执行</a></li>
-                                    </ul>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="typeFilterDropdown" data-bs-toggle="dropdown">
-                                        <i class="material-icons me-1">label</i> <span>类型筛选</span>
-                                    </button>
-                                    <ul class="dropdown-menu" id="typeFilterMenu">
-                                        <li><a class="dropdown-item type-filter-option" href="#" data-type="all">全部类型</a></li>
-                                        <!-- 动态生成攻击类型选项 -->
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div id="filterTags" class="filter-container"></div>
-                        
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: center;">配置名称</th>
-                                        <th style="text-align: center;">评估类型</th>
-                                        <th style="text-align: center;">评估策略</th>
-                                        <th style="text-align: center;">防御状态</th>
-                                        <th style="text-align: center;">状态</th>
-                                        <th style="text-align: center;">创建时间</th>
-                                        <th style="text-align: center;">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="configTableBody">
-                                    <!-- 配置列表会动态填充 -->
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div id="noConfigsMessage" class="no-configs d-none">
-                            <i class="material-icons">folder_off</i>
-                            <h4>暂无配置</h4>
-                            <p>点击"添加新配置"按钮创建您的第一个模型评估配置</p>
-                            <button class="btn btn-primary mt-3" id="addFirstConfigBtn">
-                                <i class="material-icons">add</i> 添加配置
-                            </button>
-                        </div>
-                    </div>
-                </main>
-            </div>
-            
-            <!-- 配置弹窗 -->
-            <div class="modal fade" id="configModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">
-                                <i class="material-icons">settings</i>
-                                <span id="modalTitle">添加新评估配置</span>
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="attackConfigForm">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="attackType">评估类型</label>
-                                            <select class="form-control" id="attackType" name="attackType">
-                                                <option value="AdversarialAttack">对抗攻击</option>
-                                                <option value="FET">梯度反演</option>
-                                                <option value="BackDoorAttack">后门攻击</option>
-                                                <option value="PoisoningAttack">数据投毒</option>
-                                                <option value="RLMI">模型反演</option>
-                                                <option value="ModelStealingAttack">模型窃取攻击</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="attackStrategy">评估策略</label>
-                                            <select class="form-control" id="attackStrategy" name="attackStrategy"></select>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="configName">配置名称 <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="configName" placeholder="输入配置名称" required>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="description">评估描述</label>
-                                    <textarea class="form-control" id="description" rows="3" placeholder="输入任务描述..."></textarea>
-                                </div>
-                                
-                                <div class="accordion" id="advancedSettingsAccordion">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingAdvanced">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdvanced">
-                                                <i class="material-icons me-2">tune</i> 高级设置
-                                            </button>
-                                        </h2>
-                                        <div id="collapseAdvanced" class="accordion-collapse collapse show">
-                                            <div class="accordion-body">
-                                                <div class="param-group" id="advancedSettingsContent">
-                                                    <!-- 动态生成的高级设置字段将在这里显示 -->
-                                                </div>
-                                                
-                                                <!-- 防御设置区域 -->
-                                                <div id="defenseSettings">
-                                                    <!-- 动态生成的防御设置将在这里显示 -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" class="btn btn-primary" id="saveConfigBtn">保存配置</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 全局配置弹窗 -->
-            <div class="modal fade" id="globalConfigModal" tabindex="-1">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">
-                                <i class="material-icons">settings_applications</i>
-                                评估全局配置
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="globalConfigForm">
-                                <div class="global-config-card">
-                                    <h3><i class="material-icons">tune</i> 常规训练配置</h3>
-                                    <div class="global-config-grid">
-                                        <div class="global-config-item">
-                                            <h4><i class="material-icons">settings</i> 常规设置</h4>
-                                            <div class="form-group">
-                                                <label for="randomSeed">随机种子</label>
-                                                <input type="number" class="form-control" id="randomSeed" value="0">
-                                            </div>
-                                            <div class="form-group mt-3">
-                                                <label for="logFileName">日志文件名</label>
-                                                <input type="text" class="form-control" id="logFileName" value="single">
-                                            </div>
-                                            <div class="form-check form-switch mt-3">
-                                                <input class="form-check-input" type="checkbox" id="useGPU" checked>
-                                                <label class="form-check-label" for="useGPU">使用GPU加速</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="global-config-card">
-                                    <h3><i class="material-icons">model_training</i> 模型配置</h3>
-                                    <div class="global-config-grid">
-                                        <div class="global-config-item">
-                                            <h4><i class="material-icons">select_all</i> 预选模型</h4>
-                                            <div class="form-group">
-                                                <select class="form-select" id="predefinedModel">
-                                                    <option value="">-- 选择预定义模型 --</option>
-                                                    <option value="bert_base_chinese">bert-base-chinese</option>
-                                                    <option value="bert_base_uncased" selected>bert-base-uncased</option>
-                                                    <option value="bart_large_mnli">bart-large-mnli</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="global-config-item">
-                                            <h4><i class="material-icons">link</i> 自定义模型</h4>
-                                            <div class="form-group">
-                                                <label for="customModelUrl">HuggingFace模型链接</label>
-                                                <input type="text" class="form-control" id="customModelUrl" placeholder="https://huggingface.co/...">
-                                            </div>
-                                            <div class="form-check form-switch mt-3">
-                                                <input class="form-check-input" type="checkbox" id="localModel" checked>
-                                                <label class="form-check-label" for="localModel">使用本地模型</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="global-config-card">
-                                    <h3><i class="material-icons">assignment</i> 任务配置</h3>
-                                    <div class="global-config-grid">
-                                        <div class="global-config-item">
-                                            <h4><i class="material-icons">task</i> 任务类型</h4>
-                                            <div class="form-group">
-                                                <select class="form-select" id="taskType">
-                                                    <option value="">-- 选择任务类型 --</option>
-                                                    <option value="TaskForSingleSentenceClassification" selected>单标签单文本分类</option>
-                                                    <option value="TaskForPairSentence">文本对分类</option>
-                                                    <option value="TaskForMultipleChoice">问答选择任务</option>
-                                                    <option value="TaskForSQuADQuestionAnswering">问题回答任务</option>
-                                                    <option value="TaskForPretraining">预训练任务</option>
-                                                    <option value="TaskForChineseNER">命名体识别</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-check form-switch mt-3">
-                                                <input class="form-check-input" type="checkbox" id="normalTraining">
-                                                <label class="form-check-label" for="normalTraining">启用常规训练</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="global-config-card">
-                                    <h3><i class="material-icons">storage</i> 数据集配置</h3>
-                                    <div class="global-config-grid">
-                                        <div class="global-config-item">
-                                            <h4><i class="material-icons">dataset</i> 数据集选择</h4>
-                                            <div class="form-group">
-                                                <select class="form-select" id="dataset">
-                                                    <option value="">-- 选择数据集 --</option>
-                                                    <optgroup label="英文数据集">
-                                                        <option value="imdb" selected>IMDB情感分类</option>
-                                                        <option value="GLUE/cola">GLUE/CoLA</option>
-                                                        <option value="GLUE/mnli">GLUE/MNLI</option>
-                                                        <option value="GLUE/mrpc">GLUE/MRPC</option>
-                                                        <option value="GLUE/sst2">GLUE/SST-2</option>
-                                                        <option value="emotion">情感分析数据集</option>
-                                                        <option value="yelp">Yelp评论数据集</option>
-                                                    </optgroup>
-                                                    <optgroup label="中文数据集">
-                                                        <option value="SingleSentenceClassification">今日头条15分类</option>
-                                                        <option value="PairSentenceClassification">MNLI中文数据集</option>
-                                                        <option value="MultipeChoice">SWAG问题选择</option>
-                                                        <option value="SQuAD">斯坦福问答数据集</option>
-                                                        <option value="WikiText">维基百科语料</option>
-                                                        <option value="SongCi">宋词语料</option>
-                                                        <option value="ChineseNER">中文命名体识别</option>
-                                                        <option value="SentimentAnalysis">后门攻击预处理数据集</option>
-                                                    </optgroup>
-                                                </select>
-                                            </div>
-                                            <div class="form-check form-switch mt-3">
-                                                <input class="form-check-input" type="checkbox" id="localDataset" checked>
-                                                <label class="form-check-label" for="localDataset">使用本地数据集</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" class="btn btn-primary" id="saveGlobalConfigBtn">保存全局配置</button>
+                    <div class="col-md-4">
+                        <div class="feature-card text-center">
+                            <i class="material-icons">bolt</i>
+                            <h3>快速执行评估</h3>
+                            <p>一键发送配置并执行评估，高效完成安全测试任务</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="container-fluid py-4">
+            <!-- 主内容区 -->
+            <main class="main-content">
+                <!-- 页面标题和操作按钮 -->
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>模型评估配置管理</h1>
+                        <p>管理您的评估类型、策略和高级设置</p>
+                    </div>
+                    <div class="action-buttons">
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-light d-flex align-items-center" id="addNewConfigBtn">
+                                <i class="material-icons me-1">add</i> 添加配置
+                            </button>
+                            <button class="btn btn-outline-primary d-flex align-items-center" id="globalConfigBtn">
+                                <i class="material-icons me-1">settings_applications</i> 全局配置
+                            </button>
+                            <button class="btn btn-outline-primary d-flex align-items-center" id="sendConfigBtn">
+                                <i class="material-icons me-1">send</i> 发送配置
+                            </button>
+                            <button class="btn btn-outline-success d-flex align-items-center" id="executeAttackBtn">
+                                <i class="material-icons me-1">play_arrow</i> 执行评估
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 全局配置摘要 -->
+                <div class="global-config-card">
+                    <h3><i class="material-icons">settings</i> 当前全局配置</h3>
+                    <div class="config-summary" id="globalConfigSummary">
+                        <div class="summary-item">
+                            <h5><i class="material-icons">memory</i> 模型配置</h5>
+                            <div id="modelConfigSummary">未配置</div>
+                        </div>
+                        <div class="summary-item">
+                            <h5><i class="material-icons">assignment</i> 任务配置</h5>
+                            <div id="taskConfigSummary">未配置</div>
+                        </div>
+                        <div class="summary-item">
+                            <h5><i class="material-icons">storage</i> 数据集配置</h5>
+                            <div id="datasetConfigSummary">未配置</div>
+                        </div>
+                        <div class="summary-item">
+                            <h5><i class="material-icons">tune</i> 常规配置</h5>
+                            <div id="generalConfigSummary">未配置</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 执行攻击名称模态框 -->
+                <div class="modal fade" id="executeAttackModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="material-icons">play_arrow</i>
+                                    执行评估
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="executeAttackForm">
+                                    <div class="form-group">
+                                        <label for="attackName">评估名称 <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="attackName" placeholder="输入此次任务执行的名称" required>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-primary" id="confirmExecuteBtn">执行</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 统计卡片 -->
+                <div class="stats-container">
+                    <div class="stats-card primary">
+                        <div class="stats-header">
+                            <div class="stats-icon">
+                                <i class="material-icons">list_alt</i>
+                            </div>
+                        </div>
+                        <div class="stats-content">
+                            <h3 id="totalConfigs">0</h3>
+                            <p>总配置数</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card success">
+                        <div class="stats-header">
+                            <div class="stats-icon">
+                                <i class="material-icons">check_circle</i>
+                            </div>
+                        </div>
+                        <div class="stats-content">
+                            <h3 id="activeConfigs">0</h3>
+                            <p>活跃配置</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card warning">
+                        <div class="stats-header">
+                            <div class="stats-icon">
+                                <i class="material-icons">schedule</i>
+                            </div>
+                        </div>
+                        <div class="stats-content">
+                            <h3 id="attackTypes">0</h3>
+                            <p>评估类型</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card danger">
+                        <div class="stats-header">
+                            <div class="stats-icon">
+                                <i class="material-icons">bolt</i>
+                            </div>
+                        </div>
+                        <div class="stats-content">
+                            <h3 id="executedAttacks">0</h3>
+                            <p>已执行评估</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 配置列表 -->
+                <div class="config-card">
+                    <div class="card-header flex-wrap flex-md-nowrap" style="gap:1rem;">
+                        <h2 class="mb-2 mb-md-0 d-flex align-items-center flex-shrink-0">
+                            <i class="material-icons">list</i>
+                            模型评估配置列表
+                            <span class="badge bg-primary" id="configCounter">0</span>
+                        </h2>
+                        <div class="card-tools d-flex flex-wrap align-items-center gap-2 ms-md-auto">
+                            <div class="search-box d-flex align-items-center flex-shrink-0" style="min-width:220px;">
+                                <i class="material-icons me-2">search</i>
+                                <input type="text" id="searchInput" placeholder="搜索配置...">
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                                <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="statusFilterDropdown" data-bs-toggle="dropdown">
+                                    <i class="material-icons me-1">filter_list</i> <span>状态筛选</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="all">全部状态</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="active">活跃配置</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="inactive">已禁用</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="sent">已发送</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="not_sent">未发送</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="executed">已执行</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="not_executed">未执行</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="typeFilterDropdown" data-bs-toggle="dropdown">
+                                    <i class="material-icons me-1">label</i> <span>类型筛选</span>
+                                </button>
+                                <ul class="dropdown-menu" id="typeFilterMenu">
+                                    <li><a class="dropdown-item type-filter-option" href="#" data-type="all">全部类型</a></li>
+                                    <!-- 动态生成攻击类型选项 -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="filterTags" class="filter-container"></div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">配置名称</th>
+                                    <th class="text-center">评估类型</th>
+                                    <th class="text-center">评估策略</th>
+                                    <th class="text-center">防御状态</th>
+                                    <th class="text-center">状态</th>
+                                    <th class="text-center">创建时间</th>
+                                    <th class="text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="configTableBody">
+                                <!-- 配置列表会动态填充 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="noConfigsMessage" class="no-configs d-none">
+                        <i class="material-icons">folder_off</i>
+                        <h4>暂无配置</h4>
+                        <p>点击"添加新配置"按钮创建您的第一个模型评估配置</p>
+                        <button class="btn btn-primary mt-3" id="addFirstConfigBtn">
+                            <i class="material-icons">add</i> 添加配置
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <!-- 配置弹窗 -->
+        <div class="modal fade" id="configModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="material-icons">settings</i>
+                            <span id="modalTitle">添加新评估配置</span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="attackConfigForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="attackType">评估类型</label>
+                                        <select class="form-control" id="attackType" name="attackType">
+                                            <option value="AdvAttack">对抗攻击</option>
+                                            <option value="FET">梯度反演</option>
+                                            <option value="BackdoorAttack">后门攻击</option>
+                                            <option value="PoisoningAttack">数据投毒</option>
+                                            <option value="RLMI">模型反演</option>
+                                            <option value="ModelStealingAttack">模型窃取攻击</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="attackStrategy">评估策略</label>
+                                        <select class="form-control" id="attackStrategy" name="attackStrategy"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="configName">配置名称 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="configName" placeholder="输入配置名称" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="description">评估描述</label>
+                                <textarea class="form-control" id="description" rows="3" placeholder="输入任务描述..."></textarea>
+                            </div>
+                            
+                            <div class="accordion" id="advancedSettingsAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingAdvanced">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdvanced">
+                                            <i class="material-icons me-2">tune</i> 高级设置
+                                        </button>
+                                    </h2>
+                                    <div id="collapseAdvanced" class="accordion-collapse collapse show">
+                                        <div class="accordion-body">
+                                            <div class="param-group" id="advancedSettingsContent">
+                                                <!-- 动态生成的高级设置字段将在这里显示 -->
+                                            </div>
+                                            
+                                            <!-- 防御设置区域 -->
+                                            <div id="defenseSettings">
+                                                <!-- 动态生成的防御设置将在这里显示 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="saveConfigBtn">保存配置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 全局配置弹窗 -->
+        <div class="modal fade" id="globalConfigModal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="material-icons">settings_applications</i>
+                            评估全局配置
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="globalConfigForm">
+                            <div class="global-config-card">
+                                <h3><i class="material-icons">tune</i> 常规训练配置</h3>
+                                <div class="global-config-grid">
+                                    <div class="global-config-item">
+                                        <h4><i class="material-icons">settings</i> 常规设置</h4>
+                                        <div class="form-group">
+                                            <label for="randomSeed">随机种子</label>
+                                            <input type="number" class="form-control" id="randomSeed" value="0">
+                                        </div>
+                                        <!-- 已移除日志文件名输入框 -->
+                                        <div class="form-check form-switch mt-3">
+                                            <input class="form-check-input" type="checkbox" id="useGPU" checked>
+                                            <label class="form-check-label" for="useGPU">使用GPU加速</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="global-config-card">
+                                <h3><i class="material-icons">model_training</i> 模型配置</h3>
+                                <div class="global-config-grid">
+                                    <div class="global-config-item">
+                                        <h4><i class="material-icons">select_all</i> 预选模型</h4>
+                                        <div class="form-group">
+                                            <select class="form-select" id="predefinedModel">
+                                                <!-- 添加 disabled 选项 -->
+                                                <option value="" disabled selected>-- 选择预定义模型 --</option>
+                                                <option value="bert_base_chinese">bert-base-chinese</option>
+                                                <option value="bert_base_uncased">bert-base-uncased</option>
+                                                <option value="bart_large_mnli">bart-large-mnli</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="global-config-item">
+                                        <h4><i class="material-icons">link</i> 自定义模型</h4>
+                                        <div class="form-group">
+                                            <label for="customModelUrl">HuggingFace模型链接</label>
+                                            <input type="text" class="form-control" id="customModelUrl" placeholder="https://huggingface.co/...">
+                                        </div>
+                                        <div class="form-check form-switch mt-3">
+                                            <input class="form-check-input" type="checkbox" id="localModel" checked>
+                                            <label class="form-check-label" for="localModel">使用本地模型</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="global-config-card">
+                                <h3><i class="material-icons">assignment</i> 任务配置</h3>
+                                <div class="global-config-grid">
+                                    <div class="global-config-item">
+                                        <h4><i class="material-icons">task</i> 任务类型</h4>
+                                        <div class="form-group">
+                                            <select class="form-select" id="taskType">
+                                                <!-- 添加 disabled 选项 -->
+                                                <option value="" disabled selected>-- 选择任务类型 --</option>
+                                                <option value="TaskForSingleSentenceClassification">单标签单文本分类</option>
+                                                <option value="TaskForPairSentence">文本对分类</option>
+                                                <option value="TaskForMultipleChoice">问答选择任务</option>
+                                                <option value="TaskForSQuADQuestionAnswering">问题回答任务</option>
+                                                <option value="TaskForPretraining">预训练任务</option>
+                                                <option value="TaskForChineseNER">命名体识别</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-check form-switch mt-3">
+                                            <input class="form-check-input" type="checkbox" id="normalTraining">
+                                            <label class="form-check-label" for="normalTraining">启用常规训练</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="global-config-card">
+                                <h3><i class="material-icons">storage</i> 数据集配置</h3>
+                                <div class="global-config-grid">
+                                    <div class="global-config-item">
+                                        <h4><i class="material-icons">dataset</i> 数据集选择</h4>
+                                        <div class="form-group">
+                                            <select class="form-select" id="dataset">
+                                                <!-- 添加 disabled 选项 -->
+                                                <option value="" disabled selected>-- 选择数据集 --</option>
+                                                <optgroup label="英文数据集">
+                                                    <option value="imdb">IMDB情感分类</option>
+                                                    <option value="GLUE/cola">GLUE/CoLA</option>
+                                                    <option value="GLUE/mnli">GLUE/MNLI</option>
+                                                    <option value="GLUE/mrpc">GLUE/MRPC</option>
+                                                    <option value="GLUE/sst2">GLUE/SST-2</option>
+                                                    <option value="emotion">情感分析数据集</option>
+                                                    <option value="yelp">Yelp评论数据集</option>
+                                                </optgroup>
+                                                <optgroup label="中文数据集">
+                                                    <option value="SingleSentenceClassification">今日头条15分类</option>
+                                                    <option value="PairSentenceClassification">MNLI中文数据集</option>
+                                                    <option value="MultipeChoice">SWAG问题选择</option>
+                                                    <option value="SQuAD">斯坦福问答数据集</option>
+                                                    <option value="WikiText">维基百科语料</option>
+                                                    <option value="SongCi">宋词语料</option>
+                                                    <option value="ChineseNER">中文命名体识别</option>
+                                                    <option value="SentimentAnalysis">后门攻击预处理数据集</option>
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                        <div class="form-check form-switch mt-3">
+                                            <input class="form-check-input" type="checkbox" id="localDataset" checked>
+                                            <label class="form-check-label" for="localDataset">使用本地数据集</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="saveGlobalConfigBtn">保存全局配置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 		<footer class="footer py-4  ">
 			<div class="container-fluid">
 				<div class="row align-items-center justify-content-lg-between">
@@ -1347,15 +1352,15 @@
 			</div>
 		</div>
 	</div> -->
- <div id="toastContainer"></div>
+<div id="toastContainer"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         // 攻击配置数据
         const attackConfigs = {
-            attackTypes: ['AdversarialAttack', 'FET', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'ModelStealingAttack'],
+            attackTypes: ['AdvAttack', 'FET', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'ModelStealingAttack'],
             recipes: {
-                AdversarialAttack: [
+                AdvAttack: [
                     'A2TYoo2021', 'BAEGarg2019', 'BERTAttackLi2020', 'GeneticAlgorithmAlzantot2018',
                     'FasterGeneticAlgorithmJia2019', 'DeepWordBugGao2018', 'HotFlipEbrahimi2017',
                     'InputReductionFeng2018', 'Kuleshov2017', 'MorpheusTan2020', 'Seq2SickCheng2018BlackBox',
@@ -1363,13 +1368,13 @@
                     'PSOZang2020', 'CheckList2020', 'CLARE2020', 'FrenchRecipe', 'SpanishRecipe', 'ChineseRecipe'
                 ],
                 FET: ['FET/SWAT'],
-                BackDoorAttack: ['BadNets','AddSent','SynBkd','StyleBkd','POR','TrojanLM','SOS','LWP','EP','NeuBA','LWS','RIPPLES'],
+                BackdoorAttack: ['BadNets','AddSent','SynBkd','StyleBkd','POR','TrojanLM','SOS','LWP','EP','NeuBA','LWS','RIPPLES'],
                 PoisoningAttack: ['Poisoning'],
                 RLMI: ['RLMI'],
                 ModelStealingAttack: ['MeaeQ']
             },
             defaults: {
-                AdversarialAttack: {
+                AdvAttack: {
                     use_local_model: true,
                     use_local_tokenizer: true,
                     use_local_dataset: false,
@@ -1387,7 +1392,7 @@
                     max_generations: 2,
                     halloffame_size: 30
                 },
-                BackDoorAttack: {
+                BackdoorAttack: {
                     sample_metrics: []
                 },
                 PoisoningAttack: {
@@ -1413,17 +1418,17 @@
                 }
             },
             descriptions: {
-                AdversarialAttack: "通过微小的、难以察觉的扰动来欺骗模型，使其做出错误的预测",
+                AdvAttack: "通过微小的、难以察觉的扰动来欺骗模型，使其做出错误的预测",
                 FET: "梯度反演",
-                BackDoorAttack: "在训练数据中植入后门，使模型在特定触发条件下表现出异常行为",
+                BackdoorAttack: "在训练数据中植入后门，使模型在特定触发条件下表现出异常行为",
                 PoisoningAttack: "通过污染训练数据来降低模型性能或植入后门",
                 RLMI: "模型反演",
                 ModelStealingAttack: "通过查询目标模型来窃取其结构和参数"
             },
             typeNames: {
-                AdversarialAttack: "对抗攻击",
+                AdvAttack: "对抗攻击",
                 FET: "梯度反演",
-                BackDoorAttack: "后门攻击",
+                BackdoorAttack: "后门攻击",
                 PoisoningAttack: "数据投毒",
                 RLMI: "模型反演",
                 ModelStealingAttack: "模型窃取"
@@ -1441,8 +1446,7 @@
         let globalConfig = {
             general: {
                 random_seed: 42,
-                use_gpu: false,
-                log_file_name: 'single'
+                use_gpu: true
             },
             LM_config: {
                 model: "bert_base_uncased",
@@ -1549,11 +1553,11 @@
             document.getElementById('modalTitle').textContent = '添加新评估配置';
             document.getElementById('configName').value = '';
             document.getElementById('description').value = '';
-            document.getElementById('attackType').value = 'AdversarialAttack';
+            document.getElementById('attackType').value = 'AdvAttack';
             
             updateAttackStrategies();
-            updateAdvancedSettings('AdversarialAttack');
-            updateDefenseSettings('AdversarialAttack');
+            updateAdvancedSettings('AdvAttack');
+            updateDefenseSettings('AdvAttack');
             
             // 显示模态框
             const modal = new bootstrap.Modal(document.getElementById('configModal'));
@@ -1564,7 +1568,6 @@
         function showGlobalConfigModal() {
             // 填充全局配置表单
             document.getElementById('randomSeed').value = globalConfig.general.random_seed;
-            document.getElementById('logFileName').value = globalConfig.general.log_file_name;
             document.getElementById('useGPU').checked = globalConfig.general.use_gpu;
             document.getElementById('predefinedModel').value = globalConfig.LM_config.model;
             document.getElementById('localModel').checked = globalConfig.LM_config.local_model;
@@ -1584,8 +1587,7 @@
             globalConfig = {
                 general: {
                     random_seed: parseInt(document.getElementById('randomSeed').value) || 0,
-                    use_gpu: document.getElementById('useGPU').checked,
-                    log_file_name: document.getElementById('logFileName').value || 'single'
+                    use_gpu: document.getElementById('useGPU').checked
                 },
                 LM_config: {
                     model: document.getElementById('predefinedModel').value,
@@ -1641,8 +1643,7 @@
             
             // 常规配置摘要
             let generalSummary = `随机种子: ${globalConfig.general.random_seed}<br>`;
-            generalSummary += `使用GPU: ${globalConfig.general.use_gpu ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}<br>`;
-            generalSummary += `日志文件: ${globalConfig.general.log_file_name}`;
+            generalSummary += `使用GPU: ${globalConfig.general.use_gpu ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}`;
             document.getElementById('generalConfigSummary').innerHTML = generalSummary;
         }
         
@@ -1690,21 +1691,21 @@
                 {
                     id: 1,
                     name: "文本对抗攻击配置",
-                    type: "AdversarialAttack",
+                    type: "AdvAttack",
                     strategy: "TextFoolerJin2019",
                     description: "针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型",
                     status: "active",
                     defenderEnabled: true,
                     sent: true,
                     executed: true,
-                    createdAt: "2025-05-15 10:30",
+                    createdAt: "2025-07-15 10:30",
                     params: {
                         use_local_model: true,
                         attack_nums: 3,
                         defender: {
                             num_epochs: 1,
-                            num_clean_epochs: 1,
-                            num_train_adv_examples: 1000,
+                            num_clean_epochs: 0,
+                            num_train_adv_examples: 10,
                             learning_rate: 5e-5,
                             per_device_train_batch_size: 8,
                             gradient_accumulation_steps: 4,
@@ -1715,16 +1716,16 @@
                 {
                     id: 2,
                     name: "后门攻击配置",
-                    type: "BackDoorAttack",
-                    strategy: "TrojanLM",
-                    description: "植入后门的攻击配置，在特定触发词出现时改变模型行为",
-                    status: "inactive",
+                    type: "BackdoorAttack",
+                    strategy: "BadNets",
+                    description: "针对NLP模型的后门攻击，植入特定触发模式",
+                    status: "active",
                     defenderEnabled: true,
-                    sent: false,
+                    sent: true,
                     executed: false,
-                    createdAt: "2025-05-18 14:20",
+                    createdAt: "2025-07-20 14:15",
                     params: {
-                        sample_metrics: ["accuracy"],
+                        sample_metrics: ["ppl", "use"],
                         defender: {
                             strategy: "ONION"
                         }
@@ -1776,6 +1777,11 @@
                     createdAt: "2025-06-12 11:20",
                     params: {
                         seed: 123,
+                        seq_length: 20,
+                        target_label: 1,
+                        min_input_length: 3,
+                        max_input_length: 8,
+                        num_generation: 1500,
                         max_iterations: 2500
                     }
                 }
@@ -1851,9 +1857,9 @@
                 }
                 
                 // 防御状态
-                let defenseStatus = '<span class="badge badge-info">未启用</span>';
+                let defenseStatus = '<span class="badge badge-privacy">未启用</span>';
                 if (config.defenderEnabled) {
-                    defenseStatus = '<span class="badge badge-primary">已启用</span>';
+                    defenseStatus = '<span class="badge bg-success">已启用</span>';
                 }
                 
                 // 生成类型徽章 - 使用色系分类
@@ -1861,13 +1867,13 @@
                 let strategyClass;
                 
                 // 安全攻击类（蓝色系）
-                if (['AdversarialAttack', 'BackDoorAttack', 'PoisoningAttack'].includes(config.type)) {
+                if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
                     // 为安全攻击类分配蓝色系徽章
                     switch(config.type) {
-                        case 'AdversarialAttack':
+                        case 'AdvAttack':
                             badgeClass = 'badge-security'; // 主蓝色
                             break;
-                        case 'BackDoorAttack':
+                        case 'BackdoorAttack':
                             badgeClass = 'badge-security-dark'; // 深蓝色
                             break;
                         case 'PoisoningAttack':
@@ -1900,8 +1906,8 @@
                 }
                 
                 // 策略徽章 - 启用防御时使用攻击类型颜色，否则使用灰色
-                strategyClass = config.defenderEnabled ? 'badge-primary' : 'badge-info';
-                
+                strategyClass = config.defenderEnabled ? 'badge bg-success' : 'badge-privacy';
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${config.name}</td>
@@ -1909,7 +1915,7 @@
                     <td><span class="badge ${strategyClass}">${config.strategy}</span></td>
                     <td>${defenseStatus}</td>
                     <td>
-                        <div class="d-flex flex-wrap gap-2">
+                        <div class="status-container">
                             ${statusBadges.join('')}
                         </div>
                     </td>
@@ -2068,6 +2074,20 @@
                     }
                 }
 
+                // 特殊处理：后门攻击的样本指标
+                if (config.type === 'BackdoorAttack' && config.params.sample_metrics) {
+                    const sampleMetrics = config.params.sample_metrics;
+                    if (document.getElementById('ppl')) {
+                        document.getElementById('ppl').checked = sampleMetrics.includes('ppl');
+                    }
+                    if (document.getElementById('use')) {
+                        document.getElementById('use').checked = sampleMetrics.includes('use');
+                    }
+                    if (document.getElementById('grammar')) {
+                        document.getElementById('grammar').checked = sampleMetrics.includes('grammar');
+                    }
+                }
+
                 // 填充防御设置
                 const defenseEnabled = config.defenderEnabled || false;
                 const defenderSwitch = document.getElementById('defenderSwitch');
@@ -2081,7 +2101,7 @@
                     const defenderParams = config.params.defender;
 
                     // 对抗攻击防御参数
-                    if (config.type === 'AdversarialAttack') {
+                    if (config.type === 'AdvAttack') {
                         if (defenderParams.num_epochs !== undefined && document.getElementById('defense_num_epochs')) {
                             document.getElementById('defense_num_epochs').value = defenderParams.num_epochs;
                         }
@@ -2105,7 +2125,7 @@
                         }
                     }
                     // 后门攻击防御参数
-                    else if (config.type === 'BackDoorAttack') {
+                    else if (config.type === 'BackdoorAttack') {
                         if (defenderParams.strategy !== undefined && document.getElementById('defenderStrategy')) {
                             document.getElementById('defenderStrategy').value = defenderParams.strategy;
                         }
@@ -2160,8 +2180,8 @@
             const defenseSettings = document.getElementById('defenseSettings');
             defenseSettings.innerHTML = '';
             
-            if (attackType === 'AdversarialAttack' || attackType === 'BackDoorAttack') {
-                const isAdversarial = attackType === 'AdversarialAttack';
+            if (attackType === 'AdvAttack' || attackType === 'BackdoorAttack') {
+                const isAdversarial = attackType === 'AdvAttack';
                 
                 const defenseSection = document.createElement('div');
                 defenseSection.className = 'defense-section';
@@ -2261,12 +2281,12 @@
                 const col = document.createElement('div');
                 col.className = 'param-item';
                 
-                if (attackType === 'BackDoorAttack') {
+                if (attackType === 'BackdoorAttack') {
                     // 后门攻击特殊字段处理
                     if (key === 'sample_metrics') {
                         col.innerHTML = `
                             <label class="form-label">样本指标</label>
-                            <div>
+                            <div class="backdoor-metrics">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="ppl" value="ppl">
                                     <label class="form-check-label" for="ppl">PPL</label>
@@ -2362,17 +2382,28 @@
             const params = {};
             const settings = attackConfigs.defaults[attackType] || {};
             
+            // 修复点1: 单独处理后门攻击的样本指标
+            if (attackType === 'BackdoorAttack') {
+                params.sample_metrics = [];
+                if (document.getElementById('ppl') && document.getElementById('ppl').checked) {
+                    params.sample_metrics.push('ppl');
+                }
+                if (document.getElementById('use') && document.getElementById('use').checked) {
+                    params.sample_metrics.push('use');
+                }
+                if (document.getElementById('grammar') && document.getElementById('grammar').checked) {
+                    params.sample_metrics.push('grammar');
+                }
+            }
+            
             for (const key of Object.keys(settings)) {
+                // 跳过已经在上面特殊处理的字段
+                if (attackType === 'BackdoorAttack' && key === 'sample_metrics') continue;
+                
                 const input = document.getElementById(key);
                 
                 if (input) {
-                    if (attackType === 'BackDoorAttack' && key === 'sample_metrics') {
-                        // 处理后门攻击的样本指标多选框
-                        params[key] = [];
-                        if (document.getElementById('ppl').checked) params[key].push('ppl');
-                        if (document.getElementById('use').checked) params[key].push('use');
-                        if (document.getElementById('grammar').checked) params[key].push('grammar');
-                    } else if (input.type === 'checkbox') {
+                    if (input.type === 'checkbox') {
                         params[key] = input.checked;
                     } else if (input.type === 'number') {
                         params[key] = parseFloat(input.value);
@@ -2386,8 +2417,9 @@
             const defenderSwitch = document.getElementById('defenderSwitch');
             const defenderEnabled = defenderSwitch ? defenderSwitch.checked : false;
             
+            // 根据要求处理防御状态
             if (defenderEnabled) {
-                if (attackType === 'AdversarialAttack') {
+                if (attackType === 'AdvAttack') {
                     // 收集对抗攻击防御参数
                     params.defender = {
                         num_epochs: parseInt(document.getElementById('defense_num_epochs').value) || 1,
@@ -2398,12 +2430,19 @@
                         gradient_accumulation_steps: parseInt(document.getElementById('defense_gradient_accumulation_steps').value) || 4,
                         log_to_tb: document.getElementById('defense_log_to_tb').checked
                     };
-                } else if (attackType === 'BackDoorAttack') {
+                } else if (attackType === 'BackdoorAttack') {
                     // 收集后门攻击防御策略
                     const defenderStrategy = document.getElementById('defenderStrategy');
                     params.defender = {
                         strategy: defenderStrategy ? defenderStrategy.value : 'None'
                     };
+                }
+            } else {
+                // 未启用防御时的处理
+                if (attackType === 'AdvAttack') {
+                    params.defender = false; // 对抗攻击设置为false
+                } else if (attackType === 'BackdoorAttack') {
+                    params.defender = "None"; // 后门攻击设置为"None"
                 }
             }
             
@@ -2477,7 +2516,12 @@
                     attack_list: activeConfigs,
                     globalConfig: globalConfig,
                   });
-                  console.log('发送配置:', activeConfigs);
+                  console.log('发送配置请求:', {
+                    username: authStore.username,
+                    attack_list: activeConfigs,
+                    globalConfig: globalConfig
+                  });
+
                   if (response.status ===200) {
                     showToast('配置已发送到服务器', 'success');
                     renderConfigTable();
@@ -2551,7 +2595,7 @@
                 
             } catch (err) {
                 console.error('执行失败:', err);
-                showToast('攻击执行失败', 'error');
+                //showToast('攻击执行失败', 'error');
             }
         }
         
@@ -2627,13 +2671,13 @@
                 let strategyClass;
                 
                 // 安全攻击类（蓝色系）
-                if (['AdversarialAttack', 'BackDoorAttack', 'PoisoningAttack'].includes(config.type)) {
+                if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
                     // 为安全攻击类分配蓝色系徽章
                     switch(config.type) {
-                        case 'AdversarialAttack':
+                        case 'AdvAttack':
                             badgeClass = 'badge-security'; // 主蓝色
                             break;
-                        case 'BackDoorAttack':
+                        case 'BackdoorAttack':
                             badgeClass = 'badge-security-dark'; // 深蓝色
                             break;
                         case 'PoisoningAttack':
@@ -2666,8 +2710,8 @@
                 }
                 
                 // 策略徽章 - 启用防御时使用攻击类型颜色，否则使用灰色
-                strategyClass = config.defenderEnabled ? badgeClass : 'badge-secondary';
-                
+                strategyClass = config.defenderEnabled ? 'badge-primary' : 'badge-secondary';
+                defenseStatus = config.defenderEnabled ? 'badge-primary' : 'badge-secondary';
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${config.name}</td>
@@ -2675,7 +2719,7 @@
                     <td><span class="badge ${strategyClass}">${config.strategy}</span></td>
                     <td>${defenseStatus}</td>
                     <td>
-                        <div class="d-flex flex-wrap gap-2">
+                        <div class="status-container">
                             ${statusBadges.join('')}
                         </div>
                     </td>

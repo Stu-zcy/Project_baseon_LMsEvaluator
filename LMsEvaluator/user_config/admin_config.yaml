@@ -24,7 +24,7 @@ attack_list:
     use_local_tokenizer: true
 - attack_args:
     attack: true
-    attack_type: BackDoorAttack
+    attack_type: BackdoorAttack
     defender:
       strategy: ONION
     display_full_info: true

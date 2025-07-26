@@ -4,9 +4,9 @@ LM_config:
 attack_list:
 - attack_args:
     attack: true
-    attack_nums: 2
+    attack_nums: 3
     attack_recipe: TextFoolerJin2019
-    attack_type: AdversarialAttack
+    attack_type: AdvAttack
     dataset_name_or_path: datasets/imdb/train.txt
     defender:
       gradient_accumulation_steps: 4
@@ -44,18 +44,18 @@ attack_list:
     attack: true
     attack_type: ModelStealingAttack
     epsilon: -1
-    initial_drk_model: null
+    initial_drk_model: None
     initial_sample_method: random_sentence
     method: RS
     pool_data_source: wiki
     pool_data_type: whole
     pool_subsize: -1
-    prompt: null
+    prompt: None
     query_num: 320
     run_seed_arr:
     - 56
 - attack_args:
-    attack: false
+    attack: true
     attack_type: RLMI
     dataset_name: emotion
     max_input_length: 5

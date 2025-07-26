@@ -516,9 +516,13 @@ def receive_attack_list():
     return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': attack_list})
 
 
+executed_request_ids = set()
+
 @app.route('/api/execute_attack', methods=['POST'])
 @auth
 def execute_attack():
+    if request.method == 'OPTIONS':
+        return '', 200  # 直接返回 OK，浏览器预检就不会再进业务逻辑
     try:
         print(f"METHOD: {request.method}")
         data = request.json
@@ -527,7 +531,7 @@ def execute_attack():
         attackName = data.get('attack_name', None).strip('"')
         print(f"Attack name: {attackName}")
         attack_info = get_attack_info(username)
-        print("Attack info:", attack_info)  # 输出攻击信息
+        #print("Attack info:", attack_info)  # 输出攻击信息
         # 下游任务执行代码
         initTime = int(time.time())
         date = str(datetime.now())[:10]
@@ -547,6 +551,7 @@ def execute_attack():
             
             fileName = username + '_single_' + initTime
             update_log_file_name(username, fileName)
+
             run_pipeline(os.path.join(project_path, 'user_config', username + '_config.yaml'))
 
             print("执行成功！")
@@ -586,7 +591,7 @@ def getRecord():
         result = json.loads(attackRecord.attackResult)
         attackInfo = json.loads(attackRecord.attackInfo)
 
-        attackType = ['AdversarialAttack', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']
+        attackType = ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']
         counters = [0, 0, 0, 0, 0, 0]
         globalConfig = attackInfo[1]
         attackInfo = attackInfo[0]

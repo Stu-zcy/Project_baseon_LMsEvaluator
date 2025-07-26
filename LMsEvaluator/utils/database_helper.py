@@ -9,7 +9,7 @@ def extractResult(path):
 	f = open(path, "r", encoding='utf-8')
 	content = iter(f.readlines())
 	f.close()
-	result = {k: [] for k in ['normalTrain', 'AdversarialAttack', 'BackDoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']}
+	result = {k: [] for k in ['normalTrain', 'AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']}
 	# def GetPair(s: str):
 	# 	ret = re.match(r'\|\s*([a-zA-Z][a-zA-Z ]*[a-zA-Z]):?\s*\|\s*([\d.]+%?)\s*\|', s)
 	# 	return ret.group(1,2)
@@ -53,8 +53,8 @@ def extractResult(path):
 				for _ in range(rowNum):
 					row = next(content)
 					ls.append(getContent(row))
-				result['AdversarialAttack'].append(ls)
-			elif (re.search('PoisoningAttack 攻击开始', row)):
+				result['AdvAttack'].append(ls)
+			elif (re.search('PoisoningAttack攻击开始', row)):
 				while not (re.match(r'\|.*Result.*\|.*\|', row)):
 					row = next(content)
 				rowNum = 2
@@ -64,7 +64,7 @@ def extractResult(path):
 					row = next(content)
 					ls.append(getContent(row))
 				result['PoisoningAttack'].append(ls)
-			elif (re.search('BackDoorAttack 攻击开始', row)):
+			elif (re.search('BackdoorAttack攻击开始', row)):
 				# row = iterate(2)
 				# epochs = int(getData(row))
 				# iterate(3)
@@ -85,7 +85,7 @@ def extractResult(path):
 				# row = iterate(3)
 				# subList.append(getData(row))
 				# ls.append(subList)
-				# result['BackDoorAttack'].append(ls)
+				# result['BackdoorAttack'].append(ls)
 				while not (re.match(r'\|.*Result.*\|.*\|', row)):
 					row = next(content)
 				rowNum = 7
@@ -94,7 +94,7 @@ def extractResult(path):
 				for _ in range(rowNum):
 					row = next(content)
 					ls.append(getContent(row))
-				result['BackDoorAttack'].append(ls)
+				result['BackdoorAttack'].append(ls)
 			elif re.match(r'\|\s*RLMI Attack Results.*\|.*\|', row):
 				rowNum = 4
 				ls = []
@@ -103,7 +103,7 @@ def extractResult(path):
 					row = next(content)
 					ls.append(getContent(row))
 				result['RLMI'].append(ls)
-			elif (re.search('FET 攻击开始', row)):
+			elif (re.search('FET攻击开始', row)):
 				row = next(content)
 				ret = re.search(r'n_attacks=(\d)', row)
 				n_attacks = eval(ret.group(1))

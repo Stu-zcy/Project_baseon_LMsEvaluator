@@ -559,6 +559,13 @@
             color: var(--danger);
         }
         
+        .backdoor-metrics .form-check {
+            background: #e6f7ff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #bae7ff;
+        }
+        
         @media (max-width: 992px) {
             .page-header {
                 flex-direction: column;
@@ -2063,17 +2070,28 @@
             const params = {};
             const settings = attackConfigs.defaults[attackType] || {};
             
+            // 修复点1: 单独处理后门攻击的样本指标
+            if (attackType === 'BackDoorAttack') {
+                params.sample_metrics = [];
+                if (document.getElementById('ppl') && document.getElementById('ppl').checked) {
+                    params.sample_metrics.push('ppl');
+                }
+                if (document.getElementById('use') && document.getElementById('use').checked) {
+                    params.sample_metrics.push('use');
+                }
+                if (document.getElementById('grammar') && document.getElementById('grammar').checked) {
+                    params.sample_metrics.push('grammar');
+                }
+            }
+            
             for (const key of Object.keys(settings)) {
+                // 跳过已经在上面特殊处理的字段
+                if (attackType === 'BackDoorAttack' && key === 'sample_metrics') continue;
+                
                 const input = document.getElementById(key);
                 
                 if (input) {
-                    if (attackType === 'BackDoorAttack' && key === 'sample_metrics') {
-                        // 处理后门攻击的样本指标多选框
-                        params[key] = [];
-                        if (document.getElementById('ppl').checked) params[key].push('ppl');
-                        if (document.getElementById('use').checked) params[key].push('use');
-                        if (document.getElementById('grammar').checked) params[key].push('grammar');
-                    } else if (input.type === 'checkbox') {
+                    if (input.type === 'checkbox') {
                         params[key] = input.checked;
                     } else if (input.type === 'number') {
                         params[key] = parseFloat(input.value);

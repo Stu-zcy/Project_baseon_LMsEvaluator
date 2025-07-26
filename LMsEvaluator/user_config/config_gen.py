@@ -5,7 +5,7 @@ import copy
 # 全局攻击策略
 AdvAttack = {
     "attack": True,
-    "attack_type": "AdversarialAttack",
+    "attack_type": "AdvAttack",
     "attack_recipe": "TextFoolerJin2019",
     "use_local_model": True,
     "use_local_tokenizer": True,
@@ -47,9 +47,9 @@ FET = {
     "display_full_info": True
 }
 
-BackDoorAttack = {
+BackdoorAttack = {
     "attack": True,
-    "attack_type": "BackDoorAttack",
+    "attack_type": "BackdoorAttack",
     "use_local_model": True,
     "model": "bert",
     "model_name_or_path": "LMs/bert_base_uncased",
@@ -57,7 +57,7 @@ BackDoorAttack = {
     "target_dataset": "sst-2",
     "poisoner": {"name": "badnets"},
     "train": {"name": "base", "batch_size": 16, "epochs": 1},
-    "sample_metrics": [],  # ['ppl', 'use', 'grammar']
+    "sample_metrics": ['ppl', 'use'],  # ['ppl', 'use', 'grammar']
     "display_full_info": True,
     "defender": "None"  # str: 所选择的防御方法[BKI,ONION,STRIP,RAP,CUBE]
 }
@@ -82,7 +82,7 @@ PoisoningAttack = {
 }
 
 RLMI = {
-    "attack": False,
+    "attack": True,
     "attack_type": "RLMI",
     "dataset_name": "emotion",
     "model_name": "tinybert4",
@@ -108,23 +108,23 @@ ModelStealingAttack = {
     "attack_type": "ModelStealingAttack",
     "method": "RS",
     "query_num": 320,
-    "run_seed_arr": [56],
+    "run_seed_arr":  [ 56 ],
     "pool_data_type": "whole",
     "pool_data_source": "wiki",
     "pool_subsize": -1,
-    "prompt": None,
+    "prompt": "None",
     "epsilon": -1,
     "initial_sample_method": "random_sentence",
-    "initial_drk_model": None,
+    "initial_drk_model": "None",
     "al_sample_batch_num": -1,
     "al_sample_method": "random"
 }
 
 # 攻击策略字典
 attack_strategies = {
-    "AdversarialAttack": AdvAttack,
+    "AdvAttack": AdvAttack,
     "FET": FET,
-    "BackDoorAttack": BackDoorAttack,
+    "BackdoorAttack": BackdoorAttack,
     "PoisoningAttack": PoisoningAttack,
     "RLMI": RLMI,
     "ModelStealingAttack": ModelStealingAttack
@@ -132,13 +132,7 @@ attack_strategies = {
 
 
 def generate_config(username, attack_list, globalConfig=None):
-    """
-    生成配置文件
-    
-    参数:
-    username (str): 用户名
-    attack_list (list): 攻击配置列表，每个元素是一个字典
-    """
+
     # 初始化配置字典
     config = {
         "general": {
@@ -187,6 +181,10 @@ def generate_config(username, attack_list, globalConfig=None):
         if 'model' in globalConfig:
             config['LM_config']['model'] = globalConfig['model']['predefined']
             config['LM_config']['local_model'] = globalConfig['model']['local_model']
+            if globalConfig['model']['local_model']:
+                config['LM_config']['local_model'] = globalConfig['model']['local_model']
+            else:
+                config['LM_config']['local_model'] = None
         # 合并任务配置
         if 'task' in globalConfig:
             config['task_config']['task'] = globalConfig['task']['task']
@@ -205,8 +203,18 @@ def generate_config(username, attack_list, globalConfig=None):
             # 深度复制攻击策略
             attack_config = copy.deepcopy(attack_strategies[attack_type])
             
-            
-            
+            if attack_type=='AdvAttack':
+                attack_config['attack_recipe']=attack.get('strategy')
+                for param in attack.get('params', []):
+                    attack_config[param] = attack.get('params')[param]
+            elif attack_type=='BackdoorAttack':
+                for param in attack.get('params', []):
+                    if param == 'defender':
+                        attack_config['defender'] = attack.get('params')[param]['strategy']
+                    if param == 'sample_metrics':
+                        for metric in attack.get('params')[param]:
+                            attack_config['sample_metrics'].append(metric)
+                    attack_config[param] = attack.get('params')[param]
             # 将修改后的配置添加到 attack_list
             config["attack_list"].append({
                 "attack_args": attack_config
@@ -291,7 +299,7 @@ if __name__ == '__main__':
         {
             'id': 1,
             'name': '文本对抗攻击配置',
-            'type': 'AdversarialAttack',
+            'type': 'AdvAttack',
             'strategy': 'TextFoolerJin2019',
             'description': '针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型',
             'status': 'active',

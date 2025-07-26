@@ -9,7 +9,7 @@
     sent: true
     status: active
     strategy: TextFoolerJin2019
-    type: AdversarialAttack
+    type: AdvAttack
   - createdAt: 2025-05-20 09:45
     description: 针对训练数据的投毒攻击，污染训练集以降低模型性能
     executed: false

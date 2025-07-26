@@ -188,11 +188,12 @@ def print_log_records():
 def get_attack_info(username):
     output_dir = os.path.dirname(os.path.abspath(__file__))
     info_file = os.path.join(output_dir, "test_data", f"{username}_attack_info.yaml")
+    print("info_file:", info_file)
     if not os.path.exists(info_file):
         print(f"攻击信息文件不存在: {info_file}")
         return []
     try:
-        with open(info_file, 'r' ,encoding='gb2312') as file:
+        with open(info_file, 'r' ) as file:
             attack_info = yaml.safe_load(file)
             return attack_info if attack_info else []
     except Exception as e:
@@ -222,12 +223,13 @@ if __name__ == '__main__':
     
     # 向数据库中添加攻击记录
     lmsDir = os.path.dirname(os.path.abspath(__file__))
-    filename = "u1h_single_1737727113_2025-01-24.txt"
+    filename = "ChenyangZhao_single_1753817674_2025-07-26.txt"
     info = filename.split('_')
     username = 'ChenyangZhao'
     initTime = eval(info[2])
-    result = extractResult(os.path.join(lmsDir, "test_data",filename))
-    add_attack_record('ForDEBUG', username, initTime, json.dumps(result), attackInfo=get_attack_info('admin'), isTreasure=False)
+    #result = extractResult(os.path.join(lmsDir, "test_data",filename))
+    result=extractResult('/Volumes/D/Project/LMsEvaluator/logs/'+filename)
+    add_attack_record('后门', username, initTime, json.dumps(result), attackInfo=get_attack_info('ChenyangZhao'), isTreasure=False)
     
 
     # # 示例日志操作

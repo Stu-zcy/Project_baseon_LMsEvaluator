@@ -11,7 +11,7 @@
 [2024-04-25 01:30:17] - INFO: ###  model_save_dir = /home/zhuzukun/LMsEvaluation/cache
 [2024-04-25 01:30:17] - INFO: ###  logs_save_dir = /home/zhuzukun/LMsEvaluation/logs
 [2024-04-25 01:30:17] - INFO: ###  model_save_path = /home/zhuzukun/LMsEvaluation/cache/model.pt
-[2024-04-25 01:30:17] - INFO: ###  config_parser = {'general': {'random_seed': 0, 'use_gpu': True}, 'LM_config': {'model': 'bert_base_uncased_english'}, 'task_config': {'task': 'TaskForSingleSentenceClassification', 'dataset': 'imdb', 'dataset_type': '.txt', 'split_sep': '_!_', 'epochs': 20}, 'attack_list': [{'attack_args': {'attack': True, 'attack_type': 'AdvAttack', 'attack_recipe': 'TextFoolerJin2019', 'use_local_model': True, 'use_local_tokenizer': True, 'use_local_dataset': True, 'model_name_or_path': 'LMs/bert_base_uncased_english', 'tokenizer_name_or_path': 'LMs/bert_base_uncased_english', 'dataset_name_or_path': 'datasets/imdb/train.txt', 'attack_nums': 20, 'display_full_info': True}}, {'attack_args': {'attack': False, 'attack_type': 'FET', 'seed': 42, 'attack_batch': 2, 'attack_nums': 1, 'distance_func': 'l2', 'population_size': 300, 'tournsize': 5, 'crossover_rate': 0.9, 'mutation_rate': 0.1, 'max_generations': 2, 'halloffame_size': 30, 'use_local_model': True, 'use_local_tokenizer': True, 'model_name_or_path': 'LMs/bert_base_uncased_english', 'tokenizer_name_or_path': 'LMs/bert_base_uncased_english', 'dataset_name_or_path': 'cola', 'display_full_info': True}}, {'attack_args': {'attack': True, 'attack_type': 'BackDoorAttack', 'use_local_model': True, 'model': 'bert', 'model_name_or_path': 'LMs/bert_base_uncased_english', 'poison_dataset': 'sst-2', 'target_dataset': 'sst-2', 'poisoner': {'name': 'badnets'}, 'train': {'name': 'base', 'batch_size': 32, 'epochs': 5}, 'defender': 'None', 'display_full_info': True}}, {'attack_args': {'attack': True, 'attack_type': 'PoisoningAttack', 'poisoning_rate': 0.7, 'epochs': 10, 'display_full_info': True}}], 'output': {'base_path': 'output', 'model_output': 'modelOutput', 'evaluation_result': 'evaluationResult'}}
+[2024-04-25 01:30:17] - INFO: ###  config_parser = {'general': {'random_seed': 0, 'use_gpu': True}, 'LM_config': {'model': 'bert_base_uncased_english'}, 'task_config': {'task': 'TaskForSingleSentenceClassification', 'dataset': 'imdb', 'dataset_type': '.txt', 'split_sep': '_!_', 'epochs': 20}, 'attack_list': [{'attack_args': {'attack': True, 'attack_type': 'AdvAttack', 'attack_recipe': 'TextFoolerJin2019', 'use_local_model': True, 'use_local_tokenizer': True, 'use_local_dataset': True, 'model_name_or_path': 'LMs/bert_base_uncased_english', 'tokenizer_name_or_path': 'LMs/bert_base_uncased_english', 'dataset_name_or_path': 'datasets/imdb/train.txt', 'attack_nums': 20, 'display_full_info': True}}, {'attack_args': {'attack': False, 'attack_type': 'FET', 'seed': 42, 'attack_batch': 2, 'attack_nums': 1, 'distance_func': 'l2', 'population_size': 300, 'tournsize': 5, 'crossover_rate': 0.9, 'mutation_rate': 0.1, 'max_generations': 2, 'halloffame_size': 30, 'use_local_model': True, 'use_local_tokenizer': True, 'model_name_or_path': 'LMs/bert_base_uncased_english', 'tokenizer_name_or_path': 'LMs/bert_base_uncased_english', 'dataset_name_or_path': 'cola', 'display_full_info': True}}, {'attack_args': {'attack': True, 'attack_type': 'BackdoorAttack', 'use_local_model': True, 'model': 'bert', 'model_name_or_path': 'LMs/bert_base_uncased_english', 'poison_dataset': 'sst-2', 'target_dataset': 'sst-2', 'poisoner': {'name': 'badnets'}, 'train': {'name': 'base', 'batch_size': 32, 'epochs': 5}, 'defender': 'None', 'display_full_info': True}}, {'attack_args': {'attack': True, 'attack_type': 'PoisoningAttack', 'poisoning_rate': 0.7, 'epochs': 10, 'display_full_info': True}}], 'output': {'base_path': 'output', 'model_output': 'modelOutput', 'evaluation_result': 'evaluationResult'}}
 [2024-04-25 01:30:17] - INFO: ###  log_level = 20
 [2024-04-25 01:30:17] - INFO: ###  vocab_size = 30522
 [2024-04-25 01:30:17] - INFO: ###  hidden_size = 768
@@ -307,8 +307,8 @@
 
 [2025-01-17 08:30:27] - INFO: ==================================================
 [2025-01-17 08:30:27] - INFO: ����ģ�����ü��
-[2025-01-17 08:30:27] - INFO: Checking the config of BackDoorAttack.
-[2025-01-17 08:30:27] - INFO: BackDoorAttack 攻击开始
+[2025-01-17 08:30:27] - INFO: Checking the config of BackdoorAttack.
+[2025-01-17 08:30:27] - INFO: BackdoorAttack 攻击开始
 [2025-01-17 08:31:08] - INFO: ***** Training *****
 [2025-01-17 08:31:08] - INFO:   Num Epochs = 1
 [2025-01-17 08:31:08] - INFO:   Instantaneous batch size per GPU = 16
@@ -331,7 +331,7 @@
 [2025-01-17 08:39:15] - INFO:   accuracy on test-poison: 0.27722772277227725
 [2025-01-17 08:39:15] - INFO: 
 +-------------------------------+---------+
-| BackDoorAttack Attack Results |         |
+| BackdoorAttack Attack Results |         |
 +-------------------------------+---------+
 | Poison Dataset:               | sst-2   |
 | Poisoner:                     | badnets |
@@ -341,7 +341,7 @@
 | USE:                          | nan     |
 | GRAMMAR:                      | nan     |
 +-------------------------------+---------+
-[2025-01-17 08:39:15] - INFO: BackDoorAttack��������
+[2025-01-17 08:39:15] - INFO: BackdoorAttack��������
 [2025-01-17 08:39:15] - INFO: ==================================================
 
 [2024-04-24 20:56:49] - INFO: ==================================================
@@ -351,7 +351,7 @@
 [2024-04-24 20:56:49] - INFO: 原始数据集路径: /home/zhuzukun/LMsEvaluation/datasets/imdb/train.txt
 [2024-04-24 20:56:49] - INFO: 投毒数据集路径: /home/zhuzukun/LMsEvaluation/datasets/imdb/poisoning_train.txt
 [2024-04-24 20:56:51] - INFO: 投毒数据生成完毕
-[2024-04-24 20:56:51] - INFO: PoisoningAttack 攻击开始
+[2024-04-24 20:56:51] - INFO: PoisoningAttack攻击开始
 [2024-04-24 20:56:51] - INFO:  ## 索引预处理缓存文件的参数为：['max_sen_len']
 [2024-04-24 20:56:51] - INFO: 缓存文件 /home/zhuzukun/LMsEvaluation/datasets/imdb/cache_test_max_sen_lenNone.pt 存在，直接载入缓存文件！
 [2024-04-24 20:56:53] - INFO: 数据预处理一共耗时1.801s

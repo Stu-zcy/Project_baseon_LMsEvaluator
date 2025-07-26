@@ -1,9 +1,9 @@
 - - createdAt: 2025-05-15 10:30
     defenderEnabled: true
-    description: Õë¶ÔNLPÄ£ÐÍµÄÎÄ±¾¶Ô¿¹¹¥»÷£¬Í¨¹ýÌæ»»Í¬Òå´ÊºÍ¸ÉÈÅ×Ö·ûÆÛÆ­Ä£ÐÍ
+    description: ï¿½ï¿½ï¿½NLPÄ£ï¿½Íµï¿½ï¿½Ä±ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½æ»»Í¬ï¿½ï¿½ÊºÍ¸ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½Æ­Ä£ï¿½ï¿½
     executed: true
     id: 1
-    name: ÎÄ±¾¶Ô¿¹¹¥»÷ÅäÖÃ
+    name: ï¿½Ä±ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     params:
       attack_nums: 3
       defender:
@@ -18,13 +18,13 @@
     sent: true
     status: active
     strategy: TextFoolerJin2019
-    type: AdversarialAttack
+    type: AdvAttack
   - createdAt: 2025-05-18 14:20
     defenderEnabled: true
-    description: Ö²ÈëºóÃÅµÄ¹¥»÷ÅäÖÃ£¬ÔÚÌØ¶¨´¥·¢´Ê³öÏÖÊ±¸Ä±äÄ£ÐÍÐÐÎª
+    description: Ö²ï¿½ï¿½ï¿½ï¿½ÅµÄ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê³ï¿½ï¿½ï¿½Ê±ï¿½Ä±ï¿½Ä£ï¿½ï¿½ï¿½ï¿½Îª
     executed: false
     id: 2
-    name: ºóÃÅ¹¥»÷ÅäÖÃ
+    name: ï¿½ï¿½ï¿½Å¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     params:
       defender:
         strategy: ONION
@@ -33,13 +33,13 @@
     sent: true
     status: active
     strategy: TrojanLM
-    type: BackDoorAttack
+    type: BackdoorAttack
   - createdAt: 2025-05-20 09:45
     defenderEnabled: false
-    description: Õë¶ÔÑµÁ·Êý¾ÝµÄÍ¶¶¾¹¥»÷£¬ÎÛÈ¾ÑµÁ·¼¯ÒÔ½µµÍÄ£ÐÍÐÔÄÜ
+    description: ï¿½ï¿½ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½Ýµï¿½Í¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¾Ñµï¿½ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     executed: false
     id: 3
-    name: Êý¾ÝÍ¶¶¾ÅäÖÃ
+    name: ï¿½ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     params:
       epochs: 15
       poisoning_rate: 0.15
@@ -49,10 +49,10 @@
     type: PoisoningAttack
   - createdAt: 2025-06-10 14:30
     defenderEnabled: false
-    description: Í¨¹ý²éÑ¯Ä¿±êÄ£ÐÍÀ´ÇÔÈ¡Æä½á¹¹ºÍ²ÎÊý
+    description: Í¨ï¿½ï¿½ï¿½ï¿½Ñ¯Ä¿ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½á¹¹ï¿½Í²ï¿½ï¿½ï¿½
     executed: true
     id: 4
-    name: Ä£ÐÍÇÔÈ¡¹¥»÷
+    name: Ä£ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
     params:
       attack_nums: 3
       method: MeaeQ
@@ -63,10 +63,10 @@
     type: ModelStealingAttack
   - createdAt: 2025-06-12 11:20
     defenderEnabled: false
-    description: Ê¹ÓÃÇ¿»¯Ñ§Ï°ÓÅ»¯¹¥»÷²ßÂÔ
+    description: Ê¹ï¿½ï¿½Ç¿ï¿½ï¿½Ñ§Ï°ï¿½Å»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     executed: false
     id: 5
-    name: Ä£ÐÍ·´ÑÝÅäÖÃ
+    name: Ä£ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     params:
       max_iterations: 2500
       seed: 123
@@ -76,7 +76,7 @@
     type: RLMI
   - createdAt: 2025/07/24 19:22
     defenderEnabled: false
-    description: ÌÝ¶È·´ÑÝ
+    description: ï¿½Ý¶È·ï¿½ï¿½ï¿½
     executed: false
     id: 1753356169033
     name: test

@@ -174,6 +174,7 @@ def run_pipeline(config_path: str):
         # 读取攻击模块配置
         attack_list = check_attack_config(config_parser['attack_list'])
 
+        print("loging_name:",general_config['log_file_name'])
         logger_init(log_file_name=general_config['log_file_name'], log_level=logging.INFO,
                     log_dir=general_config['logs_save_dir'], only_file=False)
 
