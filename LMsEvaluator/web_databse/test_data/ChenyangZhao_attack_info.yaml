@@ -1,0 +1,27 @@
+- - createdAt: 2025/07/26 16:29
+    defenderEnabled: false
+    description: 通过微小的、难以察觉的扰动来欺骗模型，使其做出错误的预测
+    executed: false
+    id: 1
+    name: 文本对抗攻击配置
+    params:
+      attack_nums: 3
+      defender: false
+      use_local_dataset: false
+      use_local_model: true
+      use_local_tokenizer: true
+    sent: true
+    status: active
+    strategy: TextFoolerJin2019
+    type: AdvAttack
+- LM_config:
+    local_model: true
+    model: bert_base_uncased
+  general:
+    random_seed: 42
+    use_gpu: true
+  task_config:
+    dataset: imdb
+    local_dataset: true
+    normal_training: false
+    task: TaskForSingleSentenceClassification
