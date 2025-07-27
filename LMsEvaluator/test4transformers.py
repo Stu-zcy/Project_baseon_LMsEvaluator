@@ -11,11 +11,12 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments, \
     DataCollatorWithPadding, AutoModelForCausalLM
 
-from utils.my_prettytable import MyPrettyTable
-
 from utils.my_exception import print_red
-from utils.log_helper import logger_init
+from utils.my_prettytable import PrettyTable
 from attack.attack_factory import AttackFactory
+from utils.dataset_getter import standardize_dataset
+from utils.model_getter import load_model_and_tokenizer
+from utils.log_helper import change_log_path, logger_init
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # 禁用 oneDNN 优化
@@ -175,8 +176,10 @@ def run_pipeline(config_path: str):
         attack_list = check_attack_config(config_parser['attack_list'])
 
         print("loging_name:",general_config['log_file_name'])
-        logger_init(log_file_name=general_config['log_file_name'], log_level=logging.INFO,
-                    log_dir=general_config['logs_save_dir'], only_file=False)
+        logger = logger_init(log_dir='./logs')
+        change_log_path(new_log_dir='./logs/',new_log_file_name=general_config['log_file_name'])
+        #logger_init(log_file_name=general_config['log_file_name'], log_level=logging.INFO,
+        #            log_dir=general_config['logs_save_dir'], only_file=False)
 
         # dataset.save_to_disk('./datasets/sst2')
         if task_config['local_dataset']:

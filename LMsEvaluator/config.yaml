@@ -48,8 +48,14 @@ attack_list:
       min_input_length: 2
       max_input_length: 5
       num_generation: 1000
+      defender:
+        # type: pruning
+        # prune_ratio: 0.2
+        # type: high-entropy-mask
+        type: output-perturb
+        noise_std: 0.1
   - attack_args:
-      attack: True
+      attack: False
       attack_type: AdvAttack
       attack_recipe: TextFoolerJin2019
       use_local_model: True
@@ -74,7 +80,7 @@ attack_list:
         gradient_accumulation_steps: 4
         log_to_tb: False
   - attack_args:
-      attack: False
+      attack: True
       attack_type: ModelStealingAttack
       method: RS
       query_num: 320
@@ -88,6 +94,11 @@ attack_list:
       initial_drk_model: None
       al_sample_batch_num: -1
       al_sample_method: None
+      defender:
+        # type: output-perturb
+        # noise_std: 0.1
+        # type: pruning
+        # prune_ratio: 0.2   # 剪枝比例
 #      attack_nums: 2
 #      display_full_info: True
 #
@@ -138,6 +149,12 @@ attack_list:
       tokenizer_name_or_path: "LMs/bert_base_uncased"
       dataset_name_or_path: "cola"
       display_full_info: True
+      defender:
+        # type: pruning
+        # prune_ratio: 0.2
+        # type: high-entropy-mask
+        type: output-perturb
+        noise_std: 0.1
   - attack_args:
       attack: False
       attack_type: BackdoorAttack
@@ -191,7 +208,7 @@ attack_list:
 #  attack_lr: 0.01                      # float: 攻击方法中的学习率
 #  attack_iters: 10                     # int: 一次攻击中的迭代轮次
 
-## FET攻击配置文件示例
+## SWAT攻击配置文件示例
 #attack_args:
 #  attack: True                         # boolean: 表示是否开启攻击
 #  attack_type: FET                    # str: 攻击方法,'GIAforNLP'代表梯度反转攻击

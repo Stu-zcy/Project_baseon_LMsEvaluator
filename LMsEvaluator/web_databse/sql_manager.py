@@ -56,6 +56,7 @@ def create_database():
         isTreasure BOOLEAN DEFAULT FALSE,
 				attackInfo TEXT,  
         attackResult TEXT,
+        attackProgress TEXT,
         FOREIGN KEY (createUserName) REFERENCES user (username)
     )
     ''')
@@ -142,11 +143,11 @@ def print_verification_codes():
 
 
 # 添加攻击记录
-def add_attack_record(attackName, createUserName, createTime, attackResult, attackInfo=None, isTreasure=False):
+def add_attack_record(attackName, createUserName, createTime, attackResult, attackInfo=None, isTreasure=False,attackProgress=None):
     conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO attack_record (attackName, createUserName, createTime, isTreasure, attackInfo, attackResult) VALUES (?, ?, ?, ?, ?, ?)',
-                   (attackName, createUserName, createTime, isTreasure, json.dumps(attackInfo), str(attackResult)))
+    cursor.execute('INSERT INTO attack_record (attackName, createUserName, createTime, isTreasure, attackInfo, attackResult,attackProgress) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                   (attackName, createUserName, createTime, isTreasure, json.dumps(attackInfo), str(attackResult),str(attackProgress)))
     conn.commit()
     print(f"Attack record added for user '{createUserName}'.")
     conn.close()
@@ -159,7 +160,7 @@ def print_attack_records():
     cursor.execute('SELECT * FROM attack_record')
     records = cursor.fetchall()
     for record in records:
-        print(f"AttackID: {record[0]}, createUserName: {record[1]}, CreateTime: {record[2]}, AttackResult: {record[3]}")
+        print(f"AttackID: {record[0]}, createUserName: {record[1]}, CreateTime: {record[2]}, AttackResult: {record[3]},AttackProgress{record[4]}")
     conn.close()
 
 
@@ -222,15 +223,16 @@ if __name__ == '__main__':
     # print_attack_records()
     
     # 向数据库中添加攻击记录
-    lmsDir = os.path.dirname(os.path.abspath(__file__))
-    filename = "ChenyangZhao_single_1753817674_2025-07-26.txt"
+    lmsDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    filename = "u1h_single_1737727113_2025-01-24.txt"
     info = filename.split('_')
     username = 'ChenyangZhao'
     initTime = eval(info[2])
     #result = extractResult(os.path.join(lmsDir, "test_data",filename))
-    result=extractResult('/Volumes/D/Project/LMsEvaluator/logs/'+filename)
-    add_attack_record('后门', username, initTime, json.dumps(result), attackInfo=get_attack_info('ChenyangZhao'), isTreasure=False)
-    
+    #result=extractResult(os.path.join(lmsDir,'logs',filename))
+    result = extractResult(os.path.join(lmsDir, 'web_databse','test_data', filename))
+    add_attack_record('全部', username, initTime, json.dumps(result), attackInfo=get_attack_info('ChenyangZhao'), isTreasure=False,attackProgress='6/6')
+
 
     # # 示例日志操作
     # add_log_record('zcy', 'admin_single_1737092485_2024-12-04.txt', 'FINISHED')

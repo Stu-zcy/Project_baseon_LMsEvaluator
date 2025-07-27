@@ -209,7 +209,7 @@ def generate_config(username, attack_list, globalConfig=None):
                     attack_config[param] = attack.get('params')[param]
             elif attack_type=='BackdoorAttack':
                 for param in attack.get('params', []):
-                    if param == 'defender':
+                    if param == 'defender' and attack.get('params')[param]!='None':
                         attack_config['defender'] = attack.get('params')[param]['strategy']
                     if param == 'sample_metrics':
                         for metric in attack.get('params')[param]:

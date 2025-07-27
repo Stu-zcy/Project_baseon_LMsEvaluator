@@ -126,7 +126,7 @@ class MyTextAttack(BaseAttack):
             logging.getLogger().handlers = self.my_handlers
 
         # 对抗训练
-        if self.defender:
+        if self.defender is not None:
             logging.info("-" * 50)
             logging.info('对抗训练开始：')
             train_dataset = self.dataset

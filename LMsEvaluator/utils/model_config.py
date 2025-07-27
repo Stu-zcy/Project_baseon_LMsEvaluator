@@ -1,9 +1,9 @@
 import os
-import time
 import torch
 import logging
 import tensorflow as tf
 from transformers import PreTrainedModel, TFPreTrainedModel
+
 from model.BasicBert import BertConfig
 from torch.utils.tensorboard import SummaryWriter
 from utils.log_helper import logger_init
@@ -13,16 +13,17 @@ class ModelConfig:
     def __init__(self, dataset_dir, model_dir, dataset_type='.txt', use_gpu=True, config_parser=None):
         self.project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.dataset_dir = os.path.join(self.project_dir, 'datasets', dataset_dir)
-        self.pretrained_model_dir = os.path.join(self.project_dir, "LMs", model_dir)
+        self.pretrained_model_dir = os.path.join(self.project_dir, 'LMs', model_dir)
         self.vocab_path = os.path.join(str(self.pretrained_model_dir), 'vocab.txt')
         self.device = torch.device('mps' if (use_gpu and torch.backends.mps.is_available()) else
                                    'cuda' if (use_gpu and torch.cuda.is_available()) else 'cpu')
         self.train_file_path = os.path.join(str(self.dataset_dir), 'train' + dataset_type)
         self.val_file_path = os.path.join(str(self.dataset_dir), 'val' + dataset_type)
         self.test_file_path = os.path.join(str(self.dataset_dir), 'test' + dataset_type)
-        self.model_save_dir = os.path.join(self.project_dir, 'cache')
+        self.model_load_dir = os.path.join(self.project_dir, 'cache', 'model_load')
+        self.model_save_dir = os.path.join(self.project_dir, 'cache', 'model_output')
+        self.checkpoint_dir = os.path.join(self.project_dir, 'checkpoints')
         self.logs_save_dir = os.path.join(self.project_dir, 'logs')
-        self.model_save_path = os.path.join(self.model_save_dir, 'model.pt')
         self.config_parser = config_parser
         self.log_level = logging.INFO
 
@@ -39,8 +40,8 @@ class ModelConfig:
         self.type_vocab_size = 2,
         self.initializer_range = 0.02
 
-    def log_init(self, log_file_name='single'):
-        logger_init(log_file_name=log_file_name, log_level=self.log_level,
+    def log_init(self, log_file_name='single', log_level=logging.INFO):
+        logger_init(log_file_name=log_file_name, log_level=log_level,
                     log_dir=self.logs_save_dir, only_file=False)
         if not os.path.exists(self.model_save_dir):
             os.makedirs(self.model_save_dir)
@@ -51,6 +52,7 @@ class ModelConfig:
         bert_config = BertConfig.from_json_file(bert_config_path)
         for key, value in bert_config.__dict__.items():
             self.__dict__[key] = value
+        # pass
 
     def log_config(self):
         # 将当前配置打印到日志文件中
@@ -60,8 +62,8 @@ class ModelConfig:
 
 
 class ModelTaskForChineseNER(ModelConfig):
-    def __init__(self, initTime, dataset_dir, model_dir,  dataset_type='.txt', use_gpu=True, split_sep=' ',
-                 config_parser=None,username='default'):
+    def __init__(self, dataset_dir, model_dir, dataset_type='.txt', use_gpu=True, split_sep=' ',
+                 config_parser=None):
         super().__init__(dataset_dir, model_dir, dataset_type, use_gpu, config_parser)
         self.model_save_name = "ner_model.pt"
         self.writer = SummaryWriter("runs")
@@ -75,49 +77,49 @@ class ModelTaskForChineseNER(ModelConfig):
         self.entities = {'O': 0, 'B-ORG': 1, 'B-LOC': 2, 'B-PER': 3, 'I-ORG': 4, 'I-LOC': 5, 'I-PER': 6}
         self.num_labels = len(self.entities)
         self.ignore_idx = -100
-        self.log_level = logging.DEBUG
-        self.log_init(log_file_name=username+'_ner' + '_' +  initTime)
+        self.log_level = logging.INFO
+        self.log_init(log_file_name='ner')
         self.bert_import()
         self.log_config()
 
 
 class ModelTaskForMultipleChoice(ModelConfig):
-    def __init__(self, initTime, dataset_dir, model_dir,  dataset_type='.csv', use_gpu=True, config_parser=None,username='default'):
+    def __init__(self, dataset_dir, model_dir, dataset_type='.csv', use_gpu=True, config_parser=None, num_labels=4):
         super().__init__(dataset_dir, model_dir, dataset_type, use_gpu, config_parser)
         self.is_sample_shuffle = True
         self.batch_size = 16
         self.max_sen_len = None
-        self.num_labels = 4  # num_choice
+        self.num_labels = num_labels  # num_choice
         self.learning_rate = 2e-5
         self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 10
         self.model_val_per_epoch = 2
         self.log_level = logging.INFO
-        self.log_init(log_file_name=username+'_choice' + '_' + initTime)
+        self.log_init(log_file_name='choice')
         self.bert_import()
         self.log_config()
 
 
 class ModelTaskForPairSentenceClassification(ModelConfig):
-    def __init__(self, initTime, dataset_dir, model_dir,  dataset_type='.txt', use_gpu=True, split_sep='_!_',
-                 config_parser=None,username='default'):
+    def __init__(self, dataset_dir, model_dir, dataset_type='.txt', use_gpu=True, split_sep='_!_',
+                 config_parser=None, num_labels=3):
         super().__init__(dataset_dir, model_dir, dataset_type, use_gpu, config_parser)
         self.split_sep = split_sep
         self.is_sample_shuffle = True
-        self.batch_size = 8
+        self.batch_size = 16
         self.learning_rate = 3.5e-5
         self.max_sen_len = None
-        self.num_labels = 3
-        self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 2
+        self.num_labels = num_labels
+        self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 5
         self.model_val_per_epoch = 2
         self.log_level = logging.INFO
-        self.log_init(log_file_name=username+'_pair' + '_' + initTime)
+        self.log_init(log_file_name='pair')
         self.bert_import()
         self.log_config()
 
 
 class ModelTaskForPretraining(ModelConfig):
-    def __init__(self, initTime, dataset_dir, model_dir,  dataset_type='.txt', use_gpu=True,
-                 data_name="songci", config_parser=None,username='default'):
+    def __init__(self, dataset_dir, model_dir, dataset_type='.txt', use_gpu=True,
+                 data_name="songci", config_parser=None):
         super().__init__(dataset_dir, model_dir, dataset_type, use_gpu, config_parser)
         self.data_name = data_name
         self.model_save_path = os.path.join(self.model_save_dir, f'model_{data_name}.bin')
@@ -136,32 +138,32 @@ class ModelTaskForPretraining(ModelConfig):
         self.use_torch_multi_head = False  # False表示使用model/BasicBert/MyTransformer中的多头实现
         self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 200
         self.model_val_per_epoch = 1
-        self.log_level = logging.DEBUG
-        self.log_init(log_file_name=username+'_'+data_name + '_' + initTime)
+        self.log_level = logging.INFO
+        self.log_init(log_file_name=data_name)
         self.bert_import()
         self.log_config()
 
 
 class ModelTaskForSingleSentenceClassification(ModelConfig):
-    def __init__(self, initTime, dataset_dir, model_dir,  dataset_type='.txt', use_gpu=True, split_sep='_!_',
-                 config_parser=None,username='default'):
+    def __init__(self, dataset_dir, model_dir, dataset_type='.txt', use_gpu=True, split_sep='_!_',
+                 config_parser=None, num_labels=2):
         # super(ModelTest, self).__init__(dataset_dir, model_dir, dataset, use_gpu, config_parser)
         super().__init__(dataset_dir, model_dir, dataset_type, use_gpu, config_parser)
         self.split_sep = split_sep
         self.is_sample_shuffle = True
         self.batch_size = 1
         self.max_sen_len = None
-        self.num_labels = 15
+        self.num_labels = num_labels
         self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 10
         self.model_val_per_epoch = 2
         self.log_level = logging.INFO
-        self.log_init(log_file_name=username+'_single' + '_' + initTime)
+        self.log_init(log_file_name='single', log_level=self.log_level)
         self.bert_import()
         self.log_config()
 
 
 class ModelTaskForSQuADQuestionAnswering(ModelConfig):
-    def __init__(self, initTime, dataset_dir, model_dir,  dataset_type='.json', use_gpu=True, config_parser=None,username='default'):
+    def __init__(self, dataset_dir, model_dir, dataset_type='.json', use_gpu=True, config_parser=None):
         # super(ModelTest, self).__init__(dataset_dir, model_dir, dataset, use_gpu)
         super().__init__(dataset_dir, model_dir, dataset_type, use_gpu, config_parser)
         self.train_file_path = os.path.join(str(self.dataset_dir), "train" + dataset_type)
@@ -177,10 +179,11 @@ class ModelTaskForSQuADQuestionAnswering(ModelConfig):
         self.doc_stride = 128  # 滑动窗口一次滑动的长度
         self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 200
         self.model_val_per_epoch = 1
-        self.log_level = logging.DEBUG
-        self.log_init(log_file_name=username + '_qa' + '_' + initTime)
+        self.log_level = logging.INFO
+        self.log_init(log_file_name='qa')
         self.bert_import()
         self.log_config()
+
 
 def model_load(base_model, map_location=torch.device('cpu'), model_dir='/cache/modelOutput/task4sst_model.pt'):
     '''默认读取为预训练后模型，默认路径"/cache/modelOutput/task4sst_model.pt"'''
@@ -214,16 +217,15 @@ def detect_model_type(model):
         return "Unknown"
 
 
-
 if __name__ == "__main__":
     # 下游任务模型配置示例
     # model_config = ModelConfig("SingleSentenceClassification", "bert_base_chinese", ".txt", True)
     # model_config = ModelTaskForSingleSentenceClassification("SingleSentenceClassification", "bert_base_chinese",
-    #                                                         ".txt", True, '_!_')
-    # model_config = ModelTaskForSQuADQuestionAnswering("SQuAD", "bert_base_uncased", "v1-", ".json", True)
+    #                                                         ".txt", True, '_!_', None, 2)
+    # model_config = ModelTaskForSQuADQuestionAnswering("SQuAD", "bert_base_uncased_english", "v1-", ".json", True)
     # model_config = ModelTaskForChineseNER("ChineseNER", "bert_base_chinese", ".txt", True, ' ')
-    # model_config = ModelTaskForMultipleChoice("MultipleChoice", "bert_base_uncased", ".csv", True)
-    # model_config = ModelTaskForPairSentenceClassification("PairSentenceClassification", "bert_base_uncased",
-    #                                                       ".txt", True, '_!_')
+    # model_config = ModelTaskForMultipleChoice("MultipleChoice", "bert_base_uncased_english", ".csv", True, None, 4)
+    # model_config = ModelTaskForPairSentenceClassification("PairSentenceClassification", "bert_base_uncased_english",
+    #                                                       ".txt", True, '_!_', None, 3)
     # model_config = ModelTaskForPretraining("SongCi", "bert_base_chinese", ".txt", True, "songci")
-    model_config = ModelTaskForPretraining("WikiText", "bert_base_uncased", ".tokens", True, "wiki2")
+    model_config = ModelTaskForPretraining("WikiText", "bert_base_uncased_english", ".tokens", True, "wiki2")

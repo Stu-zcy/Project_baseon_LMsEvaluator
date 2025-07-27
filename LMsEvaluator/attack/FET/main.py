@@ -86,14 +86,36 @@ class FET(BaseAttack):
         args = self.args
         logging.info(args)
         model, tokenizer, dataset = self.__get_modelDataTokenizer(args.dataset, args.model)
+        defender = self.attack_config.get('defender', None)
+        if defender is not None:
+            if defender.get('type', None) == 'pruning':
+                from utils.defense_utils import pruning_defense
+                model = pruning_defense(model, None, None, defender)
+                logging.info("[FET] 已对模型应用剪枝防御")
+            elif defender.get('type', None) == 'output-perturb':
+                from utils.defense_utils import output_perturb_defense
+                model = output_perturb_defense(model, None, None, defender)
+                logging.info("[FET] 已对模型应用输出扰动防御")
+            elif defender.get('type', None) == 'high-entropy-mask':
+                from utils.defense_utils import high_entropy_mask_defense
+                model = high_entropy_mask_defense(model, None, None, defender)
+                logging.info("[FET] 已对模型应用高熵掩码防御")
+            logging.info("[FET] [防御] 开始攻击...")
+            result = self._fet_attack_core(args, model, tokenizer, dataset, tag="[防御]")
+            logging.info(f"[FET] 防御攻击结果：{result}")
+        else:
+            logging.info("[FET] 未检测到defender配置，直接执行无防御攻击...")
+            result = self._fet_attack_core(args, model, tokenizer, dataset, tag="[无防御]")
+            logging.info(f"[FET] 无防御攻击结果：{result}")
+
+    def _fet_attack_core(self, args, model, tokenizer, dataset, tag=""):
         # sample data ids
         ids = random.sample(range(len(dataset)), args.batch_size * args.n_attacks)
-        # Start the reconstruction attacks
         References, Predictions, word_recovery_rates, edit_distances = [], [], [], []
         count_perfect = 0
         for n in range(args.n_attacks):
             logging.info('----------------------------------------------------------------------')
-            logging.info(f'Attack No.{n + 1}:')
+            logging.info(f'{tag} Attack No.{n + 1}:')
             # get original gradients
             ids_batch = ids[n * args.batch_size: (n + 1) * args.batch_size]
             if args.dataset in ['cola', 'sst2']:
@@ -101,27 +123,20 @@ class FET(BaseAttack):
             if args.dataset == 'rotten_tomatoes':
                 sentences = [dataset[i]['text'] for i in ids_batch]
             labels = torch.tensor([dataset[i]['label'] for i in ids_batch]).to(device)
-            original_batch = tokenizer(sentences, padding=True, truncation=True, return_tensors='pt').to(device)
+            original_batch = tokenizer(sentences, padding=True, truncation=True, return_tensors='pt').to(model.device)
             original_outputs = model(**original_batch, labels=labels)
             original_gradients = torch.autograd.grad(original_outputs.loss, model.parameters(), create_graph=True,
                                                      allow_unused=True)
             Reference = tokenizer.batch_decode(original_batch['input_ids'])
-            logging.info('Reference = ' + str(Reference))
-            # print('Reference = ', Reference, flush=True)
-
+            logging.info(f'{tag} Reference = ' + str(Reference))
             # reconstruct original sentences
+            from attack.FET.main import reconstruct
             Prediction, Gen = reconstruct(args, model, tokenizer, labels, original_gradients)
-            logging.info('Prediction = ' + str(Prediction))
-            logging.info('Generations = ' + str(Gen))
-            # print('Prediction = ', Prediction, flush=True)
-            # print('Generations = ', Gen, flush=True)
-
+            logging.info(f'{tag} Prediction = ' + str(Prediction))
+            logging.info(f'{tag} Generations = ' + str(Gen))
             metric = evaluate.load("evaluate/metrics/rouge")
-            # metric = evaluate.load("rouge")
             rouge_scores = metric.compute(predictions=Prediction, references=Reference)
-            logging.info('Rouge scores: ' + str(rouge_scores))
-            # print('Rouge scores: ', rouge_scores)
-
+            logging.info(f'{tag} Rouge scores: ' + str(rouge_scores))
             original_words, predict_words = set(), set()
             for ref, pre in zip(Reference, Prediction):
                 for i in tokenizer.tokenize(ref):
@@ -130,45 +145,44 @@ class FET(BaseAttack):
                     predict_words.add(i)
             revealed_word = original_words.intersection(predict_words)
             word_recovery_rate = len(revealed_word) / len(original_words)
-            logging.info('Word recovery rate: ' + str(word_recovery_rate))
-            # print('Word recovery rate: ', word_recovery_rate)
-
+            logging.info(f'{tag} Word recovery rate: ' + str(word_recovery_rate))
             edit_distance = 0
             for ref, pre in zip(Reference, Prediction):
                 edit_distance += get_edit_distance(ref, pre)
-            logging.info('Edit distance: ' + str(edit_distance))
-            # print('Edit distance: ', edit_distance)
-
+            logging.info(f'{tag} Edit distance: ' + str(edit_distance))
             if Prediction == Reference:
                 count_perfect += 1
-                logging.info('If full recovery: True')
+                logging.info(f'{tag} If full recovery: True')
             else:
-                logging.info('If full recovery: False')
-
+                logging.info(f'{tag} If full recovery: False')
             References += Reference
             Predictions += Prediction
             word_recovery_rates.append(word_recovery_rate)
             edit_distances.append(edit_distance)
-
+        metric = evaluate.load("evaluate/metrics/rouge")
         rouge_total = metric.compute(predictions=Predictions, references=References)
-
-        logging.info('Aggregate rouge scores: ' + str(rouge_total))
-        logging.info('Full recovery rate: ' + str(count_perfect / args.n_attacks))
-        logging.info('Average word recovery rate: ' + str(sum(word_recovery_rates) / args.n_attacks))
-        logging.info('Average edit distance: ' + str(sum(edit_distances) / args.n_attacks))
-
+        result = {
+            'rouge1': f"{rouge_total['rouge1']:.4f}",
+            'rouge2': f"{rouge_total['rouge2']:.4f}",
+            'rougeL': f"{rouge_total['rougeL']:.4f}",
+            'full_recovery_rate': f"{(count_perfect / args.n_attacks):.2%}",
+            'avg_word_recovery_rate': f"{(sum(word_recovery_rates) / args.n_attacks):.2%}",
+            'avg_edit_distance': str(sum(edit_distances) / args.n_attacks)
+        }
+        # 打印表格
         table = MyPrettyTable()
-        table.add_field_names(['FET Attack Results', ''])
-        table.add_row(['Aggregate rouge1 scores:', f"{rouge_total['rouge1']:.4f}"])
-        table.add_row(['Aggregate rouge2 scores:', f"{rouge_total['rouge2']:.4f}"])
-        table.add_row(['Aggregate rougeL scores:', f"{rouge_total['rougeL']:.4f}"])
-        table.add_row(['Full recovery rate:', f"{(count_perfect / args.n_attacks):.2%}"])
-        table.add_row(['Average word recovery rate:', f"{(sum(word_recovery_rates) / args.n_attacks):.2%}"])
-        table.add_row(['Average edit distance:', str(sum(edit_distances) / args.n_attacks)])
-        table.set_align('FET Attack Results', 'l')
+        table.add_field_names([f'FET Attack Results {tag}', ''])
+        table.add_row(['Aggregate rouge1 scores:', result['rouge1']])
+        table.add_row(['Aggregate rouge2 scores:', result['rouge2']])
+        table.add_row(['Aggregate rougeL scores:', result['rougeL']])
+        table.add_row(['Full recovery rate:', result['full_recovery_rate']])
+        table.add_row(['Average word recovery rate:', result['avg_word_recovery_rate']])
+        table.add_row(['Average edit distance:', result['avg_edit_distance']])
+        table.set_align(f'FET Attack Results {tag}', 'l')
         table.set_align('', 'l')
         table.print_table()
         table.logging_table()
+        return result
 
     def __get_modelDataTokenizer(self, datasetname, modelname):
         # 数据集load需要梯子, 所以先保存到本地再读取

@@ -19,7 +19,7 @@ attack_list:
     run_seed_arr:
     - 56
 general:
-  log_file_name: single
+  log_file_name: ChenyangZhao_single_1753539962
   logs_save_dir: ./logs
   random_seed: 42
   use_gpu: true

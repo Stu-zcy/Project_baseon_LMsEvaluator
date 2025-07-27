@@ -1,9 +1,9 @@
 - - createdAt: 2025-05-15 10:30
     defenderEnabled: true
-    description: ���NLPģ�͵��ı��Կ�������ͨ���滻ͬ��ʺ͸����ַ���ƭģ��
+    description: 针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型
     executed: true
     id: 1
-    name: �ı��Կ���������
+    name: 文本对抗攻击配置
     params:
       attack_nums: 3
       defender:
@@ -21,10 +21,10 @@
     type: AdvAttack
   - createdAt: 2025-05-18 14:20
     defenderEnabled: true
-    description: ֲ����ŵĹ������ã����ض������ʳ���ʱ�ı�ģ����Ϊ
+    description: 植入后门的攻击配置，在特定触发词出现时改变模型行为
     executed: false
     id: 2
-    name: ���Ź�������
+    name: 后门攻击配置
     params:
       defender:
         strategy: ONION
@@ -36,10 +36,10 @@
     type: BackdoorAttack
   - createdAt: 2025-05-20 09:45
     defenderEnabled: false
-    description: ���ѵ�����ݵ�Ͷ����������Ⱦѵ�����Խ���ģ������
+    description: 针对训练数据的投毒攻击，污染训练集以降低模型性能
     executed: false
     id: 3
-    name: ����Ͷ������
+    name: 数据投毒配置
     params:
       epochs: 15
       poisoning_rate: 0.15
@@ -49,10 +49,10 @@
     type: PoisoningAttack
   - createdAt: 2025-06-10 14:30
     defenderEnabled: false
-    description: ͨ����ѯĿ��ģ������ȡ��ṹ�Ͳ���
+    description: 通过查询目标模型来窃取其结构和参数
     executed: true
     id: 4
-    name: ģ����ȡ����
+    name: 模型窃取攻击
     params:
       attack_nums: 3
       method: MeaeQ
@@ -63,10 +63,10 @@
     type: ModelStealingAttack
   - createdAt: 2025-06-12 11:20
     defenderEnabled: false
-    description: ʹ��ǿ��ѧϰ�Ż���������
+    description: 使用强化学习优化攻击策略
     executed: false
     id: 5
-    name: ģ�ͷ�������
+    name: 模型反演配置
     params:
       max_iterations: 2500
       seed: 123
@@ -76,7 +76,7 @@
     type: RLMI
   - createdAt: 2025/07/24 19:22
     defenderEnabled: false
-    description: �ݶȷ���
+    description: 梯度反演
     executed: false
     id: 1753356169033
     name: test

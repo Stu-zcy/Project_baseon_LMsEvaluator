@@ -1,5 +1,5 @@
 {
-  "_name_or_path": "/Volumes/D/Project/LMsEvaluator/LMs/tinybert4",
+  "_name_or_path": "../public_models/tinybert4",
   "architectures": [
     "BertForSequenceClassification"
   ],
@@ -39,9 +39,8 @@
   "problem_type": "single_label_classification",
   "structure": [],
   "torch_dtype": "float32",
-  "training": "",
-  "transformers_version": "4.46.2",
+  "transformers_version": "4.46.0",
   "type_vocab_size": 2,
   "use_cache": true,
-  "vocab_size": 21128
+  "vocab_size": 30522
 }

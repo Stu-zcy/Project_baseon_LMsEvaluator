@@ -10,7 +10,6 @@ LMsEvaluator/OpenBackdoor/
 /LMsEvaluator/attack/MeaeQ/steal/query_and_pool
 /LMsEvaluator/attack/PoisoningAttack/cache
 /LMsEvaluator/attack/RLMI/results
-/LMsEvaluator/OpenBackdoor-main
 
 # Ignore macOS resource fork files (._*)
 ._*

@@ -1044,13 +1044,13 @@
                             <thead>
                                 </tr>
                                 <tr>
-                                    <th class="text-center">配置名称</th>
-                                    <th class="text-center">评估类型</th>
-                                    <th class="text-center">评估策略</th>
-                                    <th class="text-center">防御状态</th>
-                                    <th class="text-center">状态</th>
-                                    <th class="text-center">创建时间</th>
-                                    <th class="text-center">操作</th>
+                                    <th>配置名称</th>
+                                    <th>评估类型</th>
+                                    <th>评估策略</th>
+                                    <th>防御状态</th>
+                                    <th>状态</th>
+                                    <th>创建时间</th>
+                                    <th>操作</th>
                                 </tr>
                             </thead>
                             <tbody id="configTableBody">
@@ -1783,6 +1783,30 @@
                         max_input_length: 8,
                         num_generation: 1500,
                         max_iterations: 2500
+                    }
+                },
+                {
+                    id: 6,
+                    name: "梯度反演配置",
+                    type: "FET",
+                    strategy: "FET/SWAT",
+                    description: "梯度反演",
+                    status: "active",
+                    defenderEnabled: false,
+                    sent: false,
+                    executed: false,
+                    createdAt: "2025-06-12 11:22",
+                    params: {
+                        attack_batch: 2,
+                        attack_nums: 1,
+                        crossover_rate: 0.9,
+                        distance_func: "l2",
+                        halloffame_size: 30,
+                        max_generations: 2,
+                        mutation_rate: 0.1,
+                        population_size: 300,
+                        seed: 42,
+                        tournsize: 5
                     }
                 }
             ];
@@ -2567,7 +2591,8 @@
         // 执行评估
         async function executeAttack(attackName) {
             const activeConfigs = configList.filter(config => config.status === 'active');
-            
+            executedAttacks++;
+            renderConfigTable();
             try {
                 activeConfigs.forEach(config => {
                     config.executed = true;
@@ -2589,7 +2614,6 @@
                   username: authStore.username,
                   attack_name: attackName  // 添加攻击名称
                 });
-                executedAttacks++;
                 renderConfigTable();
                 showToast(`攻击"${attackName}"执行成功！`, 'success');
                 

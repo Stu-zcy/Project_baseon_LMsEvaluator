@@ -10,7 +10,7 @@ LM_config:
 
 task_config:
   task: TaskForSingleSentenceClassification
-  dataset: imdb
+  dataset: GLUE/cola
   local_dataset: True
   normal_training: True
   save_path: './cache/model_output'
@@ -28,7 +28,7 @@ task_config:
 
 attack_list:
   - attack_args:
-      attack: false
+      attack: False
       attack_type: AdvAttack
       attack_recipe: TextFoolerJin2019
       use_local_model: True
@@ -53,13 +53,13 @@ attack_list:
         gradient_accumulation_steps: 4
         log_to_tb: False
   - attack_args:
-      attack: True
+      attack: False
       attack_type: PoisoningAttack
-      poisoning_rate: 0.5
+      poisoning_rate: 0.3
       save_path: './attack/PoisoningAttack/model_output'
       train_config:
         output_dir: './attack/PoisoningAttack/cache'
-        num_train_epochs: 10
+        num_train_epochs: 1
         per_device_train_batch_size: 16
         per_device_eval_batch_size: 64
         warmup_steps: 1000
@@ -68,3 +68,55 @@ attack_list:
         logging_steps: 1000
         run_name: 'my_experiment'
         report_to: "none"
+      defender: True
+  - attack_args:
+      attack: False
+      attack_type: RLMI
+      dataset_name: "emotion"
+      model_name: "tinybert4"
+      seed: 42
+      ppo_config:
+        mini_batch_size: 16
+        batch_size: 16
+        #        log_with: "wandb" # tensorboard, wandb
+        log_with: None
+        learning_rate: 1e-5
+      seq_length: 20
+      target_label: 0
+      max_iterations: 2000
+      min_input_length: 2
+      max_input_length: 5
+      num_generation: 1000
+  - attack_args:
+      attack: False
+      attack_type: BackdoorAttack
+      use_local_model: True
+      model: "bert"
+      model_name_or_path: "LMs/bert_base_uncased"
+      poison_dataset: "sst-2"
+      target_dataset: "sst-2"
+      poisoner:
+        "name": "badnets"
+      train:
+        "name": "base"
+        "batch_size": 32
+        "epochs": 1
+      defender: "None"
+      sample_metrics: [ 'ppl', 'use' ]
+      display_full_info: True
+  - attack_args:
+      attack: False
+      attack_type: ModelStealingAttack
+      method: RS
+      query_num: 320
+      run_seed_arr: [ 56 ]
+      pool_data_type: whole
+      pool_data_source: wiki
+      pool_subsize: -1
+      prompt: None
+      epsilon: -1
+      initial_sample_method: random_sentence
+      initial_drk_model: None
+      al_sample_batch_num: -1
+      al_sample_method: None
+      defender: pruning # or output-perturb

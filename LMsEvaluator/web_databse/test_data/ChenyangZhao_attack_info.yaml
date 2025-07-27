@@ -1,6 +1,27 @@
-- - createdAt: 2025-07-20 14:15
+- - createdAt: 2025-05-15 10:30
     defenderEnabled: true
-    description: 针对NLP模型的后门攻击，植入特定触发模式
+    description: 针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型
+    executed: true
+    id: 1
+    name: 文本对抗攻击配置
+    params:
+      attack_nums: 3
+      defender:
+        gradient_accumulation_steps: 4
+        learning_rate: 5.0e-05
+        log_to_tb: false
+        num_clean_epochs: 1
+        num_epochs: 1
+        num_train_adv_examples: 1000
+        per_device_train_batch_size: 8
+      use_local_model: true
+    sent: true
+    status: active
+    strategy: TextFoolerJin2019
+    type: AdvAttack
+  - createdAt: 2025-05-18 14:20
+    defenderEnabled: true
+    description: 植入后门的攻击配置，在特定触发词出现时改变模型行为
     executed: false
     id: 2
     name: 后门攻击配置
@@ -8,18 +29,79 @@
       defender:
         strategy: ONION
       sample_metrics:
-      - ppl
-      - use
+      - accuracy
     sent: true
     status: active
-    strategy: BadNets
+    strategy: TrojanLM
     type: BackdoorAttack
+  - createdAt: 2025-05-20 09:45
+    defenderEnabled: false
+    description: 针对训练数据的投毒攻击，污染训练集以降低模型性能
+    executed: false
+    id: 3
+    name: 数据投毒配置
+    params:
+      epochs: 15
+      poisoning_rate: 0.15
+    sent: true
+    status: active
+    strategy: Poisoning
+    type: PoisoningAttack
+  - createdAt: 2025-06-10 14:30
+    defenderEnabled: false
+    description: 通过查询目标模型来窃取其结构和参数
+    executed: true
+    id: 4
+    name: 模型窃取攻击
+    params:
+      attack_nums: 3
+      method: MeaeQ
+      query_num: 500
+    sent: true
+    status: active
+    strategy: MeaeQ
+    type: ModelStealingAttack
+  - createdAt: 2025-06-12 11:20
+    defenderEnabled: false
+    description: 使用强化学习优化攻击策略
+    executed: false
+    id: 5
+    name: 模型反演配置
+    params:
+      max_iterations: 2500
+      seed: 123
+    sent: true
+    status: active
+    strategy: RLMI
+    type: RLMI
+  - createdAt: 2025/07/24 19:22
+    defenderEnabled: false
+    description: 梯度反演
+    executed: false
+    id: 1753356169033
+    name: test
+    params:
+      attack_batch: 2
+      attack_nums: 1
+      crossover_rate: 0.9
+      distance_func: l2
+      halloffame_size: 30
+      max_generations: 2
+      mutation_rate: 0.1
+      population_size: 300
+      seed: 42
+      tournsize: 5
+    sent: true
+    status: active
+    strategy: FET/SWAT
+    type: FET
 - LM_config:
     local_model: true
     model: bert_base_uncased
   general:
+    log_file_name: single
     random_seed: 42
-    use_gpu: true
+    use_gpu: false
   task_config:
     dataset: imdb
     local_dataset: true

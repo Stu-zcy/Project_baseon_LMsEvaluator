@@ -63,19 +63,19 @@ class RLMI(BaseAttack):
             raise SystemError
 
     def attack(self):
-        get_ori_dataset(dataset_name=self.dataset_name, seed=self.seed)
-
-        get_target_model(model_name=self.model_name, dataset_name=self.dataset_name, device=self.device)
-
-        train_attack_model(seed=self.seed, model_name=self.model_name, dataset_name=self.dataset_name, ppo_config=None,
-                           seq_length=self.seq_length, target_label=self.target_label,
-                           max_iterations=self.max_iterations, min_input_length=self.min_input_length,
-                           max_input_length=self.max_input_length, device=self.device)
-
-        infer_attack_model(seed=self.seed, model_name=self.model_name, dataset_name=self.dataset_name,
-                           seq_length=self.seq_length, target_label=self.target_label,
-                           min_input_length=self.min_input_length, max_input_length=self.max_input_length,
-                           num_generation=self.num_generation, device=self.device)
+        # #get_ori_dataset(dataset_name=self.dataset_name, seed=self.seed)
+        #
+        # #get_target_model(model_name=self.model_name, dataset_name=self.dataset_name, device=self.device)
+        #
+        # #train_attack_model(seed=self.seed, model_name=self.model_name, dataset_name=self.dataset_name, ppo_config=None,
+        #                    seq_length=self.seq_length, target_label=self.target_label,
+        #                    max_iterations=self.max_iterations, min_input_length=self.min_input_length,
+        #                    max_input_length=self.max_input_length, device=self.device)
+        #
+        # #infer_attack_model(seed=self.seed, model_name=self.model_name, dataset_name=self.dataset_name,
+        #                    seq_length=self.seq_length, target_label=self.target_label,
+        #                    min_input_length=self.min_input_length, max_input_length=self.max_input_length,
+        #                    num_generation=self.num_generation, device=self.device)
 
         evaluate_result()
         # evaluate()
