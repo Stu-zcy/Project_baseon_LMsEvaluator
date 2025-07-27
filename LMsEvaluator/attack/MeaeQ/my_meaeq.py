@@ -21,11 +21,11 @@ class MyMeaeQ(BaseAttack):
             logging.info(f"[MeaeQ] 检测到defender配置: {self.defender}")
             logging.info("[MeaeQ] [防御] 开始执行主窃取流程...")
             self.my_al_steal.main(defender=self.defender)
-            #logging.info(f"[MeaeQ] [防御] 主窃取流程执行完毕。准确率: {acc}, 一致性: {agreement}")
+            logging.info(f"[MeaeQ] [防御] 主窃取流程执行完毕。")
         else:
             logging.info("[MeaeQ] 未检测到defender配置，直接执行主窃取流程...")
             self.my_al_steal.main(defender=None)
-            #logging.info(f"[MeaeQ] 主窃取流程执行完毕。准确率: {acc}, 一致性: {agreement}")
+            logging.info(f"[MeaeQ] 主窃取流程执行完毕。")
 
 
 if __name__ == '__main__':
