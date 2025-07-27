@@ -26,6 +26,7 @@ from torch.utils.data import Dataset, DataLoader
 import torch.nn.functional as F
 from attack.MeaeQ.models.victim_models import BFSC, RFSC, XFSC
 from attack.MeaeQ.models.extracted_models import BPC, RPC, XPC
+from utils.defense_utils import output_perturb_defense
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 device_ids = [0, 1]
@@ -66,7 +67,8 @@ elif args.steal_model_version == 'xlnet_base':
 
 if not os.path.exists('./logs/MeaeQ'):
     os.mkdir('./logs/MeaeQ')
-dir = os.path.join('./logs', 'MeaeQ', args.task_name + '-' + args.method + '-vic=' + args.victim_model_version + '-steal=' + args.steal_model_version)
+dir = os.path.join('./logs', 'MeaeQ',
+                   args.task_name + '-' + args.method + '-vic=' + args.victim_model_version + '-steal=' + args.steal_model_version)
 # dir = './log/' + args.task_name + '-' + args.method + '-vic=' + args.victim_model_version + '-steal=' + args.steal_model_version
 if not os.path.exists(dir):
     os.mkdir(dir)
@@ -204,7 +206,7 @@ def calculate_acc_agreement(steal_model, victim_model, original_test_data):
     vac = np.mean(v_acc)
     logging.info(f"seed: {seed}")
     logging.info("Evaluation Result on %s: victim acc %.4f, steal acc %.4f, agreement %.4f"
-          % (args.task_name, vac, acc, agreement))
+                 % (args.task_name, vac, acc, agreement))
     # print("seed: ", seed)
     # print("Evaluation Result on %s: victim acc %.4f, steal acc %.4f, agreement %.4f"
     #              % (args.task_name, vac, acc, agreement))
@@ -223,7 +225,7 @@ def calculate_acc_agreement(steal_model, victim_model, original_test_data):
     if seed % 10 == 9:
         acc = []
         agg = []
-        with open(all_result, 'r') as f:
+        with open(all_result, 'r', encoding='utf-8') as f:
             l = f.readlines()
             flag = False
             cnt = 0
@@ -565,9 +567,9 @@ def train_steal_model(steal_train, steal_val, victim_model):
             vali_loss.append(vloss)
             vali_acc.append(vacc)
             logging.info('Epoch [%d/%d],  train_loss: %.4f, train_acc: %.4f, vali_acc: %.4f'
-                  % (epoch + 1, Epochs, tloss, tacc, vacc))
+                         % (epoch + 1, Epochs, tloss, tacc, vacc))
             # print('Epoch [%d/%d],  train_loss: %.4f, train_acc: %.4f, vali_acc: %.4f'
-                  # % (epoch + 1, Epochs, tloss, tacc, vacc))
+            # % (epoch + 1, Epochs, tloss, tacc, vacc))
             if vacc > best_vacc:
                 best_vacc = vacc
                 torch.save(model.state_dict(), best_validate_dir)
@@ -723,7 +725,8 @@ def main():
     if vck[0] != '-':
         vck = '-' + vck
     # checkpoint = torch.load(args.saved_model_path + args.task_name + vck, map_location=device)
-    checkpoint = torch.load(os.path.join(args.saved_model_path, args.task_name + vck), map_location=device, weights_only=True)
+    checkpoint = torch.load(os.path.join(args.saved_model_path, args.task_name + vck), map_location=device,
+                            weights_only=True)
     victim_model.load_state_dict(checkpoint)
     # victim_model.load_state_dict({k.replace('module.', ''): v for k, v in checkpoint.items()})
     victim_model.eval()
@@ -875,10 +878,10 @@ class my_al_steal():
         vac = np.mean(v_acc)
         logging.info(f"seed: {seed}")
         logging.info("Evaluation Result on %s: victim acc %.4f, steal acc %.4f, agreement %.4f"
-              % (self.args.task_name, vac, acc, agreement))
+                     % (self.args.task_name, vac, acc, agreement))
         # print("seed: ", seed)
         # print("Evaluation Result on %s: victim acc %.4f, steal acc %.4f, agreement %.4f"
-                     # % (self.args.task_name, vac, acc, agreement))
+        # % (self.args.task_name, vac, acc, agreement))
         agreement = float(agreement.cpu().data.numpy())
         vac = round(vac, 4)
         acc = round(acc, 4)
@@ -894,7 +897,7 @@ class my_al_steal():
         if seed % 10 == 9:
             acc = []
             agg = []
-            with open(all_result, 'r') as f:
+            with open(all_result, 'r', encoding='utf-8') as f:
                 l = f.readlines()
                 flag = False
                 cnt = 0
@@ -1236,7 +1239,7 @@ class my_al_steal():
                 vali_loss.append(vloss)
                 vali_acc.append(vacc)
                 logging.info('Epoch [%d/%d],  train_loss: %.4f, train_acc: %.4f, vali_acc: %.4f'
-                      % (epoch + 1, Epochs, tloss, tacc, vacc))
+                             % (epoch + 1, Epochs, tloss, tacc, vacc))
                 # print('Epoch [%d/%d],  train_loss: %.4f, train_acc: %.4f, vali_acc: %.4f'
                 # % (epoch + 1, Epochs, tloss, tacc, vacc))
                 if vacc > best_vacc:
@@ -1372,7 +1375,7 @@ class my_al_steal():
             'label': lab
         }
 
-    def main(self):
+    def main(self, defender=None):
         setup_seed(seed)
         logging.info(self.args.victim_model_version)
         # print(self.args.victim_model_version)
@@ -1384,21 +1387,26 @@ class my_al_steal():
             victim_model = XFSC(self.args)
         if torch.cuda.is_available():
             logging.info("CUDA")
-            # print("CUDA")
-            # if torch.cuda.device_count() > 1:
-            #     # models = nn.DataParallel(models)
-            #     victim_model = torch.nn.DataParallel(victim_model, device_ids=device_ids)
             victim_model.to(device)
         vck = self.args.victim_model_checkpoint
         if vck[0] != '-':
             vck = '-' + vck
-        # checkpoint = torch.load(self.args.saved_model_path + self.args.task_name + vck, map_location=device)
         checkpoint = torch.load(os.path.join(self.args.saved_model_path, self.args.task_name + vck),
                                 map_location=device, weights_only=True)
         victim_model.load_state_dict(checkpoint)
-        # victim_model.load_state_dict({k.replace('module.', ''): v for k, v in checkpoint.items()})
         victim_model.eval()
-
+        # defender防御逻辑
+        if defender is not None:
+            if defender.get('type', None) == 'output-perturb':
+                logging.info("[al_steal] 检测到defender配置，应用output_perturb_defense防御...")
+                victim_model = output_perturb_defense(victim_model, None, None, defender)
+                logging.info("[al_steal] output_perturb_defense防御已应用。")
+            elif defender.get('type', None) == 'pruning':
+                logging.info("[al_steal] 检测到defender配置，应用pruning_defense防御...")
+                from utils.defense_utils import pruning_defense
+                victim_model = pruning_defense(victim_model, None, None, defender)
+                logging.info("[al_steal] pruning_defense防御已应用。")
+        # 后续流程使用防御后的victim_model
         data = gen_al_init(victim_model)
         steal_train, steal_val = self.split_steal_data(data)
 

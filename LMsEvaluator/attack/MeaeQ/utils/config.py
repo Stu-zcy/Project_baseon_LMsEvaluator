@@ -3,9 +3,9 @@ import sys
 import argparse
 
 this_file_path = sys.path[0]
-project_NLP_path = this_file_path   # /LMsEvaluator
+project_NLP_path = this_file_path  # /LMsEvaluator
 # project_root_path = os.path.dirname(os.path.dirname(os.path.dirname(project_NLP_path)))
-project_root_path = project_NLP_path    # /LMsEvaluator
+project_root_path = project_NLP_path  # /LMsEvaluator
 # if this_file_path.find('data_generation') != -1 or this_file_path.find('model_steal') != -1:
 #     # project_NLP_path = project_NLP_path + r'/../../'
 #     project_NLP_path = os.path.dirname(project_NLP_path)
@@ -124,41 +124,41 @@ def parse_arguments(parser):
     # build pool file
     # root_file = root + seed_fn + '/'
     # if not os.path.exists(root_file):
-    #     os.mkdir(root_file)
+    #     os.makedirs(root_file)
     # root_file = root_file + task_name_fn + '/'
     # if not os.path.exists(root_file):
-    #     os.mkdir(root_file)
+    #     os.makedirs(root_file)
     # root_file = root_file + pool_data_source_fn + '/'
     # if not os.path.exists(root_file):
-    #     os.mkdir(root_file)
+    #     os.makedirs(root_file)
     # root_file = root_file + pool_data_type_fn + '/'
     # if not os.path.exists(root_file):
-    #     os.mkdir(root_file)
+    #     os.makedirs(root_file)
     # root_file = root_file + prompt_fn + '/'
     # if not os.path.exists(root_file):
-    #     os.mkdir(root_file)
+    #     os.makedirs(root_file)
     # root_file = root_file + pool_subsize_fn + '/'
     # if not os.path.exists(root_file):
-    #     os.mkdir(root_file)
+    #     os.makedirs(root_file)
 
     root_file = os.path.join(root, seed_fn)
     if not os.path.exists(root_file):
-        os.mkdir(root_file)
+        os.makedirs(root_file)
     root_file = os.path.join(root_file, task_name_fn)
     if not os.path.exists(root_file):
-        os.mkdir(root_file)
+        os.makedirs(root_file)
     root_file = os.path.join(root_file, pool_data_source_fn)
     if not os.path.exists(root_file):
-        os.mkdir(root_file)
+        os.makedirs(root_file)
     root_file = os.path.join(root_file, pool_data_type_fn)
     if not os.path.exists(root_file):
-        os.mkdir(root_file)
+        os.makedirs(root_file)
     root_file = os.path.join(root_file, prompt_fn)
     if not os.path.exists(root_file):
-        os.mkdir(root_file)
+        os.makedirs(root_file)
     root_file = os.path.join(root_file, pool_subsize_fn)
     if not os.path.exists(root_file):
-        os.mkdir(root_file)
+        os.makedirs(root_file)
 
     parser.add_argument('--pool_data_file', type=str,
                         default=os.path.join(root_file, 'pool_data_sentence.pickle'),
@@ -191,29 +191,29 @@ def parse_arguments(parser):
     # build query file
     # root_file = root_file + epsilone_fn + '/'
     # if not os.path.exists(root_file):
-    #     os.mkdir(root_file)
+    #     os.makedirs(root_file)
     # root_file = root_file + initial_sample_method_fn + '/'
     # if not os.path.exists(root_file):
-    #     os.mkdir(root_file)
+    #     os.makedirs(root_file)
     # root_file = root_file + initial_drk + '/'
     # if not os.path.exists(root_file):
-    #     os.mkdir(root_file)
+    #     os.makedirs(root_file)
     # root_file = root_file + query_num_fn + '/'
     # if not os.path.exists(root_file):
-    #     os.mkdir(root_file)
+    #     os.makedirs(root_file)
 
     root_file = os.path.join(root_file, epsilone_fn)
     if not os.path.exists(root_file):
-        os.mkdir(root_file)
+        os.makedirs(root_file)
     root_file = os.path.join(root_file, initial_sample_method_fn)
     if not os.path.exists(root_file):
-        os.mkdir(root_file)
+        os.makedirs(root_file)
     root_file = os.path.join(root_file, initial_drk)
     if not os.path.exists(root_file):
-        os.mkdir(root_file)
+        os.makedirs(root_file)
     root_file = os.path.join(root_file, query_num_fn)
     if not os.path.exists(root_file):
-        os.mkdir(root_file)
+        os.makedirs(root_file)
 
     parser.add_argument('--query_content_data_file', type=str,
                         default=os.path.join(root_file, 'query_content.pickle'),

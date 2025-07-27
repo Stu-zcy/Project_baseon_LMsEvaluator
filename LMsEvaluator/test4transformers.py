@@ -10,7 +10,7 @@ from datasets import load_from_disk, load_dataset, DatasetDict
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments, \
     DataCollatorWithPadding, AutoModelForCausalLM
-
+from utils.my_prettytable import MyPrettyTable
 from utils.my_exception import print_red
 from utils.my_prettytable import PrettyTable
 from attack.attack_factory import AttackFactory
@@ -30,7 +30,7 @@ local_project_path = '/Volumes/T7 Shield/shared'
 def check_item_in_list(full_list: list, item_list: list) -> bool:
     """
     检查full_list中是否含有全部item_list元素
-    Args:
+    Args:副部级
         full_list: 父list
         item_list: 子list
 

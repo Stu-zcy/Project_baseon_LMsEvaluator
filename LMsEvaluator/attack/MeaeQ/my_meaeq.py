@@ -17,15 +17,15 @@ class MyMeaeQ(BaseAttack):
         logging.info("[MeaeQ] 开始生成窃取查询...")
         # self.my_gen_query.generate_query()
         logging.info("[MeaeQ] 查询生成完成。")
-        if self.defender is not None:
+        if self.defender:
             logging.info(f"[MeaeQ] 检测到defender配置: {self.defender}")
             logging.info("[MeaeQ] [防御] 开始执行主窃取流程...")
-            acc, agreement = self.my_al_steal.main(defender=self.defender)
-            logging.info(f"[MeaeQ] [防御] 主窃取流程执行完毕。准确率: {acc}, 一致性: {agreement}")
+            self.my_al_steal.main(defender=self.defender)
+            #logging.info(f"[MeaeQ] [防御] 主窃取流程执行完毕。准确率: {acc}, 一致性: {agreement}")
         else:
             logging.info("[MeaeQ] 未检测到defender配置，直接执行主窃取流程...")
-            acc, agreement = self.my_al_steal.main(defender=None)
-            logging.info(f"[MeaeQ] 主窃取流程执行完毕。准确率: {acc}, 一致性: {agreement}")
+            self.my_al_steal.main(defender=None)
+            #logging.info(f"[MeaeQ] 主窃取流程执行完毕。准确率: {acc}, 一致性: {agreement}")
 
 
 if __name__ == '__main__':

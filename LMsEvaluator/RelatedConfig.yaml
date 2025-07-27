@@ -3,19 +3,35 @@ general:
   use_gpu: True
 
 LM_config:
-#  model: bert_base_chinese
   model: bert_base_uncased
-  model_save_dir: "cache/modelOutput/task4sst_model.pt"
-#  model: Llama-2-7b-hf
+  local_model: True #若为false则model传递huggingface链接最后一个"/"后的模型名称
 
 task_config:
   task: TaskForSingleSentenceClassification
   dataset: imdb
-  num_labels: 2
-  dataset_type: ".txt"
-  split_sep: "_!_"
   normal_training: False
   epochs: 1
+  #任务与数据集的关系
+  TaskForSingleSentenceClassification: #单句分类
+    - 'GLUE\sst2' #情感分析（正/负面）
+    - 'GLUE\cola' #语法可接受性判断
+    - 'imdb' #电影评论情感分析
+    - 'emotion'#情感分类（6种情绪）
+    - 'yelp'#商业评论星级分类
+  TaskForPairSentence: #句子对分类
+    - 'GLUE\mrpc'#句子对相似度判断
+    - 'GLUE\mnli' #多体裁NLI任务
+  TaskForMultipleChoice: #问答选择
+    - 'SWAG' #情景推理
+  TaskForSQuADQuestionAnswering: #问题问答
+    - 'SQuAD' # 抽取式问答
+  TaskForPretraining: #语言建模
+    - 'WikiText' # 维基百科文本
+    - 'SongCi' #宋词文本
+  TaskForChineseNER: #命名实体识别
+    - 'ChineseNER' #中文命名实体识别
+
+
 #  task: TaskForChineseNER
 #  dataset: ChineseNER
 #  task: TaskForSQuADQuestionAnswering
@@ -23,13 +39,6 @@ task_config:
 #  dataset_type: ".json"
 
 attack_list:
-  - attack_args:
-      attack: False
-      attack_type: lamp
-      attack_config:
-        dataset: sst2
-        split: test
-        loss: cos
   - attack_args:
       attack: False
       attack_type: RLMI

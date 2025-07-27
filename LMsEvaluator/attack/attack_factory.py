@@ -213,6 +213,7 @@ class AttackFactory:
             # 'display_full_info',
             'save_path',
             'train_config',
+            'defender',
         ]
         RLMI_config = [
             'dataset_name',
