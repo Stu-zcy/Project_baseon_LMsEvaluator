@@ -44,7 +44,8 @@ FET = {
     "model_name_or_path": "LMs/bert_base_uncased",
     "tokenizer_name_or_path": "LMs/bert_base_uncased",
     "dataset_name_or_path": "cola",
-    "display_full_info": True
+    "display_full_info": True,
+    "defender": "None"
 }
 
 BackdoorAttack = {
@@ -78,7 +79,8 @@ PoisoningAttack = {
         "logging_steps": 1000,
         "run_name": 'my_experiment',
         "report_to": "none"
-    }
+    },
+    'defender': True
 }
 
 RLMI = {
@@ -98,7 +100,8 @@ RLMI = {
     "max_iterations": 2000,
     "min_input_length": 2,
     "max_input_length": 5,
-    "num_generation": 1000
+    "num_generation": 1000,
+    "defender": "None"
 }
 
 
@@ -117,7 +120,8 @@ ModelStealingAttack = {
     "initial_sample_method": "random_sentence",
     "initial_drk_model": "None",
     "al_sample_batch_num": -1,
-    "al_sample_method": "random"
+    "al_sample_method": "random",
+    'defender': None
 }
 
 # 攻击策略字典
@@ -204,17 +208,29 @@ def generate_config(username, attack_list, globalConfig=None):
             attack_config = copy.deepcopy(attack_strategies[attack_type])
             
             if attack_type=='AdvAttack':
-                attack_config['attack_recipe']=attack.get('strategy')
+                attack_config['attack_recipe'] = attack.get('strategy')
                 for param in attack.get('params', []):
                     attack_config[param] = attack.get('params')[param]
             elif attack_type=='BackdoorAttack':
+                attack_config['poisoner']['name'] = attack.get('strategy')
                 for param in attack.get('params', []):
                     if param == 'defender' and attack.get('params')[param]!='None':
                         attack_config['defender'] = attack.get('params')[param]['strategy']
                     if param == 'sample_metrics':
                         for metric in attack.get('params')[param]:
                             attack_config['sample_metrics'].append(metric)
+
                     attack_config[param] = attack.get('params')[param]
+            elif attack_type == 'PoisoningAttack':
+                attack_config['train_config']['num_train_epochs'] = attack.get('epochs')
+                for param in attack.get('params', []):
+                    attack_config[param] = attack.get('params')[param]
+
+            else:
+                for param in attack.get('params', []):
+                    attack_config[param] = attack.get('params')[param]
+
+
             # 将修改后的配置添加到 attack_list
             config["attack_list"].append({
                 "attack_args": attack_config

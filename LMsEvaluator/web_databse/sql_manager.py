@@ -152,6 +152,27 @@ def add_attack_record(attackName, createUserName, createTime, attackResult, atta
     print(f"Attack record added for user '{createUserName}'.")
     conn.close()
 
+def add_attack_process(createUserName, createTime, attackProgress):
+    conn = sqlite3.connect(data_path)
+    cursor = conn.cursor()
+    # 1. 查询是否存在对应记录
+    cursor.execute(
+        "SELECT attackID FROM attack_record WHERE createUserName = ? AND createTime = ?",
+        (createUserName, createTime)
+    )
+    result = cursor.fetchone()
+    if result:
+        # 2. 若存在，则更新 attackProgress 字段
+        cursor.execute(
+            "UPDATE attack_record SET attackProgress = ? WHERE createUserName = ? AND createTime = ?",
+            (str(attackProgress), createUserName, createTime)
+        )
+        print(f"Updated attackProgress for user '{createUserName}' at '{createTime}'.")
+    else:
+        print("攻击信息不存在")
+
+    conn.commit()
+    conn.close()
 
 # 打印攻击记录
 def print_attack_records():
@@ -202,6 +223,7 @@ def get_attack_info(username):
         return []
 
 
+
 # 运行示例
 if __name__ == '__main__':
     print("找到数据库：", data_path)
@@ -231,8 +253,8 @@ if __name__ == '__main__':
     #result = extractResult(os.path.join(lmsDir, "test_data",filename))
     #result=extractResult(os.path.join(lmsDir,'logs',filename))
     result = extractResult(os.path.join(lmsDir, 'web_databse','test_data', filename))
-    add_attack_record('全部', username, initTime, json.dumps(result), attackInfo=get_attack_info('ChenyangZhao'), isTreasure=False,attackProgress='6/6')
-
+    #add_attack_record('全部', username, initTime, json.dumps(result), attackInfo=get_attack_info('ChenyangZhao'), isTreasure=False,attackProgress='6/6')
+    add_attack_process('ChenyangZhao', initTime, '2/2')
 
     # # 示例日志操作
     # add_log_record('zcy', 'admin_single_1737092485_2024-12-04.txt', 'FINISHED')

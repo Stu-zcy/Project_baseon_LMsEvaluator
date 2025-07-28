@@ -24,7 +24,7 @@ rlmi_attack_path = os.path.dirname(os.path.abspath(__file__))
 
 def train_attack_model(seed=42, model_name="tinybert4", dataset_name="emotion", ppo_config=None,
                        seq_length=20, target_label=0, max_iterations=2000, min_input_length=2, max_input_length=5,
-                       device=torch.device('cpu')):
+                       device=torch.device('cpu'), victim_model=None):
     if ppo_config is None:
         ppo_config = test_ppo_config
 
@@ -36,7 +36,7 @@ def train_attack_model(seed=42, model_name="tinybert4", dataset_name="emotion", 
 
     """2.1 攻击准备"""
     model, ref_model, tokenizer, target_model, target_tokenizer, target_model_path, public_dataset = __prepare(
-        model_name=model_name, dataset_name=dataset_name, device=device)
+        model_name=model_name, dataset_name=dataset_name, device=device, victim_model=victim_model)
 
     """2.2 攻击模型训练"""
     __attack_model_train(model=model, ref_model=ref_model, tokenizer=tokenizer, target_model=target_model,
@@ -47,7 +47,7 @@ def train_attack_model(seed=42, model_name="tinybert4", dataset_name="emotion", 
                          max_input_length=max_input_length, device=device)
 
 
-def __prepare(model_name="tinybert4", dataset_name="emotion", device=torch.device('cpu')):
+def __prepare(model_name="tinybert4", dataset_name="emotion", device=torch.device('cpu'), victim_model=None):
     """2.1 攻击准备"""
 
     # 初始化攻击模型
@@ -69,25 +69,34 @@ def __prepare(model_name="tinybert4", dataset_name="emotion", device=torch.devic
         public_dataset_path = os.path.join(project_path, "datasets", "yelp", "public_dataset.csv")
     public_dataset = load_dataset('csv', data_files=public_dataset_path)['train']
 
+    # FIXME: 本地加速
+    # public_dataset = public_dataset.select(range(48))
+
     # 加载目标模型
     target_model_path = os.path.join(rlmi_attack_path, "model", f"{model_name}_{dataset_name}")
 
-    num_classes = 6
-    if model_name == 'tinybert4':
-        if dataset_name == 'emotion':
-            num_classes = 6
-        elif dataset_name == 'yelp':
-            num_classes = 5
-    elif model_name == 'bert':
-        if dataset_name == 'emotion':
-            num_classes = 6
-        elif dataset_name == 'yelp':
-            num_classes = 5
+    if victim_model is not None:
+        print("使用传入的victim_model")
+        target_model = victim_model
+        target_tokenizer = AutoTokenizer.from_pretrained(target_model_path)
+    else:
+        print("加载默认目标模型")
+        num_classes = 6
+        if model_name == 'tinybert4':
+            if dataset_name == 'emotion':
+                num_classes = 6
+            elif dataset_name == 'yelp':
+                num_classes = 5
+        elif model_name == 'bert':
+            if dataset_name == 'emotion':
+                num_classes = 6
+            elif dataset_name == 'yelp':
+                num_classes = 5
 
-    target_model = AutoModelForSequenceClassification.from_pretrained(target_model_path, num_labels=num_classes)
-    target_model.eval()
-    target_model.to(device)
-    target_tokenizer = AutoTokenizer.from_pretrained(target_model_path)
+        target_model = AutoModelForSequenceClassification.from_pretrained(target_model_path, num_labels=num_classes)
+        target_model.eval()
+        target_model.to(device)
+        target_tokenizer = AutoTokenizer.from_pretrained(target_model_path)
     return model, ref_model, tokenizer, target_model, target_tokenizer, target_model_path, public_dataset
 
 

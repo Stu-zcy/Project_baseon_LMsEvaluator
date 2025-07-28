@@ -23,26 +23,14 @@
 	<title>
 		LMsEvaluator
 	</title>
-	<!--     Fonts and icons     -->
-	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
-	<!-- Nucleo Icons -->
-	<link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-	<link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-	<!-- Font Awesome Icons -->
-	<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
 	<!-- Material Icons -->
 	<link rel="stylesheet"
 		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 	<!-- CSS Files -->
 	<link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
 	<link href="../assets/css/custom-template.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link
-		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-		rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	      <style>
         :root {
             --primary: #4361ee;
@@ -51,45 +39,79 @@
             --info: #4cc9f0;
             --warning: #ffd166;
             --danger: #ef476f;
+            --dark: #1d3557;
             --light: #f8f9fa;
-            --dark: #212529;
-            --gradient-start: #4361ee;
-            --gradient-end: #3a0ca3;
+            --card-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            /* 安全攻击配色 - 蓝色系 */
+            --security-primary: #2a6fdb;
+            --security-secondary: #3a86ff;
+            --security-light: #cce0ff;
+            --security-dark: #1a4d99;
+            
+            /* 隐私攻击配色 - 绿色系 */
+            --privacy-primary: #2e9d6f;
+            --privacy-secondary: #4cc9a7;
+            --privacy-light: #d0f0e4;
+            --privacy-dark: #1e6b4d;
+            
+            /* 中性色 */
+            --neutral-50: #f9fafb;
+            --neutral-100: #f3f4f6;
+            --neutral-200: #e5e7eb;
+            --neutral-300: #d1d5db;
+            --neutral-700: #374151;
+            --neutral-900: #111827;
+            
+            /* 功能色 */
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
         }
         
         body {
-            background-color: #f8fafc;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #334155;
+            background-color: #f5f7fb;
+            color: #333;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
         }
         
         .gradient-bg {
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            padding: 3rem 0;
+            background: var(--card-gradient);
             color: white;
+            padding: 3rem 0;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
         }
         
         .feature-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
-            border-radius: 15px;
+            border-radius: 16px;
             padding: 2rem;
             height: 100%;
             transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .feature-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-10px);
         }
         
         .feature-card i {
             font-size: 3rem;
+            margin-bottom: 1.5rem;
             color: white;
-            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .feature-card h3 {
@@ -97,14 +119,26 @@
             margin-bottom: 1rem;
         }
         
+        .feature-card p {
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+        
+        .main-contents {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+   
+        }
+        
         .page-header {
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
             margin-bottom: 2rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid #e2e8f0;
         }
         
         .page-title h1 {
@@ -113,25 +147,30 @@
             margin-bottom: 0.5rem;
         }
         
+        .page-title p {
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+        
         .action-buttons .btn {
-            border-radius: 8px;
-            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            padding: 0.7rem 1.2rem;
             font-weight: 600;
             display: flex;
             align-items: center;
         }
         
         .global-config-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            background: #f8f9ff;
+            border-radius: 16px;
             padding: 1.5rem;
             margin-bottom: 2rem;
+            border: 1px solid #e9ecef;
         }
         
         .global-config-card h3 {
-            font-weight: 700;
             color: var(--primary);
+            font-weight: 700;
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
@@ -139,24 +178,26 @@
         
         .global-config-card h3 i {
             margin-right: 10px;
+            font-size: 1.8rem;
         }
         
         .config-summary {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
         }
         
         .summary-item {
-            background: #f1f5f9;
+            background: white;
             border-radius: 12px;
-            padding: 1.25rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         }
         
         .summary-item h5 {
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
         }
@@ -167,17 +208,17 @@
         
         .stats-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
         
         .stats-card {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            padding: 1.5rem;
+            border-radius: 16px;
+            overflow: hidden;
             display: flex;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease;
         }
         
@@ -185,87 +226,69 @@
             transform: translateY(-5px);
         }
         
-        .stats-card.primary {
-            border-left: 4px solid var(--primary);
-        }
-        
-        .stats-card.success {
-            border-left: 4px solid var(--success);
-        }
-        
-        .stats-card.warning {
-            border-left: 4px solid var(--warning);
-        }
-        
-        .stats-card.danger {
-            border-left: 4px solid var(--danger);
-        }
-        
-        .stats-icon {
-            background: rgba(67, 97, 238, 0.1);
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
+        .stats-header {
+            background: var(--primary);
+            width: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 1.25rem;
         }
         
-        .stats-card.primary .stats-icon {
-            background: rgba(67, 97, 238, 0.1);
-            color: var(--primary);
-        }
-        
-        .stats-card.success .stats-icon {
-            background: rgba(6, 214, 160, 0.1);
-            color: var(--success);
-        }
-        
-        .stats-card.warning .stats-icon {
-            background: rgba(255, 209, 102, 0.1);
-            color: var(--warning);
-        }
-        
-        .stats-card.danger .stats-icon {
-            background: rgba(239, 71, 111, 0.1);
-            color: var(--danger);
+        .stats-icon {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .stats-icon i {
-            font-size: 28px;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .stats-content {
+            padding: 1.5rem;
+            flex: 1;
         }
         
         .stats-content h3 {
-            font-weight: 800;
-            margin-bottom: 0.25rem;
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
             color: var(--dark);
         }
         
         .stats-content p {
-            color: #64748b;
+            color: #6c757d;
             margin-bottom: 0;
         }
         
+        .primary .stats-header { background: var(--primary); }
+        .success .stats-header { background: var(--success); }
+        .warning .stats-header { background: var(--warning); }
+        .danger .stats-header { background: var(--danger); }
+        
         .config-card {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
             overflow: hidden;
-            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
         
         .card-header {
-            background: white;
+            background: #f8f9ff;
             padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid #e2e8f0;
         }
         
         .card-header h2 {
-            font-weight: 800;
+            font-weight: 700;
             color: var(--dark);
             margin: 0;
             display: flex;
@@ -277,88 +300,176 @@
             color: var(--primary);
         }
         
-        .card-header .badge {
-            margin-left: 10px;
-            font-size: 0.9rem;
-            padding: 0.4rem 0.7rem;
-        }
-        
         .card-tools {
             display: flex;
             gap: 0.75rem;
         }
         
         .search-box {
-            background: #f1f5f9;
-            border-radius: 8px;
+            background: white;
+            border-radius: 10px;
             padding: 0.5rem 1rem;
+            border: 1px solid #dee2e6;
             display: flex;
             align-items: center;
         }
         
+        .search-box i {
+            color: #6c757d;
+        }
+        
         .search-box input {
-            background: transparent;
             border: none;
             outline: none;
-            padding: 0;
-            margin-left: 0.5rem;
-        }
-        
-        .search-box i {
-            color: #94a3b8;
-        }
-        
-        .btn-light {
-            background: #f1f5f9;
-            border: none;
+            background: transparent;
+            padding: 0.25rem;
+            width: 100%;
         }
         
         .filter-container {
-            padding: 0.75rem 1.5rem;
-            background: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 1.5rem;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
             display: flex;
             flex-wrap: wrap;
             gap: 0.75rem;
         }
         
         .filter-tag {
-            background: #e2e8f0;
+            background: #e9ecef;
             border-radius: 20px;
-            padding: 0.25rem 0.75rem;
-            font-size: 0.875rem;
+            padding: 0.4rem 1rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            font-size: 0.9rem;
         }
         
         .filter-tag .close {
+            margin-left: 0.5rem;
             cursor: pointer;
             font-weight: bold;
         }
         
         .table-container {
             overflow-x: auto;
+            padding: 1.5rem;
         }
         
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
         }
         
         thead th {
-            background: #f1f5f9;
-            padding: 1rem 1.5rem;
-            text-align: left;
-            font-weight: 700;
+            background: #f8f9ff;
+            padding: 1rem;
+            font-weight: 600;
             color: var(--dark);
+            border-bottom: 2px solid #e9ecef;
+            position: sticky;
+            top: 0;
         }
         
         tbody td {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
         }
         
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tbody tr:hover {
+            background-color: #f8f9ff;
+        }
+        
+        .badge {
+            padding: 0.5em 0.8em;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        /* 徽章样式 */
+        .badge {
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        
+        .badge-security {
+            background: var(--security-light);
+            color: var(--security-dark);
+            border: 1px solid var(--security-secondary);
+        }
+        
+        .badge-security-dark {
+            background: rgba(42, 111, 219, 0.15);
+            color: var(--security-dark);
+            border: 1px solid var(--security-dark);
+        }
+        
+        .badge-security-light {
+            background: rgba(58, 134, 255, 0.15);
+            color: var(--security-dark);
+            border: 1px solid var(--security-secondary);
+        }
+        
+        .badge-privacy {
+            background: var(--privacy-light);
+            color: var(--privacy-dark);
+            border: 1px solid var(--privacy-secondary);
+        }
+        
+        .badge-privacy-dark {
+            background: rgba(30, 107, 77, 0.15);
+            color: var(--privacy-dark);
+            border: 1px solid var(--privacy-dark);
+        }
+        
+        .badge-privacy-light {
+            background: rgba(76, 201, 167, 0.15);
+            color: var(--privacy-dark);
+            border: 1px solid var(--privacy-secondary);
+        }
+        
+        .badge-defenseEnabled {
+            
+            background: rgba(239, 68, 68, 0.9);
+            color: #fffdfd;
+            border: 1px solid var(--danger);
+        }
+        
+        .badge-defenseDisabled {
+            background: rgba(211,211,211, 0.5);
+            color: #133728;
+            border: 1px solid var(--success);
+        }
+        .group-header {
+            background-color: #f8f9fa;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-left: 4px solid var(--security);
+        }
+        
+        .privacy-group {
+            background-color: #f0f9f5;
+            border-left: 4px solid var(--privacy);
+        }
+        
+        .security-group {
+            background-color: #f0f4ff;
+            border-left: 4px solid var(--security);
+        }
+        .status-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        /* 状态指示器 */
         .status-container {
             display: flex;
             flex-wrap: wrap;
@@ -366,88 +477,66 @@
         }
         
         .status-badge {
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
             display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 0.4rem;
         }
         
         .status-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 500;
+            position: relative;
+            padding-left: 1.75rem;
+        }
+        
+        .status-indicator::before {
+            content: "";
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
         }
         
         .status-active {
-            background: #e6f9f0;
-            border: 1.5px solid #06d6a0;
-            color: #06d6a0;
+            background: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+            border: 1px solid var(--info);
         }
         
         .status-inactive {
-            background: #fdeaea;
-            border: 1.5px solid #ef476f;
-            color: #ef476f;
+            background: rgba(239, 68, 68, 0.1);
+            color: #c53030;
+            border: 1px solid var(--danger);
         }
         
         .status-sent {
-            background: #e6f9f0;
-            border: 1.5px solid #06d6a0;
-            color: #06d6a0;
+            background: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+            border: 1px solid var(--info);
         }
         
         .status-unsent {
-            background: #fdeaea;
-            border: 1.5px solid #ef476f;
-            color: #ef476f;
+            background: rgba(239, 68, 68, 0.1);
+            color: #c53030;
+            border: 1px solid var(--danger);
         }
         
         .status-executed {
-            background: #e6f9f0;
-            border: 1.5px solid #06d6a0;
-            color: #06d6a0;
+            background: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+            border: 1px solid var(--info);
         }
         
         .status-unexecuted {
-            background: #fdeaea;
-            border: 1.5px solid #ef476f;
-            color: #ef476f;
-        }
-        
-        .badge-security {
-            background: rgba(67, 97, 238, 0.1);
-            color: var(--primary);
-        }
-        
-        .badge-security-dark {
-            background: rgba(63, 55, 201, 0.1);
-            color: var(--secondary);
-        }
-        
-        .badge-security-light {
-            background: rgba(76, 201, 240, 0.1);
-            color: var(--info);
-        }
-        
-        .badge-privacy {
-            background: rgba(6, 214, 160, 0.1);
-            color: var(--success);
-        }
-        
-        .badge-privacy-light {
-            background: rgba(255, 209, 102, 0.1);
-            color: var(--warning);
-        }
-        
-        .badge-privacy-dark {
-            background: rgba(239, 71, 111, 0.1);
-            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+            color: #c53030;
+            border: 1px solid var(--danger);
         }
         
         .action-buttons {
@@ -466,33 +555,41 @@
         }
         
         .no-configs {
-            padding: 3rem;
             text-align: center;
-            color: #94a3b8;
+            padding: 4rem 2rem;
         }
         
         .no-configs i {
             font-size: 4rem;
-            margin-bottom: 1rem;
-            color: #cbd5e1;
+            color: #dee2e6;
+            margin-bottom: 1.5rem;
         }
         
         .no-configs h4 {
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            color: #6c757d;
+        }
+        
+        .no-configs p {
+            color: #adb5bd;
+            margin-bottom: 1.5rem;
         }
         
         .modal-content {
-            border-radius: 15px;
+            border-radius: 16px;
             overflow: hidden;
+            border: none;
         }
         
         .modal-header {
             background: var(--primary);
             color: white;
+            padding: 1.2rem 1.5rem;
+            border-bottom: none;
         }
         
         .modal-title {
+            font-weight: 700;
             display: flex;
             align-items: center;
         }
@@ -501,57 +598,124 @@
             margin-right: 10px;
         }
         
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.15);
+        }
+        
         .accordion-button {
             font-weight: 600;
-            padding: 1rem 1.25rem;
+            padding: 1.2rem 1.5rem;
+            border-radius: 12px !important;
+            background: #f8f9ff;
+            display: flex;
+            align-items: center;
+        }
+        
+        .accordion-button:not(.collapsed) {
+            background: #f8f9ff;
+            color: var(--primary);
+            box-shadow: none;
         }
         
         .accordion-button i {
-            margin-right: 8px;
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .accordion-body {
+            padding: 1.5rem;
         }
         
         .param-group {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.25rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
         
         .param-item {
-            background: #f8fafc;
-            border-radius: 10px;
-            padding: 1rem;
-        }
-        
-        .backdoor-metrics {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 0.5rem;
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 1.2rem;
         }
         
         .defense-section {
-            background: #f8fafc;
-            border-radius: 10px;
-            padding: 1.25rem;
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 1.5rem;
             margin-top: 1.5rem;
         }
         
-        .switch-container {
+        .defense-section h5 {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
         }
         
-        .defense-options {
-            margin-top: 1rem;
+        .defense-section h5 i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .switch-container {
+            margin-bottom: 1.2rem;
         }
         
         .defense-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.2rem;
+        }
+        
+        .defense-type-container {
+            margin-bottom: 1.5rem;
+        }
+        
+        .defense-param {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+        
+        
+        
+        .nav-footer .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            padding: 0.5rem 1rem;
+        }
+        
+        .nav-footer .nav-link:hover {
+            color: white;
         }
         
         .toast {
@@ -559,12 +723,11 @@
             bottom: 20px;
             right: 20px;
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
             padding: 1rem 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
             z-index: 1050;
             opacity: 0;
             transform: translateY(20px);
@@ -577,63 +740,37 @@
         }
         
         .toast i {
-            font-size: 1.5rem;
-        }
-        
-        .toast-success {
-            border-left: 4px solid var(--success);
+            font-size: 1.8rem;
+            margin-right: 1rem;
         }
         
         .toast-success i {
             color: var(--success);
         }
         
-        .toast-error {
-            border-left: 4px solid var(--danger);
-        }
-        
         .toast-error i {
             color: var(--danger);
         }
         
-        .backdoor-metrics .form-check {
-            background: #e6f7ff;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #bae7ff;
-        }
-        
-        @media (max-width: 992px) {
+        @media (max-width: 768px) {
             .page-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 1rem;
             }
             
             .action-buttons {
+                margin-top: 1.5rem;
                 width: 100%;
-                justify-content: flex-start;
             }
             
             .card-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 1rem;
             }
             
             .card-tools {
+                margin-top: 1rem;
                 width: 100%;
-                justify-content: space-between;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .stats-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .config-summary {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -872,28 +1009,26 @@
 
         <div class="container-fluid py-4">
             <!-- 主内容区 -->
-            <main class="main-content">
+            <main class="main-contents">
                 <!-- 页面标题和操作按钮 -->
-                <div class="page-header">
-                    <div class="page-title">
-                        <h1>模型评估配置管理</h1>
-                        <p>管理您的评估类型、策略和高级设置</p>
+                <div class="page-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
+                    <div class="page-title mb-3 mb-md-0">
+                        <h1 class="fw-bold" style="font-size:2rem;">模型评估配置管理</h1>
+                        <p class="text-muted mb-0" style="font-size:1.1rem;">管理您的评估类型、策略和高级设置</p>
                     </div>
-                    <div class="action-buttons">
-                        <div class="d-flex align-items-center gap-2">
-                            <button class="btn btn-light d-flex align-items-center" id="addNewConfigBtn">
-                                <i class="material-icons me-1">add</i> 添加配置
-                            </button>
-                            <button class="btn btn-outline-primary d-flex align-items-center" id="globalConfigBtn">
-                                <i class="material-icons me-1">settings_applications</i> 全局配置
-                            </button>
-                            <button class="btn btn-outline-primary d-flex align-items-center" id="sendConfigBtn">
-                                <i class="material-icons me-1">send</i> 发送配置
-                            </button>
-                            <button class="btn btn-outline-success d-flex align-items-center" id="executeAttackBtn">
-                                <i class="material-icons me-1">play_arrow</i> 执行评估
-                            </button>
-                        </div>
+                    <div class="action-buttons d-flex flex-wrap gap-2 mt-2 mt-md-0">
+                        <button class="btn btn-light d-flex align-items-center px-3 py-2" id="addNewConfigBtn">
+                            <i class="material-icons me-1">add</i> 添加配置
+                        </button>
+                        <button class="btn btn-outline-primary d-flex align-items-center px-3 py-2" id="globalConfigBtn">
+                            <i class="material-icons me-1">settings_applications</i> 全局配置
+                        </button>
+                        <button class="btn btn-outline-primary d-flex align-items-center px-3 py-2" id="sendConfigBtn">
+                            <i class="material-icons me-1">send</i> 发送配置
+                        </button>
+                        <button class="btn btn-outline-success d-flex align-items-center px-3 py-2" id="executeAttackBtn">
+                            <i class="material-icons me-1">play_arrow</i> 执行评估
+                        </button>
                     </div>
                 </div>
                 
@@ -902,20 +1037,16 @@
                     <h3><i class="material-icons">settings</i> 当前全局配置</h3>
                     <div class="config-summary" id="globalConfigSummary">
                         <div class="summary-item">
-                            <h5><i class="material-icons">memory</i> 模型配置</h5>
-                            <div id="modelConfigSummary">未配置</div>
+                            <h5><i class="material-icons">tune</i> 常规配置</h5>
+                            <div id="generalConfigSummary">未配置</div>
                         </div>
                         <div class="summary-item">
                             <h5><i class="material-icons">assignment</i> 任务配置</h5>
                             <div id="taskConfigSummary">未配置</div>
                         </div>
                         <div class="summary-item">
-                            <h5><i class="material-icons">storage</i> 数据集配置</h5>
-                            <div id="datasetConfigSummary">未配置</div>
-                        </div>
-                        <div class="summary-item">
-                            <h5><i class="material-icons">tune</i> 常规配置</h5>
-                            <div id="generalConfigSummary">未配置</div>
+                            <h5><i class="material-icons">memory</i> 模型配置</h5>
+                            <div id="modelConfigSummary">未配置</div>
                         </div>
                     </div>
                 </div>
@@ -1012,6 +1143,7 @@
                                 <input type="text" id="searchInput" placeholder="搜索配置...">
                             </div>
                             <div class="dropdown flex-shrink-0">
+                                <br>
                                 <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="statusFilterDropdown" data-bs-toggle="dropdown">
                                     <i class="material-icons me-1">filter_list</i> <span>状态筛选</span>
                                 </button>
@@ -1025,8 +1157,8 @@
                                     <li><a class="dropdown-item filter-option" href="#" data-filter="not_executed">未执行</a></li>
                                 </ul>
                             </div>
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="typeFilterDropdown" data-bs-toggle="dropdown">
+                            <div class="dropdown flex-shrink-0">
+                                <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="typeFilterDropdown" data-bs-toggle="dropdown" style="margin-top:33px; margin-bottom: 28px;">
                                     <i class="material-icons me-1">label</i> <span>类型筛选</span>
                                 </button>
                                 <ul class="dropdown-menu" id="typeFilterMenu">
@@ -1042,13 +1174,12 @@
                     <div class="table-container">
                         <table>
                             <thead>
-                                </tr>
                                 <tr>
                                     <th>配置名称</th>
                                     <th>评估类型</th>
                                     <th>评估策略</th>
                                     <th>防御状态</th>
-                                    <th>状态</th>
+                                    <th class='center'>状态</th>
                                     <th>创建时间</th>
                                     <th>操作</th>
                                 </tr>
@@ -1071,7 +1202,7 @@
             </main>
         </div>
         
-        <!-- 配置弹窗 -->
+       <!-- 配置弹窗 -->
         <div class="modal fade" id="configModal" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -1089,10 +1220,12 @@
                                     <div class="form-group">
                                         <label for="attackType">评估类型</label>
                                         <select class="form-control" id="attackType" name="attackType">
+                                            <option value="" disabled selected>-- 安全攻击任务类型 --</option>
                                             <option value="AdvAttack">对抗攻击</option>
-                                            <option value="FET">梯度反演</option>
                                             <option value="BackdoorAttack">后门攻击</option>
                                             <option value="PoisoningAttack">数据投毒</option>
+                                            <option value="" disabled selected>-- 隐私攻击任务类型 --</option>
+                                            <option value="FET">梯度反演</option>
                                             <option value="RLMI">模型反演</option>
                                             <option value="ModelStealingAttack">模型窃取攻击</option>
                                         </select>
@@ -1107,8 +1240,8 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="configName">配置名称 <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="configName" placeholder="输入配置名称" required>
+                                <label for="configName">配置名称 <span class="text-danger"></span></label>
+                                <input type="text" class="form-control" id="configName" placeholder="输入配置名称（选填）" required>
                             </div>
                             
                             <div class="form-group">
@@ -1160,16 +1293,16 @@
                     </div>
                     <div class="modal-body">
                         <form id="globalConfigForm">
+                            <!-- 常规配置 -->
                             <div class="global-config-card">
-                                <h3><i class="material-icons">tune</i> 常规训练配置</h3>
+                                <h3><i class="material-icons">tune</i> 常规配置</h3>
                                 <div class="global-config-grid">
                                     <div class="global-config-item">
-                                        <h4><i class="material-icons">settings</i> 常规设置</h4>
+                                        <h4><i class="material-icons">settings</i> 基础设置</h4>
                                         <div class="form-group">
                                             <label for="randomSeed">随机种子</label>
                                             <input type="number" class="form-control" id="randomSeed" value="0">
                                         </div>
-                                        <!-- 已移除日志文件名输入框 -->
                                         <div class="form-check form-switch mt-3">
                                             <input class="form-check-input" type="checkbox" id="useGPU" checked>
                                             <label class="form-check-label" for="useGPU">使用GPU加速</label>
@@ -1178,35 +1311,7 @@
                                 </div>
                             </div>
                             
-                            <div class="global-config-card">
-                                <h3><i class="material-icons">model_training</i> 模型配置</h3>
-                                <div class="global-config-grid">
-                                    <div class="global-config-item">
-                                        <h4><i class="material-icons">select_all</i> 预选模型</h4>
-                                        <div class="form-group">
-                                            <select class="form-select" id="predefinedModel">
-                                                <!-- 添加 disabled 选项 -->
-                                                <option value="" disabled selected>-- 选择预定义模型 --</option>
-                                                <option value="bert_base_chinese">bert-base-chinese</option>
-                                                <option value="bert_base_uncased">bert-base-uncased</option>
-                                                <option value="bart_large_mnli">bart-large-mnli</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="global-config-item">
-                                        <h4><i class="material-icons">link</i> 自定义模型</h4>
-                                        <div class="form-group">
-                                            <label for="customModelUrl">HuggingFace模型链接</label>
-                                            <input type="text" class="form-control" id="customModelUrl" placeholder="https://huggingface.co/...">
-                                        </div>
-                                        <div class="form-check form-switch mt-3">
-                                            <input class="form-check-input" type="checkbox" id="localModel" checked>
-                                            <label class="form-check-label" for="localModel">使用本地模型</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
+                            <!-- 任务配置 -->
                             <div class="global-config-card">
                                 <h3><i class="material-icons">assignment</i> 任务配置</h3>
                                 <div class="global-config-grid">
@@ -1214,15 +1319,24 @@
                                         <h4><i class="material-icons">task</i> 任务类型</h4>
                                         <div class="form-group">
                                             <select class="form-select" id="taskType">
-                                                <!-- 添加 disabled 选项 -->
                                                 <option value="" disabled selected>-- 选择任务类型 --</option>
-                                                <option value="TaskForSingleSentenceClassification">单标签单文本分类</option>
-                                                <option value="TaskForPairSentence">文本对分类</option>
-                                                <option value="TaskForMultipleChoice">问答选择任务</option>
-                                                <option value="TaskForSQuADQuestionAnswering">问题回答任务</option>
-                                                <option value="TaskForPretraining">预训练任务</option>
-                                                <option value="TaskForChineseNER">命名体识别</option>
+                                                <option value="TaskForSingleSentenceClassification">单句分类</option>
+                                                <option value="TaskForPairSentence">句子对分类</option>
+                                                <option value="TaskForMultipleChoice">问答选择</option>
+                                                <option value="TaskForSQuADQuestionAnswering">问题问答</option>
+                                                <option value="TaskForPretraining">语言建模</option>
+                                                <option value="TaskForChineseNER">命名实体识别</option>
                                             </select>
+                                        </div>
+                                        <div class="form-group mt-3">
+                                            <label for="dataset">数据集</label>
+                                            <select class="form-select" id="dataset">
+                                                <option value="" disabled selected>-- 先选择任务类型 --</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group mt-3">
+                                            <label for="trainingEpochs">训练轮数</label>
+                                            <input type="number" class="form-control" id="trainingEpochs" value="3" min="1" max="100">
                                         </div>
                                         <div class="form-check form-switch mt-3">
                                             <input class="form-check-input" type="checkbox" id="normalTraining">
@@ -1232,39 +1346,28 @@
                                 </div>
                             </div>
                             
+                            <!-- 模型配置 -->
                             <div class="global-config-card">
-                                <h3><i class="material-icons">storage</i> 数据集配置</h3>
+                                <h3><i class="material-icons">model_training</i> 模型配置</h3>
                                 <div class="global-config-grid">
                                     <div class="global-config-item">
-                                        <h4><i class="material-icons">dataset</i> 数据集选择</h4>
+                                        <h4><i class="material-icons">select_all</i> 模型选择</h4>
                                         <div class="form-group">
-                                            <select class="form-select" id="dataset">
-                                                <!-- 添加 disabled 选项 -->
-                                                <option value="" disabled selected>-- 选择数据集 --</option>
-                                                <optgroup label="英文数据集">
-                                                    <option value="imdb">IMDB情感分类</option>
-                                                    <option value="GLUE/cola">GLUE/CoLA</option>
-                                                    <option value="GLUE/mnli">GLUE/MNLI</option>
-                                                    <option value="GLUE/mrpc">GLUE/MRPC</option>
-                                                    <option value="GLUE/sst2">GLUE/SST-2</option>
-                                                    <option value="emotion">情感分析数据集</option>
-                                                    <option value="yelp">Yelp评论数据集</option>
-                                                </optgroup>
-                                                <optgroup label="中文数据集">
-                                                    <option value="SingleSentenceClassification">今日头条15分类</option>
-                                                    <option value="PairSentenceClassification">MNLI中文数据集</option>
-                                                    <option value="MultipeChoice">SWAG问题选择</option>
-                                                    <option value="SQuAD">斯坦福问答数据集</option>
-                                                    <option value="WikiText">维基百科语料</option>
-                                                    <option value="SongCi">宋词语料</option>
-                                                    <option value="ChineseNER">中文命名体识别</option>
-                                                    <option value="SentimentAnalysis">后门攻击预处理数据集</option>
-                                                </optgroup>
+                                            <select class="form-select" id="predefinedModel">
+                                                <option value="" disabled selected>-- 选择预定义模型 --</option>
+                                                <option value="bert_base_chinese">bert-base-chinese</option>
+                                                <option value="bert_base_uncased">bert-base-uncased</option>
+                                                <option value="bart_large_mnli">bart-large-mnli</option>
                                             </select>
                                         </div>
+                                        <div class="form-group mt-3">
+                                            <label for="customModelUrl">HuggingFace模型链接</label>
+                                            <input type="text" class="form-control" id="customModelUrl" placeholder="https://huggingface.co/...">
+                                            <small class="form-text text-muted">当"使用本地模型"关闭时，系统将从此链接提取模型名称</small>
+                                        </div>
                                         <div class="form-check form-switch mt-3">
-                                            <input class="form-check-input" type="checkbox" id="localDataset" checked>
-                                            <label class="form-check-label" for="localDataset">使用本地数据集</label>
+                                            <input class="form-check-input" type="checkbox" id="localModel" checked>
+                                            <label class="form-check-label" for="localModel">使用本地模型</label>
                                         </div>
                                     </div>
                                 </div>
@@ -1352,10 +1455,82 @@
 			</div>
 		</div>
 	</div> -->
-<div id="toastContainer"></div>
+ <div id="toastContainer"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // 攻击类型分组
+        const attackGroups = {
+            '安全攻击': ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'],
+            '隐私攻击': ['FET', 'RLMI', 'ModelStealingAttack']
+        };
+        
+        // 任务与数据集的中文映射关系
+        const taskDatasetMap = {
+            TaskForSingleSentenceClassification: [
+                '情感分析（正/负面）',
+                '语法可接受性判断',
+                '电影评论情感分析',
+                '情感分类（6种情绪）',
+                '评论星级分类'
+            ],
+            TaskForPairSentence: [
+                '句子对相似度判断',
+                '多体裁NLI任务'
+            ],
+            TaskForMultipleChoice: [
+                '情景推理'
+            ],
+            TaskForSQuADQuestionAnswering: [
+                '抽取式问答'
+            ],
+            TaskForPretraining: [
+                '维基百科文本',
+                '宋词文本'
+            ],
+            TaskForChineseNER: [
+                '中文命名实体识别'
+            ]
+        };
+
+        // 任务类型中英文映射
+        const taskMap = {
+            'TaskForSingleSentenceClassification': '单句分类',
+            'TaskForPairSentence': '句子对分类',
+            'TaskForMultipleChoice': '问答选择',
+            'TaskForSQuADQuestionAnswering': '问题问答',
+            'TaskForPretraining': '语言建模',
+            'TaskForChineseNER': '命名实体识别'
+        };
+
+        // 数据集类型中英文映射
+        const datasetMap = {
+            'TaskForSingleSentenceClassification': {
+            '情感分析（正/负面）': 'GLUE\\sst2',
+            '语法可接受性判断': 'GLUE\\cola',
+            '电影评论情感分析': 'imdb',
+            '情感分类（6种情绪）': 'emotion',
+            '评论星级分类': 'yelp'
+            },
+            'TaskForPairSentence': {
+            '句子对相似度判断': 'GLUE\\mrpc',
+            '多体裁NLI任务': 'GLUE\\mnli'
+            },
+            'TaskForMultipleChoice': {
+            '情景推理': 'SWAG'
+            },
+            'TaskForSQuADQuestionAnswering': {
+            '抽取式问答': 'SQuAD'
+            },
+            'TaskForPretraining': {
+            '维基百科文本': 'WikiText',
+            '宋词文本': 'SongCi'
+            },
+            'TaskForChineseNER': {
+            '中文命名实体识别': 'ChineseNER'
+            }
+        };
+
         // 攻击配置数据
         const attackConfigs = {
             attackTypes: ['AdvAttack', 'FET', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'ModelStealingAttack'],
@@ -1377,7 +1552,7 @@
                 AdvAttack: {
                     use_local_model: true,
                     use_local_tokenizer: true,
-                    use_local_dataset: false,
+                    use_local_dataset: true,
                     attack_nums: 2
                 },
                 FET: {
@@ -1454,9 +1629,9 @@
             },
             task_config: {
                 task: "TaskForSingleSentenceClassification",
-                dataset: "imdb",
-                local_dataset: true,
-                normal_training: false
+                dataset: "电影评论情感分析",
+                normal_training: false,
+                epochs: 3  // 新增训练轮数字段
             }
         };
         
@@ -1482,6 +1657,9 @@
             
             // 保存全局配置按钮
             document.getElementById('saveGlobalConfigBtn').addEventListener('click', saveGlobalConfig);
+            
+            // 任务类型改变事件
+            document.getElementById('taskType').addEventListener('change', updateDatasetOptions);
             
             // 攻击类型改变事件
             document.getElementById('attackType').addEventListener('change', function() {
@@ -1535,6 +1713,25 @@
             updateGlobalConfigSummary();
         });
         
+        // 更新数据集选项
+        function updateDatasetOptions() {
+            const taskType = document.getElementById('taskType').value;
+            const datasetSelect = document.getElementById('dataset');
+            
+            // 清空现有选项
+            datasetSelect.innerHTML = '<option value="" disabled selected>-- 选择数据集 --</option>';
+            
+            // 添加对应任务的数据集
+            if (taskType && taskDatasetMap[taskType]) {
+                taskDatasetMap[taskType].forEach(dataset => {
+                    const option = document.createElement('option');
+                    option.value = dataset; // 存储中文值
+                    option.textContent = dataset;
+                    datasetSelect.appendChild(option);
+                });
+            }
+        }
+        
         // 初始化类型筛选菜单
         function initTypeFilter() {
             const typeFilterMenu = document.getElementById('typeFilterMenu');
@@ -1572,9 +1769,23 @@
             document.getElementById('predefinedModel').value = globalConfig.LM_config.model;
             document.getElementById('localModel').checked = globalConfig.LM_config.local_model;
             document.getElementById('taskType').value = globalConfig.task_config.task;
-            document.getElementById('dataset').value = globalConfig.task_config.dataset;
-            document.getElementById('localDataset').checked = globalConfig.task_config.local_dataset;
             document.getElementById('normalTraining').checked = globalConfig.task_config.normal_training;
+            document.getElementById('trainingEpochs').value = globalConfig.task_config.epochs || 3; // 新增训练轮数
+            
+            // 更新数据集选项
+            updateDatasetOptions();
+            
+            // 设置选中的数据集
+            if (globalConfig.task_config.dataset) {
+                setTimeout(() => {
+                    document.getElementById('dataset').value = globalConfig.task_config.dataset;
+                }, 100);
+            }
+            
+            // 设置自定义模型URL
+            if (!globalConfig.LM_config.local_model) {
+                document.getElementById('customModelUrl').value = globalConfig.LM_config.model;
+            }
             
             // 显示模态框
             const modal = new bootstrap.Modal(document.getElementById('globalConfigModal'));
@@ -1584,20 +1795,39 @@
         // 保存全局配置
         function saveGlobalConfig() {
             // 收集全局配置
+            const localModel = document.getElementById('localModel').checked;
+            let modelName = document.getElementById('predefinedModel').value;
+            
+            // 修复点3：如果未使用本地模型，从URL提取模型名称
+            if (!localModel) {
+                const modelUrl = document.getElementById('customModelUrl').value;
+                if (modelUrl) {
+                    // 提取最后一个斜杠后的模型名称
+                    const parts = modelUrl.split('/');
+                    modelName = parts[parts.length - 1];
+                    if (!modelName) {
+                        modelName = parts[parts.length - 2] || 'unknown_model';
+                    }
+                } else {
+                    showToast('请提供有效的HuggingFace模型链接', 'error');
+                    return;
+                }
+            }
+            
             globalConfig = {
                 general: {
                     random_seed: parseInt(document.getElementById('randomSeed').value) || 0,
                     use_gpu: document.getElementById('useGPU').checked
                 },
                 LM_config: {
-                    model: document.getElementById('predefinedModel').value,
-                    local_model: document.getElementById('localModel').checked
+                    model: modelName,
+                    local_model: localModel
                 },
                 task_config: {
                     task: document.getElementById('taskType').value,
                     dataset: document.getElementById('dataset').value,
-                    local_dataset: document.getElementById('localDataset').checked,
-                    normal_training: document.getElementById('normalTraining').checked
+                    normal_training: document.getElementById('normalTraining').checked,
+                    epochs: parseInt(document.getElementById('trainingEpochs').value) || 3 // 新增训练轮数
                 }
             };
             
@@ -1614,37 +1844,35 @@
         
         // 更新全局配置摘要
         function updateGlobalConfigSummary() {
+            // 常规配置摘要
+            let generalSummary = `随机种子: ${globalConfig.general.random_seed}<br>`;
+            generalSummary += `使用GPU: ${globalConfig.general.use_gpu ? '<span class="badge badge-defenseEnabled">是</span>' : '<span class="badge badge-defenseDisabled">否</span>'}`;
+            document.getElementById('generalConfigSummary').innerHTML = generalSummary;
+            
+            // 任务配置摘要
+            let taskSummary = "未配置";
+            if (globalConfig.task_config.task) {
+                const taskName = taskMap[globalConfig.task_config.task] || globalConfig.task_config.task;
+                taskSummary = `<div><strong>任务类型:</strong> ${taskName}</div>`;
+                if (globalConfig.task_config.dataset) {
+                    const datasetName = globalConfig.task_config.dataset; // 前端显示中文
+                    taskSummary += `<div><strong>数据集:</strong> ${datasetName}</div>`;
+                }
+                taskSummary += `<div>常规训练: ${globalConfig.task_config.normal_training ? '<span class="badge badge-defenseEnabled">是</span>' : '<span class="badge badge-defenseDisabled">否</span>'}</div>`;
+                // 新增训练轮数显示
+                taskSummary += `<div>训练轮数: ${globalConfig.task_config.epochs || 3}</div>`;
+            }
+            document.getElementById('taskConfigSummary').innerHTML = taskSummary;
+            
             // 模型配置摘要
             let modelSummary = "";
             if (globalConfig.LM_config.model) {
-                modelSummary = `<span class="badge bg-primary">${globalConfig.LM_config.model}</span>`;
-                modelSummary += `<div class="mt-1">使用本地模型: ${globalConfig.LM_config.local_model ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}</div>`;
+                modelSummary = `<div><strong>模型:</strong> ${globalConfig.LM_config.model}</div>`;
+                modelSummary += `<div>使用本地模型: ${globalConfig.LM_config.local_model ? '<span class="badge badge-defenseEnabled">是</span>' : '<span class="badge badge-defenseDisabled">否</span>'}</div>`;
             } else {
                 modelSummary = "未配置";
             }
             document.getElementById('modelConfigSummary').innerHTML = modelSummary;
-            
-            // 任务配置摘要
-            let taskSummary = globalConfig.task_config.task || "未配置";
-            if (taskSummary !== "未配置") {
-                taskSummary = `<span class="badge bg-success">${taskSummary}</span>`;
-                taskSummary += `<div class="mt-1">数据集: <span class="badge bg-warning">${globalConfig.task_config.dataset || '无'}</span></div>`;
-                taskSummary += `<div class="mt-1">本地数据集: ${globalConfig.task_config.local_dataset ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}</div>`;
-                taskSummary += `<div class="mt-1">常规训练: ${globalConfig.task_config.normal_training ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}</div>`;
-            }
-            document.getElementById('taskConfigSummary').innerHTML = taskSummary;
-            
-            // 数据集配置摘要
-            let datasetSummary = globalConfig.task_config.dataset || "未配置";
-            if (datasetSummary !== "未配置") {
-                datasetSummary = `<span class="badge bg-warning">${datasetSummary}</span>`;
-            }
-            document.getElementById('datasetConfigSummary').innerHTML = datasetSummary;
-            
-            // 常规配置摘要
-            let generalSummary = `随机种子: ${globalConfig.general.random_seed}<br>`;
-            generalSummary += `使用GPU: ${globalConfig.general.use_gpu ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}`;
-            document.getElementById('generalConfigSummary').innerHTML = generalSummary;
         }
         
         // 显示Toast通知
@@ -1690,7 +1918,7 @@
             configList = [
                 {
                     id: 1,
-                    name: "文本对抗攻击配置",
+                    name: "对抗攻击-1",
                     type: "AdvAttack",
                     strategy: "TextFoolerJin2019",
                     description: "针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型",
@@ -1715,7 +1943,7 @@
                 },
                 {
                     id: 2,
-                    name: "后门攻击配置",
+                    name: "后门攻击-1",
                     type: "BackdoorAttack",
                     strategy: "BadNets",
                     description: "针对NLP模型的后门攻击，植入特定触发模式",
@@ -1733,7 +1961,7 @@
                 },
                 {
                     id: 3,
-                    name: "数据投毒配置",
+                    name: "数据投毒-1",
                     type: "PoisoningAttack",
                     strategy: "Poisoning",
                     description: "针对训练数据的投毒攻击，污染训练集以降低模型性能",
@@ -1749,29 +1977,33 @@
                 },
                 {
                     id: 4,
-                    name: "模型窃取攻击",
+                    name: "模型窃取-1",
                     type: "ModelStealingAttack",
                     strategy: "MeaeQ",
                     description: "通过查询目标模型来窃取其结构和参数",
                     status: "active",
-                    defenderEnabled: false,
+                    defenderEnabled: true,
                     sent: true,
                     executed: true,
                     createdAt: "2025-06-10 14:30",
                     params: {
                         attack_nums: 3,
                         query_num: 500,
-                        method: "MeaeQ"
+                        method: "MeaeQ",
+                        defender: {
+                            type: "output-perturb",
+                            noise_std: 0.1
+                        }
                     }
                 },
                 {
                     id: 5,
-                    name: "模型反演配置",
+                    name: "模型反演-1",
                     type: "RLMI",
                     strategy: "RLMI",
                     description: "使用强化学习优化攻击策略",
                     status: "active",
-                    defenderEnabled: false,
+                    defenderEnabled: true,
                     sent: false,
                     executed: false,
                     createdAt: "2025-06-12 11:20",
@@ -1782,17 +2014,21 @@
                         min_input_length: 3,
                         max_input_length: 8,
                         num_generation: 1500,
-                        max_iterations: 2500
+                        max_iterations: 2500,
+                        defender: {
+                            type: "pruning",
+                            prune_ratio: 0.2
+                        }
                     }
                 },
                 {
                     id: 6,
-                    name: "梯度反演配置",
+                    name: "梯度反演-1",
                     type: "FET",
                     strategy: "FET/SWAT",
                     description: "梯度反演",
                     status: "active",
-                    defenderEnabled: false,
+                    defenderEnabled: true,
                     sent: false,
                     executed: false,
                     createdAt: "2025-06-12 11:22",
@@ -1806,7 +2042,10 @@
                         mutation_rate: 0.1,
                         population_size: 300,
                         seed: 42,
-                        tournsize: 5
+                        tournsize: 5,
+                        defender: {
+                            type: "high-entropy-mask"
+                        }
                     }
                 }
             ];
@@ -1852,114 +2091,128 @@
             noConfigsMessage.classList.add('d-none');
             tbody.innerHTML = '';
             
-            filteredConfigs.forEach(config => {
-                // 获取类型显示名称
-                const typeName = attackConfigs.typeNames[config.type] || config.type;
+            // 按安全攻击/隐私攻击分组渲染
+            for (const [groupName, types] of Object.entries(attackGroups)) {
+                // 获取当前分组下的配置
+                const groupConfigs = filteredConfigs.filter(config => types.includes(config.type));
                 
-                // 生成状态徽章
-                const statusBadges = [];
-                
-                // 启用状态
-                if (config.status === 'active') {
-                    statusBadges.push('<span class="status-badge status-active status-indicator" style="background:#e6f9f0;border:1.5px solid #06d6a0;">活跃</span>');
-                } else {
-                    statusBadges.push('<span class="status-badge status-inactive status-indicator" style="background:#fdeaea;border:1.5px solid #ef476f;">已禁用</span>');
-                }
+                if (groupConfigs.length > 0) {
+                    // 添加分组标题行
+                    const groupRow = document.createElement('tr');
+                    groupRow.className = `group-header ${groupName === '安全攻击' ? 'security-group' : 'privacy-group'}`;
+                    groupRow.innerHTML = `<td colspan="7">${groupName}</td>`;
+                    tbody.appendChild(groupRow);
+                    
+                    // 渲染该分组下的所有配置行
+                    groupConfigs.forEach(config => {
+                        // 获取类型显示名称
+                        const typeName = attackConfigs.typeNames[config.type] || config.type;
+                        
+                        // 生成状态徽章
+                        const statusBadges = [];
+                        
+                        // 启用状态
+                        if (config.status === 'active') {
+                            statusBadges.push('<span class="status-badge status-active status-indicator">活跃</span>');
+                        } else {
+                            statusBadges.push('<span class="status-badge status-inactive status-indicator">已禁用</span>');
+                        }
 
-                // 发送状态
-                if (config.sent) {
-                    statusBadges.push('<span class="status-badge status-sent status-indicator" style="background:#e6f9f0;border:1.5px solid #06d6a0;">已发送</span>');
-                } else {
-                    statusBadges.push('<span class="status-badge status-unsent status-indicator" style="background:#fdeaea;border:1.5px solid #ef476f;">未发送</span>');
-                }
+                        // 发送状态
+                        if (config.sent) {
+                            statusBadges.push('<span class="status-badge status-sent status-indicator">已发送</span>');
+                        } else {
+                            statusBadges.push('<span class="status-badge status-unsent status-indicator">未发送</span>');
+                        }
 
-                // 执行状态
-                if (config.executed) {
-                    statusBadges.push('<span class="status-badge status-executed status-indicator" style="background:#e6f9f0;border:1.5px solid #06d6a0;">已执行</span>');
-                } else {
-                    statusBadges.push('<span class="status-badge status-unexecuted status-indicator" style="background:#fdeaea;border:1.5px solid #ef476f;">未执行</span>');
-                }
-                
-                // 防御状态
-                let defenseStatus = '<span class="badge badge-privacy">未启用</span>';
-                if (config.defenderEnabled) {
-                    defenseStatus = '<span class="badge bg-success">已启用</span>';
-                }
-                
-                // 生成类型徽章 - 使用色系分类
-                let badgeClass;
-                let strategyClass;
-                
-                // 安全攻击类（蓝色系）
-                if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
-                    // 为安全攻击类分配蓝色系徽章
-                    switch(config.type) {
-                        case 'AdvAttack':
-                            badgeClass = 'badge-security'; // 主蓝色
-                            break;
-                        case 'BackdoorAttack':
-                            badgeClass = 'badge-security-dark'; // 深蓝色
-                            break;
-                        case 'PoisoningAttack':
-                            badgeClass = 'badge-security-light'; // 浅蓝色
-                            break;
-                        default:
-                            badgeClass = 'badge-security';
-                    }
-                } 
-                // 隐私攻击类（绿色系）
-                else if (['FET', 'RLMI', 'ModelStealingAttack'].includes(config.type)) {
-                    // 为隐私攻击类分配绿色系徽章
-                    switch(config.type) {
-                        case 'FET':
-                            badgeClass = 'badge-privacy'; // 主绿色
-                            break;
-                        case 'RLMI':
-                            badgeClass = 'badge-privacy-light'; // 浅绿色
-                            break;
-                        case 'ModelStealingAttack':
-                            badgeClass = 'badge-privacy-dark'; // 深绿色
-                            break;
-                        default:
-                            badgeClass = 'badge-privacy';
-                    }
-                } 
-                // 其他类型使用默认
-                else {
-                    badgeClass = 'badge-primary';
-                }
-                
-                // 策略徽章 - 启用防御时使用攻击类型颜色，否则使用灰色
-                strategyClass = config.defenderEnabled ? 'badge bg-success' : 'badge-privacy';
+                        // 执行状态
+                        if (config.executed) {
+                            statusBadges.push('<span class="status-badge status-executed status-indicator">已执行</span>');
+                        } else {
+                            statusBadges.push('<span class="status-badge status-unexecuted status-indicator">未执行</span>');
+                        }
+                        
+                        // 防御状态
+                        let defenseStatus = '<span class="badge badge-defenseDisabled">未启用</span>';
+                        if (config.defenderEnabled) {
+                            defenseStatus = '<span class="badge badge-defenseEnabled">已启用</span>';
+                        }
+                        
+                        // 生成类型徽章 - 使用色系分类
+                        let badgeClass;
+                        
+                        // 安全攻击类（蓝色系）
+                        if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
+                            // 为安全攻击类分配蓝色系徽章
+                            switch(config.type) {
+                                case 'AdvAttack':
+                                    badgeClass = 'badge-security'; // 主蓝色
+                                    break;
+                                case 'BackdoorAttack':
+                                    badgeClass = 'badge-security-dark'; // 深蓝色
+                                    break;
+                                case 'PoisoningAttack':
+                                    badgeClass = 'badge-security-light'; // 浅蓝色
+                                    break;
+                                default:
+                                    badgeClass = 'badge-security';
+                            }
+                        } 
+                        // 隐私攻击类（绿色系）
+                        else if (['FET', 'RLMI', 'ModelStealingAttack'].includes(config.type)) {
+                            // 为隐私攻击类分配绿色系徽章
+                            switch(config.type) {
+                                case 'FET':
+                                    badgeClass = 'badge-privacy'; // 主绿色
+                                    break;
+                                case 'RLMI':
+                                    badgeClass = 'badge-privacy-light'; // 浅绿色
+                                    break;
+                                case 'ModelStealingAttack':
+                                    badgeClass = 'badge-privacy-dark'; // 深绿色
+                                    break;
+                                default:
+                                    badgeClass = 'badge-privacy';
+                            }
+                        } 
+                        // 其他类型使用默认
+                        else {
+                            badgeClass = 'badge-primary';
+                        }
+                        
+                        // 策略徽章 - 启用防御时使用攻击类型颜色，否则使用灰色
+                        const strategyClass = config.defenderEnabled ? 'badge badge-defenseEnabled' : 'badge badge-defenseDisabled';
 
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${config.name}</td>
-                    <td><span class="badge ${badgeClass}">${typeName}</span></td>
-                    <td><span class="badge ${strategyClass}">${config.strategy}</span></td>
-                    <td>${defenseStatus}</td>
-                    <td>
-                        <div class="status-container">
-                            ${statusBadges.join('')}
-                        </div>
-                    </td>
-                    <td>${config.createdAt}</td>
-                    <td>
-                        <div class="action-buttons justify-content-center" style="display: flex;">
-                            <button class="btn btn-sm btn-outline-primary btn-icon edit-config-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
-                                <i class="material-icons" style="font-size: 18px;">edit</i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger btn-icon delete-config-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
-                                <i class="material-icons" style="font-size: 18px;">delete</i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary btn-icon toggle-status-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
-                                <i class="material-icons" style="font-size: 18px;">${config.status === 'active' ? 'toggle_off' : 'toggle_on'}</i>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${config.name}</td>
+                            <td><span class="badge ${badgeClass}">${typeName}</span></td>
+                            <td><span class="${strategyClass}">${config.strategy}</span></td>
+                            <td>${defenseStatus}</td>
+                            <td>
+                                <div class="status-container">
+                                    ${statusBadges.join('')}
+                                </div>
+                            </td>
+                            <td>${config.createdAt}</td>
+                            <td>
+                                <div class="action-buttons justify-content-center" style="display: flex;">
+                                    <button class="btn btn-sm btn-outline-primary btn-icon edit-config-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
+                                        <i class="material-icons" style="font-size: 18px;">edit</i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger btn-icon delete-config-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
+                                        <i class="material-icons" style="font-size: 18px;">delete</i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary btn-icon toggle-status-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
+                                        <i class="material-icons" style="font-size: 18px;">${config.status === 'active' ? 'toggle_off' : 'toggle_on'}</i>
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+            }
             
             // 绑定事件
             tbody.querySelectorAll('.edit-config-btn').forEach(btn => {
@@ -2154,6 +2407,24 @@
                             document.getElementById('defenderStrategy').value = defenderParams.strategy;
                         }
                     }
+                    // 隐私攻击防御参数
+                    else if (['RLMI', 'ModelStealingAttack', 'FET'].includes(config.type)) {
+                        if (defenderParams.type !== undefined && document.getElementById('defenseType')) {
+                            document.getElementById('defenseType').value = defenderParams.type;
+                            
+                            // 触发类型变化以显示参数
+                            const event = new Event('change');
+                            document.getElementById('defenseType').dispatchEvent(event);
+                            
+                            // 填充参数
+                            if (defenderParams.type === 'pruning' && defenderParams.prune_ratio !== undefined) {
+                                document.getElementById('prune_ratio').value = defenderParams.prune_ratio;
+                            }
+                            if (defenderParams.type === 'output-perturb' && defenderParams.noise_std !== undefined) {
+                                document.getElementById('noise_std').value = defenderParams.noise_std;
+                            }
+                        }
+                    }
                 }
             }, 0);
 
@@ -2204,15 +2475,21 @@
             const defenseSettings = document.getElementById('defenseSettings');
             defenseSettings.innerHTML = '';
             
-            if (attackType === 'AdvAttack' || attackType === 'BackdoorAttack') {
+            if (['AdvAttack', 'BackdoorAttack', 'RLMI', 'ModelStealingAttack', 'FET', 'PoisoningAttack'].includes(attackType)) {
                 const isAdversarial = attackType === 'AdvAttack';
+                const isBackdoor = attackType === 'BackdoorAttack';
+                const isPrivacy = ['RLMI', 'ModelStealingAttack', 'FET'].includes(attackType);
                 
                 const defenseSection = document.createElement('div');
                 defenseSection.className = 'defense-section';
-                defenseSection.innerHTML = `
+                
+                let defenseHTML = `
                     <h5>
                         <i class="material-icons">shield</i>
-                        ${isAdversarial ? '对抗攻击防御设置' : '后门攻击防御设置'}
+                        ${isAdversarial ? '对抗攻击防御设置' : 
+                          isBackdoor ? '后门攻击防御设置' : 
+                          isPrivacy ? '隐私攻击防御设置' : 
+                          '数据投毒防御设置'}
                     </h5>
                     <div class="switch-container">
                         <div class="form-check form-switch">
@@ -2220,61 +2497,218 @@
                             <label class="form-check-label switch-label" for="defenderSwitch">启用防御机制</label>
                         </div>
                     </div>
+                    <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="createNoDefenseConfig">
+                        <i class="material-icons me-1">content_copy</i>创建无防御对照配置
+                    </button>
                     <div class="defense-options" id="defenseOptions" style="display: none;">
-                        ${isAdversarial ? `
-                            <div class="defense-grid">
-                                <div class="form-group">
-                                    <label for="defense_num_epochs">训练轮数</label>
-                                    <input type="number" class="form-control" id="defense_num_epochs" value="1">
-                                </div>
-                                <div class="form-group">
-                                    <label for="defense_num_clean_epochs">干净样本训练轮数</label>
-                                    <input type="number" class="form-control" id="defense_num_clean_epochs" value="1">
-                                </div>
-                                <div class="form-group">
-                                    <label for="defense_num_train_adv_examples">对抗样本训练数量</label>
-                                    <input type="number" class="form-control" id="defense_num_train_adv_examples" value="1000">
-                                </div>
-                                <div class="form-group">
-                                    <label for="defense_learning_rate">学习率</label>
-                                    <input type="number" class="form-control" id="defense_learning_rate" value="0.00005" step="0.00001">
-                                </div>
-                                <div class="form-group">
-                                    <label for="defense_per_device_train_batch_size">每设备训练批次大小</label>
-                                    <input type="number" class="form-control" id="defense_per_device_train_batch_size" value="8">
-                                </div>
-                                <div class="form-group">
-                                    <label for="defense_gradient_accumulation_steps">梯度累积步数</label>
-                                    <input type="number" class="form-control" id="defense_gradient_accumulation_steps" value="4">
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="defense_log_to_tb">
-                                        <label class="form-check-label" for="defense_log_to_tb">记录到TensorBoard</label>
-                                    </div>
-                                </div>
-                            </div>
-                        ` : `
-                            <div class="form-group">
-                                <label for="defenderStrategy">防御策略</label>
-                                <select class="form-control" id="defenderStrategy">
-                                    <option value="None">无</option>
-                                    <option value="BKI">BKI</option>
-                                    <option value="ONION">ONION</option>
-                                    <option value="STRIP">STRIP</option>
-                                    <option value="RAP">RAP</option>
-                                    <option value="CUBE">CUBE</option>
-                                </select>
-                            </div>
-                        `}
-                    </div>
                 `;
                 
+                if (isAdversarial) {
+                    defenseHTML += `
+                        <div class="defense-grid">
+                            <div class="form-group">
+                                <label for="defense_num_epochs">训练轮数</label>
+                                <input type="number" class="form-control" id="defense_num_epochs" value="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="defense_num_clean_epochs">干净样本训练轮数</label>
+                                <input type="number" class="form-control" id="defense_num_clean_epochs" value="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="defense_num_train_adv_examples">对抗样本训练数量</label>
+                                <input type="number" class="form-control" id="defense_num_train_adv_examples" value="1000">
+                            </div>
+                            <div class="form-group">
+                                <label for="defense_learning_rate">学习率</label>
+                                <input type="number" class="form-control" id="defense_learning_rate" value="0.00005" step="0.00001">
+                            </div>
+                            <div class="form-group">
+                                <label for="defense_per_device_train_batch_size">每设备训练批次大小</label>
+                                <input type="number" class="form-control" id="defense_per_device_train_batch_size" value="8">
+                            </div>
+                            <div class="form-group">
+                                <label for="defense_gradient_accumulation_steps">梯度累积步数</label>
+                                <input type="number" class="form-control" id="defense_gradient_accumulation_steps" value="4">
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="defense_log_to_tb">
+                                    <label class="form-check-label" for="defense_log_to_tb">记录到TensorBoard</label>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } 
+                else if (isBackdoor) {
+                    defenseHTML += `
+                        <div class="form-group">
+                            <label for="defenderStrategy">防御策略</label>
+                            <select class="form-control" id="defenderStrategy">
+                                <option value="None">无</option>
+                                <option value="BKI">BKI</option>
+                                <option value="ONION">ONION</option>
+                                <option value="STRIP">STRIP</option>
+                                <option value="RAP">RAP</option>
+                                <option value="CUBE">CUBE</option>
+                            </select>
+                        </div>
+                    `;
+                } 
+                else if (isPrivacy) {
+                    let typeOptions = '';
+                    
+                    if (attackType === 'RLMI' || attackType === 'FET') {
+                        typeOptions = `
+                            <option value="pruning">Pruning</option>
+                            <option value="high-entropy-mask">High-Entropy Mask</option>
+                            <option value="output-perturb">Output Perturbation</option>
+                        `;
+                    } 
+                    else if (attackType === 'ModelStealingAttack') {
+                        typeOptions = `
+                            <option value="pruning">Pruning</option>
+                            <option value="output-perturb">Output Perturbation</option>
+                        `;
+                    }
+                    
+                    defenseHTML += `
+                        <div class="defense-type-container">
+                            <div class="form-group">
+                                <label for="defenseType">防御类型</label>
+                                <select class="form-control" id="defenseType">
+                                    <option value="">-- 选择防御类型 --</option>
+                                    ${typeOptions}
+                                </select>
+                            </div>
+                            
+                            <div id="defenseParams" class="defense-param" style="display: none;">
+                                <div class="form-group" id="pruningParam" style="display: none;">
+                                    <label for="prune_ratio">剪枝比例</label>
+                                    <input type="number" class="form-control" id="prune_ratio" min="0" max="1" step="0.01" value="0.2">
+                                </div>
+                                <div class="form-group" id="outputPerturbParam" style="display: none;">
+                                    <label for="noise_std">噪声标准差</label>
+                                    <input type="number" class="form-control" id="noise_std" min="0" step="0.01" value="0.1">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                else if (attackType === 'PoisoningAttack') {
+                    defenseHTML += `
+                        <div class="alert alert-info d-flex align-items-center">
+                            <i class="material-icons me-2">info</i>
+                            <span>数据投毒防御通过启用数据清洗机制来保护模型</span>
+                        </div>
+                    `;
+                }
+                
+                defenseHTML += `</div>`;
+                defenseSection.innerHTML = defenseHTML;
                 defenseSettings.appendChild(defenseSection);
                 
                 // 绑定防御开关事件
                 document.getElementById('defenderSwitch').addEventListener('change', toggleDefenseOptions);
+                
+                // 绑定创建无防御配置按钮事件
+                document.getElementById('createNoDefenseConfig').addEventListener('click', createNoDefenseConfig);
+                
+                // 绑定防御类型变化事件
+                if (isPrivacy) {
+                    document.getElementById('defenseType').addEventListener('change', function() {
+                        const defenseType = this.value;
+                        const defenseParams = document.getElementById('defenseParams');
+                        const pruningParam = document.getElementById('pruningParam');
+                        const outputPerturbParam = document.getElementById('outputPerturbParam');
+                        
+                        if (defenseType) {
+                            defenseParams.style.display = 'block';
+                            
+                            if (defenseType === 'pruning') {
+                                pruningParam.style.display = 'block';
+                                outputPerturbParam.style.display = 'none';
+                            } 
+                            else if (defenseType === 'output-perturb') {
+                                pruningParam.style.display = 'none';
+                                outputPerturbParam.style.display = 'block';
+                            } 
+                            else if (defenseType === 'high-entropy-mask') {
+                                pruningParam.style.display = 'none';
+                                outputPerturbParam.style.display = 'none';
+                            }
+                        } else {
+                            defenseParams.style.display = 'none';
+                        }
+                    });
+                }
             }
+        }
+        
+        // 创建无防御对照配置
+        function createNoDefenseConfig() {
+            // 收集当前表单数据
+            const configName = document.getElementById('configName').value;
+            const attackType = document.getElementById('attackType').value;
+            const attackStrategy = document.getElementById('attackStrategy').value;
+            const description = document.getElementById('description').value;
+            
+            // 收集高级设置
+            const params = {};
+            const settings = attackConfigs.defaults[attackType] || {};
+            
+            for (const key of Object.keys(settings)) {
+                // 跳过已经在上面特殊处理的字段
+                if (attackType === 'BackdoorAttack' && key === 'sample_metrics') continue;
+                
+                const input = document.getElementById(key);
+                
+                if (input) {
+                    if (input.type === 'checkbox') {
+                        params[key] = input.checked;
+                    } else if (input.type === 'number') {
+                        params[key] = parseFloat(input.value);
+                    } else {
+                        params[key] = input.value;
+                    }
+                }
+            }
+            
+            // 创建无防御配置
+            const newConfig = {
+                id: Date.now(),
+                name: configName ? `${configName} (无防御)` : `${attackConfigs.typeNames[attackType]} (无防御)`,
+                type: attackType,
+                strategy: attackStrategy,
+                description: description,
+                status: 'active',
+                defenderEnabled: false,
+                sent: false,
+                executed: false,
+                createdAt: new Date().toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                params: {
+                    ...params,
+                    defender: null
+                }
+            };
+            
+            // 添加到配置列表
+            configList.push(newConfig);
+            
+            // 更新表格
+            renderConfigTable();
+            
+            // 关闭当前模态框
+            const modal = bootstrap.Modal.getInstance(document.getElementById('configModal'));
+            modal.hide();
+            
+            // 显示成功消息
+            showToast(`无防御对照配置"${newConfig.name}"创建成功！`, 'success');
         }
         
         // 切换防御选项显示状态
@@ -2392,15 +2826,17 @@
         
         // 保存配置
         function saveConfig() {
-            const configName = document.getElementById('configName').value;
-            if (!configName) {
-                showToast('请填写配置名称', 'error');
-                return;
-            }
-            
+            let configName = document.getElementById('configName').value;
             const attackType = document.getElementById('attackType').value;
             const attackStrategy = document.getElementById('attackStrategy').value;
             const description = document.getElementById('description').value;
+            
+            // 如果是新配置，生成默认名称
+            if (!currentConfigId) {
+                // 统计当前类型已有的配置数量
+                const count = configList.filter(c => c.type === attackType).length + 1;
+                configName = `${attackConfigs.typeNames[attackType] || attackType}-${count}`;
+            }
             
             // 收集高级设置
             const params = {};
@@ -2454,12 +2890,29 @@
                         gradient_accumulation_steps: parseInt(document.getElementById('defense_gradient_accumulation_steps').value) || 4,
                         log_to_tb: document.getElementById('defense_log_to_tb').checked
                     };
-                } else if (attackType === 'BackdoorAttack') {
+                } 
+                else if (attackType === 'BackdoorAttack') {
                     // 收集后门攻击防御策略
                     const defenderStrategy = document.getElementById('defenderStrategy');
                     params.defender = {
                         strategy: defenderStrategy ? defenderStrategy.value : 'None'
                     };
+                } 
+                else if (['RLMI', 'ModelStealingAttack', 'FET'].includes(attackType)) {
+                    // 收集隐私攻击防御参数
+                    const defenseType = document.getElementById('defenseType') ? document.getElementById('defenseType').value : '';
+                    params.defender = { type: defenseType };
+                    
+                    if (defenseType === 'pruning') {
+                        params.defender.prune_ratio = parseFloat(document.getElementById('prune_ratio').value) || 0.2;
+                    } 
+                    else if (defenseType === 'output-perturb') {
+                        params.defender.noise_std = parseFloat(document.getElementById('noise_std').value) || 0.1;
+                    }
+                } 
+                else if (attackType === 'PoisoningAttack') {
+                    // 数据投毒防御
+                    params.defender = { enabled: true };
                 }
             } else {
                 // 未启用防御时的处理
@@ -2467,6 +2920,8 @@
                     params.defender = false; // 对抗攻击设置为false
                 } else if (attackType === 'BackdoorAttack') {
                     params.defender = "None"; // 后门攻击设置为"None"
+                } else {
+                    params.defender = null; // 其他类型设置为null
                 }
             }
             
@@ -2522,7 +2977,15 @@
                 showToast('没有可发送的配置', 'error');
                 return;
             }
-            
+            // 修复点2：发送配置时，将任务类型和数据集转换为英文
+            const configToSend = {
+                ...globalConfig,
+                task_config: {
+                    ...globalConfig.task_config,
+                    task: globalConfig.task_config.task, // 任务类型已经是英文
+                    dataset: datasetMap[globalConfig.task_config.task]?.[globalConfig.task_config.dataset] || globalConfig.task_config.dataset
+                    }
+            };
             try {
                 activeConfigs.forEach(config => {
                     config.sent = true;
@@ -2538,12 +3001,12 @@
                     },
                     username: authStore.username,
                     attack_list: activeConfigs,
-                    globalConfig: globalConfig,
+                    globalConfig: configToSend,
                   });
                   console.log('发送配置请求:', {
                     username: authStore.username,
                     attack_list: activeConfigs,
-                    globalConfig: globalConfig
+                    globalConfig: configToSend
                   });
 
                   if (response.status ===200) {
@@ -2559,7 +3022,7 @@
             }
         }
         
-          // 显示执行攻击模态框
+         // 显示执行攻击模态框
         function showExecuteAttackModal() {
             const activeConfigs = configList.filter(config => config.status === 'active');
             if (activeConfigs.length === 0) {
@@ -2582,11 +3045,10 @@
             // 关闭模态框
             const modal = bootstrap.Modal.getInstance(document.getElementById('executeAttackModal'));
             modal.hide();
-            console.log("执行评估中；")
+            
             // 执行评估
             executeAttack(attackName);
         }
-        
         
         // 执行评估
         async function executeAttack(attackName) {
@@ -2623,7 +3085,7 @@
             }
         }
         
-        // 搜索配置
+       // 搜索配置
         function searchConfigs() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             
@@ -2656,114 +3118,127 @@
             noConfigsMessage.classList.add('d-none');
             tbody.innerHTML = '';
             
-            filteredConfigs.forEach(config => {
-                // 获取类型显示名称
-                const typeName = attackConfigs.typeNames[config.type] || config.type;
+            // 按安全攻击/隐私攻击分组渲染
+            for (const [groupName, types] of Object.entries(attackGroups)) {
+                // 获取当前分组下的配置
+                const groupConfigs = filteredConfigs.filter(config => types.includes(config.type));
                 
-                // 生成状态徽章
-                const statusBadges = [];
-                
-                // 启用状态
-                if (config.status === 'active') {
-                    statusBadges.push('<span class="status-badge status-active status-indicator"><span class="status-dot"></span>活跃</span>');
-                } else {
-                    statusBadges.push('<span class="status-badge status-inactive status-indicator"><span class="status-dot"></span>已禁用</span>');
-                }
+                if (groupConfigs.length > 0) {
+                    // 添加分组标题行
+                    const groupRow = document.createElement('tr');
+                    groupRow.className = `group-header ${groupName === '安全攻击' ? 'security-group' : 'privacy-group'}`;
+                    groupRow.innerHTML = `<td colspan="7">${groupName}</td>`;
+                    tbody.appendChild(groupRow);
+                    
+                    // 渲染该分组下的所有配置行
+                    groupConfigs.forEach(config => {
+                        // 获取类型显示名称
+                        const typeName = attackConfigs.typeNames[config.type] || config.type;
+                        
+                        // 生成状态徽章
+                        const statusBadges = [];
+                        
+                        // 启用状态
+                        if (config.status === 'active') {
+                            statusBadges.push('<span class="status-badge status-active status-indicator">活跃</span>');
+                        } else {
+                            statusBadges.push('<span class="status-badge status-inactive status-indicator">已禁用</span>');
+                        }
 
-                // 发送状态
-                if (config.sent) {
-                    statusBadges.push('<span class="status-badge status-sent status-indicator"><span class="status-dot"></span>已发送</span>');
-                } else {
-                    statusBadges.push('<span class="status-badge status-indicator" style="border:1px solid #4361ee;"><span class="status-dot"></span>未发送</span>');
-                }
+                        // 发送状态
+                        if (config.sent) {
+                            statusBadges.push('<span class="status-badge status-sent status-indicator">已发送</span>');
+                        } else {
+                            statusBadges.push('<span class="status-badge status-unsent status-indicator">未发送</span>');
+                        }
 
-                // 执行状态
-                if (config.executed) {
-                    statusBadges.push('<span class="status-badge status-executed status-indicator" style="border:1px solid #ef476f;"><span class="status-dot"></span>已执行</span>');
-                } else {
-                    statusBadges.push('<span class="status-badge status-indicator" style="border:1px solid #ef476f;"><span class="status-dot"></span>未执行</span>');
+                        // 执行状态
+                        if (config.executed) {
+                            statusBadges.push('<span class="status-badge status-executed status-indicator">已执行</span>');
+                        } else {
+                            statusBadges.push('<span class="status-badge status-unexecuted status-indicator">未执行</span>');
+                        }
+                        
+                        // 防御状态
+                        let defenseStatus = '<span class="badge badge-defenseDisabled">未启用</span>';
+                        if (config.defenderEnabled) {
+                            defenseStatus = '<span class="badge badge-defenseEnabled">已启用</span>';
+                        }
+                        
+                        // 生成类型徽章 - 使用色系分类
+                        let badgeClass;
+                        
+                        // 安全攻击类（蓝色系）
+                        if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
+                            // 为安全攻击类分配蓝色系徽章
+                            switch(config.type) {
+                                case 'AdvAttack':
+                                    badgeClass = 'badge-security'; // 主蓝色
+                                    break;
+                                case 'BackdoorAttack':
+                                    badgeClass = 'badge-security-dark'; // 深蓝色
+                                    break;
+                                case 'PoisoningAttack':
+                                    badgeClass = 'badge-security-light'; // 浅蓝色
+                                    break;
+                                default:
+                                    badgeClass = 'badge-security';
+                            }
+                        } 
+                        // 隐私攻击类（绿色系）
+                        else if (['FET', 'RLMI', 'ModelStealingAttack'].includes(config.type)) {
+                            // 为隐私攻击类分配绿色系徽章
+                            switch(config.type) {
+                                case 'FET':
+                                    badgeClass = 'badge-privacy'; // 主绿色
+                                    break;
+                                case 'RLMI':
+                                    badgeClass = 'badge-privacy-light'; // 浅绿色
+                                    break;
+                                case 'ModelStealingAttack':
+                                    badgeClass = 'badge-privacy-dark'; // 深绿色
+                                    break;
+                                default:
+                                    badgeClass = 'badge-privacy';
+                            }
+                        } 
+                        // 其他类型使用默认
+                        else {
+                            badgeClass = 'badge-primary';
+                        }
+                        
+                        // 策略徽章 - 启用防御时使用攻击类型颜色，否则使用灰色
+                        const strategyClass = config.defenderEnabled ? 'badge badge-defenseEnabled' : 'badge badge-defenseDisabled';
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${config.name}</td>
+                            <td><span class="badge ${badgeClass}">${typeName}</span></td>
+                            <td><span class="${strategyClass}">${config.strategy}</span></td>
+                            <td>${defenseStatus}</td>
+                            <td>
+                                <div class="status-container">
+                                    ${statusBadges.join('')}
+                                </div>
+                            </td>
+                            <td>${config.createdAt}</td>
+                            <td>
+                                <div class="action-buttons justify-content-center" style="display: flex;">
+                                    <button class="btn btn-sm btn-outline-primary btn-icon edit-config-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
+                                        <i class="material-icons" style="font-size: 18px;">edit</i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger btn-icon delete-config-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
+                                        <i class="material-icons" style="font-size: 18px;">delete</i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary btn-icon toggle-status-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
+                                        <i class="material-icons" style="font-size: 18px;">${config.status === 'active' ? 'toggle_off' : 'toggle_on'}</i>
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
                 }
-                
-                // 防御状态
-                let defenseStatus = '<span class="badge badge-secondary">未启用</span>';
-                if (config.defenderEnabled) {
-                    defenseStatus = '<span class="badge badge-info">已启用</span>';
-                }
-                
-                // 生成类型徽章 - 使用色系分类
-                let badgeClass;
-                let strategyClass;
-                
-                // 安全攻击类（蓝色系）
-                if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
-                    // 为安全攻击类分配蓝色系徽章
-                    switch(config.type) {
-                        case 'AdvAttack':
-                            badgeClass = 'badge-security'; // 主蓝色
-                            break;
-                        case 'BackdoorAttack':
-                            badgeClass = 'badge-security-dark'; // 深蓝色
-                            break;
-                        case 'PoisoningAttack':
-                            badgeClass = 'badge-security-light'; // 浅蓝色
-                            break;
-                        default:
-                            badgeClass = 'badge-security';
-                    }
-                } 
-                // 隐私攻击类（绿色系）
-                else if (['FET', 'RLMI', 'ModelStealingAttack'].includes(config.type)) {
-                    // 为隐私攻击类分配绿色系徽章
-                    switch(config.type) {
-                        case 'FET':
-                            badgeClass = 'badge-privacy'; // 主绿色
-                            break;
-                        case 'RLMI':
-                            badgeClass = 'badge-privacy-light'; // 浅绿色
-                            break;
-                        case 'ModelStealingAttack':
-                            badgeClass = 'badge-privacy-dark'; // 深绿色
-                            break;
-                        default:
-                            badgeClass = 'badge-privacy';
-                    }
-                } 
-                // 其他类型使用默认
-                else {
-                    badgeClass = 'badge-primary';
-                }
-                
-                // 策略徽章 - 启用防御时使用攻击类型颜色，否则使用灰色
-                strategyClass = config.defenderEnabled ? 'badge-primary' : 'badge-secondary';
-                defenseStatus = config.defenderEnabled ? 'badge-primary' : 'badge-secondary';
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${config.name}</td>
-                    <td><span class="badge ${badgeClass}">${typeName}</span></td>
-                    <td><span class="badge ${strategyClass}">${config.strategy}</span></td>
-                    <td>${defenseStatus}</td>
-                    <td>
-                        <div class="status-container">
-                            ${statusBadges.join('')}
-                        </div>
-                    </td>
-                    <td>${config.createdAt}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-sm btn-outline-primary btn-icon edit-config-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
-                            <i class="material-icons" style="font-size: 18px;">edit</i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger btn-icon delete-config-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
-                            <i class="material-icons" style="font-size: 18px;">delete</i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary btn-icon toggle-status-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
-                            <i class="material-icons" style="font-size: 18px;">${config.status === 'active' ? 'toggle_off' : 'toggle_on'}</i>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
+            }
             
             // 绑定事件
             tbody.querySelectorAll('.edit-config-btn').forEach(btn => {

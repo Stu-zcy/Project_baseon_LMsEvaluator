@@ -8,61 +8,46 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            /* 安全攻击配色 - 蓝色系 */
-            --security-primary: #2a6fdb;
-            --security-secondary: #3a86ff;
-            --security-light: #cce0ff;
-            --security-dark: #1a4d99;
-            
-            /* 隐私攻击配色 - 绿色系 */
-            --privacy-primary: #2e9d6f;
-            --privacy-secondary: #4cc9a7;
-            --privacy-light: #d0f0e4;
-            --privacy-dark: #1e6b4d;
-            
-            /* 中性色 */
-            --neutral-50: #f9fafb;
-            --neutral-100: #f3f4f6;
-            --neutral-200: #e5e7eb;
-            --neutral-300: #d1d5db;
-            --neutral-700: #374151;
-            --neutral-900: #111827;
-            
-            /* 功能色 */
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --info: #3b82f6;
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #06d6a0;
+            --info: #4cc9f0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --security: #4361ee;
+            --privacy: #06d6a0;
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--neutral-100);
-            color: var(--neutral-900);
+            background-color: #f5f7fb;
+            color: #333;
+            overflow-x: hidden;
         }
         
-        /* 渐变背景 */
         .gradient-bg {
-            background: linear-gradient(135deg, var(--security-primary) 0%, var(--privacy-primary) 100%);
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
             color: white;
             padding: 4rem 0;
             margin-bottom: 2rem;
+            border-radius: 0 0 30px 30px;
         }
         
-        /* 功能卡片 */
         .feature-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border-radius: 16px;
+            border-radius: 15px;
             padding: 2rem;
             height: 100%;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .feature-card:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
         
         .feature-card i {
@@ -72,7 +57,7 @@
         }
         
         .feature-card h3 {
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 1rem;
         }
         
@@ -80,68 +65,68 @@
             opacity: 0.9;
         }
         
-        /* 页面头部 */
         .page-header {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
         }
         
         .page-title h1 {
-            font-weight: 700;
-            font-size: 2.25rem;
-            color: var(--neutral-900);
+            font-weight: 800;
+            color: var(--primary);
             margin-bottom: 0.5rem;
         }
         
-        .page-title p {
-            color: var(--neutral-700);
-            font-size: 1.1rem;
+        .action-buttons .btn {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
         }
         
-        /* 全局配置卡片 */
+        .action-buttons .btn i {
+            margin-right: 0.5rem;
+        }
+        
         .global-config-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 15px;
             padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
         
         .global-config-card h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--neutral-900);
         }
         
-        .config-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
+        .global-config-card h3 i {
+            margin-right: 0.5rem;
         }
         
         .summary-item {
-            background: var(--neutral-50);
-            border-radius: 10px;
-            padding: 1.25rem;
-            border-left: 4px solid var(--security-primary);
+            margin-bottom: 1.5rem;
         }
         
         .summary-item h5 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: var(--neutral-700);
         }
         
-        /* 统计卡片 */
+        .summary-item h5 i {
+            margin-right: 0.5rem;
+        }
+        
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -151,107 +136,113 @@
         
         .stats-card {
             background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-        
-        .stats-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stats-header {
-            height: 8px;
-        }
-        
-        .stats-card.primary .stats-header {
-            background: var(--security-primary);
-        }
-        
-        .stats-card.success .stats-header {
-            background: var(--privacy-primary);
-        }
-        
-        .stats-card.warning .stats-header {
-            background: var(--warning);
-        }
-        
-        .stats-card.danger .stats-header {
-            background: var(--danger);
-        }
-        
-        .stats-content {
+            border-radius: 15px;
             padding: 1.5rem;
-            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+        
+        .stats-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+        
+        .stats-card.primary .stats-icon {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .stats-card.success .stats-icon {
+            background: rgba(6, 214, 160, 0.1);
+            color: var(--success);
+        }
+        
+        .stats-card.warning .stats-icon {
+            background: rgba(255, 209, 102, 0.1);
+            color: var(--warning);
+        }
+        
+        .stats-card.danger .stats-icon {
+            background: rgba(239, 71, 111, 0.1);
+            color: var(--danger);
         }
         
         .stats-content h3 {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
         
         .stats-content p {
-            color: var(--neutral-700);
-            font-size: 1.1rem;
+            color: #6c757d;
+            margin-bottom: 0;
         }
         
-        /* 配置卡片 */
         .config-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            margin-bottom: 3rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+            margin-bottom: 2rem;
         }
         
         .card-header {
-            background: white;
             padding: 1.5rem;
+            background: white;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid var(--neutral-200);
+            border-bottom: 1px solid #e9ecef;
         }
         
         .card-header h2 {
+            font-weight: 700;
+            color: var(--dark);
+            margin: 0;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            margin: 0;
-            font-size: 1.5rem;
-            color: var(--neutral-900);
         }
         
-        .card-header .badge {
-            font-size: 0.9rem;
-            padding: 0.35rem 0.7rem;
+        .card-header h2 i {
+            margin-right: 0.5rem;
+            color: var(--primary);
         }
         
         .card-tools {
             display: flex;
             align-items: center;
-            gap: 1rem;
         }
         
         .search-box {
-            background: var(--neutral-50);
+            background: #f8f9fa;
             border-radius: 8px;
             padding: 0.5rem 1rem;
             display: flex;
             align-items: center;
+            border: 1px solid #e9ecef;
+        }
+        
+        .search-box i {
+            color: #6c757d;
         }
         
         .search-box input {
             background: transparent;
             border: none;
             outline: none;
+            padding: 0.25rem;
             width: 100%;
-            padding-left: 0.5rem;
         }
         
-        /* 表格样式 */
+        .dropdown .btn {
+            border-radius: 8px;
+        }
+        
         .table-container {
             overflow-x: auto;
             padding: 0 1.5rem;
@@ -264,241 +255,193 @@
         }
         
         thead th {
-            background: var(--neutral-50);
-            padding: 1rem 1.25rem;
+            background: #f8f9fa;
+            padding: 1rem;
             text-align: left;
             font-weight: 600;
-            color: var(--neutral-700);
-            border-bottom: 1px solid var(--neutral-200);
+            color: var(--dark);
+            border-bottom: 2px solid #e9ecef;
         }
         
         tbody td {
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--neutral-100);
-        }
-        
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-        
-        tbody tr:hover {
-            background: var(--neutral-50);
-        }
-        
-        .group-header {
-            background: var(--neutral-100);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.9rem;
-        }
-        
-        .security-group {
-            background: var(--security-light);
-            color: var(--security-dark);
-        }
-        
-        .privacy-group {
-            background: var(--privacy-light);
-            color: var(--privacy-dark);
-        }
-        
-        /* 徽章样式 */
-        .badge {
-            padding: 0.4rem 0.75rem;
-            border-radius: 6px;
-            font-weight: 500;
-            font-size: 0.85rem;
-        }
-        
-        .badge-security {
-            background: var(--security-light);
-            color: var(--security-dark);
-            border: 1px solid var(--security-secondary);
-        }
-        
-        .badge-security-dark {
-            background: rgba(42, 111, 219, 0.15);
-            color: var(--security-dark);
-            border: 1px solid var(--security-dark);
-        }
-        
-        .badge-security-light {
-            background: rgba(58, 134, 255, 0.15);
-            color: var(--security-dark);
-            border: 1px solid var(--security-secondary);
-        }
-        
-        .badge-privacy {
-            background: var(--privacy-light);
-            color: var(--privacy-dark);
-            border: 1px solid var(--privacy-secondary);
-        }
-        
-        .badge-privacy-dark {
-            background: rgba(30, 107, 77, 0.15);
-            color: var(--privacy-dark);
-            border: 1px solid var(--privacy-dark);
-        }
-        
-        .badge-privacy-light {
-            background: rgba(76, 201, 167, 0.15);
-            color: var(--privacy-dark);
-            border: 1px solid var(--privacy-secondary);
-        }
-        
-        .badge-defenseEnabled {
-            background: rgba(16, 185, 129, 0.15);
-            color: #0f8554;
-            border: 1px solid var(--success);
-        }
-        
-        .badge-defenseDisabled {
-            background: rgba(239, 68, 68, 0.1);
-            color: #c53030;
-            border: 1px solid var(--danger);
-        }
-        
-        /* 状态指示器 */
-        .status-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
         }
         
         .status-badge {
-            padding: 0.3rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
         }
         
         .status-indicator {
             position: relative;
-            padding-left: 1.75rem;
+            padding-left: 1.25rem;
         }
         
-        .status-indicator::before {
-            content: "";
+        .status-dot {
             position: absolute;
-            left: 0.75rem;
+            left: 0.5rem;
             top: 50%;
             transform: translateY(-50%);
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: currentColor;
         }
         
-        .status-active {
-            background: rgba(16, 185, 129, 0.1);
-            color: #0f8554;
-            border: 1px solid var(--success);
+        .status-active .status-dot {
+            background: var(--success);
         }
         
-        .status-inactive {
-            background: rgba(239, 68, 68, 0.1);
-            color: #c53030;
-            border: 1px solid var(--danger);
+        .status-inactive .status-dot {
+            background: var(--danger);
         }
         
-        .status-sent {
-            background: rgba(59, 130, 246, 0.1);
-            color: #2563eb;
-            border: 1px solid var(--info);
+        .status-sent .status-dot {
+            background: var(--primary);
         }
         
-        .status-unsent {
-            background: rgba(245, 158, 11, 0.1);
-            color: #d97706;
-            border: 1px solid var(--warning);
+        .status-executed .status-dot {
+            background: var(--warning);
         }
         
-        .status-executed {
-            background: rgba(16, 185, 129, 0.1);
-            color: #0f8554;
-            border: 1px solid var(--success);
+        .badge-security {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--security);
+            border: 1px solid rgba(67, 97, 238, 0.3);
         }
         
-        .status-unexecuted {
-            background: rgba(156, 163, 175, 0.1);
-            color: #6b7280;
-            border: 1px solid var(--neutral-300);
+        .badge-security-dark {
+            background-color: rgba(63, 55, 201, 0.1);
+            color: #3f37c9;
+            border: 1px solid rgba(63, 55, 201, 0.3);
         }
         
-        /* 操作按钮 */
+        .badge-security-light {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: #4cc9f0;
+            border: 1px solid rgba(76, 201, 240, 0.3);
+        }
+        
+        .badge-privacy {
+            background-color: rgba(6, 214, 160, 0.1);
+            color: var(--privacy);
+            border: 1px solid rgba(6, 214, 160, 0.3);
+        }
+        
+        .badge-privacy-dark {
+            background-color: rgba(0, 168, 120, 0.1);
+            color: #00a878;
+            border: 1px solid rgba(0, 168, 120, 0.3);
+        }
+        
+        .badge-privacy-light {
+            background-color: rgba(120, 224, 190, 0.1);
+            color: #78e0be;
+            border: 1px solid rgba(120, 224, 190, 0.3);
+        }
+        
         .action-buttons {
             display: flex;
             gap: 0.5rem;
         }
         
         .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0;
-            width: 36px;
-            height: 36px;
             border-radius: 8px;
         }
         
-        .btn-icon i {
-            font-size: 18px;
+        .no-configs {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
         }
         
-        /* 模态框样式 */
-        .modal-content {
-            border-radius: 16px;
-            overflow: hidden;
-            border: none;
-        }
-        
-        .modal-header {
-            padding: 1.25rem 1.5rem;
-            background: var(--neutral-50);
-            border-bottom: 1px solid var(--neutral-200);
-        }
-        
-        .modal-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-        
-        .modal-body {
-            padding: 1.5rem;
-        }
-        
-        .modal-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid var(--neutral-200);
-        }
-        
-        /* 防御设置区域 */
-        .defense-section {
-            background: var(--neutral-50);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-top: 1.5rem;
-            border: 1px solid var(--neutral-200);
-        }
-        
-        .defense-section h5 {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
+        .no-configs i {
+            font-size: 4rem;
+            color: #dee2e6;
             margin-bottom: 1rem;
         }
         
-        .defense-options {
-            padding-top: 1rem;
-            border-top: 1px solid var(--neutral-200);
-            margin-top: 1rem;
+        .no-configs h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .no-configs p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .modal-title i {
+            margin-right: 0.5rem;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 0.75rem;
+        }
+        
+        .accordion-button {
+            font-weight: 600;
+            border-radius: 8px !important;
+            padding: 1rem 1.25rem;
+        }
+        
+        .accordion-button:not(.collapsed) {
+            background-color: #f8f9fa;
+            color: var(--primary);
+        }
+        
+        .accordion-button:focus {
+            box-shadow: none;
+        }
+        
+        .param-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .param-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+        
+        .defense-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
         }
         
         .defense-grid {
@@ -507,87 +450,89 @@
             gap: 1rem;
         }
         
-        .defense-param {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px dashed var(--neutral-200);
-        }
-        
-        /* 参数组 */
-        .param-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .param-item {
-            background: var(--neutral-50);
-            border-radius: 10px;
-            padding: 1rem;
-        }
-        
-        /* 无配置消息 */
-        .no-configs {
-            text-align: center;
-            padding: 4rem 2rem;
-        }
-        
-        .no-configs i {
-            font-size: 4rem;
-            color: var(--neutral-300);
-            margin-bottom: 1.5rem;
-        }
-        
-        .no-configs h4 {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--neutral-700);
-        }
-        
-        .no-configs p {
-            color: var(--neutral-700);
-            margin-bottom: 1.5rem;
-        }
-        
-        /* 页脚 */
         .footer {
             background: white;
-            border-top: 1px solid var(--neutral-200);
+            margin-top: 3rem;
+            padding: 2rem 0;
+            border-top: 1px solid #e9ecef;
         }
         
-        /* Toast通知 */
         .toast {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 1rem;
+            right: 1rem;
             background: white;
             border-radius: 8px;
-            padding: 1rem 1.25rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
             display: flex;
             align-items: center;
-            gap: 12px;
             z-index: 1050;
-            transform: translateY(100px);
             opacity: 0;
+            transform: translateY(20px);
             transition: all 0.3s ease;
         }
         
         .toast.show {
-            transform: translateY(0);
             opacity: 1;
+            transform: translateY(0);
         }
         
-        .toast-success {
-            border-left: 4px solid var(--success);
+        .toast i {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
         }
         
-        .toast-error {
-            border-left: 4px solid var(--danger);
+        .toast-success i {
+            color: var(--success);
         }
         
-        /* 响应式调整 */
+        .toast-error i {
+            color: var(--danger);
+        }
+        
+        .group-header {
+            background-color: #f8f9fa;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-left: 4px solid var(--security);
+        }
+        
+        .privacy-group {
+            background-color: #f0f9f5;
+            border-left: 4px solid var(--privacy);
+        }
+        
+        .security-group {
+            background-color: #f0f4ff;
+            border-left: 4px solid var(--security);
+        }
+        
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.5rem 1.5rem;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .filter-tag {
+            background: #e9ecef;
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-tag .close {
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+        
         @media (max-width: 768px) {
             .page-header {
                 flex-direction: column;
@@ -596,6 +541,7 @@
             }
             
             .action-buttons {
+                width: 100%;
                 flex-wrap: wrap;
             }
             
@@ -643,28 +589,30 @@
             </div>
         </div>
 
-        div class="container-fluid py-4">
+        <div class="container-fluid py-4">
             <!-- 主内容区 -->
-            <main class="main-contents">
+            <main class="main-content">
                 <!-- 页面标题和操作按钮 -->
-                <div class="page-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
-                    <div class="page-title mb-3 mb-md-0">
-                        <h1 class="fw-bold" style="font-size:2rem;">模型评估配置管理</h1>
-                        <p class="text-muted mb-0" style="font-size:1.1rem;">管理您的评估类型、策略和高级设置</p>
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>模型评估配置管理</h1>
+                        <p>管理您的评估类型、策略和高级设置</p>
                     </div>
-                    <div class="action-buttons d-flex flex-wrap gap-2 mt-2 mt-md-0">
-                        <button class="btn btn-light d-flex align-items-center px-3 py-2" id="addNewConfigBtn">
-                            <i class="material-icons me-1">add</i> 添加配置
-                        </button>
-                        <button class="btn btn-outline-primary d-flex align-items-center px-3 py-2" id="globalConfigBtn">
-                            <i class="material-icons me-1">settings_applications</i> 全局配置
-                        </button>
-                        <button class="btn btn-outline-primary d-flex align-items-center px-3 py-2" id="sendConfigBtn">
-                            <i class="material-icons me-1">send</i> 发送配置
-                        </button>
-                        <button class="btn btn-outline-success d-flex align-items-center px-3 py-2" id="executeAttackBtn">
-                            <i class="material-icons me-1">play_arrow</i> 执行评估
-                        </button>
+                    <div class="action-buttons">
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-light d-flex align-items-center" id="addNewConfigBtn">
+                                <i class="material-icons me-1">add</i> 添加配置
+                            </button>
+                            <button class="btn btn-outline-primary d-flex align-items-center" id="globalConfigBtn">
+                                <i class="material-icons me-1">settings_applications</i> 全局配置
+                            </button>
+                            <button class="btn btn-outline-primary d-flex align-items-center" id="sendConfigBtn">
+                                <i class="material-icons me-1">send</i> 发送配置
+                            </button>
+                            <button class="btn btn-outline-success d-flex align-items-center" id="executeAttackBtn">
+                                <i class="material-icons me-1">play_arrow</i> 执行评估
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
@@ -779,7 +727,6 @@
                                 <input type="text" id="searchInput" placeholder="搜索配置...">
                             </div>
                             <div class="dropdown flex-shrink-0">
-                                <br>
                                 <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="statusFilterDropdown" data-bs-toggle="dropdown">
                                     <i class="material-icons me-1">filter_list</i> <span>状态筛选</span>
                                 </button>
@@ -856,12 +803,10 @@
                                     <div class="form-group">
                                         <label for="attackType">评估类型</label>
                                         <select class="form-control" id="attackType" name="attackType">
-                                            <option value="" disabled selected>-- 安全攻击任务类型 --</option>
                                             <option value="AdvAttack">对抗攻击</option>
+                                            <option value="FET">梯度反演</option>
                                             <option value="BackdoorAttack">后门攻击</option>
                                             <option value="PoisoningAttack">数据投毒</option>
-                                            <option value="" disabled selected>-- 隐私攻击任务类型 --</option>
-                                            <option value="FET">梯度反演</option>
                                             <option value="RLMI">模型反演</option>
                                             <option value="ModelStealingAttack">模型窃取攻击</option>
                                         </select>
@@ -876,8 +821,8 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="configName">配置名称 <span class="text-danger"></span></label>
-                                <input type="text" class="form-control" id="configName" placeholder="输入配置名称（选填）" required>
+                                <label for="configName">配置名称 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="configName" placeholder="输入配置名称" required>
                             </div>
                             
                             <div class="form-group">
@@ -1441,7 +1386,7 @@
         function updateGlobalConfigSummary() {
             // 常规配置摘要
             let generalSummary = `随机种子: ${globalConfig.general.random_seed}<br>`;
-            generalSummary += `使用GPU: ${globalConfig.general.use_gpu ? '<span class="badge badge-defenseEnabled">是</span>' : '<span class="badge badge-defenseDisabled">否</span>'}`;
+            generalSummary += `使用GPU: ${globalConfig.general.use_gpu ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}`;
             document.getElementById('generalConfigSummary').innerHTML = generalSummary;
             
             // 任务配置摘要
@@ -1453,7 +1398,7 @@
                     const datasetName = globalConfig.task_config.dataset; // 前端显示中文
                     taskSummary += `<div><strong>数据集:</strong> ${datasetName}</div>`;
                 }
-                taskSummary += `<div>常规训练: ${globalConfig.task_config.normal_training ? '<span class="badge badge-defenseEnabled">是</span>' : '<span class="badge badge-defenseDisabled">否</span>'}</div>`;
+                taskSummary += `<div>常规训练: ${globalConfig.task_config.normal_training ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}</div>`;
                 // 新增训练轮数显示
                 taskSummary += `<div>训练轮数: ${globalConfig.task_config.epochs || 3}</div>`;
             }
@@ -1463,7 +1408,7 @@
             let modelSummary = "";
             if (globalConfig.LM_config.model) {
                 modelSummary = `<div><strong>模型:</strong> ${globalConfig.LM_config.model}</div>`;
-                modelSummary += `<div>使用本地模型: ${globalConfig.LM_config.local_model ? '<span class="badge badge-defenseEnabled">是</span>' : '<span class="badge badge-defenseDisabled">否</span>'}</div>`;
+                modelSummary += `<div>使用本地模型: ${globalConfig.LM_config.local_model ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}</div>`;
             } else {
                 modelSummary = "未配置";
             }
@@ -1708,33 +1653,34 @@
                         
                         // 启用状态
                         if (config.status === 'active') {
-                            statusBadges.push('<span class="status-badge status-active status-indicator">活跃</span>');
+                            statusBadges.push('<span class="status-badge status-active status-indicator" style="background:#e6f9f0;border:1.5px solid #06d6a0;">活跃</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-inactive status-indicator">已禁用</span>');
+                            statusBadges.push('<span class="status-badge status-inactive status-indicator" style="background:#fdeaea;border:1.5px solid #ef476f;">已禁用</span>');
                         }
 
                         // 发送状态
                         if (config.sent) {
-                            statusBadges.push('<span class="status-badge status-sent status-indicator">已发送</span>');
+                            statusBadges.push('<span class="status-badge status-sent status-indicator" style="background:#e6f9f0;border:1.5px solid #06d6a0;">已发送</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-unsent status-indicator">未发送</span>');
+                            statusBadges.push('<span class="status-badge status-unsent status-indicator" style="background:#fdeaea;border:1.5px solid #ef476f;">未发送</span>');
                         }
 
                         // 执行状态
                         if (config.executed) {
-                            statusBadges.push('<span class="status-badge status-executed status-indicator">已执行</span>');
+                            statusBadges.push('<span class="status-badge status-executed status-indicator" style="background:#e6f9f0;border:1.5px solid #06d6a0;">已执行</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-unexecuted status-indicator">未执行</span>');
+                            statusBadges.push('<span class="status-badge status-unexecuted status-indicator" style="background:#fdeaea;border:1.5px solid #ef476f;">未执行</span>');
                         }
                         
                         // 防御状态
-                        let defenseStatus = '<span class="badge badge-defenseDisabled">未启用</span>';
+                        let defenseStatus = '<span class="badge bg-secondary">未启用</span>';
                         if (config.defenderEnabled) {
-                            defenseStatus = '<span class="badge badge-defenseEnabled">已启用</span>';
+                            defenseStatus = '<span class="badge bg-success">已启用</span>';
                         }
                         
                         // 生成类型徽章 - 使用色系分类
                         let badgeClass;
+                        let strategyClass;
                         
                         // 安全攻击类（蓝色系）
                         if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
@@ -1776,13 +1722,13 @@
                         }
                         
                         // 策略徽章 - 启用防御时使用攻击类型颜色，否则使用灰色
-                        const strategyClass = config.defenderEnabled ? 'badge badge-defenseEnabled' : 'badge badge-defenseDisabled';
+                        strategyClass = config.defenderEnabled ? 'badge bg-success' : 'badge-privacy';
 
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td>${config.name}</td>
                             <td><span class="badge ${badgeClass}">${typeName}</span></td>
-                            <td><span class="${strategyClass}">${config.strategy}</span></td>
+                            <td><span class="badge ${strategyClass}">${config.strategy}</span></td>
                             <td>${defenseStatus}</td>
                             <td>
                                 <div class="status-container">
@@ -2092,9 +2038,6 @@
                             <label class="form-check-label switch-label" for="defenderSwitch">启用防御机制</label>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="createNoDefenseConfig">
-                        <i class="material-icons me-1">content_copy</i>创建无防御对照配置
-                    </button>
                     <div class="defense-options" id="defenseOptions" style="display: none;">
                 `;
                 
@@ -2205,9 +2148,6 @@
                 // 绑定防御开关事件
                 document.getElementById('defenderSwitch').addEventListener('change', toggleDefenseOptions);
                 
-                // 绑定创建无防御配置按钮事件
-                document.getElementById('createNoDefenseConfig').addEventListener('click', createNoDefenseConfig);
-                
                 // 绑定防御类型变化事件
                 if (isPrivacy) {
                     document.getElementById('defenseType').addEventListener('change', function() {
@@ -2237,73 +2177,6 @@
                     });
                 }
             }
-        }
-        
-        // 创建无防御对照配置
-        function createNoDefenseConfig() {
-            // 收集当前表单数据
-            const configName = document.getElementById('configName').value;
-            const attackType = document.getElementById('attackType').value;
-            const attackStrategy = document.getElementById('attackStrategy').value;
-            const description = document.getElementById('description').value;
-            
-            // 收集高级设置
-            const params = {};
-            const settings = attackConfigs.defaults[attackType] || {};
-            
-            for (const key of Object.keys(settings)) {
-                // 跳过已经在上面特殊处理的字段
-                if (attackType === 'BackdoorAttack' && key === 'sample_metrics') continue;
-                
-                const input = document.getElementById(key);
-                
-                if (input) {
-                    if (input.type === 'checkbox') {
-                        params[key] = input.checked;
-                    } else if (input.type === 'number') {
-                        params[key] = parseFloat(input.value);
-                    } else {
-                        params[key] = input.value;
-                    }
-                }
-            }
-            
-            // 创建无防御配置
-            const newConfig = {
-                id: Date.now(),
-                name: configName ? `${configName} (无防御)` : `${attackConfigs.typeNames[attackType]} (无防御)`,
-                type: attackType,
-                strategy: attackStrategy,
-                description: description,
-                status: 'active',
-                defenderEnabled: false,
-                sent: false,
-                executed: false,
-                createdAt: new Date().toLocaleString('zh-CN', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }),
-                params: {
-                    ...params,
-                    defender: null
-                }
-            };
-            
-            // 添加到配置列表
-            configList.push(newConfig);
-            
-            // 更新表格
-            renderConfigTable();
-            
-            // 关闭当前模态框
-            const modal = bootstrap.Modal.getInstance(document.getElementById('configModal'));
-            modal.hide();
-            
-            // 显示成功消息
-            showToast(`无防御对照配置"${newConfig.name}"创建成功！`, 'success');
         }
         
         // 切换防御选项显示状态
@@ -2714,33 +2587,34 @@
                         
                         // 启用状态
                         if (config.status === 'active') {
-                            statusBadges.push('<span class="status-badge status-active status-indicator">活跃</span>');
+                            statusBadges.push('<span class="status-badge status-active status-indicator"><span class="status-dot"></span>活跃</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-inactive status-indicator">已禁用</span>');
+                            statusBadges.push('<span class="status-badge status-inactive status-indicator"><span class="status-dot"></span>已禁用</span>');
                         }
 
                         // 发送状态
                         if (config.sent) {
-                            statusBadges.push('<span class="status-badge status-sent status-indicator">已发送</span>');
+                            statusBadges.push('<span class="status-badge status-sent status-indicator"><span class="status-dot"></span>已发送</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-unsent status-indicator">未发送</span>');
+                            statusBadges.push('<span class="status-badge status-indicator" style="border:1px solid #4361ee;"><span class="status-dot"></span>未发送</span>');
                         }
 
                         // 执行状态
                         if (config.executed) {
-                            statusBadges.push('<span class="status-badge status-executed status-indicator">已执行</span>');
+                            statusBadges.push('<span class="status-badge status-executed status-indicator" style="border:1px solid #ef476f;"><span class="status-dot"></span>已执行</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-unexecuted status-indicator">未执行</span>');
+                            statusBadges.push('<span class="status-badge status-indicator" style="border:1px solid #ef476f;"><span class="status-dot"></span>未执行</span>');
                         }
                         
                         // 防御状态
-                        let defenseStatus = '<span class="badge badge-defenseDisabled">未启用</span>';
+                        let defenseStatus = '<span class="badge badge-secondary">未启用</span>';
                         if (config.defenderEnabled) {
-                            defenseStatus = '<span class="badge badge-defenseEnabled">已启用</span>';
+                            defenseStatus = '<span class="badge badge-info">已启用</span>';
                         }
                         
                         // 生成类型徽章 - 使用色系分类
                         let badgeClass;
+                        let strategyClass;
                         
                         // 安全攻击类（蓝色系）
                         if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
@@ -2782,12 +2656,13 @@
                         }
                         
                         // 策略徽章 - 启用防御时使用攻击类型颜色，否则使用灰色
-                        const strategyClass = config.defenderEnabled ? 'badge badge-defenseEnabled' : 'badge badge-defenseDisabled';
+                        strategyClass = config.defenderEnabled ? 'badge-primary' : 'badge-secondary';
+                        defenseStatus = config.defenderEnabled ? 'badge-primary' : 'badge-secondary';
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td>${config.name}</td>
                             <td><span class="badge ${badgeClass}">${typeName}</span></td>
-                            <td><span class="${strategyClass}">${config.strategy}</span></td>
+                            <td><span class="badge ${strategyClass}">${config.strategy}</span></td>
                             <td>${defenseStatus}</td>
                             <td>
                                 <div class="status-container">
@@ -2796,15 +2671,15 @@
                             </td>
                             <td>${config.createdAt}</td>
                             <td>
-                                <div class="action-buttons justify-content-center" style="display: flex;">
-                                    <button class="btn btn-sm btn-outline-primary btn-icon edit-config-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
-                                        <i class="material-icons" style="font-size: 18px;">edit</i>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-outline-primary btn-icon edit-config-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
+                                    <i class="material-icons" style="font-size: 18px;">edit</i>
                                     </button>
-                                    <button class="btn btn-sm btn-outline-danger btn-icon delete-config-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
-                                        <i class="material-icons" style="font-size: 18px;">delete</i>
+                                    <button class="btn btn-sm btn-outline-danger btn-icon delete-config-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
+                                    <i class="material-icons" style="font-size: 18px;">delete</i>
                                     </button>
-                                    <button class="btn btn-sm btn-outline-secondary btn-icon toggle-status-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
-                                        <i class="material-icons" style="font-size: 18px;">${config.status === 'active' ? 'toggle_off' : 'toggle_on'}</i>
+                                    <button class="btn btn-sm btn-outline-secondary btn-icon toggle-status-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
+                                    <i class="material-icons" style="font-size: 18px;">${config.status === 'active' ? 'toggle_off' : 'toggle_on'}</i>
                                     </button>
                                 </div>
                             </td>

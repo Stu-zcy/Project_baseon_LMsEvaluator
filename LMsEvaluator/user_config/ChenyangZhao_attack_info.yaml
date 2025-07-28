@@ -1,17 +1,48 @@
-- - createdAt: 2025-06-10 14:30
+- - createdAt: 2025/07/29 02:59
     defenderEnabled: false
-    description: 通过查询目标模型来窃取其结构和参数
-    executed: true
-    id: 4
-    name: 模型窃取攻击
+    description: 通过微小的、难以察觉的扰动来欺骗模型，使其做出错误的预测
+    executed: false
+    id: 1
+    name: 对抗攻击-1
     params:
       attack_nums: 3
-      method: MeaeQ
-      query_num: 500
+      defender: false
+      use_local_dataset: true
+      use_local_model: true
+      use_local_tokenizer: true
     sent: true
     status: active
-    strategy: MeaeQ
-    type: ModelStealingAttack
+    strategy: TextFoolerJin2019
+    type: AdvAttack
+  - createdAt: 2025/07/29 02:59
+    defenderEnabled: true
+    description: 在训练数据中植入后门，使模型在特定触发条件下表现出异常行为
+    executed: false
+    id: 2
+    name: 后门攻击-1
+    params:
+      defender:
+        strategy: ONION
+      sample_metrics:
+      - ppl
+      - use
+    sent: true
+    status: active
+    strategy: BadNets
+    type: BackdoorAttack
+  - createdAt: 2025-05-20 09:45
+    defenderEnabled: false
+    description: 针对训练数据的投毒攻击，污染训练集以降低模型性能
+    executed: false
+    id: 3
+    name: 数据投毒-1
+    params:
+      epochs: 15
+      poisoning_rate: 0.15
+    sent: true
+    status: active
+    strategy: Poisoning
+    type: PoisoningAttack
 - LM_config:
     local_model: true
     model: bert_base_uncased
@@ -20,6 +51,6 @@
     use_gpu: true
   task_config:
     dataset: imdb
-    local_dataset: true
+    epochs: 3
     normal_training: false
     task: TaskForSingleSentenceClassification

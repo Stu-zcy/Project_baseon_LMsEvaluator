@@ -12,7 +12,7 @@ rlmi_attack_path = os.path.dirname(os.path.abspath(__file__))
 
 
 def infer_attack_model(seed=42, model_name="tinybert4", dataset_name="emotion", seq_length=20, target_label=0,
-                       min_input_length=2, max_input_length=5, num_generation=1000, device=torch.device('cpu')):
+                       min_input_length=2, max_input_length=5, num_generation=1000, device=torch.device('cpu'), victim_model=None):
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
@@ -37,10 +37,17 @@ def infer_attack_model(seed=42, model_name="tinybert4", dataset_name="emotion", 
     public_dataset = load_dataset('csv', data_files=public_dataset_path)['train']
 
     target_model_path = os.path.join(rlmi_attack_path, "model", f"{model_name}_{dataset_name}")
-    target_model = AutoModelForSequenceClassification.from_pretrained(target_model_path, num_labels=num_classes)
-    target_model.eval()
-    target_model.to(device)
-    target_tokenizer = AutoTokenizer.from_pretrained(target_model_path)
+
+    if victim_model is not None:
+        print("使用传入的victim_model进行推理")
+        target_model = victim_model
+        target_tokenizer = AutoTokenizer.from_pretrained(target_model_path)
+    else:
+        print("加载默认目标模型进行推理")
+        target_model = AutoModelForSequenceClassification.from_pretrained(target_model_path, num_labels=num_classes)
+        target_model.eval()
+        target_model.to(device)
+        target_tokenizer = AutoTokenizer.from_pretrained(target_model_path)
 
     generation_kwargs = {
         "min_length": -1,

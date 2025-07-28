@@ -17,7 +17,7 @@ from attack.attack_factory import AttackFactory
 from utils.dataset_getter import standardize_dataset
 from utils.model_getter import load_model_and_tokenizer
 from utils.log_helper import change_log_path, logger_init
-
+from web_databse.sql_manager import add_attack_process
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # 禁用 oneDNN 优化
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 减少 TensorFlow 日志输出 (0=all, 1=info, 2=warnings, 3=errors)
@@ -174,10 +174,14 @@ def run_pipeline(config_path: str):
 
         # 读取攻击模块配置
         attack_list = check_attack_config(config_parser['attack_list'])
+        log_file_name=general_config['log_file_name']
 
-        print("loging_name:",general_config['log_file_name'])
+        info = log_file_name.split('_')
+        username = info[0]
+        initTime = eval(info[2])
+        print("loging_name:",log_file_name)
         logger = logger_init(log_dir='./logs')
-        change_log_path(new_log_dir='./logs/',new_log_file_name=general_config['log_file_name'])
+        change_log_path(new_log_dir='./logs/',new_log_file_name=log_file_name)
         #logger_init(log_file_name=general_config['log_file_name'], log_level=logging.INFO,
         #            log_dir=general_config['logs_save_dir'], only_file=False)
 
@@ -277,7 +281,9 @@ def run_pipeline(config_path: str):
         logging.info("没有攻击被执行。")
         logging.info("=" * 50)
     else:
-        for item in attack_list:
+        for idx,item in enumerate(attack_list):
+            str = f"{idx}/{len(attack_list)}"
+            add_attack_process(username,initTime,str)
             attack_args = item['attack_args']
             attack_type = attack_args['attack_type']
             logging.info("=" * 50)
