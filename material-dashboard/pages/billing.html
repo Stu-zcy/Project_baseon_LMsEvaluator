@@ -550,6 +550,71 @@
             margin-bottom: 1.5rem;
         }
         
+        /* 对照配置开关 */
+        .defense-compare-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 8px;
+            margin-top: 1rem;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: #0f8554;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--success);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
         /* 页脚 */
         .footer {
             background: white;
@@ -643,28 +708,30 @@
             </div>
         </div>
 
-        div class="container-fluid py-4">
+        <div class="container-fluid py-4">
             <!-- 主内容区 -->
-            <main class="main-contents">
+            <main class="main-content">
                 <!-- 页面标题和操作按钮 -->
-                <div class="page-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
-                    <div class="page-title mb-3 mb-md-0">
-                        <h1 class="fw-bold" style="font-size:2rem;">模型评估配置管理</h1>
-                        <p class="text-muted mb-0" style="font-size:1.1rem;">管理您的评估类型、策略和高级设置</p>
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>模型评估配置管理</h1>
+                        <p>管理您的评估类型、策略和高级设置</p>
                     </div>
-                    <div class="action-buttons d-flex flex-wrap gap-2 mt-2 mt-md-0">
-                        <button class="btn btn-light d-flex align-items-center px-3 py-2" id="addNewConfigBtn">
-                            <i class="material-icons me-1">add</i> 添加配置
-                        </button>
-                        <button class="btn btn-outline-primary d-flex align-items-center px-3 py-2" id="globalConfigBtn">
-                            <i class="material-icons me-1">settings_applications</i> 全局配置
-                        </button>
-                        <button class="btn btn-outline-primary d-flex align-items-center px-3 py-2" id="sendConfigBtn">
-                            <i class="material-icons me-1">send</i> 发送配置
-                        </button>
-                        <button class="btn btn-outline-success d-flex align-items-center px-3 py-2" id="executeAttackBtn">
-                            <i class="material-icons me-1">play_arrow</i> 执行评估
-                        </button>
+                    <div class="action-buttons">
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-light d-flex align-items-center" id="addNewConfigBtn">
+                                <i class="material-icons me-1">add</i> 添加配置
+                            </button>
+                            <button class="btn btn-outline-primary d-flex align-items-center" id="globalConfigBtn">
+                                <i class="material-icons me-1">settings_applications</i> 全局配置
+                            </button>
+                            <button class="btn btn-outline-primary d-flex align-items-center" id="sendConfigBtn">
+                                <i class="material-icons me-1">send</i> 发送配置
+                            </button>
+                            <button class="btn btn-outline-success d-flex align-items-center" id="executeAttackBtn">
+                                <i class="material-icons me-1">play_arrow</i> 执行评估
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
@@ -717,11 +784,7 @@
                 <!-- 统计卡片 -->
                 <div class="stats-container">
                     <div class="stats-card primary">
-                        <div class="stats-header">
-                            <div class="stats-icon">
-                                <i class="material-icons">list_alt</i>
-                            </div>
-                        </div>
+                        <div class="stats-header"></div>
                         <div class="stats-content">
                             <h3 id="totalConfigs">0</h3>
                             <p>总配置数</p>
@@ -729,11 +792,7 @@
                     </div>
                     
                     <div class="stats-card success">
-                        <div class="stats-header">
-                            <div class="stats-icon">
-                                <i class="material-icons">check_circle</i>
-                            </div>
-                        </div>
+                        <div class="stats-header"></div>
                         <div class="stats-content">
                             <h3 id="activeConfigs">0</h3>
                             <p>活跃配置</p>
@@ -741,11 +800,7 @@
                     </div>
                     
                     <div class="stats-card warning">
-                        <div class="stats-header">
-                            <div class="stats-icon">
-                                <i class="material-icons">schedule</i>
-                            </div>
-                        </div>
+                        <div class="stats-header"></div>
                         <div class="stats-content">
                             <h3 id="attackTypes">0</h3>
                             <p>评估类型</p>
@@ -753,11 +808,7 @@
                     </div>
                     
                     <div class="stats-card danger">
-                        <div class="stats-header">
-                            <div class="stats-icon">
-                                <i class="material-icons">bolt</i>
-                            </div>
-                        </div>
+                        <div class="stats-header"></div>
                         <div class="stats-content">
                             <h3 id="executedAttacks">0</h3>
                             <p>已执行评估</p>
@@ -779,7 +830,6 @@
                                 <input type="text" id="searchInput" placeholder="搜索配置...">
                             </div>
                             <div class="dropdown flex-shrink-0">
-                                <br>
                                 <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="statusFilterDropdown" data-bs-toggle="dropdown">
                                     <i class="material-icons me-1">filter_list</i> <span>状态筛选</span>
                                 </button>
@@ -1211,6 +1261,7 @@
         let executedAttacks = 0;
         let currentFilter = 'all';
         let currentTypeFilter = 'all';
+        let createDefenseComparison = false; // 是否创建无防御对照配置
         
         // 全局配置
         let globalConfig = {
@@ -1346,6 +1397,7 @@
             document.getElementById('configName').value = '';
             document.getElementById('description').value = '';
             document.getElementById('attackType').value = 'AdvAttack';
+            createDefenseComparison = false; // 重置对照配置开关
             
             updateAttackStrategies();
             updateAdvancedSettings('AdvAttack');
@@ -1917,6 +1969,7 @@
             document.getElementById('configName').value = config.name;
             document.getElementById('description').value = config.description;
             document.getElementById('attackType').value = config.type;
+            createDefenseComparison = false; // 重置对照配置开关
             
             updateAttackStrategies();
             document.getElementById('attackStrategy').value = config.strategy;
@@ -2092,9 +2145,6 @@
                             <label class="form-check-label switch-label" for="defenderSwitch">启用防御机制</label>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="createNoDefenseConfig">
-                        <i class="material-icons me-1">content_copy</i>创建无防御对照配置
-                    </button>
                     <div class="defense-options" id="defenseOptions" style="display: none;">
                 `;
                 
@@ -2202,11 +2252,28 @@
                 defenseSection.innerHTML = defenseHTML;
                 defenseSettings.appendChild(defenseSection);
                 
+                // 添加对照配置开关
+                const comparisonToggle = document.createElement('div');
+                comparisonToggle.className = 'defense-compare-toggle';
+                comparisonToggle.innerHTML = `
+                    <div class="toggle-label">
+                        <i class="material-icons">compare</i>
+                        <span>创建无防御对照配置</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="defenseComparisonToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                `;
+                defenseSection.appendChild(comparisonToggle);
+                
                 // 绑定防御开关事件
                 document.getElementById('defenderSwitch').addEventListener('change', toggleDefenseOptions);
                 
-                // 绑定创建无防御配置按钮事件
-                document.getElementById('createNoDefenseConfig').addEventListener('click', createNoDefenseConfig);
+                // 绑定对照配置开关事件
+                document.getElementById('defenseComparisonToggle').addEventListener('change', function() {
+                    createDefenseComparison = this.checked;
+                });
                 
                 // 绑定防御类型变化事件
                 if (isPrivacy) {
@@ -2237,73 +2304,6 @@
                     });
                 }
             }
-        }
-        
-        // 创建无防御对照配置
-        function createNoDefenseConfig() {
-            // 收集当前表单数据
-            const configName = document.getElementById('configName').value;
-            const attackType = document.getElementById('attackType').value;
-            const attackStrategy = document.getElementById('attackStrategy').value;
-            const description = document.getElementById('description').value;
-            
-            // 收集高级设置
-            const params = {};
-            const settings = attackConfigs.defaults[attackType] || {};
-            
-            for (const key of Object.keys(settings)) {
-                // 跳过已经在上面特殊处理的字段
-                if (attackType === 'BackdoorAttack' && key === 'sample_metrics') continue;
-                
-                const input = document.getElementById(key);
-                
-                if (input) {
-                    if (input.type === 'checkbox') {
-                        params[key] = input.checked;
-                    } else if (input.type === 'number') {
-                        params[key] = parseFloat(input.value);
-                    } else {
-                        params[key] = input.value;
-                    }
-                }
-            }
-            
-            // 创建无防御配置
-            const newConfig = {
-                id: Date.now(),
-                name: configName ? `${configName} (无防御)` : `${attackConfigs.typeNames[attackType]} (无防御)`,
-                type: attackType,
-                strategy: attackStrategy,
-                description: description,
-                status: 'active',
-                defenderEnabled: false,
-                sent: false,
-                executed: false,
-                createdAt: new Date().toLocaleString('zh-CN', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }),
-                params: {
-                    ...params,
-                    defender: null
-                }
-            };
-            
-            // 添加到配置列表
-            configList.push(newConfig);
-            
-            // 更新表格
-            renderConfigTable();
-            
-            // 关闭当前模态框
-            const modal = bootstrap.Modal.getInstance(document.getElementById('configModal'));
-            modal.hide();
-            
-            // 显示成功消息
-            showToast(`无防御对照配置"${newConfig.name}"创建成功！`, 'success');
         }
         
         // 切换防御选项显示状态
@@ -2549,6 +2549,38 @@
             } else {
                 // 添加新配置
                 configList.push(newConfig);
+            }
+            
+            // 如果开启了创建无防御对照配置
+            if (createDefenseComparison && defenderEnabled) {
+                // 创建无防御配置
+                const noDefenseConfig = {
+                    id: Date.now(),
+                    name: configName + " (无防御)",
+                    type: attackType,
+                    strategy: attackStrategy,
+                    description: description + " (无防御对照)",
+                    status: 'active',
+                    defenderEnabled: false,
+                    sent: false,
+                    executed: false,
+                    createdAt: new Date().toLocaleString('zh-CN', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }),
+                    params: {
+                        ...params,
+                        defender: none
+                    }
+                };
+                
+                // 添加到配置列表
+                configList.push(noDefenseConfig);
+                
+                showToast(`已创建无防御对照配置: ${noDefenseConfig.name}`, 'success');
             }
             
             // 更新表格
