@@ -20,3 +20,4 @@ components.d.ts
 yarn.lock
 test.vue
 .DS_Store
+LMsEvaluator/user_config/*_attack_info.yaml

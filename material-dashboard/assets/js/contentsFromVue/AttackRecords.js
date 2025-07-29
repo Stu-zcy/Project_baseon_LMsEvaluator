@@ -1,4 +1,5 @@
 import AttackTable from "./AttackTable.js";
+import logViewer from "./logViewer.js";
 import axios from "../utils/axiosConfig.js";
 
 const { ref, h, defineComponent, onMounted } = Vue;
@@ -54,7 +55,8 @@ const AttackRecords = defineComponent({
 		}
 	},
 	components: {
-		'AttackTable': AttackTable
+		'AttackTable': AttackTable,
+		'logViewer': logViewer
 	},
 	template: `
         <div>
@@ -73,8 +75,13 @@ const AttackRecords = defineComponent({
                                 </div>
 
                                 <!-- 2. 状态图标 -->
-                                <div class="status-container">
-                                    <a-spin :indicator="indicator" v-if="(item[1] == 0)"></a-spin>
+                                <div class="status-container">                                  
+																		<div v-if="(item[1] == 0)" class="executing" >
+																				<button @click="showModal_log(item[0], item[1])" class="progress-button">
+																				<a-progress :percent="computeProgress(item[4])" size="small" status="active"/>
+																				</button>
+																				<spin class="exe-spin">{{ getAttackType(item[4], item[5]) }}</spin>
+																		</div>
                                     <div v-else-if="(item[1] == 2)" class="status-icon">
                                         <img src="../assets/icons/fail.png" alt="Fail">
                                     </div>
@@ -121,15 +128,58 @@ const AttackRecords = defineComponent({
                 <a-modal
                     v-if="OPEN"
                     :open="OPEN"
-                    title="攻击执行详情"
+                    title="执行详情"
                     width="90%"
                     wrap-class-name="full-modal-custom"
                     :footer="null"
                     :destroyOnClose="true"
                     @cancel="handleCancel"
                 >
+										<div class="report-buttons">
+<a-button
+      class="spawn-report-button"
+      @click="generateReport"
+      :disabled="spawnState === 1"
+    >
+      <span v-if="spawnState === 1">
+        <a-spin :indicator="indicator" style="margin-right: 4px;" />
+        正在生成
+      </span>
+      <span v-else-if="spawnState === 0">生成报告</span>
+      <span v-else-if="spawnState === 2">重新生成</span>
+    </a-button>
+
+    <a-button
+      class="read-report-button"
+      :disabled="spawnState !== 2"
+      @click="readReport"
+    >
+      阅读报告
+    </a-button>
+
+    <a-button
+      class="download-report-button"
+      :disabled="spawnState !== 2"
+      @click="downloadReport"
+    >
+      下载报告
+    </a-button>
+										</div>
                     <AttackTable :target-create-time="targetCreateTime" />
                 </a-modal>
+
+								<a-modal
+                    v-if="OPEN_log"
+                    :open="OPEN_log"
+                    title="执行日志"
+                    width="90%"
+                    wrap-class-name="full-modal-custom"
+                    :footer="null"
+                    :destroyOnClose="true"
+                    @cancel="handleCancel_log"
+                >
+									<logViewer :username="targetUsername" :target-create-time="targetCreateTime" />
+								</a-modal>
             </div>
         </div>
     `,
@@ -141,6 +191,8 @@ const AttackRecords = defineComponent({
 		const currentPageSize = ref(props.defaultCurrentPageSize);
 		const totalRecordsNum = ref(1);
 		const OPEN = ref(false);
+		const OPEN_log = ref(false);
+		const targetUsername = ref(username);
 		const targetCreateTime = ref(null);
 		const starValues = ref({}); // Should be an object
 		// Ensure LoadingOutlined is available, or provide a fallback
@@ -152,6 +204,8 @@ const AttackRecords = defineComponent({
 				color: '#e22f2f'
 			},
 		});
+		const spawnState = ref(0);
+		const reportID = ref("");
 
 		async function fetchData() {
 			// Ensure axios is available globally
@@ -188,6 +242,16 @@ const AttackRecords = defineComponent({
 				responseData.value = [];
 				totalRecordsNum.value = 1;
 				starValues.value = {};
+			} finally {
+				if ((responseData.value.length > 0)) {
+					let flag = false;
+					for (let i = 0; i < responseData.value.length; ++i) {
+						if (computeProgress(responseData.value[i][4]) !== '100.00') {
+							setTimeout(fetchData, 30 * 1000);
+							break;
+						}
+					}
+				}
 			}
 		}
 
@@ -203,11 +267,20 @@ const AttackRecords = defineComponent({
 			return time.toLocaleString();
 		}
 
-		function showModal(createTimeVal, state) {
+		async function showModal(createTimeVal, state) {
 			if (state == 1) {
 				targetCreateTime.value = createTimeVal;
 				OPEN.value = true;
 				console.log("展示对话框 (Showing modal for createTime):", createTimeVal);
+
+				const response = await axios.post("/api/read_report", {
+					username: username,
+					createTime: targetCreateTime.value
+				});
+				console.log(response);
+				spawnState.value = response.data.spawnState
+				reportID.value = response.data.reportID
+
 			} else if (state == 2) {
 				// 执行失败
 				antd.message.error("执行失败，无法查看详情。");
@@ -215,11 +288,24 @@ const AttackRecords = defineComponent({
 				// 执行中
 				antd.message.warning("当前实验正在执行中，请稍后再试。");
 			}
-
 		}
 
 		function handleCancel() { // Changed from handleOK to handleCancel for clarity
 			OPEN.value = false;
+			spawnState.value = 0;
+			reportID.value = "";
+		}
+
+		async function showModal_log(createTimeVal, state) {
+			if (state == 0) {
+				targetCreateTime.value = createTimeVal;
+				OPEN_log.value = true;
+				console.log("展示日志 (Showing modal for createTime):", createTimeVal);
+			}
+		}
+
+		function handleCancel_log() {
+			OPEN_log.value = false;
 		}
 
 		async function del(createTimeVal) {
@@ -260,7 +346,90 @@ const AttackRecords = defineComponent({
 				console.error("Error treasuring record:", error);
 				// Optionally revert UI or show error
 			}
+		};
+
+		async function generateReport() {
+			console.log("即将生成...");
+      antd.message.success("DeepSeek正在生成您的报告...");
+			spawnState.value = 1; // 正在生成
+
+      try {
+        const response = await axios.post('/api/generate_report', {
+          username: username,
+					createTime: targetCreateTime.value,
+        });
+
+        if (response.status === 200) {
+					spawnState.value = 2;
+					reportID.value = response.data.reportID;
+          antd.message.success('报告生成成功！');
+        } else {
+					spawnState.value = 0;
+          antd.message.error('报告生成失败');
+        }
+      } catch (error) {
+				spawnState.value = 0;
+        console.error('生成报告失败:', error);
+        antd.message.error('报告生成失败，请稍后再试。');
+      }
+    }
+
+    function readReport() {
+      if (spawnState.value === 2 && reportID.value !== "") {
+        // 构建完整的URL，如果reportPath是相对路径，需要加上你的后端API基础URL
+        const fullUrl = "/reports/" + reportID.value + ".pdf";
+        // 使用 window.open 在新标签页打开PDF，浏览器会根据MIME类型处理
+        window.open(fullUrl, '_blank');
+      } else {
+        antd.message.warn('请先生成报告！');
+      }
+    }
+
+    function downloadReport() {
+      if (spawnState.value === 2 && reportID.value !== "") {
+				const fullUrl = "/reports/" + reportID.value + ".pdf";
+				const link = document.createElement('a');
+				link.href = fullUrl; // 同样直接使用
+				link.download = fullUrl.substring(fullUrl.lastIndexOf('/') + 1);
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+      } else {
+        antd.message.warn('请先生成报告！');
+      }
+    }
+
+    // 
+    function computeProgress(str) {
+      const parts = str.split('/');
+			console.log("总共", parts[1], "次攻击，正在执行第", parts[0], "次...");
+			let progress = Number(parts[0]) / Number(parts[1]) * 100;
+			progress = progress.toFixed(2);
+			console.log("执行进度: ", progress);
+      return progress;
+    }
+
+		// 获取正在进行的攻击名称
+		function getAttackType(str, list) {
+			const map = {
+				"AdvAttack": "对抗样本攻击",
+				"BackdoorAttack": "后门攻击",
+				"PoisoningAttack": "数据投毒攻击",
+				"FET": "梯度反演攻击",
+				"RLMI": "模型反演攻击",
+				"ModelStealingAttack": "模型窃取攻击"
+			}
+			const parts = str.split('/');
+			if (list.length !== Number(parts[1])) {
+				console.error("攻击数量不一致！");
+				return "error";
+			}
+			if (Number(parts[0]) < Number(parts[1]))
+				return map[list[Number(parts[0])]] + " 执行中...";
+			else
+				return "即将执行完毕..."
 		}
+  
 
 		onMounted(() => {
 			// 只注入分页器的样式
@@ -279,16 +448,27 @@ const AttackRecords = defineComponent({
 			currentPageSize,
 			totalRecordsNum,
 			OPEN,
+			OPEN_log,
 			targetCreateTime,
+			targetUsername,
 			starValues,
 			indicator,
+			spawnState,
+			reportID,
 			fetchData,
 			onPageChange,
 			formatTime,
 			showModal,
 			handleCancel, // Expose the correct cancel handler
+			showModal_log,
+			handleCancel_log,
 			del,
-			treasure
+			treasure,
+			generateReport,
+			readReport,
+			downloadReport,
+			computeProgress,
+			getAttackType,
 		};
 	}
 });

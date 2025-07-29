@@ -6,15 +6,15 @@ attack_list:
     attack: true
     attack_nums: 3
     attack_recipe: TextFoolerJin2019
-    attack_type: AdversarialAttack
+    attack_type: AdvAttack
     dataset_name_or_path: datasets/imdb/train.txt
     defender:
       gradient_accumulation_steps: 4
       learning_rate: 5.0e-05
       log_to_tb: false
-      num_clean_epochs: 1
+      num_clean_epochs: 0
       num_epochs: 1
-      num_train_adv_examples: 1000
+      num_train_adv_examples: 10
       per_device_train_batch_size: 8
     display_full_info: true
     model_name_or_path: LMs/bert_base_uncased
@@ -34,7 +34,8 @@ attack_list:
     poisoner:
       name: badnets
     sample_metrics:
-    - accuracy
+    - ppl
+    - use
     target_dataset: sst-2
     train:
       batch_size: 16
@@ -44,7 +45,7 @@ attack_list:
 - attack_args:
     attack: true
     attack_type: PoisoningAttack
-    poisoning_rate: 0.15
+    poisoning_rate: 0.1
     save_path: ./attack/PoisoningAttack/model_output
     train_config:
       logging_dir: ./logs
@@ -63,22 +64,22 @@ attack_list:
     attack: true
     attack_type: ModelStealingAttack
     epsilon: -1
-    initial_drk_model: null
+    initial_drk_model: None
     initial_sample_method: random_sentence
-    method: MeaeQ
+    method: RS
     pool_data_source: wiki
     pool_data_type: whole
     pool_subsize: -1
-    prompt: null
-    query_num: 500
+    prompt: None
+    query_num: 320
     run_seed_arr:
     - 56
 - attack_args:
-    attack: false
+    attack: true
     attack_type: RLMI
     dataset_name: emotion
     max_input_length: 5
-    max_iterations: 2500
+    max_iterations: 2000
     min_input_length: 2
     model_name: tinybert4
     num_generation: 1000
@@ -87,7 +88,7 @@ attack_list:
       learning_rate: 1.0e-05
       log_with: None
       mini_batch_size: 16
-    seed: 123
+    seed: 42
     seq_length: 20
     target_label: 0
 - attack_args:
@@ -113,7 +114,7 @@ general:
   log_file_name: single
   logs_save_dir: ./logs
   random_seed: 42
-  use_gpu: false
+  use_gpu: true
 output:
   base_path: output
   evaluation_result: evaluationResult

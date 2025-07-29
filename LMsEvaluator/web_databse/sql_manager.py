@@ -55,8 +55,10 @@ def create_database():
         createTime BIGINT DEFAULT (CAST(strftime('%s', 'now') AS BIGINT)) NOT NULL,
         isTreasure BOOLEAN DEFAULT FALSE,
 				attackInfo TEXT,  
-        attackResult TEXT,
-        attackProgress TEXT,
+        attackResult TEXT NOT NULL,
+        attackProgress TEXT NOT NULL,
+				reportState INT NOT NULL,
+				reportID TEXT,
         FOREIGN KEY (createUserName) REFERENCES user (username)
     )
     ''')
@@ -143,11 +145,11 @@ def print_verification_codes():
 
 
 # 添加攻击记录
-def add_attack_record(attackName, createUserName, createTime, attackResult, attackInfo=None, isTreasure=False,attackProgress=None):
+def add_attack_record(attackName, createUserName, createTime, attackResult, reportState, reportID, attackInfo=None, isTreasure=False,attackProgress=None):
     conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO attack_record (attackName, createUserName, createTime, isTreasure, attackInfo, attackResult,attackProgress) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                   (attackName, createUserName, createTime, isTreasure, json.dumps(attackInfo), str(attackResult),str(attackProgress)))
+    cursor.execute('INSERT INTO attack_record (attackName, createUserName, createTime, isTreasure, attackInfo, attackResult,attackProgress, reportState, reportID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                   (attackName, createUserName, createTime, isTreasure, json.dumps(attackInfo), str(attackResult),str(attackProgress), reportState, reportID))
     conn.commit()
     print(f"Attack record added for user '{createUserName}'.")
     conn.close()
@@ -183,6 +185,34 @@ def print_attack_records():
     for record in records:
         print(f"AttackID: {record[0]}, createUserName: {record[1]}, CreateTime: {record[2]}, AttackResult: {record[3]},AttackProgress{record[4]}")
     conn.close()
+    
+def get_attack_record(id=None, username=None, timestamp=None):
+    if id is not None:
+        conn = sqlite3.connect(data_path)
+        cursor = conn.cursor()
+        cursor.execute('SELECT attackInfo, attackResult FROM attack_record WHERE attackID = ?', (id))
+        record = cursor.fetchone()
+        conn.close()
+        if record:
+            return record.attackInfo, record.attackResult
+        else:
+            print(f"未能查到相关记录")
+            return None, None
+    elif (username is not None) and (timestamp is not None):
+        conn = sqlite3.connect(data_path)
+        cursor = conn.cursor()
+        cursor.execute('SELECT attackInfo, attackResult FROM attack_record WHERE createUserName = ? AND createTime = ?', (username, timestamp))
+        record = cursor.fetchone()
+        conn.close()
+        if record:
+            return record
+        else:
+            print(f"未能查到相关记录")
+            return None, None
+    else:
+        print("请至少提供ID或用户名和时间戳。")
+        return None, None 
+    
 
 
 # 添加日志记录
@@ -215,7 +245,7 @@ def get_attack_info(username):
         print(f"攻击信息文件不存在: {info_file}")
         return []
     try:
-        with open(info_file, 'r' ) as file:
+        with open(info_file, 'r', encoding='utf-8') as file:
             attack_info = yaml.safe_load(file)
             return attack_info if attack_info else []
     except Exception as e:
@@ -248,13 +278,22 @@ if __name__ == '__main__':
     lmsDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     filename = "u1h_single_1737727113_2025-01-24.txt"
     info = filename.split('_')
-    username = 'ChenyangZhao'
+    # username = 'ChenyangZhao'
+    username = 'admin'
     initTime = eval(info[2])
     #result = extractResult(os.path.join(lmsDir, "test_data",filename))
     #result=extractResult(os.path.join(lmsDir,'logs',filename))
     result = extractResult(os.path.join(lmsDir, 'web_databse','test_data', filename))
-    #add_attack_record('全部', username, initTime, json.dumps(result), attackInfo=get_attack_info('ChenyangZhao'), isTreasure=False,attackProgress='6/6')
-    add_attack_process('ChenyangZhao', initTime, '2/2')
+    add_attack_record('全部', 
+                      username, 
+											initTime, 
+											json.dumps(result), 
+											reportState=2,
+											reportID="test",
+											attackInfo=get_attack_info('ChenyangZhao'), 
+											isTreasure=False,
+											attackProgress='6/6')
+
 
     # # 示例日志操作
     # add_log_record('zcy', 'admin_single_1737092485_2024-12-04.txt', 'FINISHED')

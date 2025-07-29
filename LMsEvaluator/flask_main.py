@@ -1,16 +1,19 @@
+import eventlet
+eventlet.monkey_patch()
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
+from flask_socketio import SocketIO, emit
 from functools import wraps
-import jwt
-import os
-import json
-import string
+import jwt, os, json, string, hashlib
+from markdown_pdf import MarkdownPdf, Section
 from utils.config_parser import parse_config
 from werkzeug.security import generate_password_hash, check_password_hash
 import random, time, secrets
 import torch
+from utils.deepseek_helper import chatForReport
+from utils.log_helper import LogThreadManager
 from datetime import datetime, timedelta
 from utils.database_helper import extractResult
 from jwt_token import sign
@@ -19,8 +22,11 @@ from test4transformers import run_pipeline
 os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
 torch.backends.mps.is_available = lambda: False
 app = Flask(__name__)
+socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins='*')
 CORS(app)
 
+project_path = os.path.dirname(os.path.abspath(__file__))
+data_path = os.path.join(project_path, 'web_databse', 'users.db')
 # 邮箱配置
 app.config['MAIL_DEBUG'] = True
 app.config['MAIL_SUPPRESS_SEND'] = False
@@ -33,14 +39,11 @@ app.config['MAIL_DEFAULT_SENDER'] = '2544073891@qq.com'
 expires_in = 60 * 60 * 1000
 expires_in_refresh = 3 * expires_in
 mail = Mail(app)
-project_path = os.path.dirname(os.path.abspath(__file__))
-# 数据库配置
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\Desktop\\Project\\LMsEvaluator\\web_databse\\users.db'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\yjh\\Desktop\\Project_baseon_LMsEvaluator\\LMsEvaluator\\web_databse\\users.db'
-# 使用os.path.join来正确拼接路径
-data_path = os.path.join(project_path, 'web_databse', 'users.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' +f"{data_path}"
 db = SQLAlchemy(app)
+
+active_clients = 0
+log_thread_manager = {}
 
 
 class User(db.Model):
@@ -74,6 +77,9 @@ class AttackRecord(db.Model):
     isTreasure = db.Column(db.Boolean, default=False)
     attackInfo = db.Column(db.String, nullable=True)  # 攻击信息，存储为JSON字符串
     attackResult = db.Column(db.String, nullable=False) # 攻击结果，JSON字符串
+    attackProgress = db.Column(db.String, nullable=False)
+    reportState = db.Column(db.Integer, nullable=False) #是否生成报告
+    reportID = db.Column(db.String(32))
 
 
 
@@ -537,9 +543,11 @@ def execute_attack():
         date = str(datetime.now())[:10]
         attack = AttackRecord(attackName=attackName, 
                               createUserName=username, 
-															createTime=initTime, 
-															attackInfo=json.dumps(attack_info),  # 将攻击信息转换为JSON字符串
-															attackResult=json.dumps("RUNNING"))
+							  createTime=initTime, 
+							  attackInfo=json.dumps(attack_info),  # 将攻击信息转换为JSON字符串
+							  attackResult=json.dumps("RUNNING"),
+                              attackProgress="0/" + str(len(attack_info[0])),
+                              reportState=0)
 
         initTime = str(initTime)
         db.session.add(attack)
@@ -596,11 +604,8 @@ def getRecord():
         globalConfig = attackInfo[1]
         attackInfo = attackInfo[0]
         for info in attackInfo:
-            print("info:", info)
             tp = info['type']
-            print("tp:", tp)
             index = attackType.index(tp)
-            print("counters:", counters[index])
             result[tp][counters[index]] = {'info': info, 'resultData': result[tp][counters[index]]}
             counters[index] += 1
 
@@ -643,9 +648,10 @@ def attackRecords():
                 records = (AttackRecord.query.filter_by(createUserName=username).
                            order_by(AttackRecord.createTime.desc()).offset((currentPage - 1) * currentPageSize).limit(
                     currentPageSize).all())
+            detectResult = lambda r: 0 if r.attackResult == json.dumps("RUNNING") else (2 if r.attackResult == json.dumps("FAILED") else 1)
+            getInfo = lambda r: [e['type'] for e in json.loads(r.attackInfo)[0]]
             records = list(map(
-                lambda r: (r.createTime, 0 if r.attackResult == json.dumps("RUNNING") else (
-                    2 if r.attackResult == json.dumps("FAILED") else 1), r.isTreasure, r.attackName),
+                lambda r: (r.createTime, detectResult(r), r.isTreasure, r.attackName, r.attackProgress, getInfo(r)),
                 records))
         else:
             records = []
@@ -703,6 +709,158 @@ def treasure():
         print(f"Error fetching log: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+#生成分析报告
+@app.route('/api/generate_report', methods=['POST'])
+@auth
+def generate_report():
+    try:
+        data = request.json
+        username = data.get('username', None).strip('"')
+        createTime = data.get('createTime', None)
+
+        AttackRecord.query.filter_by(createUserName=username, createTime=createTime).update(
+                {AttackRecord.reportState: 1})
+        db.session.commit()
+        attackRecord = AttackRecord.query.filter_by(createUserName=username, createTime=createTime).first()
+        # if attackID is None:
+        #     attackRecord = AttackRecord.query.filter_by(createUserName=username).order_by(AttackRecord.createTime.desc()).first()
+        # else:
+        #     attackRecord = AttackRecord.query.filter_by(attackID=attackID, createUserName=username).first()
+        # result = attackRecord.attackResult
+        result = json.loads(attackRecord.attackResult)
+        attackInfo = json.loads(attackRecord.attackInfo)
+
+        attackType = ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']
+        counters = [0, 0, 0, 0, 0, 0]
+        globalConfig = attackInfo[1]
+        attackInfo = attackInfo[0]
+        for info in attackInfo:
+            tp = info['type']
+            index = attackType.index(tp)
+            result[tp][counters[index]] = {'info': info, 'resultData': result[tp][counters[index]]}
+            counters[index] += 1
+
+        resultInfo = {"result": result, "globalConfig": globalConfig}
+
+        # 生成报告逻辑
+        report = chatForReport(resultInfo)
+        # f = open("testDeepseek.md", "r", encoding='utf-8')
+        # report = f.read()
+        # f.close()
+        if len(report) > 0:
+            print("报告内容已获取，等待生成pdf文件.")
+            reportDir = os.path.join(project_path, "..", "material-dashboard", "reports")
+            reportID = hashlib.md5((username+str(createTime)).encode("utf-8")).hexdigest()
+
+            # 转换pdf
+            pdf = MarkdownPdf(toc_level=0, optimize=True)
+            pdf.add_section(Section(report))
+            pdf.save(os.path.join(reportDir, reportID + ".pdf"))
+            print("pdf文件生成成功")
+
+            AttackRecord.query.filter_by(createUserName=username, createTime=createTime).update(
+                {AttackRecord.reportState: 2, AttackRecord.reportID: reportID})
+            db.session.commit()
+            
+            # f = open(os.path.join(reportDir, reportID + ".md"), "w", encoding='utf-8')
+            # f.write(report)
+            # f.close()
+            return jsonify({'reportID': reportID}), 200
+        else:
+            raise Exception("未能获取报告")
+
+    except Exception as e:
+        AttackRecord.query.filter_by(createUserName=username, createTime=createTime).update(
+                {AttackRecord.reportState: 0})
+        db.session.commit()
+        print(f"生成报告失败, error: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@app.route('/api/read_report', methods=['POST'])
+@auth
+def read_report():
+    try:
+        data = request.json
+        username = data.get('username', None).strip('"')
+        createTime = data.get('createTime', None)
+        attackRecord = AttackRecord.query.filter_by(createUserName=username, createTime=createTime).first()
+        reportID = attackRecord.reportID
+        reportState = attackRecord.reportState
+        return jsonify({'spawnState': reportState, 'reportID': reportID}), 200
+
+    except Exception as e:
+        print(f"获取报告id失败, error: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+    
+# @app.route('/api/download_report', methods=['POST'])
+# @auth
+# def download_report():
+#     try:
+#         data = request.json
+#         username = data.get('username', None).strip('"')
+#         createTime = data.get('createTime', None)
+#         attackRecord = AttackRecord.query.filter_by(createUserName=username, createTime=createTime).first()
+#         reportID = attackRecord.reportID
+
+@socketio.on('connect')
+def handle_connect():
+    global active_clients
+    active_clients += 1
+    print(f"成功建立连接: {request.sid}. 已建立连接客户端数: {active_clients}")
+
+    emit('status', {'data': 'Connected to log stream'}, room=request.sid)
+
+@socketio.on('requestLog')
+def handle_requertLog(data):
+    global log_thread_manager
+    sid = request.sid
+    username = data.get('username', None).strip('"')
+    createTime = data.get('createTime', None)
+    attackRecord = AttackRecord.query.filter_by(createUserName=username, createTime=createTime).first()
+    date = datetime.fromtimestamp(attackRecord.createTime).strftime('%Y-%m-%d')
+    fileName = username + "_single_" + str(attackRecord.createTime) + '_' + date + '.txt'
+    logFilePath = os.path.join(project_path, "logs", fileName)
+
+    # 将当前客户端添加到查看日志的集合中
+    # log_viewing_sids.add(request.sid)
+    # print(f"Client {request.sid} requested log stream. Current log viewers: {len(log_viewing_sids)}")
+
+    if log_thread_manager.get(sid) == None:
+        print(f"开始监听客户端{sid}的日志...")
+        logThread = LogThreadManager(logFilePath, socketio, sid)
+        log_thread_manager[sid] = logThread
+        logThread.startTail()
+
+    # 向当前请求的客户端发送最新的历史日志
+    f = open(logFilePath, 'r', encoding='utf-8')
+    initial_logs = f.read()
+    f.close()
+
+    socketio.emit('new_log_entry', initial_logs, room=sid) # 只发送给当前的客户端
+
+    emit('status', {'data': 'Log stream started, initial logs sent.'}, room=request.sid) 
+
+@socketio.on('stopLog')
+def handle_stopLog():
+    global log_thread_manager
+    sid = request.sid
+    logThread = log_thread_manager[sid]
+
+    if logThread is not None:
+        print(f"关闭客户端{sid}的日志...")
+        logThread.stopTail()
+    del log_thread_manager[sid]
+
+@socketio.on('disconnect')
+def handle_disconnect(data=None):
+    global active_clients
+    sid = request.sid
+
+
+    active_clients -= 1
+    print(f"断开连接: {request.sid}. 已建立连接客户端数: {active_clients}")
 
 if __name__ == '__main__':
-    app.run(port=57777, debug=True)
+    # app.run(port=57777, debug=True)
+    socketio.run(app, debug=True, host='127.0.0.1', port=57777, allow_unsafe_werkzeug=True)

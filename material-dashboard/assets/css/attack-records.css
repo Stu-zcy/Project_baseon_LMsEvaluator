@@ -59,7 +59,7 @@
  }
 
  .status-container {
- 	width: 80px;
+ 	width: 20%;
  	display: flex;
  	justify-content: center;
  	align-items: center;
@@ -99,4 +99,45 @@
 
  button.ant-pagination-item-link span {
  	transform: translateY(-2px)
+ }
+
+ .ant-modal-title {
+	text-align: center;
+	font-size: 24px !important;
+ }
+
+ /* ai生成报告 */
+ .report-buttons {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+	width: 50%;
+	margin: 4px auto 0;
+ }
+
+ .executing {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: 8px !important;
+	width: 100%;
+ }
+
+ .ant-progress {
+	/* margin-left: 20px !important; */
+	width: 100%;
+ }
+
+ .progress-button {
+	background-color: #fff;
+	border: none;
+	width: 100%;
+ }
+
+ .exe-spin {
+	font-size: small !important;
+	white-space: nowrap;
+	margin: 0 auto;
  }

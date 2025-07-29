@@ -1,7 +1,4 @@
-import os
-import re
-import json
-import sys
+import os,re,sys
 lmsDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
 

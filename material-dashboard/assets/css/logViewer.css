@@ -1,0 +1,36 @@
+/* frontend/src/components/LogViewer.css */
+
+.log-viewer-container {
+  width: 95%;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  text-align: left;
+}
+
+.log-viewer-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.log-display {
+  background-color: #282c34;
+  color: #abb2bf;
+  font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+  padding: 15px;
+  border-radius: 6px;
+  max-height: 450px;
+  min-height: 150px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  border: 1px solid #444;
+  font-size: 0.9em;
+  line-height: 1.4;
+  text-align: left;
+}
