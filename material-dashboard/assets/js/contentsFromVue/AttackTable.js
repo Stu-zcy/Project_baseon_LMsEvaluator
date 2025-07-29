@@ -59,7 +59,7 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.AdvAttack.length > 0" v-bind="$attrs" 
         :columns="AdvColumns" :dataSource="responseData.AdvAttack" 
-        :pagination="false" class="outer-table attack-table">
+        :pagination="false" class="outer-table safe-attack-table" :rowClassName="rowClassName">
 									<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
                 <span style="display: inline-flex; align-items: center; margin-top: 5px">
@@ -128,7 +128,7 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.PoisoningAttack.length > 0" v-bind="$attrs" 
         :columns="PoisoningColumns" :dataSource="responseData.PoisoningAttack" 
-        :pagination="false" class="outer-table attack-table">
+        :pagination="false" class="outer-table safe-attack-table" :rowClassName="rowClassName">
 									<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
                 <span style="display: inline-flex; align-items: center; margin-top: 5px">
@@ -177,7 +177,7 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.BackdoorAttack.length > 0" v-bind="$attrs" 
         :columns="BackDoorColumns" :dataSource="responseData.BackdoorAttack" 
-        :pagination="false" class="outer-table attack-table">
+        :pagination="false" class="outer-table safe-attack-table" :rowClassName="rowClassName">
 									<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
                 <span style="display: inline-flex; align-items: center; margin-top: 5px">
@@ -251,7 +251,7 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.RLMI.length > 0" v-bind="$attrs" 
         :columns="RLMIAttackColumns" :dataSource="responseData.RLMI" 
-        :pagination="false" class="outer-table attack-table">
+        :pagination="false" class="outer-table privacy-attack-table" :rowClassName="rowClassName">
 									<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
                 <span style="display: inline-flex; align-items: center; margin-top: 5px">
@@ -310,7 +310,7 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.FET.length > 0" v-bind="$attrs" 
         :columns="FETAttackColumns" :dataSource="responseData.FET" 
-        :pagination="false" @expand="getInnerData" class="outer-table attack-table">
+        :pagination="false" @expand="getInnerData" class="outer-table privacy-attack-table" :rowClassName="rowClassName">
 									<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
                 <span style="display: inline-flex; align-items: center; margin-top: 5px">
@@ -427,7 +427,7 @@ const AttackTable = defineComponent({
 
     <a-table v-if="responseData.ModelStealingAttack.length > 0" v-bind="$attrs" 
         :columns="ModelStealingAttackColumns" :dataSource="responseData.ModelStealingAttack" 
-        :pagination="false" class="outer-table attack-table">
+        :pagination="false" class="outer-table privacy-attack-table" :rowClassName="rowClassName">
 					<template #headerCell="{ column }">
             <template v-if="column.dataIndex === 'index'">
                 <span style="display: inline-flex; align-items: center; margin-top: 5px">
@@ -667,8 +667,15 @@ const AttackTable = defineComponent({
 			//     }); 
 			// }
 			// console.log("Processed responseData:", responseData.value);
-
 		});
+
+		function rowClassName(record, index) {
+			console.log("row: ",record);
+			if (record.info.defenderEnabled)
+				return "defender-row";
+			else
+				return "only-attack-row";
+		}
 
 		// Return everything that the template needs
 		return {
@@ -683,6 +690,7 @@ const AttackTable = defineComponent({
 			responseData,
 			FETInnerData,
 			getInnerData,
+			rowClassName,
 			// username, token, props are available via `this` or closure, but not directly needed by template
 		};
 	}

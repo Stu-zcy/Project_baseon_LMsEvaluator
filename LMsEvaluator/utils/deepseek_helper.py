@@ -59,73 +59,82 @@ def chatForReport(result):
 
 #### 3. 安全攻击分析（对抗样本、后门、投毒）
 - **对抗样本攻击(AdvAttack)**:
+	- 稍微解释该攻击
   - 计算平均攻击成功率
   - 分析攻击前后准确率变化
   - 统计攻击尝试分布（成功/失败/跳过）
   
 - **后门攻击(BackdoorAttack)**:
+	- 稍微解释该攻击
   - 对比毒化前后准确率
   - 评估攻击隐蔽性：困惑度、语义相似性、语法正确性
   - 生成毒化效果雷达图（概念描述）
   
 - **数据投毒攻击(PoisoningAttack)**:
+	- 稍微解释该攻击
   - 分析多次攻击的准确率和F1变化趋势
   - 计算攻击造成的平均性能下降
 
 #### 4. 隐私攻击分析（模型反演、梯度反演、模型窃取）
 - **模型反演攻击(RLMI)**:
+	- 稍微解释该攻击
   - 对比攻击阶段和推理阶段指标
   - 成功率与词错误率的平衡分析
   
 - **梯度反演攻击(FET)**:
+	- 稍微解释该攻击
   - 提取最终综合指标：ROUGE-1、ROUGE-2、ROUGE-L、词汇恢复率、编辑距离、完全恢复率
   - 描述训练动态：ROUGE分数随epoch的变化趋势
   - 识别关键转折点（如分数突增的epoch）
   
 - **模型窃取攻击(ModelStealingAttack)**:
+	- 稍微解释该攻击
   - 对比受害者模型(victim_acc)和窃取模型(steal_acc)性能
   - 分析模型相似度(agreement)
   - 描述训练过程：损失/准确率随迭代的变化
 
-#### 5. 横向对比分析
-##### 安全攻击特性对比
-| 评估维度         | 对抗样本攻击     | 后门攻击         | 数据投毒攻击     |
+## 5. 横向对比分析
+### 安全攻击特性对比
+| 评估维度         | {{#if AdvAttack}}对抗样本{{/if}} | {{#if BackdoorAttack}}后门{{/if}} | {{#if PoisoningAttack}}投毒{{/if}} |
 |------------------|------------------|------------------|------------------|
-| 性能影响         | [占位符]         | [占位符]         | [占位符]         |
-| 检测难度         | [占位符]         | [占位符]         | [占位符]         |
-| 时效特性         | [占位符]         | [占位符]         | [占位符]         |
-| 缓解成本         | [占位符]         | [占位符]         | [占位符]         |
+| 性能影响         | {{#if AdvAttack}}{{impact_adv}}{{/if}} | {{#if BackdoorAttack}}{{impact_backdoor}}{{/if}} | {{#if PoisoningAttack}}{{impact_poison}}{{/if}} |
+| 检测难度         | {{#if AdvAttack}}{{detect_adv}}{{/if}} | {{#if BackdoorAttack}}{{detect_backdoor}}{{/if}} | {{#if PoisoningAttack}}{{detect_poison}}{{/if}} |
+| 缓解成本         | {{#if AdvAttack}}{{cost_adv}}{{/if}} | {{#if BackdoorAttack}}{{cost_backdoor}}{{/if}} | {{#if PoisoningAttack}}{{cost_poison}}{{/if}} |
 
-**对比分析**：
-- 后门攻击在隐蔽性维度展现显著优势，潜伏指数达行业平均的[倍数]倍
-- 对抗样本攻击的即时破坏强度超出数据投毒[比例]%
+**对比分析**：  
+{{#if BackdoorAttack}}
+- 后门攻击隐蔽性指数为{{stealth_index}}，超过行业平均{{industry_avg}}%  
+{{/if}}
+{{#if AdvAttack}}
+- 对抗样本攻击成功率{{success_rate}}%，破坏强度超其他攻击{{comparative_impact}}%  
+{{/if}}
 
-##### 隐私攻击特性对比
-| 评估维度         | 模型反演攻击     | 梯度反演攻击     | 模型窃取攻击     |
+### 隐私攻击特性对比
+| 评估维度         | {{#if RLMI}}模型反演{{/if}} | {{#if FET}}梯度反演{{/if}} | {{#if ModelStealingAttack}}模型窃取{{/if}} |
 |------------------|------------------|------------------|------------------|
-| 信息质量         | [占位符]         | [占位符]         | [占位符]         |
-| 泄露范围         | [占位符]         | [占位符]         | [占位符]         |
-| 实施复杂度       | [占位符]         | [占位符]         | [占位符]         |
-| 防御可行性       | [占位符]         | [占位符]         | [占位符]         |
+| 信息质量         | {{#if RLMI}}{{info_quality_rlmi}}{{/if}} | {{#if FET}}{{info_quality_fet}}{{/if}} | {{#if ModelStealingAttack}}{{info_quality_steal}}{{/if}} |
+| 实施复杂度       | {{#if RLMI}}{{complexity_rlmi}}{{/if}} | {{#if FET}}{{complexity_fet}}{{/if}} | {{#if ModelStealingAttack}}{{complexity_steal}}{{/if}} |
+| 防御可行性       | {{#if RLMI}}{{defense_feasibility_rlmi}}{{/if}} | {{#if FET}}{{defense_feasibility_fet}}{{/if}} | {{#if ModelStealingAttack}}{{defense_feasibility_steal}}{{/if}} |
 
-**对比分析**：
-- 模型窃取在知识产权威胁维度风险值超其他攻击[比例]%
-- 梯度反演的过程稳定性显著低于模型反演[差距值]
+**对比分析**：  
+{{#if ModelStealingAttack}}
+- 模型窃取导致知识产权风险值达{{ip_risk}}，构成最高合规风险  
+{{/if}}
+{{#if FET}}
+- 梯度反演完全恢复率{{full_recovery}}%，存在关键数据泄露隐患  
+{{/if}}
 
-##### 关键风险评估
-1. **最大业务威胁**：后门攻击的[具体风险特征]
-2. **最高合规风险**：模型窃取导致的[具体侵权问题]
-3. **最紧急漏洞**：[攻击类型]在[系统组件]的未防护接口
+### 关键风险评估
+1. **最大业务威胁**：{{top_business_threat}}  
+2. **最高合规风险**：{{top_compliance_risk}}  
+3. **最紧急漏洞**：{{critical_vulnerability}}  
 
 #### 6. 防御建议
 - 针对每种攻击分析防御效果
 - 推荐监控指标（实时检测攻击）
 - 架构改进建议（增强鲁棒性）
 
-#### 7. 可视化需求
-- 图1: 安全攻击三维雷达图（破坏强度/隐蔽性/实施成本）
-- 图2: 隐私攻击信息恢复质量对比柱状图
-- 图3: FET攻击ROUGE-L随epoch变化曲线
+> 附录：指标解释
 ...
 
 ### 输出要求

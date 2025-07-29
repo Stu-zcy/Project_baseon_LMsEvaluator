@@ -141,12 +141,18 @@ const AttackRecords = defineComponent({
       @click="generateReport"
       :disabled="spawnState === 1"
     >
-      <span v-if="spawnState === 1">
-        <a-spin :indicator="indicator" style="margin-right: 4px;" />
-        正在生成
+      <span v-if="spawnState === 1" class="spawnstate">
+        <a-spin :indicator="indicator" />
+        <spin>正在生成</spin>
       </span>
-      <span v-else-if="spawnState === 0">生成报告</span>
-      <span v-else-if="spawnState === 2">重新生成</span>
+      <span v-else-if="spawnState === 0" class="spawnstate">
+				<img alt="spawn" src="../assets/icons/deepseek.svg" class="state-img"/>
+				<spin>生成报告</spin>
+			</span>
+      <span v-else-if="spawnState === 2" class="spawnstate">
+				<img alt="respawn" src="../assets/icons/deepseek.svg" class="state-img"/>
+				<spin>重新生成</spin>
+			</span>
     </a-button>
 
     <a-button
@@ -154,7 +160,8 @@ const AttackRecords = defineComponent({
       :disabled="spawnState !== 2"
       @click="readReport"
     >
-      阅读报告
+				<img alt="respawn" src="../assets/icons/read.svg" class="read-img"/>
+				<spin>阅读报告</spin>
     </a-button>
 
     <a-button
@@ -162,7 +169,8 @@ const AttackRecords = defineComponent({
       :disabled="spawnState !== 2"
       @click="downloadReport"
     >
-      下载报告
+				<img alt="respawn" src="../assets/icons/download.svg" class="download-img"/>
+				<spin>下载报告</spin>
     </a-button>
 										</div>
                     <AttackTable :target-create-time="targetCreateTime" />
@@ -199,10 +207,7 @@ const AttackRecords = defineComponent({
 		const indicator = h('img', {
 			src: '../assets/icons/loading.gif',
 			alt: 'Loading',
-			style: {
-				fontSize: '40px',
-				color: '#e22f2f'
-			},
+			class: 'state-img'
 		});
 		const spawnState = ref(0);
 		const reportID = ref("");
@@ -244,7 +249,7 @@ const AttackRecords = defineComponent({
 				starValues.value = {};
 			} finally {
 				if ((responseData.value.length > 0)) {
-					let flag = false;
+					// let flag = false;
 					for (let i = 0; i < responseData.value.length; ++i) {
 						if (computeProgress(responseData.value[i][4]) !== '100.00') {
 							setTimeout(fetchData, 30 * 1000);

@@ -113,7 +113,7 @@
 	justify-content: space-evenly;
 	align-items: center;
 	width: 50%;
-	margin: 4px auto 0;
+	margin: 2em auto 0;
  }
 
  .executing {
@@ -140,4 +140,34 @@
 	font-size: small !important;
 	white-space: nowrap;
 	margin: 0 auto;
+ }
+
+ .spawnstate,
+ .read-report-button,
+ .download-report-button {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+ }
+
+ .state-img {
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+ }
+
+ .read-img {
+	width: 24px;
+	height: 24px;
+	margin-right: 3px;
+	/* margin-bottom: 5px; */
+ }
+
+ .download-img {
+	width: 12px;
+	height: 18px;
+	margin-right: 5px;
+	/* margin-bottom: 5px; */
  }

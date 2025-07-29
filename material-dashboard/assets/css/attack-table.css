@@ -39,18 +39,26 @@
 	box-shadow: 0 4px 12px #83898d;
 }
 
-.normal-train-table .ant-table-title {
+.safe-attack-table .ant-table-title {
 		background: linear-gradient(45deg,
 			#1c72cf,
 			#0a9bb2
 	);
 }
 
-.attack-table .ant-table-title {
+.privacy-attack-table .ant-table-title {
 	/* 渐变背景，上方是空白，下方是卡片 */
 	background: linear-gradient(45deg,
 			#00adb5,
 			#0a8754
+	);
+}
+
+.normal-train-table .ant-table-title {
+	/* 渐变背景，上方是空白，下方是卡片 */
+	background: linear-gradient(45deg,
+			#9c5fb9,
+			#1d66c6
 	);
 }
 
@@ -82,11 +90,22 @@
 } */
 
 .ant-table-row-expand-icon-cell {
-width: 10px;
+	width: 10px;
   padding: 0 !important; /* Flexbox下可以完全移除内边距 */
   
   /* 使用 Flexbox 居中 */
   display: flex;
   justify-content: center; /* 水平居中 */
   align-items: center;     /* 垂直居中 */
+}
+
+.ant-table-row:hover {
+	box-shadow:  
+		2px 2px 10px 1px rgba(0, 0, 0, 0.2),
+		-2px -2px 10px 1px rgba(0, 0, 0, 0.2);
+}
+
+.defender-row {
+	/* border-bottom: 2px solid #00adb5 !important; */
+	box-shadow: inset 0px -5px 2px #0061b579 !important;
 }
