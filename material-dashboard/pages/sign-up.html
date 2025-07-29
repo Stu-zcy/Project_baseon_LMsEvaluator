@@ -518,6 +518,130 @@
         forms.classList.add('was-validated');
       }, false);
     });
+    function showAlert(type, title, message, duration = 5000) {
+    // 创建弹窗元素
+    const alertElement = document.createElement('div');
+    alertElement.className = 'custom-alert';
+    
+    // 设置图标
+    const iconMap = {
+      success: 'fa-check-circle',
+      error: 'fa-exclamation-circle',
+      warning: 'fa-exclamation-triangle',
+      info: 'fa-info-circle'
+    };
+    
+    // 设置弹窗内容
+    alertElement.innerHTML = `
+      <div class="alert-icon ${type}">
+        <i class="fas ${iconMap[type]}"></i>
+      </div>
+      <div class="alert-content">
+        <div class="alert-title">${title}</div>
+        <div class="alert-message">${message}</div>
+      </div>
+      <button class="alert-close">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="progress-bar">
+        <div class="progress" style="animation: progress ${duration}ms linear;"></div>
+      </div>
+    `;
+    
+    // 添加到容器
+    const container = document.getElementById('alertContainer');
+    container.appendChild(alertElement);
+    
+    // 添加显示动画
+    setTimeout(() => {
+      alertElement.classList.add('show');
+    }, 10);
+    
+    // 关闭按钮事件
+    const closeBtn = alertElement.querySelector('.alert-close');
+    closeBtn.addEventListener('click', () => {
+      closeAlert(alertElement);
+    });
+    
+    // 自动关闭
+    if (duration > 0) {
+      setTimeout(() => {
+        closeAlert(alertElement);
+      }, duration);
+    }
+    
+    // 添加动画样式
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes progress {
+        from { transform: scaleX(1); }
+        to { transform: scaleX(0); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  // 显示通知函数
+  function showAlert(type, title, message, duration = 5000) {
+    // 创建弹窗元素
+    const alertElement = document.createElement('div');
+    alertElement.className = `custom-alert alert-${type}`;
+    
+    // 设置图标
+    const iconMap = {
+      success: 'fa-check-circle',
+      error: 'fa-exclamation-circle',
+      warning: 'fa-exclamation-triangle',
+      info: 'fa-info-circle'
+    };
+    
+    // 设置弹窗内容
+    alertElement.innerHTML = `
+      <div class="alert-icon">
+        <i class="fas ${iconMap[type]}"></i>
+      </div>
+      <div class="alert-content">
+        <div class="alert-title">${title}</div>
+        <div class="alert-message">${message}</div>
+      </div>
+      <button class="alert-close">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="progress-bar">
+        <div class="progress" style="animation-duration: ${duration}ms;"></div>
+      </div>
+    `;
+    
+    // 添加到容器
+    const container = document.getElementById('alertContainer');
+    container.appendChild(alertElement);
+    
+    // 添加显示动画
+    setTimeout(() => {
+      alertElement.classList.add('show');
+    }, 10);
+    
+    // 关闭按钮事件
+    const closeBtn = alertElement.querySelector('.alert-close');
+    closeBtn.addEventListener('click', () => {
+      closeAlert(alertElement);
+    });
+    
+    // 自动关闭
+    if (duration > 0) {
+      setTimeout(() => {
+        closeAlert(alertElement);
+      }, duration);
+    }
+    
+    // 关闭函数
+    function closeAlert(element) {
+      element.classList.remove('show');
+      element.classList.add('hide');
+      setTimeout(() => {
+        element.remove();
+      }, 500);
+    }
+  }
   </script>
 </body>
 </html>
