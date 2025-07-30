@@ -90,39 +90,54 @@ const AttackTable = defineComponent({
 								{{ record.info.name }}
                 </div>
             </div>
-            <div class="" v-else-if="column.dataIndex === 'success'">
-                <div class="text-subtext">
-                    {{ record.resultData[0] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'fail'">
-                <div class="text-subtext">
-                    {{ record.resultData[1] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'skip'">
-                <div class="text-subtext">
-                    {{ record.resultData[2] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'before'">
-                <div class="text-subtext">
-                    {{ record.resultData[3] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'after'">
-                <div class="text-subtext">
-                    {{ record.resultData[4] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'rate'">
-                <div class="text-subtext">
-                    {{ record.resultData[5] }}
-                </div>
-            </div>
-            <div v-else class="text-subtext">
-                {{ record.resultData[column.dataIndex] }}
-            </div>
+<div class="" v-if="column.dataIndex === 'success'">
+      <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
+        {{ record.resultData[0] }}
+      </div>
+      <div class="text-subtext" v-else>
+        {{ record.resultData[0] }}
+      </div>
+    </div>
+    <div class="" v-else-if="column.dataIndex === 'fail'">
+      <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
+        {{ record.resultData[1] }}
+      </div>
+      <div class="text-subtext" v-else>
+        {{ record.resultData[1] }}
+      </div>
+    </div>
+    <div class="" v-else-if="column.dataIndex === 'skip'">
+      <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
+        {{ record.resultData[2] }}
+      </div>
+      <div class="text-subtext" v-else>
+        {{ record.resultData[2] }}
+      </div>
+    </div>
+    <div class="" v-else-if="column.dataIndex === 'before'">
+      <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
+        {{ record.resultData[3] }}
+      </div>
+      <div class="text-subtext" v-else>
+        {{ record.resultData[3] }}
+      </div>
+    </div>
+    <div class="" v-else-if="column.dataIndex === 'after'">
+      <div class="text-subtext" v-if="record.compResult && record.compResult[4]" style="color: blue;">
+        {{ record.resultData[4] }}
+      </div>
+      <div class="text-subtext" v-else>
+        {{ record.resultData[4] }}
+      </div>
+    </div>
+    <div class="" v-else-if="column.dataIndex === 'rate'">
+      <div class="text-subtext" v-if="record.compResult && record.compResult[5]" style="color: blue;">
+        {{ record.resultData[5] }}
+      </div>
+      <div class="text-subtext" v-else>
+        {{ record.resultData[5] }}
+      </div>
+		</div>
         </template>
     </a-table>
 
@@ -159,16 +174,22 @@ const AttackTable = defineComponent({
 								{{ record.info.name }}
                 </div>
             </div>
-            <div class="" v-else-if="column.dataIndex === 'acc'">
-                <div class="text-subtext">
-                    {{ record.resultData[0] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'f1'">
-                <div class="text-subtext">
-                    {{ record.resultData[1] }}
-                </div>
-            </div>
+<div v-else-if="column.dataIndex === 'acc'">
+      <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
+        {{ record.resultData[0] }}
+      </div>
+      <div class="text-subtext" v-else>
+        {{ record.resultData[0] }}
+      </div>
+    </div>
+    <div v-else-if="column.dataIndex === 'f1'">
+      <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
+        {{ record.resultData[1] }}
+      </div>
+      <div class="text-subtext" v-else>
+        {{ record.resultData[1] }}
+      </div>
+    </div>
             <div v-else class="text-subtext">
                 {{ record.resultData[column.dataIndex] }}
             </div>
@@ -208,41 +229,62 @@ const AttackTable = defineComponent({
 								{{ record.info.name }}
                 </div>
             </div>
-            <div class="" v-else-if="column.dataIndex === 'dataset'">
-                <div class="text-subtext">
-                    {{ record.resultData[0] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'Poisoner'">
-                <div class="text-subtext">
-                    {{ record.resultData[1] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'before'">
-                <div class="text-subtext">
-                    {{ record.resultData[2] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'after'">
-                <div class="text-subtext">
-                    {{ record.resultData[3] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'PPL'">
-                <div class="text-subtext">
-                    {{ record.resultData[4] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'USE'">
-                <div class="text-subtext">
-                    {{ record.resultData[5] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'GRAMMAR'">
-                <div class="text-subtext">
-                    {{ record.resultData[6] }}
-                </div>
-            </div>
+<div v-else-if="column.dataIndex === 'dataset'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
+    {{ record.resultData[0] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData[0] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'Poisoner'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
+    {{ record.resultData[1] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData[1] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'before'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
+    {{ record.resultData[2] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData[2] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'after'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
+    {{ record.resultData[3] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData[3] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'PPL'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[4]" style="color: blue;">
+    {{ record.resultData[4] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData[4] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'USE'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[5]" style="color: blue;">
+    {{ record.resultData[5] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData[5] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'GRAMMAR'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[6]" style="color: blue;">
+    {{ record.resultData[6] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData[6] }}
+  </div>
+</div>
             <div v-else class="text-subtext">
                 {{ record.resultData[column.dataIndex] }}
             </div>
@@ -282,26 +324,38 @@ const AttackTable = defineComponent({
 								{{ record.info.name }}
                 </div>
             </div>
-            <div class="" v-else-if="column.dataIndex === 'ASR_Attack'">
-                <div class="text-subtext">
-                    {{ record.resultData[0] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'WER_Attack'">
-                <div class="text-subtext">
-                    {{ record.resultData[1] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'ASR_Inference'">
-                <div class="text-subtext">
-                    {{ record.resultData[2] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'WER_Inference'">
-                <div class="text-subtext">
-                    {{ record.resultData[3] }}
-                </div>
-            </div>
+<div v-else-if="column.dataIndex === 'ASR_Attack'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
+    {{ record.resultData[0] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData[0] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'WER_Attack'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
+    {{ record.resultData[1] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData[1] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'ASR_Inference'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
+    {{ record.resultData[2] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData[2] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'WER_Inference'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
+    {{ record.resultData[3] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData[3] }}
+  </div>
+</div>
             <div v-else class="text-subtext">
                 {{ record.resultData[column.dataIndex] }}
             </div>
@@ -341,36 +395,54 @@ const AttackTable = defineComponent({
 								{{ record.info.name }}
                 </div>
             </div>
-            <div class="" v-else-if="column.dataIndex === 'rouge1'">
-                <div class="text-subtext">
-                    {{ record.resultData.at(-1) && record.resultData.at(-1)[0] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'rouge2'">
-                <div class="text-subtext">
-                    {{ record.resultData.at(-1) && record.resultData.at(-1)[1] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'rougeL'">
-                <div class="text-subtext">
-                    {{ record.resultData.at(-1) && record.resultData.at(-1)[2] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'wrr'">
-                <div class="text-subtext">
-                    {{ record.resultData.at(-1) && record.resultData.at(-1)[3] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'distance'">
-                <div class="text-subtext">
-                    {{ record.resultData.at(-1) && record.resultData.at(-1)[4] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'fr'">
-                <div class="text-subtext">
-                    {{ record.resultData.at(-1) && record.resultData.at(-1)[5] }}
-                </div>
-            </div>
+<div v-else-if="column.dataIndex === 'rouge1'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
+    {{ record.resultData.at(-1) && record.resultData.at(-1)[0] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.at(-1) && record.resultData.at(-1)[0] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'rouge2'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
+    {{ record.resultData.at(-1) && record.resultData.at(-1)[1] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.at(-1) && record.resultData.at(-1)[1] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'rougeL'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
+    {{ record.resultData.at(-1) && record.resultData.at(-1)[2] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.at(-1) && record.resultData.at(-1)[2] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'wrr'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
+    {{ record.resultData.at(-1) && record.resultData.at(-1)[3] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.at(-1) && record.resultData.at(-1)[3] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'distance'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[4]" style="color: blue;">
+    {{ record.resultData.at(-1) && record.resultData.at(-1)[4] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.at(-1) && record.resultData.at(-1)[4] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'fr'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[5]" style="color: blue;">
+    {{ record.resultData.at(-1) && record.resultData.at(-1)[5] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.at(-1) && record.resultData.at(-1)[5] }}
+  </div>
+</div>
             <div v-else class="text-subtext">
                 {{ record.resultData[column.dataIndex] }}
             </div>
@@ -458,36 +530,54 @@ const AttackTable = defineComponent({
 								{{ record.info.name }}
                 </div>
             </div>
-            <div class="" v-else-if="column.dataIndex === 'train_loss'">
-                <div class="text-subtext">
-                    {{ record.resultData.iteration.at(-1)[0] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'train_acc'">
-                <div class="text-subtext">
-                    {{ record.resultData.iteration.at(-1)[1] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'valid_acc'">
-                <div class="text-subtext">
-                    {{ record.resultData.iteration.at(-1)[2] }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'victim_acc'">
-                <div class="text-subtext">
-                    {{ record.resultData.victim_acc }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'steal_acc'">
-                <div class="text-subtext">
-                    {{ record.resultData.steal_acc }}
-                </div>
-            </div>
-            <div class="" v-else-if="column.dataIndex === 'agreement'">
-                <div class="text-subtext">
-                    {{ record.resultData.agreement }}
-                </div>
-            </div>
+<div v-else-if="column.dataIndex === 'train_loss'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
+    {{ record.resultData.iteration.at(-1)[0] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.iteration.at(-1)[0] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'train_acc'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
+    {{ record.resultData.iteration.at(-1)[1] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.iteration.at(-1)[1] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'valid_acc'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
+    {{ record.resultData.iteration.at(-1)[2] }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.iteration.at(-1)[2] }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'victim_acc'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
+    {{ record.resultData.victim_acc }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.victim_acc }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'steal_acc'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[4]" style="color: blue;">
+    {{ record.resultData.steal_acc }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.steal_acc }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'agreement'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[5]" style="color: blue;">
+    {{ record.resultData.agreement }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.agreement }}
+  </div>
+</div>
         </template>
     </a-table>
 </div>
@@ -581,6 +671,265 @@ const AttackTable = defineComponent({
 			}
 		}
 
+		function convert(str) {
+			// 检查是否为百分数
+			if (str.includes('%')) {
+				const valueWithoutPercent = parseFloat(str) / 100;
+				return valueWithoutPercent;
+			}
+
+			// 对于小数和整数
+			// parseFloat 可以处理整数和小数，如果确定都是十进制数，用它更通用
+			const num = parseFloat(str);
+
+			// 检查是否是有效的数字
+			if (isNaN(num)) {
+				console.warn(`"${str}" 无法转换为有效数字。`);
+				return null; // 或者你可以返回 undefined、0，或者抛出错误
+			}
+
+			return num;
+		}
+		// AdvAttack: [],
+		// BackdoorAttack: [],
+		// PoisoningAttack: [],
+		// RLMI: [],
+		// FET: [],
+		// ModelStealingAttack: []
+
+		function compare(e1, e2) {
+			let arr;
+			switch (e1.info.type) {
+				case 'AdvAttack':
+					arr = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]];
+					if (convert(e1.resultData[0]) > convert(e2.resultData[0]))
+						arr[1][0] = 1;
+					else if (convert(e1.resultData[0]) < convert(e2.resultData[0]))
+						arr[0][0] = 1;
+
+					if (convert(e1.resultData[1]) > convert(e2.resultData[1]))
+						arr[0][1] = 1;
+					else if (convert(e1.resultData[1]) < convert(e2.resultData[1]))
+						arr[1][1] = 1;
+
+					if (convert(e1.resultData[2]) > convert(e2.resultData[2]))
+						arr[0][2] = 1;
+					else if (convert(e1.resultData[2]) < convert(e2.resultData[2]))
+						arr[1][2] = 1;
+
+					if (convert(e1.resultData[3]) > convert(e2.resultData[3]))
+						arr[0][3] = 1;
+					else if (convert(e1.resultData[3]) < convert(e2.resultData[3]))
+						arr[1][3] = 1;
+
+					if (convert(e1.resultData[4]) > convert(e2.resultData[4]))
+						arr[0][4] = 1;
+					else if (convert(e1.resultData[4]) < convert(e2.resultData[4]))
+						arr[1][4] = 1;
+
+					if (convert(e1.resultData[5]) > convert(e2.resultData[5]))
+						arr[1][5] = 1;
+					else if (convert(e1.resultData[5]) < convert(e2.resultData[5]))
+						arr[0][5] = 1;
+
+					e1.compResult = arr[0];
+					e2.compResult = arr[1];
+					break;
+
+				case 'BackdoorAttack':
+					arr = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]];
+					if (convert(e1.resultData[1]) > convert(e2.resultData[1]))
+						arr[0][1] = 1;
+					else if (convert(e1.resultData[1]) < convert(e2.resultData[1]))
+						arr[1][1] = 1;
+
+					if (convert(e1.resultData[2]) > convert(e2.resultData[2]))
+						arr[0][2] = 1;
+					else if (convert(e1.resultData[2]) < convert(e2.resultData[2]))
+						arr[1][2] = 1;
+
+					if (convert(e1.resultData[3]) > convert(e2.resultData[3]))
+						arr[0][3] = 1;
+					else if (convert(e1.resultData[3]) < convert(e2.resultData[3]))
+						arr[1][3] = 1;
+
+					if (convert(e1.resultData[4]) > convert(e2.resultData[4]))
+						arr[1][4] = 1;
+					else if (convert(e1.resultData[4]) < convert(e2.resultData[4]))
+						arr[0][4] = 1;
+
+					if (convert(e1.resultData[5]) > convert(e2.resultData[5]))
+						arr[1][5] = 1;
+					else if (convert(e1.resultData[5]) < convert(e2.resultData[5]))
+						arr[0][5] = 1;
+
+					e1.compResult = arr[0];
+					e2.compResult = arr[1];
+					break;
+
+				case "PoisoningAttack":
+					arr = [[0, 0], [0, 0]];
+					if (convert(e1.resultData[0]) > convert(e2.resultData[0]))
+						arr[0][0] = 1;
+					else if (convert(e1.resultData[0]) < convert(e2.resultData[0]))
+						arr[1][0] = 1;
+
+					if (convert(e1.resultData[1]) > convert(e2.resultData[1]))
+						arr[0][1] = 1;
+					else if (convert(e1.resultData[1]) < convert(e2.resultData[1]))
+						arr[1][1] = 1;
+					e1.compResult = arr[0];
+					e2.compResult = arr[1];
+					break;
+
+				case "RLMI":
+					arr = [[0, 0, 0, 0], [0, 0, 0, 0]];
+					if (convert(e1.resultData[0]) > convert(e2.resultData[0]))
+						arr[1][0] = 1;
+					else if (convert(e1.resultData[0]) < convert(e2.resultData[0]))
+						arr[0][0] = 1;
+
+					if (convert(e1.resultData[1]) > convert(e2.resultData[1]))
+						arr[0][1] = 1;
+					else if (convert(e1.resultData[1]) < convert(e2.resultData[1]))
+						arr[1][1] = 1;
+
+					if (convert(e1.resultData[2]) > convert(e2.resultData[2]))
+						arr[1][2] = 1;
+					else if (convert(e1.resultData[2]) < convert(e2.resultData[2]))
+						arr[0][2] = 1;
+
+					if (convert(e1.resultData[3]) > convert(e2.resultData[3]))
+						arr[0][3] = 1;
+					else if (convert(e1.resultData[3]) < convert(e2.resultData[3]))
+						arr[1][3] = 1;
+
+					e1.compResult = arr[0];
+					e2.compResult = arr[1];
+					break;
+
+				case "FET":
+					arr = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]];
+					if (convert(e1.resultData.at(-1)[0]) > convert(e2.resultData.at(-1)[0]))
+						arr[1][0] = 1;
+					else if (convert(e1.resultData.at(-1)[0]) < convert(e2.resultData.at(-1)[0]))
+						arr[0][0] = 1;
+
+					if (convert(e1.resultData.at(-1)[1]) > convert(e2.resultData.at(-1)[1]))
+						arr[1][1] = 1;
+					else if (convert(e1.resultData.at(-1)[1]) < convert(e2.resultData.at(-1)[1]))
+						arr[0][1] = 1;
+
+					if (convert(e1.resultData.at(-1)[2]) > convert(e2.resultData.at(-1)[2]))
+						arr[1][2] = 1;
+					else if (convert(e1.resultData.at(-1)[2]) < convert(e2.resultData.at(-1)[2]))
+						arr[0][2] = 1;
+
+					if (convert(e1.resultData.at(-1)[3]) > convert(e2.resultData.at(-1)[3]))
+						arr[1][3] = 1;
+					else if (convert(e1.resultData.at(-1)[3]) < convert(e2.resultData.at(-1)[3]))
+						arr[0][3] = 1;
+
+					if (convert(e1.resultData.at(-1)[4]) > convert(e2.resultData.at(-1)[4]))
+						arr[0][4] = 1;
+					else if (convert(e1.resultData.at(-1)[4]) < convert(e2.resultData.at(-1)[4]))
+						arr[1][4] = 1;
+
+					if (convert(e1.resultData.at(-1)[5]) > convert(e2.resultData.at(-1)[5]))
+						arr[1][5] = 1;
+					else if (convert(e1.resultData.at(-1)[5]) < convert(e2.resultData.at(-1)[5]))
+						arr[0][5] = 1;
+
+					e1.compResult = arr[0];
+					e2.compResult = arr[1];
+					break;
+
+				case "ModelStealingAttack":
+					arr = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]];
+					if (convert(e1.resultData.iteration.at(-1)[0]) > convert(e2.resultData.iteration.at(-1)[0]))
+						arr[0][0] = 1;
+					else if (convert(e1.resultData.iteration.at(-1)[0]) < convert(e2.resultData.iteration.at(-1)[0]))
+						arr[1][0] = 1;
+
+					if (convert(e1.resultData.iteration.at(-1)[1]) > convert(e2.resultData.iteration.at(-1)[1]))
+						arr[1][1] = 1;
+					else if (convert(e1.resultData.iteration.at(-1)[1]) < convert(e2.resultData.iteration.at(-1)[1]))
+						arr[0][1] = 1;
+
+					if (convert(e1.resultData.iteration.at(-1)[2]) > convert(e2.resultData.iteration.at(-1)[2]))
+						arr[0][2] = 1;
+					else if (convert(e1.resultData.iteration.at(-1)[2]) < convert(e2.resultData.iteration.at(-1)[2]))
+						arr[1][2] = 1;
+
+					if (convert(e1.resultData.victim_acc) > convert(e2.resultData.victim_acc))
+						arr[0][3] = 1;
+					else if (convert(e1.resultData.victim_acc) < convert(e2.resultData.victim_acc))
+						arr[1][3] = 1;
+
+					if (convert(e1.resultData.steal_acc) > convert(e2.resultData.steal_acc))
+						arr[1][4] = 1;
+					else if (convert(e1.resultData.steal_acc) < convert(e2.resultData.steal_acc))
+						arr[0][4] = 1;
+
+					if (convert(e1.resultData.agreement) > convert(e2.resultData.agreement))
+						arr[1][5] = 1;
+					else if (convert(e1.resultData.agreement) < convert(e2.resultData.agreement))
+						arr[0][5] = 1;
+
+					e1.compResult = arr[0];
+					e2.compResult = arr[1];
+					break;
+
+				default:
+					break;
+			}
+
+			return [e1, e2];
+		}
+		// 处理函数
+		function processControlGroup(attackList) {
+			if (attackList.length === 0)
+				return attackList;
+
+			let res = [];
+			let last = [];
+			// 使用 Map 存储 buffer，键是 info.name，值是对应的元素
+			let bufferMap = new Map();
+
+			const len = attackList.length;
+			for (let i = 0; i < len; ++i) {
+				let e = attackList[i];
+				if ((e.info !== undefined) && e.info.comparison) {
+					const comparisonName = e.info.comparison.name;
+					if (bufferMap.has(comparisonName)) {
+						let matchedElement = bufferMap.get(comparisonName);
+						if (e.info.defenderEnabled === false) {
+							res.push(...(compare(e, matchedElement)));
+						} else {
+							res.push(...(compare(matchedElement, e)));
+						}
+						bufferMap.delete(comparisonName); // 从 Map 中移除已配对的
+					} else {
+						// 如果当前元素还没有找到它的对照，就把它放入 bufferMap
+						// 以它自己的 name 作为键，等待其对照组出现
+						bufferMap.set(e.info.name, e);
+					}
+				} else {
+					last.push(e);
+				}
+			}
+
+			if (bufferMap.keys.length > 0) {
+				console.warn("存在含有comparison的配置，但是找不到对照组。")
+				for (let item of bufferMap.values())
+					last.push(item);
+			}
+
+			res.push(...last);
+
+			return res;
+		}
+
 		onMounted(async () => {
 			if (!props.targetCreateTime) {
 				console.warn("targetCreateTime prop is not provided or is invalid.");
@@ -604,12 +953,12 @@ const AttackTable = defineComponent({
 				if (response && response.data && typeof response.data === 'object') {
 					// Assign specific keys if they exist, or default to empty arrays
 					responseData.value.NormalTrain = response.data.result.normalTrain || [];
-					responseData.value.AdvAttack = response.data.result.AdvAttack || [];
-					responseData.value.BackdoorAttack = response.data.result.BackdoorAttack || [];
-					responseData.value.PoisoningAttack = response.data.result.PoisoningAttack || [];
-					responseData.value.RLMI = response.data.result.RLMI || [];
-					responseData.value.FET = response.data.result.FET || [];
-					responseData.value.ModelStealingAttack = response.data.result.ModelStealingAttack || [];
+					responseData.value.AdvAttack = processControlGroup(response.data.result.AdvAttack || []);
+					responseData.value.BackdoorAttack = processControlGroup(response.data.result.BackdoorAttack || []);
+					responseData.value.PoisoningAttack = processControlGroup(response.data.result.PoisoningAttack || []);
+					responseData.value.RLMI = processControlGroup(response.data.result.RLMI || []);
+					responseData.value.FET = processControlGroup(response.data.result.FET || []);
+					responseData.value.ModelStealingAttack = processControlGroup(response.data.result.ModelStealingAttack || []);
 				} else {
 					console.error("Invalid API response structure:", response);
 				}
@@ -670,11 +1019,15 @@ const AttackTable = defineComponent({
 		});
 
 		function rowClassName(record, index) {
-			console.log("row: ",record);
-			if (record.info.defenderEnabled)
+			console.log("row: ", record);
+
+			if (record.info.defenderEnabled) {
 				return "defender-row";
-			else
+			} else if (record.info.comparison) {
+				return "attack-row";
+			} else {
 				return "only-attack-row";
+			}
 		}
 
 		// Return everything that the template needs

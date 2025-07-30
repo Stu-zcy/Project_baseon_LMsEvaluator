@@ -751,9 +751,11 @@ def generate_report():
             print("报告内容已获取，等待生成pdf文件.")
             reportDir = os.path.join(project_path, "..", "material-dashboard", "reports")
             reportID = hashlib.md5((username+str(createTime)).encode("utf-8")).hexdigest()
-
+            f = open(os.path.join(reportDir, reportID + ".md"), "w", encoding='utf-8')
+            f.write(report)
+            f.close()
             # 转换pdf
-            pdf = MarkdownPdf(toc_level=0, optimize=True)
+            pdf = MarkdownPdf(toc_level=0, optimize=False)
             pdf.add_section(Section(report))
             pdf.save(os.path.join(reportDir, reportID + ".pdf"))
             print("pdf文件生成成功")
@@ -762,9 +764,7 @@ def generate_report():
                 {AttackRecord.reportState: 2, AttackRecord.reportID: reportID})
             db.session.commit()
             
-            # f = open(os.path.join(reportDir, reportID + ".md"), "w", encoding='utf-8')
-            # f.write(report)
-            # f.close()
+
             return jsonify({'reportID': reportID}), 200
         else:
             raise Exception("未能获取报告")
