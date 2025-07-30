@@ -7,7 +7,7 @@ from flask_mail import Mail, Message
 from flask_socketio import SocketIO, emit
 from functools import wraps
 import jwt, os, json, string, hashlib
-from markdown_pdf import MarkdownPdf, Section
+import subprocess
 from utils.config_parser import parse_config
 from werkzeug.security import generate_password_hash, check_password_hash
 import random, time, secrets
@@ -751,14 +751,21 @@ def generate_report():
             print("报告内容已获取，等待生成pdf文件.")
             reportDir = os.path.join(project_path, "..", "material-dashboard", "reports")
             reportID = hashlib.md5((username+str(createTime)).encode("utf-8")).hexdigest()
-            f = open(os.path.join(reportDir, reportID + ".md"), "w", encoding='utf-8')
+            reportMDPath = os.path.join(reportDir, reportID + ".md")
+            print(reportMDPath)
+            f = open(reportMDPath, "w", encoding='utf-8')
             f.write(report)
             f.close()
             # 转换pdf
-            pdf = MarkdownPdf(toc_level=0, optimize=False)
-            pdf.add_section(Section(report))
-            pdf.save(os.path.join(reportDir, reportID + ".pdf"))
-            print("pdf文件生成成功")
+            os.system('npx md-to-pdf ' + reportMDPath)
+            if os.path.exists(reportMDPath):
+                subprocess.run(['rm', reportMDPath], check=True)
+            	  # pdf = MarkdownPdf(toc_level=0, optimize=False)
+            	  # pdf.add_section(Section(report))
+            	  # pdf.save(os.path.join(reportDir, reportID + ".pdf"))
+                print("pdf文件生成成功")
+            else:
+                raise Exception("未能生成pdf文件")
 
             AttackRecord.query.filter_by(createUserName=username, createTime=createTime).update(
                 {AttackRecord.reportState: 2, AttackRecord.reportID: reportID})
