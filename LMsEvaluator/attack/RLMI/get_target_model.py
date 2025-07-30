@@ -5,7 +5,7 @@ import argparse
 from datasets import load_dataset
 from sklearn.metrics import accuracy_score
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, \
-    DataCollatorWithPadding, TrainingArguments, Trainer, AdamW
+    DataCollatorWithPadding, TrainingArguments, Trainer
 
 project_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 rlmi_attack_path = os.path.dirname(os.path.abspath(__file__))
