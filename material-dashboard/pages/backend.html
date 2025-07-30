@@ -10,50 +10,50 @@
         :root {
             --primary: #4361ee;
             --secondary: #3f37c9;
-            --success: #06d6a0;
-            --info: #4cc9f0;
-            --warning: #ffd166;
-            --danger: #ef476f;
+            --success: #4cc9f0;
+            --info: #4895ef;
+            --warning: #f72585;
+            --danger: #e63946;
             --light: #f8f9fa;
             --dark: #212529;
-            --security: #4361ee;
-            --privacy: #06d6a0;
+            --card-bg: #ffffff;
+            --body-bg: #f5f7fb;
+            --comparison-attack: #ff6b6b;
+            --comparison-defense: #4cc9f0;
         }
         
         body {
+            background-color: var(--body-bg);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fb;
             color: #333;
-            overflow-x: hidden;
         }
         
         .gradient-bg {
-            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            background: linear-gradient(135deg, #4361ee, #3f37c9);
             color: white;
-            padding: 4rem 0;
+            padding: 3rem 0;
             margin-bottom: 2rem;
-            border-radius: 0 0 30px 30px;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
         
         .feature-card {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
             padding: 2rem;
+            border-radius: 15px;
             height: 100%;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
         }
         
         .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
         }
         
         .feature-card i {
             font-size: 3rem;
             margin-bottom: 1rem;
-            color: white;
+            color: #fff;
         }
         
         .feature-card h3 {
@@ -61,70 +61,36 @@
             margin-bottom: 1rem;
         }
         
-        .feature-card p {
-            opacity: 0.9;
-        }
-        
         .page-header {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
             padding: 1rem 0;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 1.5rem;
         }
         
-        .page-title h1 {
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .action-buttons .btn {
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-        }
-        
-        .action-buttons .btn i {
-            margin-right: 0.5rem;
-        }
-        
-        .global-config-card {
-            background: white;
+        .global-config-card, .config-card {
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 1.5rem;
             margin-bottom: 2rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
         
-        .global-config-card h3 {
+        .global-config-card h3, .config-card h2 {
             color: var(--primary);
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
         }
         
-        .global-config-card h3 i {
-            margin-right: 0.5rem;
+        .global-config-card h3 i, .config-card h2 i {
+            margin-right: 10px;
         }
         
         .summary-item {
-            margin-bottom: 1.5rem;
-        }
-        
-        .summary-item h5 {
-            color: var(--secondary);
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-        }
-        
-        .summary-item h5 i {
-            margin-right: 0.5rem;
+            background: rgba(67, 97, 238, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
         }
         
         .stats-container {
@@ -135,22 +101,47 @@
         }
         
         .stats-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-card.primary {
+            border-left: 4px solid var(--primary);
+        }
+        
+        .stats-card.success {
+            border-left: 4px solid var(--success);
+        }
+        
+        .stats-card.warning {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .stats-card.danger {
+            border-left: 4px solid var(--danger);
+        }
+        
+        .stats-header {
+            margin-right: 1.5rem;
         }
         
         .stats-icon {
             width: 60px;
             height: 60px;
-            border-radius: 12px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 1rem;
+            font-size: 1.8rem;
         }
         
         .stats-card.primary .stats-icon {
@@ -159,24 +150,24 @@
         }
         
         .stats-card.success .stats-icon {
-            background: rgba(6, 214, 160, 0.1);
+            background: rgba(76, 201, 240, 0.1);
             color: var(--success);
         }
         
         .stats-card.warning .stats-icon {
-            background: rgba(255, 209, 102, 0.1);
+            background: rgba(247, 37, 133, 0.1);
             color: var(--warning);
         }
         
         .stats-card.danger .stats-icon {
-            background: rgba(239, 71, 111, 0.1);
+            background: rgba(230, 57, 70, 0.1);
             color: var(--danger);
         }
         
         .stats-content h3 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
         }
         
         .stats-content p {
@@ -184,68 +175,45 @@
             margin-bottom: 0;
         }
         
-        .config-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
-            margin-bottom: 2rem;
-        }
-        
         .card-header {
-            padding: 1.5rem;
-            background: white;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #e9ecef;
+            padding: 1rem 1.5rem;
+            background: rgba(67, 97, 238, 0.03);
+            border-radius: 10px 10px 0 0;
         }
         
         .card-header h2 {
-            font-weight: 700;
-            color: var(--dark);
             margin: 0;
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
         }
         
-        .card-header h2 i {
-            margin-right: 0.5rem;
-            color: var(--primary);
-        }
-        
-        .card-tools {
-            display: flex;
-            align-items: center;
+        .card-header .badge {
+            margin-left: 10px;
+            font-size: 0.9rem;
+            padding: 0.4em 0.7em;
         }
         
         .search-box {
-            background: #f8f9fa;
-            border-radius: 8px;
+            background: var(--light);
             padding: 0.5rem 1rem;
+            border-radius: 50px;
             display: flex;
             align-items: center;
-            border: 1px solid #e9ecef;
-        }
-        
-        .search-box i {
-            color: #6c757d;
         }
         
         .search-box input {
             background: transparent;
             border: none;
             outline: none;
-            padding: 0.25rem;
             width: 100%;
-        }
-        
-        .dropdown .btn {
-            border-radius: 8px;
         }
         
         .table-container {
             overflow-x: auto;
-            padding: 0 1.5rem;
         }
         
         table {
@@ -254,96 +222,91 @@
             border-spacing: 0;
         }
         
-        thead th {
-            background: #f8f9fa;
+        th {
+            background: rgba(67, 97, 238, 0.05);
             padding: 1rem;
             text-align: left;
             font-weight: 600;
-            color: var(--dark);
-            border-bottom: 2px solid #e9ecef;
+            color: var(--primary);
         }
         
-        tbody td {
+        td {
             padding: 1rem;
-            border-bottom: 1px solid #e9ecef;
-            vertical-align: middle;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .badge-defenseEnabled {
+            background: rgba(76, 201, 240, 0.15);
+            color: #1a73e8;
+            font-weight: 500;
+            padding: 0.35em 0.8em;
+        }
+        
+        .badge-defenseDisabled {
+            background: rgba(108, 117, 125, 0.15);
+            color: #6c757d;
+            font-weight: 500;
+            padding: 0.35em 0.8em;
+        }
+        
+        .status-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
         
         .status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.75rem;
+            padding: 0.3em 0.7em;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 500;
-            margin-right: 0.5rem;
         }
         
-        .status-indicator {
-            position: relative;
-            padding-left: 1.25rem;
+        .status-active {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
         }
         
-        .status-dot {
-            position: absolute;
-            left: 0.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
+        .status-inactive {
+            background: rgba(108, 117, 125, 0.15);
+            color: #6c757d;
         }
         
-        .status-active .status-dot {
-            background: var(--success);
+        .status-sent {
+            background: rgba(0, 123, 255, 0.15);
+            color: #007bff;
         }
         
-        .status-inactive .status-dot {
-            background: var(--danger);
+        .status-unsent {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
         }
         
-        .status-sent .status-dot {
-            background: var(--primary);
+        .status-executed {
+            background: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
         }
         
-        .status-executed .status-dot {
-            background: var(--warning);
+        .status-unexecuted {
+            background: rgba(23, 162, 184, 0.15);
+            color: #17a2b8;
         }
         
-        .badge-security {
-            background-color: rgba(67, 97, 238, 0.1);
-            color: var(--security);
-            border: 1px solid rgba(67, 97, 238, 0.3);
+        .no-configs {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #6c757d;
         }
         
-        .badge-security-dark {
-            background-color: rgba(63, 55, 201, 0.1);
-            color: #3f37c9;
-            border: 1px solid rgba(63, 55, 201, 0.3);
+        .no-configs i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #dee2e6;
         }
         
-        .badge-security-light {
-            background-color: rgba(76, 201, 240, 0.1);
-            color: #4cc9f0;
-            border: 1px solid rgba(76, 201, 240, 0.3);
-        }
-        
-        .badge-privacy {
-            background-color: rgba(6, 214, 160, 0.1);
-            color: var(--privacy);
-            border: 1px solid rgba(6, 214, 160, 0.3);
-        }
-        
-        .badge-privacy-dark {
-            background-color: rgba(0, 168, 120, 0.1);
-            color: #00a878;
-            border: 1px solid rgba(0, 168, 120, 0.3);
-        }
-        
-        .badge-privacy-light {
-            background-color: rgba(120, 224, 190, 0.1);
-            color: #78e0be;
-            border: 1px solid rgba(120, 224, 190, 0.3);
+        .no-configs h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
         
         .action-buttons {
@@ -352,119 +315,128 @@
         }
         
         .btn-icon {
-            width: 36px;
-            height: 36px;
-            padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            padding: 0;
         }
         
-        .no-configs {
-            text-align: center;
-            padding: 3rem;
-            color: #6c757d;
-        }
-        
-        .no-configs i {
-            font-size: 4rem;
-            color: #dee2e6;
-            margin-bottom: 1rem;
-        }
-        
-        .no-configs h4 {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        
-        .no-configs p {
-            margin-bottom: 1.5rem;
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
         }
         
         .modal-header {
-            border-bottom: 1px solid #e9ecef;
+            background: var(--primary);
+            color: white;
         }
         
         .modal-title {
-            font-weight: 600;
             display: flex;
             align-items: center;
         }
         
         .modal-title i {
-            margin-right: 0.5rem;
-        }
-        
-        .modal-footer {
-            border-top: 1px solid #e9ecef;
-        }
-        
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-        
-        .form-control, .form-select {
-            border-radius: 8px;
-            padding: 0.75rem;
-        }
-        
-        .accordion-button {
-            font-weight: 600;
-            border-radius: 8px !important;
-            padding: 1rem 1.25rem;
-        }
-        
-        .accordion-button:not(.collapsed) {
-            background-color: #f8f9fa;
-            color: var(--primary);
-        }
-        
-        .accordion-button:focus {
-            box-shadow: none;
+            margin-right: 10px;
         }
         
         .param-group {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
         
         .param-item {
-            background: #f8f9fa;
-            border-radius: 10px;
+            background: rgba(67, 97, 238, 0.03);
             padding: 1rem;
-        }
-        
-        .defense-section {
-            background: #f8f9fa;
             border-radius: 10px;
-            padding: 1.25rem;
-            margin-top: 1.5rem;
         }
         
-        .defense-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+        .comparison-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            width: 100%;
         }
         
-        .footer {
-            background: white;
-            margin-top: 3rem;
-            padding: 2rem 0;
-            border-top: 1px solid #e9ecef;
+        .comparison-btn:hover {
+            background: rgba(67, 97, 238, 0.2);
+        }
+        
+        .comparison-btn i {
+            margin-right: 8px;
+        }
+        
+        .comparison-btn.attack {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--comparison-attack);
+        }
+        
+        .comparison-btn.attack:hover {
+            background: rgba(255, 107, 107, 0.2);
+        }
+        
+        .comparison-btn.defense {
+            background: rgba(76, 201, 240, 0.1);
+            color: var(--comparison-defense);
+        }
+        
+        .comparison-btn.defense:hover {
+            background: rgba(76, 201, 240, 0.2);
+        }
+        
+        .comparison-indicator {
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .comparison-indicator::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        
+        .comparison-attack::before {
+            background-color: var(--comparison-attack);
+        }
+        
+        .comparison-defense::before {
+            background-color: var(--comparison-defense);
+        }
+        
+        .comparison-row {
+            background: rgba(255, 107, 107, 0.03);
+        }
+        
+        .comparison-row-defense {
+            background: rgba(76, 201, 240, 0.03);
         }
         
         .toast {
             position: fixed;
-            bottom: 1rem;
-            right: 1rem;
+            bottom: 20px;
+            right: 20px;
             background: white;
-            border-radius: 8px;
+            color: #333;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 1rem;
             display: flex;
             align-items: center;
             z-index: 1050;
@@ -479,82 +451,31 @@
         }
         
         .toast i {
+            margin-right: 10px;
             font-size: 1.5rem;
-            margin-right: 0.75rem;
         }
         
         .toast-success i {
-            color: var(--success);
+            color: #28a745;
         }
         
         .toast-error i {
-            color: var(--danger);
+            color: #dc3545;
         }
         
-        .group-header {
-            background-color: #f8f9fa;
-            font-weight: 700;
-            font-size: 1.1rem;
-            border-left: 4px solid var(--security);
+        footer {
+            background: #fff;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid #eaeaea;
         }
         
-        .privacy-group {
-            background-color: #f0f9f5;
-            border-left: 4px solid var(--privacy);
+        .nav-footer .nav-link {
+            color: #6c757d;
         }
         
-        .security-group {
-            background-color: #f0f4ff;
-            border-left: 4px solid var(--security);
-        }
-        
-        .filter-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            padding: 0.5rem 1.5rem;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        .filter-tag {
-            background: #e9ecef;
-            border-radius: 20px;
-            padding: 0.25rem 0.75rem;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .filter-tag .close {
-            cursor: pointer;
-            font-size: 1.1rem;
-            line-height: 1;
-        }
-        
-        @media (max-width: 768px) {
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
-            .action-buttons {
-                width: 100%;
-                flex-wrap: wrap;
-            }
-            
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
-            .card-tools {
-                width: 100%;
-                flex-wrap: wrap;
-            }
+        .nav-footer .nav-link:hover {
+            color: var(--primary);
         }
     </style>
 </head>
@@ -591,28 +512,26 @@
 
         <div class="container-fluid py-4">
             <!-- 主内容区 -->
-            <main class="main-content">
+            <main class="main-contents">
                 <!-- 页面标题和操作按钮 -->
-                <div class="page-header">
-                    <div class="page-title">
-                        <h1>模型评估配置管理</h1>
-                        <p>管理您的评估类型、策略和高级设置</p>
+                <div class="page-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
+                    <div class="page-title mb-3 mb-md-0">
+                        <h1 class="fw-bold" style="font-size:2rem;">模型评估配置管理</h1>
+                        <p class="text-muted mb-0" style="font-size:1.1rem;">管理您的评估类型、策略和高级设置</p>
                     </div>
-                    <div class="action-buttons">
-                        <div class="d-flex align-items-center gap-2">
-                            <button class="btn btn-light d-flex align-items-center" id="addNewConfigBtn">
-                                <i class="material-icons me-1">add</i> 添加配置
-                            </button>
-                            <button class="btn btn-outline-primary d-flex align-items-center" id="globalConfigBtn">
-                                <i class="material-icons me-1">settings_applications</i> 全局配置
-                            </button>
-                            <button class="btn btn-outline-primary d-flex align-items-center" id="sendConfigBtn">
-                                <i class="material-icons me-1">send</i> 发送配置
-                            </button>
-                            <button class="btn btn-outline-success d-flex align-items-center" id="executeAttackBtn">
-                                <i class="material-icons me-1">play_arrow</i> 执行评估
-                            </button>
-                        </div>
+                    <div class="action-buttons d-flex flex-wrap gap-2 mt-2 mt-md-0">
+                        <button class="btn btn-light d-flex align-items-center px-3 py-2" id="addNewConfigBtn">
+                            <i class="material-icons me-1">add</i> 添加配置
+                        </button>
+                        <button class="btn btn-outline-primary d-flex align-items-center px-3 py-2" id="globalConfigBtn">
+                            <i class="material-icons me-1">settings_applications</i> 全局配置
+                        </button>
+                        <button class="btn btn-outline-primary d-flex align-items-center px-3 py-2" id="sendConfigBtn">
+                            <i class="material-icons me-1">send</i> 发送配置
+                        </button>
+                        <button class="btn btn-outline-success d-flex align-items-center px-3 py-2" id="executeAttackBtn">
+                            <i class="material-icons me-1">play_arrow</i> 执行评估
+                        </button>
                     </div>
                 </div>
                 
@@ -740,8 +659,8 @@
                                     <li><a class="dropdown-item filter-option" href="#" data-filter="not_executed">未执行</a></li>
                                 </ul>
                             </div>
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="typeFilterDropdown" data-bs-toggle="dropdown">
+                            <div class="dropdown flex-shrink-0">
+                                <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="typeFilterDropdown" data-bs-toggle="dropdown" style="margin-top:33px; margin-bottom: 28px;">
                                     <i class="material-icons me-1">label</i> <span>类型筛选</span>
                                 </button>
                                 <ul class="dropdown-menu" id="typeFilterMenu">
@@ -762,7 +681,7 @@
                                     <th>评估类型</th>
                                     <th>评估策略</th>
                                     <th>防御状态</th>
-                                    <th>状态</th>
+                                    <th class='center'>状态</th>
                                     <th>创建时间</th>
                                     <th>操作</th>
                                 </tr>
@@ -785,7 +704,7 @@
             </main>
         </div>
         
-        <!-- 配置弹窗 -->
+       <!-- 配置弹窗 -->
         <div class="modal fade" id="configModal" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -803,10 +722,12 @@
                                     <div class="form-group">
                                         <label for="attackType">评估类型</label>
                                         <select class="form-control" id="attackType" name="attackType">
+                                            <option value="" disabled selected>-- 安全攻击任务类型 --</option>
                                             <option value="AdvAttack">对抗攻击</option>
-                                            <option value="FET">梯度反演</option>
                                             <option value="BackdoorAttack">后门攻击</option>
                                             <option value="PoisoningAttack">数据投毒</option>
+                                            <option value="" disabled selected>-- 隐私攻击任务类型 --</option>
+                                            <option value="FET">梯度反演</option>
                                             <option value="RLMI">模型反演</option>
                                             <option value="ModelStealingAttack">模型窃取攻击</option>
                                         </select>
@@ -821,8 +742,9 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="configName">配置名称 <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="configName" placeholder="输入配置名称" required>
+                                <label for="configName">配置名称 <span class="text-muted">(选填)</span></label>
+                                <input type="text" class="form-control" id="configName" placeholder="输入配置名称">
+                                <small class="form-text text-muted">格式：攻击类型-x <span class="text-primary" id="defenseIndicator">(防御)</span></small>
                             </div>
                             
                             <div class="form-group">
@@ -849,6 +771,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 对照实验按钮区域 -->
+                            <div id="comparisonSection" class="mt-3" style="display: none;">
+                                <div class="comparison-btn" id="comparisonBtn">
+                                    <i class="material-icons">compare_arrows</i>
+                                    <span>增加对照（防御）配置</span>
                                 </div>
                             </div>
                         </form>
@@ -963,39 +893,40 @@
             </div>
         </div>
     </div>
-    <footer class="footer py-4">
-        <div class="container-fluid">
-            <div class="row align-items-center justify-content-lg-between">
-                <div class="col-lg-6 mb-lg-0 mb-4">
-                    <div class="copyright text-center text-sm text-muted text-lg-start">
-                        ©
-                        <script>
-                            document.write(new Date().getFullYear())
-                        </script>,
-                        模型评估配置管理系统 | 安全研究平台
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                        <li class="nav-item">
-                            <a href="https://shi.buaa.edu.cn/gaoyingketizu/zh_CN/index.htm" class="nav-link text-muted" target="_blank">关于我们</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-muted" target="_blank">隐私政策</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-muted" target="_blank">使用条款</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link pe-0 text-muted"
-                                target="_blank">帮助中心</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <div id="toastContainer"></div>
+		<footer class="footer py-4  ">
+			<div class="container-fluid">
+				<div class="row align-items-center justify-content-lg-between">
+					<div class="col-lg-6 mb-lg-0 mb-4">
+						<div class="copyright text-center text-sm text-muted text-lg-start">
+							©
+							<script>
+								document.write(new Date().getFullYear())
+							</script>,
+							模型评估配置管理系统 | 安全研究平台
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<ul class="nav nav-footer justify-content-center justify-content-lg-end">
+							<li class="nav-item">
+								<a href="https://shi.buaa.edu.cn/gaoyingketizu/zh_CN/index.htm" class="nav-link text-muted" target="_blank">关于我们</a>
+							</li>
+							<li class="nav-item">
+								<a href="#" class="nav-link text-muted" target="_blank">隐私政策</a>
+							</li>
+							<li class="nav-item">
+								<a href="#" class="nav-link text-muted" target="_blank">使用条款</a>
+							</li>
+							<li class="nav-item">
+								<a href="#" class="nav-link pe-0 text-muted"
+									target="_blank">帮助中心</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</main>
+<div id="toastContainer"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -1156,6 +1087,8 @@
         let executedAttacks = 0;
         let currentFilter = 'all';
         let currentTypeFilter = 'all';
+        let createComparisonConfig = false; // 是否创建对照配置
+        let comparisonType = ''; // 对照配置类型
         
         // 全局配置
         let globalConfig = {
@@ -1171,9 +1104,69 @@
                 task: "TaskForSingleSentenceClassification",
                 dataset: "电影评论情感分析",
                 normal_training: false,
-                epochs: 3  // 新增训练轮数字段
+                epochs: 3
             }
         };
+        
+        // 自动生成配置名称的函数
+        function generateDefaultConfigName(attackType, defenderEnabled) {
+            const typeName = attackConfigs.typeNames[attackType] || attackType;
+            // 统计当前配置列表中相同攻击类型的配置数量
+            const count = configList.filter(c => c.type === attackType).length + 1;
+            let name = `${typeName}-${count}`;
+            if (defenderEnabled) {
+                name += '（防御）';
+            }
+            return name;
+        }
+        
+        // 更新配置名称
+        function updateConfigName() {
+            const attackType = document.getElementById('attackType').value;
+            if (!attackType) return;
+            
+            const defenderSwitch = document.getElementById('defenderSwitch');
+            const defenderEnabled = defenderSwitch ? defenderSwitch.checked : false;
+            
+            const newName = generateDefaultConfigName(attackType, defenderEnabled);
+            document.getElementById('configName').value = newName;
+            
+            // 更新防御指示器
+            const defenseIndicator = document.getElementById('defenseIndicator');
+            if (defenderEnabled) {
+                defenseIndicator.classList.add('text-primary');
+                defenseIndicator.classList.remove('text-muted');
+            } else {
+                defenseIndicator.classList.add('text-muted');
+                defenseIndicator.classList.remove('text-primary');
+            }
+            
+            // 更新对照按钮
+            updateComparisonButton();
+        }
+        
+        // 更新对照按钮
+        function updateComparisonButton() {
+            const comparisonSection = document.getElementById('comparisonSection');
+            const comparisonBtn = document.getElementById('comparisonBtn');
+            const defenderSwitch = document.getElementById('defenderSwitch');
+            
+            if (!defenderSwitch) {
+                comparisonSection.style.display = 'none';
+                return;
+            }
+            
+            const defenderEnabled = defenderSwitch.checked;
+            comparisonSection.style.display = 'block';
+            
+            if (defenderEnabled) {
+                comparisonBtn.innerHTML = '<i class="material-icons">compare_arrows</i> 增加对照（攻击）配置';
+                comparisonBtn.className = 'comparison-btn attack';
+            } else {
+                comparisonBtn.innerHTML = '<i class="material-icons">compare_arrows</i> 增加对照（防御）配置';
+                comparisonBtn.className = 'comparison-btn defense';
+            }
+        }
         
         // DOM 加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
@@ -1206,6 +1199,7 @@
                 updateAttackStrategies();
                 updateAdvancedSettings(this.value);
                 updateDefenseSettings(this.value);
+                updateConfigName();
                 
                 // 更新描述
                 const type = this.value;
@@ -1251,7 +1245,43 @@
             
             // 更新全局配置摘要
             updateGlobalConfigSummary();
+            
+            // 对照按钮点击事件
+            document.getElementById('comparisonBtn').addEventListener('click', function() {
+                createComparisonConfig = true;
+                const defenderSwitch = document.getElementById('defenderSwitch');
+                if (defenderSwitch) {
+                    const defenderEnabled = defenderSwitch.checked;
+                    comparisonType = defenderEnabled ? 'attack' : 'defense';
+                }
+            });
         });
+        
+        // 生成对照配置
+        function generateComparisonConfig(baseConfig, type) {
+            const baseName = baseConfig.name.replace('（防御）', '').replace('（攻击）', '');
+            const suffix = type === 'attack' ? '（攻击对照）' : '（防御对照）';
+            
+            return {
+                ...baseConfig,
+                id: Date.now() + 1,
+                name: baseName + suffix,
+                defenderEnabled: !baseConfig.defenderEnabled,
+                sent: false,
+                executed: false,
+                createdAt: new Date().toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                comparison: {
+                    type: type,
+                    baseConfig: baseConfig.name
+                }
+            };
+        }
         
         // 更新数据集选项
         function updateDatasetOptions() {
@@ -1287,6 +1317,8 @@
         // 显示添加配置模态框
         function showAddConfigModal() {
             currentConfigId = null;
+            createComparisonConfig = false;
+            comparisonType = '';
             document.getElementById('modalTitle').textContent = '添加新评估配置';
             document.getElementById('configName').value = '';
             document.getElementById('description').value = '';
@@ -1295,6 +1327,7 @@
             updateAttackStrategies();
             updateAdvancedSettings('AdvAttack');
             updateDefenseSettings('AdvAttack');
+            updateConfigName();
             
             // 显示模态框
             const modal = new bootstrap.Modal(document.getElementById('configModal'));
@@ -1310,7 +1343,7 @@
             document.getElementById('localModel').checked = globalConfig.LM_config.local_model;
             document.getElementById('taskType').value = globalConfig.task_config.task;
             document.getElementById('normalTraining').checked = globalConfig.task_config.normal_training;
-            document.getElementById('trainingEpochs').value = globalConfig.task_config.epochs || 3; // 新增训练轮数
+            document.getElementById('trainingEpochs').value = globalConfig.task_config.epochs || 3;
             
             // 更新数据集选项
             updateDatasetOptions();
@@ -1367,7 +1400,7 @@
                     task: document.getElementById('taskType').value,
                     dataset: document.getElementById('dataset').value,
                     normal_training: document.getElementById('normalTraining').checked,
-                    epochs: parseInt(document.getElementById('trainingEpochs').value) || 3 // 新增训练轮数
+                    epochs: parseInt(document.getElementById('trainingEpochs').value) || 3
                 }
             };
             
@@ -1386,7 +1419,7 @@
         function updateGlobalConfigSummary() {
             // 常规配置摘要
             let generalSummary = `随机种子: ${globalConfig.general.random_seed}<br>`;
-            generalSummary += `使用GPU: ${globalConfig.general.use_gpu ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}`;
+            generalSummary += `使用GPU: ${globalConfig.general.use_gpu ? '<span class="badge badge-defenseEnabled">是</span>' : '<span class="badge badge-defenseDisabled">否</span>'}`;
             document.getElementById('generalConfigSummary').innerHTML = generalSummary;
             
             // 任务配置摘要
@@ -1395,11 +1428,10 @@
                 const taskName = taskMap[globalConfig.task_config.task] || globalConfig.task_config.task;
                 taskSummary = `<div><strong>任务类型:</strong> ${taskName}</div>`;
                 if (globalConfig.task_config.dataset) {
-                    const datasetName = globalConfig.task_config.dataset; // 前端显示中文
+                    const datasetName = globalConfig.task_config.dataset;
                     taskSummary += `<div><strong>数据集:</strong> ${datasetName}</div>`;
                 }
-                taskSummary += `<div>常规训练: ${globalConfig.task_config.normal_training ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}</div>`;
-                // 新增训练轮数显示
+                taskSummary += `<div>常规训练: ${globalConfig.task_config.normal_training ? '<span class="badge badge-defenseEnabled">是</span>' : '<span class="badge badge-defenseDisabled">否</span>'}</div>`;
                 taskSummary += `<div>训练轮数: ${globalConfig.task_config.epochs || 3}</div>`;
             }
             document.getElementById('taskConfigSummary').innerHTML = taskSummary;
@@ -1408,7 +1440,7 @@
             let modelSummary = "";
             if (globalConfig.LM_config.model) {
                 modelSummary = `<div><strong>模型:</strong> ${globalConfig.LM_config.model}</div>`;
-                modelSummary += `<div>使用本地模型: ${globalConfig.LM_config.local_model ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}</div>`;
+                modelSummary += `<div>使用本地模型: ${globalConfig.LM_config.local_model ? '<span class="badge badge-defenseEnabled">是</span>' : '<span class="badge badge-defenseDisabled">否</span>'}</div>`;
             } else {
                 modelSummary = "未配置";
             }
@@ -1458,7 +1490,7 @@
             configList = [
                 {
                     id: 1,
-                    name: "对抗攻击-1",
+                    name: "对抗攻击-1（防御）",
                     type: "AdvAttack",
                     strategy: "TextFoolerJin2019",
                     description: "针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型",
@@ -1517,7 +1549,7 @@
                 },
                 {
                     id: 4,
-                    name: "模型窃取-1",
+                    name: "模型窃取-1（防御）",
                     type: "ModelStealingAttack",
                     strategy: "MeaeQ",
                     description: "通过查询目标模型来窃取其结构和参数",
@@ -1563,7 +1595,7 @@
                 },
                 {
                     id: 6,
-                    name: "梯度反演-1",
+                    name: "梯度反演-1（防御）",
                     type: "FET",
                     strategy: "FET/SWAT",
                     description: "梯度反演",
@@ -1653,47 +1685,46 @@
                         
                         // 启用状态
                         if (config.status === 'active') {
-                            statusBadges.push('<span class="status-badge status-active status-indicator" style="background:#e6f9f0;border:1.5px solid #06d6a0;">活跃</span>');
+                            statusBadges.push('<span class="status-badge status-active status-indicator">活跃</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-inactive status-indicator" style="background:#fdeaea;border:1.5px solid #ef476f;">已禁用</span>');
+                            statusBadges.push('<span class="status-badge status-inactive status-indicator">已禁用</span>');
                         }
 
                         // 发送状态
                         if (config.sent) {
-                            statusBadges.push('<span class="status-badge status-sent status-indicator" style="background:#e6f9f0;border:1.5px solid #06d6a0;">已发送</span>');
+                            statusBadges.push('<span class="status-badge status-sent status-indicator">已发送</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-unsent status-indicator" style="background:#fdeaea;border:1.5px solid #ef476f;">未发送</span>');
+                            statusBadges.push('<span class="status-badge status-unsent status-indicator">未发送</span>');
                         }
 
                         // 执行状态
                         if (config.executed) {
-                            statusBadges.push('<span class="status-badge status-executed status-indicator" style="background:#e6f9f0;border:1.5px solid #06d6a0;">已执行</span>');
+                            statusBadges.push('<span class="status-badge status-executed status-indicator">已执行</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-unexecuted status-indicator" style="background:#fdeaea;border:1.5px solid #ef476f;">未执行</span>');
+                            statusBadges.push('<span class="status-badge status-unexecuted status-indicator">未执行</span>');
                         }
                         
                         // 防御状态
-                        let defenseStatus = '<span class="badge bg-secondary">未启用</span>';
+                        let defenseStatus = '<span class="badge badge-defenseDisabled">未启用</span>';
                         if (config.defenderEnabled) {
-                            defenseStatus = '<span class="badge bg-success">已启用</span>';
+                            defenseStatus = '<span class="badge badge-defenseEnabled">已启用</span>';
                         }
                         
                         // 生成类型徽章 - 使用色系分类
                         let badgeClass;
-                        let strategyClass;
                         
                         // 安全攻击类（蓝色系）
                         if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
                             // 为安全攻击类分配蓝色系徽章
                             switch(config.type) {
                                 case 'AdvAttack':
-                                    badgeClass = 'badge-security'; // 主蓝色
+                                    badgeClass = 'badge-security';
                                     break;
                                 case 'BackdoorAttack':
-                                    badgeClass = 'badge-security-dark'; // 深蓝色
+                                    badgeClass = 'badge-security-dark';
                                     break;
                                 case 'PoisoningAttack':
-                                    badgeClass = 'badge-security-light'; // 浅蓝色
+                                    badgeClass = 'badge-security-light';
                                     break;
                                 default:
                                     badgeClass = 'badge-security';
@@ -1704,13 +1735,13 @@
                             // 为隐私攻击类分配绿色系徽章
                             switch(config.type) {
                                 case 'FET':
-                                    badgeClass = 'badge-privacy'; // 主绿色
+                                    badgeClass = 'badge-privacy';
                                     break;
                                 case 'RLMI':
-                                    badgeClass = 'badge-privacy-light'; // 浅绿色
+                                    badgeClass = 'badge-privacy-light';
                                     break;
                                 case 'ModelStealingAttack':
-                                    badgeClass = 'badge-privacy-dark'; // 深绿色
+                                    badgeClass = 'badge-privacy-dark';
                                     break;
                                 default:
                                     badgeClass = 'badge-privacy';
@@ -1722,13 +1753,25 @@
                         }
                         
                         // 策略徽章 - 启用防御时使用攻击类型颜色，否则使用灰色
-                        strategyClass = config.defenderEnabled ? 'badge bg-success' : 'badge-privacy';
+                        const strategyClass = config.defenderEnabled ? 'badge badge-defenseEnabled' : 'badge badge-defenseDisabled';
 
+                        // 检查是否为对照配置
+                        const isComparison = config.comparison && config.comparison.type;
+                        const rowClass = isComparison ? 
+                            (config.comparison.type === 'attack' ? 'comparison-row' : 'comparison-row-defense') : '';
+                            
                         const row = document.createElement('tr');
+                        row.className = rowClass;
                         row.innerHTML = `
-                            <td>${config.name}</td>
+                            <td>
+                                ${config.name}
+                                ${isComparison ? 
+                                    `<div class="comparison-indicator ${config.comparison.type === 'attack' ? 'comparison-attack' : 'comparison-defense'}">
+                                        ${config.comparison.type === 'attack' ? '攻击对照' : '防御对照'} (基于: ${config.comparison.baseConfig})
+                                    </div>` : ''}
+                            </td>
                             <td><span class="badge ${badgeClass}">${typeName}</span></td>
-                            <td><span class="badge ${strategyClass}">${config.strategy}</span></td>
+                            <td><span class="${strategyClass}">${config.strategy}</span></td>
                             <td>${defenseStatus}</td>
                             <td>
                                 <div class="status-container">
@@ -1859,6 +1902,8 @@
             if (!config) return;
             
             currentConfigId = configId;
+            createComparisonConfig = false;
+            comparisonType = '';
             document.getElementById('modalTitle').textContent = '编辑攻击配置';
             document.getElementById('configName').value = config.name;
             document.getElementById('description').value = config.description;
@@ -1967,6 +2012,9 @@
                         }
                     }
                 }
+                
+                // 更新对照按钮
+                updateComparisonButton();
             }, 0);
 
             // 显示模态框
@@ -2146,7 +2194,11 @@
                 defenseSettings.appendChild(defenseSection);
                 
                 // 绑定防御开关事件
-                document.getElementById('defenderSwitch').addEventListener('change', toggleDefenseOptions);
+                document.getElementById('defenderSwitch').addEventListener('change', function() {
+                    toggleDefenseOptions();
+                    updateComparisonButton();
+                    updateConfigName();
+                });
                 
                 // 绑定防御类型变化事件
                 if (isPrivacy) {
@@ -2176,6 +2228,9 @@
                         }
                     });
                 }
+                
+                // 初始化对照按钮
+                updateComparisonButton();
             }
         }
         
@@ -2299,11 +2354,11 @@
             const attackStrategy = document.getElementById('attackStrategy').value;
             const description = document.getElementById('description').value;
             
-            // 如果是新配置，生成默认名称
-            if (!currentConfigId) {
-                // 统计当前类型已有的配置数量
-                const count = configList.filter(c => c.type === attackType).length + 1;
-                configName = `${attackConfigs.typeNames[attackType] || attackType}-${count}`;
+            // 如果用户没有输入名称，则使用自动生成的名称
+            if (!configName) {
+                const defenderSwitch = document.getElementById('defenderSwitch');
+                const defenderEnabled = defenderSwitch ? defenderSwitch.checked : false;
+                configName = generateDefaultConfigName(attackType, defenderEnabled);
             }
             
             // 收集高级设置
@@ -2413,16 +2468,38 @@
                 params: params
             };
             
+            // 保存对照配置标志
+            const shouldCreateComparison = createComparisonConfig;
+            const comparisonTypeToCreate = comparisonType;
+            
             if (currentConfigId) {
                 // 更新现有配置
                 const index = configList.findIndex(c => c.id === currentConfigId);
                 if (index !== -1) {
                     configList[index] = newConfig;
+                    
+                    // 创建对照配置
+                    if (shouldCreateComparison) {
+                        const comparisonConfig = generateComparisonConfig(newConfig, comparisonTypeToCreate);
+                        configList.splice(index + 1, 0, comparisonConfig);
+                        showToast(`已创建对照配置: ${comparisonConfig.name}`, 'success');
+                    }
                 }
             } else {
                 // 添加新配置
                 configList.push(newConfig);
+                
+                // 创建对照配置
+                if (shouldCreateComparison) {
+                    const comparisonConfig = generateComparisonConfig(newConfig, comparisonTypeToCreate);
+                    configList.push(comparisonConfig);
+                    showToast(`已创建对照配置: ${comparisonConfig.name}`, 'success');
+                }
             }
+            
+            // 重置标志
+            createComparisonConfig = false;
+            comparisonType = '';
             
             // 更新表格
             renderConfigTable();
@@ -2446,34 +2523,21 @@
                 showToast('没有可发送的配置', 'error');
                 return;
             }
-            
+            // 修复点2：发送配置时，将任务类型和数据集转换为英文
+            const configToSend = {
+                ...globalConfig,
+                task_config: {
+                    ...globalConfig.task_config,
+                    task: globalConfig.task_config.task, // 任务类型已经是英文
+                    dataset: datasetMap[globalConfig.task_config.task]?.[globalConfig.task_config.dataset] || globalConfig.task_config.dataset
+                    }
+            };
             try {
                 activeConfigs.forEach(config => {
                     config.sent = true;
                 });
-                
-                // 修复点2：发送配置时，将任务类型和数据集转换为英文
-                const configToSend = {
-                    ...globalConfig,
-                    task_config: {
-                        ...globalConfig.task_config,
-                        task: globalConfig.task_config.task, // 任务类型已经是英文
-                        dataset: datasetMap[globalConfig.task_config.task]?.[globalConfig.task_config.dataset] || globalConfig.task_config.dataset
-                    }
-                };
-                
-                // 模拟发送请求
-                console.log('发送配置到服务器:', {
-                    config: configToSend,
-                    attack_list: activeConfigs
-                });
-                
-                // 模拟发送成功
-                setTimeout(() => {
-                    showToast('配置已发送到服务器', 'success');
-                    renderConfigTable();
-                }, 1000);
-                
+                renderConfigTable();
+                showToast('配置已发送到服务器', 'success');
             } catch (err) {
                 console.error('发送失败:', err);
                 showToast('发送配置失败', 'error');
@@ -2517,14 +2581,8 @@
                 activeConfigs.forEach(config => {
                     config.executed = true;
                 });
-                
-                // 模拟执行攻击请求
-                console.log('执行评估:', attackName);
-                
-                // 模拟执行成功
-                setTimeout(() => {
-                    showToast(`攻击"${attackName}"执行成功！`, 'success');
-                }, 1500);
+                renderConfigTable();
+                showToast(`攻击"${attackName}"执行成功！`, 'success');
                 
             } catch (err) {
                 console.error('执行失败:', err);
@@ -2532,7 +2590,7 @@
             }
         }
         
-        // 搜索配置
+       // 搜索配置
         function searchConfigs() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             
@@ -2587,47 +2645,46 @@
                         
                         // 启用状态
                         if (config.status === 'active') {
-                            statusBadges.push('<span class="status-badge status-active status-indicator"><span class="status-dot"></span>活跃</span>');
+                            statusBadges.push('<span class="status-badge status-active status-indicator">活跃</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-inactive status-indicator"><span class="status-dot"></span>已禁用</span>');
+                            statusBadges.push('<span class="status-badge status-inactive status-indicator">已禁用</span>');
                         }
 
                         // 发送状态
                         if (config.sent) {
-                            statusBadges.push('<span class="status-badge status-sent status-indicator"><span class="status-dot"></span>已发送</span>');
+                            statusBadges.push('<span class="status-badge status-sent status-indicator">已发送</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-indicator" style="border:1px solid #4361ee;"><span class="status-dot"></span>未发送</span>');
+                            statusBadges.push('<span class="status-badge status-unsent status-indicator">未发送</span>');
                         }
 
                         // 执行状态
                         if (config.executed) {
-                            statusBadges.push('<span class="status-badge status-executed status-indicator" style="border:1px solid #ef476f;"><span class="status-dot"></span>已执行</span>');
+                            statusBadges.push('<span class="status-badge status-executed status-indicator">已执行</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-indicator" style="border:1px solid #ef476f;"><span class="status-dot"></span>未执行</span>');
+                            statusBadges.push('<span class="status-badge status-unexecuted status-indicator">未执行</span>');
                         }
                         
                         // 防御状态
-                        let defenseStatus = '<span class="badge badge-secondary">未启用</span>';
+                        let defenseStatus = '<span class="badge badge-defenseDisabled">未启用</span>';
                         if (config.defenderEnabled) {
-                            defenseStatus = '<span class="badge badge-info">已启用</span>';
+                            defenseStatus = '<span class="badge badge-defenseEnabled">已启用</span>';
                         }
                         
                         // 生成类型徽章 - 使用色系分类
                         let badgeClass;
-                        let strategyClass;
                         
                         // 安全攻击类（蓝色系）
                         if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
                             // 为安全攻击类分配蓝色系徽章
                             switch(config.type) {
                                 case 'AdvAttack':
-                                    badgeClass = 'badge-security'; // 主蓝色
+                                    badgeClass = 'badge-security';
                                     break;
                                 case 'BackdoorAttack':
-                                    badgeClass = 'badge-security-dark'; // 深蓝色
+                                    badgeClass = 'badge-security-dark';
                                     break;
                                 case 'PoisoningAttack':
-                                    badgeClass = 'badge-security-light'; // 浅蓝色
+                                    badgeClass = 'badge-security-light';
                                     break;
                                 default:
                                     badgeClass = 'badge-security';
@@ -2638,13 +2695,13 @@
                             // 为隐私攻击类分配绿色系徽章
                             switch(config.type) {
                                 case 'FET':
-                                    badgeClass = 'badge-privacy'; // 主绿色
+                                    badgeClass = 'badge-privacy';
                                     break;
                                 case 'RLMI':
-                                    badgeClass = 'badge-privacy-light'; // 浅绿色
+                                    badgeClass = 'badge-privacy-light';
                                     break;
                                 case 'ModelStealingAttack':
-                                    badgeClass = 'badge-privacy-dark'; // 深绿色
+                                    badgeClass = 'badge-privacy-dark';
                                     break;
                                 default:
                                     badgeClass = 'badge-privacy';
@@ -2656,13 +2713,25 @@
                         }
                         
                         // 策略徽章 - 启用防御时使用攻击类型颜色，否则使用灰色
-                        strategyClass = config.defenderEnabled ? 'badge-primary' : 'badge-secondary';
-                        defenseStatus = config.defenderEnabled ? 'badge-primary' : 'badge-secondary';
+                        const strategyClass = config.defenderEnabled ? 'badge badge-defenseEnabled' : 'badge badge-defenseDisabled';
+
+                        // 检查是否为对照配置
+                        const isComparison = config.comparison && config.comparison.type;
+                        const rowClass = isComparison ? 
+                            (config.comparison.type === 'attack' ? 'comparison-row' : 'comparison-row-defense') : '';
+                            
                         const row = document.createElement('tr');
+                        row.className = rowClass;
                         row.innerHTML = `
-                            <td>${config.name}</td>
+                            <td>
+                                ${config.name}
+                                ${isComparison ? 
+                                    `<div class="comparison-indicator ${config.comparison.type === 'attack' ? 'comparison-attack' : 'comparison-defense'}">
+                                        ${config.comparison.type === 'attack' ? '攻击对照' : '防御对照'} (基于: ${config.comparison.baseConfig})
+                                    </div>` : ''}
+                            </td>
                             <td><span class="badge ${badgeClass}">${typeName}</span></td>
-                            <td><span class="badge ${strategyClass}">${config.strategy}</span></td>
+                            <td><span class="${strategyClass}">${config.strategy}</span></td>
                             <td>${defenseStatus}</td>
                             <td>
                                 <div class="status-container">
@@ -2671,15 +2740,15 @@
                             </td>
                             <td>${config.createdAt}</td>
                             <td>
-                                <div class="action-buttons">
-                                    <button class="btn btn-sm btn-outline-primary btn-icon edit-config-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
-                                    <i class="material-icons" style="font-size: 18px;">edit</i>
+                                <div class="action-buttons justify-content-center" style="display: flex;">
+                                    <button class="btn btn-sm btn-outline-primary btn-icon edit-config-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
+                                        <i class="material-icons" style="font-size: 18px;">edit</i>
                                     </button>
-                                    <button class="btn btn-sm btn-outline-danger btn-icon delete-config-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
-                                    <i class="material-icons" style="font-size: 18px;">delete</i>
+                                    <button class="btn btn-sm btn-outline-danger btn-icon delete-config-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
+                                        <i class="material-icons" style="font-size: 18px;">delete</i>
                                     </button>
-                                    <button class="btn btn-sm btn-outline-secondary btn-icon toggle-status-btn" data-id="${config.id}" style="width: 40px; height: 40px;">
-                                    <i class="material-icons" style="font-size: 18px;">${config.status === 'active' ? 'toggle_off' : 'toggle_on'}</i>
+                                    <button class="btn btn-sm btn-outline-secondary btn-icon toggle-status-btn" data-id="${config.id}" style="width: 40px; height: 40px; border-radius: 6px;">
+                                        <i class="material-icons" style="font-size: 18px;">${config.status === 'active' ? 'toggle_off' : 'toggle_on'}</i>
                                     </button>
                                 </div>
                             </td>

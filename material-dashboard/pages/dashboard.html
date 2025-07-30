@@ -406,13 +406,13 @@
         }
         
         .badge-security-dark {
-            background: rgba(42, 111, 219, 0.15);
+            background: var(--security-light);
             color: var(--security-dark);
-            border: 1px solid var(--security-dark);
+            border: 1px solid var(--security-secondary);
         }
         
         .badge-security-light {
-            background: rgba(58, 134, 255, 0.15);
+            background: var(--security-light);
             color: var(--security-dark);
             border: 1px solid var(--security-secondary);
         }
@@ -424,13 +424,13 @@
         }
         
         .badge-privacy-dark {
-            background: rgba(30, 107, 77, 0.15);
+            background: var(--privacy-light);
             color: var(--privacy-dark);
-            border: 1px solid var(--privacy-dark);
+            border: 1px solid var(--privacy-secondary);
         }
         
         .badge-privacy-light {
-            background: rgba(76, 201, 167, 0.15);
+            background: var(--privacy-light);
             color: var(--privacy-dark);
             border: 1px solid var(--privacy-secondary);
         }
@@ -773,7 +773,14 @@
             margin-top: 1rem;
         }
         
-        
+        .dropdown .btn {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* 按钮阴影 */
+    }
+
+    .dropdown-menu {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);  /* 菜单阴影 */
+        border: none;  /* 可选：去除边框 */
+    }
         
         .nav-footer .nav-link {
             color: rgba(255, 255, 255, 0.7);
@@ -1043,7 +1050,8 @@
 		</nav>
 		<!-- End Navbar -->
 		    
-         <div class="container-fluid">
+         <body>
+    <div class="container-fluid">
         <!-- 渐变背景区域 -->
         <div class="gradient-bg">
             <div class="container">
@@ -1200,7 +1208,7 @@
                     <div class="card-header flex-wrap flex-md-nowrap" style="gap:1rem;">
                         <h2 class="mb-2 mb-md-0 d-flex align-items-center flex-shrink-0">
                             <i class="material-icons">list</i>
-                            模型评估配置列表
+                            模型评估配置列表  
                             <span class="badge bg-primary" id="configCounter">0</span>
                         </h2>
                         <div class="card-tools d-flex flex-wrap align-items-center gap-2 ms-md-auto">
@@ -1306,8 +1314,9 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="configName">配置名称 <span class="text-danger"></span></label>
-                                <input type="text" class="form-control" id="configName" placeholder="输入配置名称（选填）" required>
+                                <label for="configName">配置名称 <span class="text-muted">(选填)</span></label>
+                                <input type="text" class="form-control" id="configName" placeholder="输入配置名称">
+                                <small class="form-text text-muted">格式：攻击类型-x <span class="text-primary" id="defenseIndicator">(防御)</span></small>
                             </div>
                             
                             <div class="form-group">
@@ -1334,6 +1343,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 对照实验按钮区域 -->
+                            <div id="comparisonSection" class="mt-3" style="display: none;">
+                                <div class="comparison-btn" id="comparisonBtn">
+                                    <i class="material-icons">compare_arrows</i>
+                                    <span>增加对照（防御）配置</span>
                                 </div>
                             </div>
                         </form>
@@ -1702,6 +1719,66 @@
             }
         };
         
+        // 自动生成配置名称的函数
+        function generateDefaultConfigName(attackType, defenderEnabled) {
+            const typeName = attackConfigs.typeNames[attackType] || attackType;
+            // 统计当前配置列表中相同攻击类型的配置数量
+            const count = configList.filter(c => c.type === attackType).length + 1;
+            let name = `${typeName}-${count}`;
+            if (defenderEnabled) {
+                name += '（防御）';
+            }
+            return name;
+        }
+        
+        // 更新配置名称
+        function updateConfigName() {
+            const attackType = document.getElementById('attackType').value;
+            if (!attackType) return;
+            
+            const defenderSwitch = document.getElementById('defenderSwitch');
+            const defenderEnabled = defenderSwitch ? defenderSwitch.checked : false;
+            
+            const newName = generateDefaultConfigName(attackType, defenderEnabled);
+            document.getElementById('configName').value = newName;
+            
+            // 更新防御指示器
+            const defenseIndicator = document.getElementById('defenseIndicator');
+            if (defenderEnabled) {
+                defenseIndicator.classList.add('text-primary');
+                defenseIndicator.classList.remove('text-muted');
+            } else {
+                defenseIndicator.classList.add('text-muted');
+                defenseIndicator.classList.remove('text-primary');
+            }
+            
+            // 更新对照按钮
+            updateComparisonButton();
+        }
+        
+        // 更新对照按钮
+        function updateComparisonButton() {
+            const comparisonSection = document.getElementById('comparisonSection');
+            const comparisonBtn = document.getElementById('comparisonBtn');
+            const defenderSwitch = document.getElementById('defenderSwitch');
+            
+            if (!defenderSwitch) {
+                comparisonSection.style.display = 'none';
+                return;
+            }
+            
+            const defenderEnabled = defenderSwitch.checked;
+            comparisonSection.style.display = 'block';
+            
+            if (defenderEnabled) {
+                comparisonBtn.innerHTML = '<i class="material-icons">compare_arrows</i> 增加对照（攻击）配置';
+                comparisonBtn.className = 'comparison-btn attack';
+            } else {
+                comparisonBtn.innerHTML = '<i class="material-icons">compare_arrows</i> 增加对照（防御）配置';
+                comparisonBtn.className = 'comparison-btn defense';
+            }
+        }
+        
         // DOM 加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
             // 初始化攻击策略下拉菜单
@@ -1733,6 +1810,7 @@
                 updateAttackStrategies();
                 updateAdvancedSettings(this.value);
                 updateDefenseSettings(this.value);
+                updateConfigName();
                 
                 // 更新描述
                 const type = this.value;
@@ -1778,7 +1856,58 @@
             
             // 更新全局配置摘要
             updateGlobalConfigSummary();
+            
+            // 对照按钮点击事件
+            document.getElementById('comparisonBtn').addEventListener('click', addComparisonConfig);
         });
+        
+        // 添加对照配置
+        function addComparisonConfig() {
+            const attackType = document.getElementById('attackType').value;
+            const attackStrategy = document.getElementById('attackStrategy').value;
+            const description = document.getElementById('description').value;
+            const configName = document.getElementById('configName').value;
+            
+            const defenderSwitch = document.getElementById('defenderSwitch');
+            const defenderEnabled = defenderSwitch ? defenderSwitch.checked : false;
+            
+            // 创建对照配置
+            const comparisonConfig = {
+                id: Date.now(),
+                name: configName.replace('（防御）', '').replace('（攻击）', '') + 
+                      (defenderEnabled ? '（攻击对照）' : '（防御对照）'),
+                type: attackType,
+                strategy: attackStrategy,
+                description: description + (defenderEnabled ? '（攻击对照）' : '（防御对照）'),
+                status: 'active',
+                defenderEnabled: !defenderEnabled,
+                sent: false,
+                executed: false,
+                createdAt: new Date().toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                params: {
+                    // 这里应该复制当前配置的参数
+                },
+                comparison: {
+                    type: defenderEnabled ? 'attack' : 'defense',
+                    baseConfig: configName
+                }
+            };
+            
+            // 添加到配置列表
+            configList.push(comparisonConfig);
+            
+            // 显示成功消息
+            showToast(`已创建对照配置: ${comparisonConfig.name}`, 'success');
+            
+            // 更新表格
+            renderConfigTable();
+        }
         
         // 更新数据集选项
         function updateDatasetOptions() {
@@ -1823,6 +1952,7 @@
             updateAttackStrategies();
             updateAdvancedSettings('AdvAttack');
             updateDefenseSettings('AdvAttack');
+            updateConfigName();
             
             // 显示模态框
             const modal = new bootstrap.Modal(document.getElementById('configModal'));
@@ -1986,7 +2116,7 @@
             configList = [
                 {
                     id: 1,
-                    name: "对抗攻击-1",
+                    name: "对抗攻击-1（防御）",
                     type: "AdvAttack",
                     strategy: "TextFoolerJin2019",
                     description: "针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型",
@@ -2045,7 +2175,7 @@
                 },
                 {
                     id: 4,
-                    name: "模型窃取-1",
+                    name: "模型窃取-1（防御）",
                     type: "ModelStealingAttack",
                     strategy: "MeaeQ",
                     description: "通过查询目标模型来窃取其结构和参数",
@@ -2091,7 +2221,7 @@
                 },
                 {
                     id: 6,
-                    name: "梯度反演-1",
+                    name: "梯度反演-1（防御）",
                     type: "FET",
                     strategy: "FET/SWAT",
                     description: "梯度反演",
@@ -2495,6 +2625,9 @@
                         }
                     }
                 }
+                
+                // 更新对照按钮
+                updateComparisonButton();
             }, 0);
 
             // 显示模态框
@@ -2673,27 +2806,10 @@
                 defenseSection.innerHTML = defenseHTML;
                 defenseSettings.appendChild(defenseSection);
                 
-                // 添加对照配置开关
-                const comparisonToggle = document.createElement('div');
-                comparisonToggle.className = 'defense-compare-toggle';
-                comparisonToggle.innerHTML = `
-                    <div class="toggle-label">
-                        <i class="material-icons">compare</i>
-                        <span>创建无防御对照配置</span>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="defenseComparisonToggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                `;
-                defenseSection.appendChild(comparisonToggle);
-                
                 // 绑定防御开关事件
-                document.getElementById('defenderSwitch').addEventListener('change', toggleDefenseOptions);
-                
-                // 绑定对照配置开关事件
-                document.getElementById('defenseComparisonToggle').addEventListener('change', function() {
-                    createDefenseComparison = this.checked;
+                document.getElementById('defenderSwitch').addEventListener('change', function() {
+                    toggleDefenseOptions();
+                    updateConfigName();
                 });
                 
                 // 绑定防御类型变化事件
@@ -2847,11 +2963,11 @@
             const attackStrategy = document.getElementById('attackStrategy').value;
             const description = document.getElementById('description').value;
             
-            // 如果是新配置，生成默认名称
-            if (!currentConfigId) {
-                // 统计当前类型已有的配置数量
-                const count = configList.filter(c => c.type === attackType).length + 1;
-                configName = `${attackConfigs.typeNames[attackType] || attackType}-${count}`;
+            // 如果用户没有输入名称，则使用自动生成的名称
+            if (!configName) {
+                const defenderSwitch = document.getElementById('defenderSwitch');
+                const defenderEnabled = defenderSwitch ? defenderSwitch.checked : false;
+                configName = generateDefaultConfigName(attackType, defenderEnabled);
             }
             
             // 收集高级设置
@@ -2970,38 +3086,6 @@
             } else {
                 // 添加新配置
                 configList.push(newConfig);
-            }
-            
-            // 如果开启了创建无防御对照配置
-            if (createDefenseComparison && defenderEnabled) {
-                // 创建无防御配置
-                const noDefenseConfig = {
-                    id: Date.now(),
-                    name: configName + " (无防御)",
-                    type: attackType,
-                    strategy: attackStrategy,
-                    description: description + " (无防御对照)",
-                    status: 'active',
-                    defenderEnabled: false,
-                    sent: false,
-                    executed: false,
-                    createdAt: new Date().toLocaleString('zh-CN', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    }),
-                    params: {
-                        ...params,
-                        defender: null
-                    }
-                };
-                
-                // 添加到配置列表
-                configList.push(noDefenseConfig);
-                
-                showToast(`已创建无防御对照配置: ${noDefenseConfig.name}`, 'success');
             }
             
             // 更新表格
@@ -3130,7 +3214,7 @@
                 
             } catch (err) {
                 console.error('执行失败:', err);
-                //showToast('攻击执行失败', 'error');
+                showToast('攻击执行失败', 'error');
             }
         }
         
