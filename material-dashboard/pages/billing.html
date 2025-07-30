@@ -8,56 +8,45 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            /* 安全攻击配色 - 蓝色系 */
-            --security-primary: #2a6fdb;
-            --security-secondary: #3a86ff;
-            --security-light: #cce0ff;
-            --security-dark: #1a4d99;
-            
-            /* 隐私攻击配色 - 绿色系 */
-            --privacy-primary: #2e9d6f;
-            --privacy-secondary: #4cc9a7;
-            --privacy-light: #d0f0e4;
-            --privacy-dark: #1e6b4d;
-            
-            /* 中性色 */
-            --neutral-50: #f9fafb;
-            --neutral-100: #f3f4f6;
-            --neutral-200: #e5e7eb;
-            --neutral-300: #d1d5db;
-            --neutral-700: #374151;
-            --neutral-900: #111827;
-            
-            /* 功能色 */
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --info: #3b82f6;
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --info: #4895ef;
+            --warning: #f72585;
+            --danger: #e63946;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --security: #4361ee;
+            --security-light: #4895ef;
+            --security-dark: #3f37c9;
+            --privacy: #4cc9f0;
+            --privacy-light: #90e0ef;
+            --privacy-dark: #00b4d8;
+            --gradient-start: #4361ee;
+            --gradient-end: #3a0ca3;
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--neutral-100);
-            color: var(--neutral-900);
+            background-color: #f5f7fb;
+            color: #333;
+            padding-top: 0;
         }
         
-        /* 渐变背景 */
         .gradient-bg {
-            background: linear-gradient(135deg, var(--security-primary) 0%, var(--privacy-primary) 100%);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             color: white;
-            padding: 4rem 0;
+            padding: 3rem 0;
             margin-bottom: 2rem;
+            border-radius: 0 0 30px 30px;
         }
         
-        /* 功能卡片 */
         .feature-card {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
             padding: 2rem;
+            border-radius: 15px;
             height: 100%;
             transition: transform 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .feature-card:hover {
@@ -68,92 +57,91 @@
         .feature-card i {
             font-size: 3rem;
             margin-bottom: 1rem;
-            color: white;
+            color: #fff;
         }
         
         .feature-card h3 {
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 1rem;
         }
         
-        .feature-card p {
-            opacity: 0.9;
-        }
-        
-        /* 页面头部 */
         .page-header {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
         }
         
         .page-title h1 {
-            font-weight: 700;
-            font-size: 2.25rem;
-            color: var(--neutral-900);
+            font-weight: 800;
+            color: var(--primary);
             margin-bottom: 0.5rem;
         }
         
-        .page-title p {
-            color: var(--neutral-700);
-            font-size: 1.1rem;
+        .action-buttons .btn {
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 0.7rem 1.2rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
         }
         
-        /* 全局配置卡片 */
+        .action-buttons .btn i {
+            margin-right: 8px;
+        }
+        
         .global-config-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 15px;
             padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
         
         .global-config-card h3 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--neutral-900);
         }
         
-        .config-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
+        .global-config-card h3 i {
+            margin-right: 10px;
+            color: var(--primary);
         }
         
         .summary-item {
-            background: var(--neutral-50);
-            border-radius: 10px;
-            padding: 1.25rem;
-            border-left: 4px solid var(--security-primary);
+            margin-bottom: 1.5rem;
         }
         
         .summary-item h5 {
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: var(--neutral-700);
+            margin-bottom: 0.5rem;
         }
         
-        /* 统计卡片 */
+        .summary-item h5 i {
+            margin-right: 8px;
+            color: var(--info);
+        }
+        
         .stats-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
         
         .stats-card {
             background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
             transition: transform 0.3s ease;
         }
         
@@ -161,97 +149,160 @@
             transform: translateY(-5px);
         }
         
-        .stats-header {
-            height: 8px;
+        .stats-card.primary {
+            border-left: 4px solid var(--primary);
         }
         
-        .stats-card.primary .stats-header {
-            background: var(--security-primary);
+        .stats-card.success {
+            border-left: 4px solid var(--success);
         }
         
-        .stats-card.success .stats-header {
-            background: var(--privacy-primary);
+        .stats-card.warning {
+            border-left: 4px solid var(--warning);
         }
         
-        .stats-card.warning .stats-header {
-            background: var(--warning);
+        .stats-card.danger {
+            border-left: 4px solid var(--danger);
         }
         
-        .stats-card.danger .stats-header {
-            background: var(--danger);
+        .stats-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
         }
         
-        .stats-content {
-            padding: 1.5rem;
-            text-align: center;
+        .stats-card.primary .stats-icon {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .stats-card.success .stats-icon {
+            background: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+        
+        .stats-card.warning .stats-icon {
+            background: rgba(247, 37, 133, 0.1);
+            color: var(--warning);
+        }
+        
+        .stats-card.danger .stats-icon {
+            background: rgba(230, 57, 70, 0.1);
+            color: var(--danger);
+        }
+        
+        .stats-icon i {
+            font-size: 28px;
         }
         
         .stats-content h3 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
         
         .stats-content p {
-            color: var(--neutral-700);
-            font-size: 1.1rem;
+            color: #6c757d;
+            margin-bottom: 0;
         }
         
-        /* 配置卡片 */
         .config-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            margin-bottom: 3rem;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
         }
         
         .card-header {
-            background: white;
             padding: 1.5rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e9ecef;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid var(--neutral-200);
+            flex-wrap: wrap;
         }
         
         .card-header h2 {
+            font-weight: 700;
+            margin: 0;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            margin: 0;
-            font-size: 1.5rem;
-            color: var(--neutral-900);
         }
         
-        .card-header .badge {
-            font-size: 0.9rem;
-            padding: 0.35rem 0.7rem;
+        .card-header h2 i {
+            margin-right: 10px;
+            color: var(--primary);
         }
         
         .card-tools {
             display: flex;
             align-items: center;
-            gap: 1rem;
         }
         
         .search-box {
-            background: var(--neutral-50);
-            border-radius: 8px;
+            background: white;
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-box i {
+            color: #6c757d;
+            margin-right: 0.5rem;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            background: transparent;
+        }
+        
+        .dropdown .btn {
+            border-radius: 10px;
+            background: white;
+            border: 1px solid #dee2e6;
             padding: 0.5rem 1rem;
             display: flex;
             align-items: center;
         }
         
-        .search-box input {
-            background: transparent;
-            border: none;
-            outline: none;
-            width: 100%;
-            padding-left: 0.5rem;
+        .dropdown .btn i {
+            margin-right: 0.5rem;
         }
         
-        /* 表格样式 */
+        .filter-container {
+            padding: 0.75rem 1.5rem;
+            background: #f1f5f9;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        
+        .filter-tag {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-tag .close {
+            cursor: pointer;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+        
         .table-container {
             overflow-x: auto;
             padding: 0 1.5rem;
@@ -264,17 +315,18 @@
         }
         
         thead th {
-            background: var(--neutral-50);
-            padding: 1rem 1.25rem;
-            text-align: left;
+            background: #f8fafc;
+            padding: 1rem;
             font-weight: 600;
-            color: var(--neutral-700);
-            border-bottom: 1px solid var(--neutral-200);
+            color: #495057;
+            border-bottom: 2px solid #e9ecef;
+            text-align: left;
         }
         
         tbody td {
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--neutral-100);
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
         }
         
         tbody tr:last-child td {
@@ -282,84 +334,71 @@
         }
         
         tbody tr:hover {
-            background: var(--neutral-50);
+            background-color: #f8fafc;
         }
         
         .group-header {
-            background: var(--neutral-100);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.9rem;
+            background: #f1f5f9;
+            font-weight: 700;
+            color: #495057;
         }
         
-        .security-group {
-            background: var(--security-light);
-            color: var(--security-dark);
+        .group-header.security-group {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--security);
         }
         
-        .privacy-group {
-            background: var(--privacy-light);
-            color: var(--privacy-dark);
+        .group-header.privacy-group {
+            background: rgba(76, 201, 240, 0.1);
+            color: var(--privacy);
         }
         
-        /* 徽章样式 */
         .badge {
-            padding: 0.4rem 0.75rem;
-            border-radius: 6px;
-            font-weight: 500;
-            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
         }
         
         .badge-security {
-            background: var(--security-light);
-            color: var(--security-dark);
-            border: 1px solid var(--security-secondary);
-        }
-        
-        .badge-security-dark {
-            background: rgba(42, 111, 219, 0.15);
-            color: var(--security-dark);
-            border: 1px solid var(--security-dark);
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--security);
         }
         
         .badge-security-light {
-            background: rgba(58, 134, 255, 0.15);
+            background: rgba(72, 149, 239, 0.1);
+            color: var(--security-light);
+        }
+        
+        .badge-security-dark {
+            background: rgba(63, 55, 201, 0.1);
             color: var(--security-dark);
-            border: 1px solid var(--security-secondary);
         }
         
         .badge-privacy {
-            background: var(--privacy-light);
-            color: var(--privacy-dark);
-            border: 1px solid var(--privacy-secondary);
-        }
-        
-        .badge-privacy-dark {
-            background: rgba(30, 107, 77, 0.15);
-            color: var(--privacy-dark);
-            border: 1px solid var(--privacy-dark);
+            background: rgba(76, 201, 240, 0.1);
+            color: var(--privacy);
         }
         
         .badge-privacy-light {
-            background: rgba(76, 201, 167, 0.15);
+            background: rgba(144, 224, 239, 0.1);
+            color: var(--privacy-light);
+        }
+        
+        .badge-privacy-dark {
+            background: rgba(0, 180, 216, 0.1);
             color: var(--privacy-dark);
-            border: 1px solid var(--privacy-secondary);
         }
         
         .badge-defenseEnabled {
-            background: rgba(16, 185, 129, 0.15);
-            color: #0f8554;
-            border: 1px solid var(--success);
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
         }
         
         .badge-defenseDisabled {
-            background: rgba(239, 68, 68, 0.1);
-            color: #c53030;
-            border: 1px solid var(--danger);
+            background: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
         }
         
-        /* 状态指示器 */
         .status-container {
             display: flex;
             flex-wrap: wrap;
@@ -367,106 +406,128 @@
         }
         
         .status-badge {
-            padding: 0.3rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
         }
         
-        .status-indicator {
-            position: relative;
-            padding-left: 1.75rem;
-        }
-        
-        .status-indicator::before {
+        .status-badge.status-indicator::before {
             content: "";
-            position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
+            display: inline-block;
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: currentColor;
+            margin-right: 4px;
         }
         
         .status-active {
-            background: rgba(16, 185, 129, 0.1);
-            color: #0f8554;
-            border: 1px solid var(--success);
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .status-active.status-indicator::before {
+            background: #28a745;
         }
         
         .status-inactive {
-            background: rgba(239, 68, 68, 0.1);
-            color: #c53030;
-            border: 1px solid var(--danger);
+            background: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+        }
+        
+        .status-inactive.status-indicator::before {
+            background: #6c757d;
         }
         
         .status-sent {
-            background: rgba(59, 130, 246, 0.1);
-            color: #2563eb;
-            border: 1px solid var(--info);
+            background: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+        }
+        
+        .status-sent.status-indicator::before {
+            background: #007bff;
         }
         
         .status-unsent {
-            background: rgba(245, 158, 11, 0.1);
-            color: #d97706;
-            border: 1px solid var(--warning);
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        
+        .status-unsent.status-indicator::before {
+            background: #ffc107;
         }
         
         .status-executed {
-            background: rgba(16, 185, 129, 0.1);
-            color: #0f8554;
-            border: 1px solid var(--success);
+            background: rgba(23, 162, 184, 0.1);
+            color: #17a2b8;
+        }
+        
+        .status-executed.status-indicator::before {
+            background: #17a2b8;
         }
         
         .status-unexecuted {
-            background: rgba(156, 163, 175, 0.1);
-            color: #6b7280;
-            border: 1px solid var(--neutral-300);
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
         }
         
-        /* 操作按钮 */
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
+        .status-unexecuted.status-indicator::before {
+            background: #dc3545;
         }
         
-        .btn-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
+        .action-buttons .btn-icon {
             width: 36px;
             height: 36px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 8px;
+            margin: 0 2px;
         }
         
-        .btn-icon i {
-            font-size: 18px;
+        .no-configs {
+            text-align: center;
+            padding: 3rem;
         }
         
-        /* 模态框样式 */
+        .no-configs i {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 1rem;
+        }
+        
+        .no-configs h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .no-configs p {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+        
         .modal-content {
-            border-radius: 16px;
-            overflow: hidden;
+            border-radius: 15px;
             border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
         
         .modal-header {
+            border-bottom: 1px solid #e9ecef;
             padding: 1.25rem 1.5rem;
-            background: var(--neutral-50);
-            border-bottom: 1px solid var(--neutral-200);
         }
         
         .modal-title {
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 600;
+        }
+        
+        .modal-title i {
+            margin-right: 10px;
+            color: var(--primary);
         }
         
         .modal-body {
@@ -474,100 +535,99 @@
         }
         
         .modal-footer {
+            border-top: 1px solid #e9ecef;
             padding: 1rem 1.5rem;
-            border-top: 1px solid var(--neutral-200);
         }
         
-        /* 防御设置区域 */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .accordion-button {
+            font-weight: 600;
+            padding: 1rem 1.25rem;
+        }
+        
+        .accordion-button i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .accordion-button:not(.collapsed) {
+            background-color: #f8fafc;
+            color: var(--primary);
+        }
+        
+        .param-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .param-item {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+        
         .defense-section {
-            background: var(--neutral-50);
-            border-radius: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
             padding: 1.25rem;
             margin-top: 1.5rem;
-            border: 1px solid var(--neutral-200);
         }
         
         .defense-section h5 {
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 600;
             margin-bottom: 1rem;
         }
         
+        .defense-section h5 i {
+            margin-right: 8px;
+            color: var(--success);
+        }
+        
+        .switch-container {
+            margin-bottom: 1rem;
+        }
+        
+        .switch-label {
+            font-weight: 500;
+        }
+        
         .defense-options {
-            padding-top: 1rem;
-            border-top: 1px solid var(--neutral-200);
             margin-top: 1rem;
         }
         
         .defense-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1rem;
         }
         
-        .defense-param {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px dashed var(--neutral-200);
-        }
-        
-        /* 参数组 */
-        .param-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .param-item {
-            background: var(--neutral-50);
-            border-radius: 10px;
-            padding: 1rem;
-        }
-        
-        /* 无配置消息 */
-        .no-configs {
-            text-align: center;
-            padding: 4rem 2rem;
-        }
-        
-        .no-configs i {
-            font-size: 4rem;
-            color: var(--neutral-300);
-            margin-bottom: 1.5rem;
-        }
-        
-        .no-configs h4 {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--neutral-700);
-        }
-        
-        .no-configs p {
-            color: var(--neutral-700);
-            margin-bottom: 1.5rem;
-        }
-        
-        /* 对照配置开关 */
         .defense-compare-toggle {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-top: 1.5rem;
             padding: 0.75rem 1rem;
-            background: rgba(16, 185, 129, 0.1);
-            border-radius: 8px;
-            margin-top: 1rem;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
         }
         
         .toggle-label {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
             font-weight: 500;
-            color: #0f8554;
+        }
+        
+        .toggle-label i {
+            margin-right: 8px;
+            color: var(--warning);
         }
         
         .toggle-switch {
@@ -592,7 +652,7 @@
             bottom: 0;
             background-color: #ccc;
             transition: .4s;
-            border-radius: 24px;
+            border-radius: 34px;
         }
         
         .toggle-slider:before {
@@ -608,72 +668,72 @@
         }
         
         input:checked + .toggle-slider {
-            background-color: var(--success);
+            background-color: var(--warning);
         }
         
         input:checked + .toggle-slider:before {
             transform: translateX(26px);
         }
         
-        /* 页脚 */
-        .footer {
-            background: white;
-            border-top: 1px solid var(--neutral-200);
+        .backdoor-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
-        /* Toast通知 */
+        .backdoor-metrics .form-check {
+            background: white;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #dee2e6;
+        }
+        
+        .footer {
+            background: #f8fafc;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+        
         .toast {
             position: fixed;
             bottom: 20px;
             right: 20px;
             background: white;
-            border-radius: 8px;
-            padding: 1rem 1.25rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 1rem 1.5rem;
             display: flex;
             align-items: center;
-            gap: 12px;
             z-index: 1050;
-            transform: translateY(100px);
             opacity: 0;
+            transform: translateY(20px);
             transition: all 0.3s ease;
         }
         
         .toast.show {
-            transform: translateY(0);
             opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .toast i {
+            margin-right: 10px;
+            font-size: 1.5rem;
         }
         
         .toast-success {
             border-left: 4px solid var(--success);
         }
         
+        .toast-success i {
+            color: var(--success);
+        }
+        
         .toast-error {
             border-left: 4px solid var(--danger);
         }
         
-        /* 响应式调整 */
-        @media (max-width: 768px) {
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
-            .action-buttons {
-                flex-wrap: wrap;
-            }
-            
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
-            .card-tools {
-                width: 100%;
-                flex-wrap: wrap;
-            }
+        .toast-error i {
+            color: var(--danger);
         }
     </style>
 </head>
@@ -710,28 +770,26 @@
 
         <div class="container-fluid py-4">
             <!-- 主内容区 -->
-            <main class="main-content">
+            <main class="main-contents">
                 <!-- 页面标题和操作按钮 -->
-                <div class="page-header">
-                    <div class="page-title">
-                        <h1>模型评估配置管理</h1>
-                        <p>管理您的评估类型、策略和高级设置</p>
+                <div class="page-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
+                    <div class="page-title mb-3 mb-md-0">
+                        <h1 class="fw-bold" style="font-size:2rem;">模型评估配置管理</h1>
+                        <p class="text-muted mb-0" style="font-size:1.1rem;">管理您的评估类型、策略和高级设置</p>
                     </div>
-                    <div class="action-buttons">
-                        <div class="d-flex align-items-center gap-2">
-                            <button class="btn btn-light d-flex align-items-center" id="addNewConfigBtn">
-                                <i class="material-icons me-1">add</i> 添加配置
-                            </button>
-                            <button class="btn btn-outline-primary d-flex align-items-center" id="globalConfigBtn">
-                                <i class="material-icons me-1">settings_applications</i> 全局配置
-                            </button>
-                            <button class="btn btn-outline-primary d-flex align-items-center" id="sendConfigBtn">
-                                <i class="material-icons me-1">send</i> 发送配置
-                            </button>
-                            <button class="btn btn-outline-success d-flex align-items-center" id="executeAttackBtn">
-                                <i class="material-icons me-1">play_arrow</i> 执行评估
-                            </button>
-                        </div>
+                    <div class="action-buttons d-flex flex-wrap gap-2 mt-2 mt-md-0">
+                        <button class="btn btn-light d-flex align-items-center px-3 py-2" id="addNewConfigBtn">
+                            <i class="material-icons me-1">add</i> 添加配置
+                        </button>
+                        <button class="btn btn-outline-primary d-flex align-items-center px-3 py-2" id="globalConfigBtn">
+                            <i class="material-icons me-1">settings_applications</i> 全局配置
+                        </button>
+                        <button class="btn btn-outline-primary d-flex align-items-center px-3 py-2" id="sendConfigBtn">
+                            <i class="material-icons me-1">send</i> 发送配置
+                        </button>
+                        <button class="btn btn-outline-success d-flex align-items-center px-3 py-2" id="executeAttackBtn">
+                            <i class="material-icons me-1">play_arrow</i> 执行评估
+                        </button>
                     </div>
                 </div>
                 
@@ -784,7 +842,11 @@
                 <!-- 统计卡片 -->
                 <div class="stats-container">
                     <div class="stats-card primary">
-                        <div class="stats-header"></div>
+                        <div class="stats-header">
+                            <div class="stats-icon">
+                                <i class="material-icons">list_alt</i>
+                            </div>
+                        </div>
                         <div class="stats-content">
                             <h3 id="totalConfigs">0</h3>
                             <p>总配置数</p>
@@ -792,7 +854,11 @@
                     </div>
                     
                     <div class="stats-card success">
-                        <div class="stats-header"></div>
+                        <div class="stats-header">
+                            <div class="stats-icon">
+                                <i class="material-icons">check_circle</i>
+                            </div>
+                        </div>
                         <div class="stats-content">
                             <h3 id="activeConfigs">0</h3>
                             <p>活跃配置</p>
@@ -800,7 +866,11 @@
                     </div>
                     
                     <div class="stats-card warning">
-                        <div class="stats-header"></div>
+                        <div class="stats-header">
+                            <div class="stats-icon">
+                                <i class="material-icons">schedule</i>
+                            </div>
+                        </div>
                         <div class="stats-content">
                             <h3 id="attackTypes">0</h3>
                             <p>评估类型</p>
@@ -808,7 +878,11 @@
                     </div>
                     
                     <div class="stats-card danger">
-                        <div class="stats-header"></div>
+                        <div class="stats-header">
+                            <div class="stats-icon">
+                                <i class="material-icons">bolt</i>
+                            </div>
+                        </div>
                         <div class="stats-content">
                             <h3 id="executedAttacks">0</h3>
                             <p>已执行评估</p>
@@ -830,6 +904,7 @@
                                 <input type="text" id="searchInput" placeholder="搜索配置...">
                             </div>
                             <div class="dropdown flex-shrink-0">
+                                <br>
                                 <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="statusFilterDropdown" data-bs-toggle="dropdown">
                                     <i class="material-icons me-1">filter_list</i> <span>状态筛选</span>
                                 </button>
@@ -843,8 +918,8 @@
                                     <li><a class="dropdown-item filter-option" href="#" data-filter="not_executed">未执行</a></li>
                                 </ul>
                             </div>
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="typeFilterDropdown" data-bs-toggle="dropdown">
+                            <div class="dropdown flex-shrink-0">
+                                <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="typeFilterDropdown" data-bs-toggle="dropdown" style="margin-top:33px; margin-bottom: 28px;">
                                     <i class="material-icons me-1">label</i> <span>类型筛选</span>
                                 </button>
                                 <ul class="dropdown-menu" id="typeFilterMenu">
@@ -865,7 +940,7 @@
                                     <th>评估类型</th>
                                     <th>评估策略</th>
                                     <th>防御状态</th>
-                                    <th>状态</th>
+                                    <th class='center'>状态</th>
                                     <th>创建时间</th>
                                     <th>操作</th>
                                 </tr>
@@ -888,7 +963,7 @@
             </main>
         </div>
         
-        <!-- 配置弹窗 -->
+       <!-- 配置弹窗 -->
         <div class="modal fade" id="configModal" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -926,8 +1001,14 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="configName">配置名称 <span class="text-danger"></span></label>
-                                <input type="text" class="form-control" id="configName" placeholder="输入配置名称（选填）" required>
+                                <label for="configName">配置名称 <span class="text-muted">(选填)</span></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="configName" placeholder="输入配置名称或使用自动生成">
+                                    <button class="btn btn-outline-secondary" type="button" id="autoGenerateNameBtn">
+                                        <i class="material-icons">autorenew</i> 自动生成
+                                    </button>
+                                </div>
+                                <small class="form-text text-muted">格式：攻击类型-x <span class="text-primary" id="defenseIndicator">(防御)</span></small>
                             </div>
                             
                             <div class="form-group">
@@ -1068,39 +1149,40 @@
             </div>
         </div>
     </div>
-    <footer class="footer py-4">
-        <div class="container-fluid">
-            <div class="row align-items-center justify-content-lg-between">
-                <div class="col-lg-6 mb-lg-0 mb-4">
-                    <div class="copyright text-center text-sm text-muted text-lg-start">
-                        ©
-                        <script>
-                            document.write(new Date().getFullYear())
-                        </script>,
-                        模型评估配置管理系统 | 安全研究平台
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                        <li class="nav-item">
-                            <a href="https://shi.buaa.edu.cn/gaoyingketizu/zh_CN/index.htm" class="nav-link text-muted" target="_blank">关于我们</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-muted" target="_blank">隐私政策</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-muted" target="_blank">使用条款</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link pe-0 text-muted"
-                                target="_blank">帮助中心</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <div id="toastContainer"></div>
+		<footer class="footer py-4  ">
+			<div class="container-fluid">
+				<div class="row align-items-center justify-content-lg-between">
+					<div class="col-lg-6 mb-lg-0 mb-4">
+						<div class="copyright text-center text-sm text-muted text-lg-start">
+							©
+							<script>
+								document.write(new Date().getFullYear())
+							</script>,
+							模型评估配置管理系统 | 安全研究平台
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<ul class="nav nav-footer justify-content-center justify-content-lg-end">
+							<li class="nav-item">
+								<a href="https://shi.buaa.edu.cn/gaoyingketizu/zh_CN/index.htm" class="nav-link text-muted" target="_blank">关于我们</a>
+							</li>
+							<li class="nav-item">
+								<a href="#" class="nav-link text-muted" target="_blank">隐私政策</a>
+							</li>
+							<li class="nav-item">
+								<a href="#" class="nav-link text-muted" target="_blank">使用条款</a>
+							</li>
+							<li class="nav-item">
+								<a href="#" class="nav-link pe-0 text-muted"
+									target="_blank">帮助中心</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</main>
+<div id="toastContainer"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -1281,6 +1363,40 @@
             }
         };
         
+        // 自动生成配置名称的函数
+        function generateDefaultConfigName(attackType, defenderEnabled) {
+            const typeName = attackConfigs.typeNames[attackType] || attackType;
+            // 统计当前配置列表中相同攻击类型的配置数量
+            const count = configList.filter(c => c.type === attackType).length + 1;
+            let name = `${typeName}-${count}`;
+            if (defenderEnabled) {
+                name += '（防御）';
+            }
+            return name;
+        }
+        
+        // 更新配置名称
+        function updateConfigName() {
+            const attackType = document.getElementById('attackType').value;
+            if (!attackType) return;
+            
+            const defenderSwitch = document.getElementById('defenderSwitch');
+            const defenderEnabled = defenderSwitch ? defenderSwitch.checked : false;
+            
+            const newName = generateDefaultConfigName(attackType, defenderEnabled);
+            document.getElementById('configName').value = newName;
+            
+            // 更新防御指示器
+            const defenseIndicator = document.getElementById('defenseIndicator');
+            if (defenderEnabled) {
+                defenseIndicator.classList.add('text-primary');
+                defenseIndicator.classList.remove('text-muted');
+            } else {
+                defenseIndicator.classList.add('text-muted');
+                defenseIndicator.classList.remove('text-primary');
+            }
+        }
+        
         // DOM 加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
             // 初始化攻击策略下拉菜单
@@ -1312,11 +1428,15 @@
                 updateAttackStrategies();
                 updateAdvancedSettings(this.value);
                 updateDefenseSettings(this.value);
+                updateConfigName();
                 
                 // 更新描述
                 const type = this.value;
                 document.getElementById('description').value = attackConfigs.descriptions[type] || '';
             });
+            
+            // 自动生成名称按钮
+            document.getElementById('autoGenerateNameBtn').addEventListener('click', updateConfigName);
             
             // 保存配置按钮点击事件
             document.getElementById('saveConfigBtn').addEventListener('click', saveConfig);
@@ -1402,6 +1522,7 @@
             updateAttackStrategies();
             updateAdvancedSettings('AdvAttack');
             updateDefenseSettings('AdvAttack');
+            updateConfigName();
             
             // 显示模态框
             const modal = new bootstrap.Modal(document.getElementById('configModal'));
@@ -1565,7 +1686,7 @@
             configList = [
                 {
                     id: 1,
-                    name: "对抗攻击-1",
+                    name: "对抗攻击-1（防御）",
                     type: "AdvAttack",
                     strategy: "TextFoolerJin2019",
                     description: "针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型",
@@ -1624,7 +1745,7 @@
                 },
                 {
                     id: 4,
-                    name: "模型窃取-1",
+                    name: "模型窃取-1（防御）",
                     type: "ModelStealingAttack",
                     strategy: "MeaeQ",
                     description: "通过查询目标模型来窃取其结构和参数",
@@ -1670,7 +1791,7 @@
                 },
                 {
                     id: 6,
-                    name: "梯度反演-1",
+                    name: "梯度反演-1（防御）",
                     type: "FET",
                     strategy: "FET/SWAT",
                     description: "梯度反演",
@@ -2268,7 +2389,10 @@
                 defenseSection.appendChild(comparisonToggle);
                 
                 // 绑定防御开关事件
-                document.getElementById('defenderSwitch').addEventListener('change', toggleDefenseOptions);
+                document.getElementById('defenderSwitch').addEventListener('change', function() {
+                    toggleDefenseOptions();
+                    updateConfigName();
+                });
                 
                 // 绑定对照配置开关事件
                 document.getElementById('defenseComparisonToggle').addEventListener('change', function() {
@@ -2426,11 +2550,11 @@
             const attackStrategy = document.getElementById('attackStrategy').value;
             const description = document.getElementById('description').value;
             
-            // 如果是新配置，生成默认名称
-            if (!currentConfigId) {
-                // 统计当前类型已有的配置数量
-                const count = configList.filter(c => c.type === attackType).length + 1;
-                configName = `${attackConfigs.typeNames[attackType] || attackType}-${count}`;
+            // 如果用户没有输入名称，则使用自动生成的名称
+            if (!configName) {
+                const defenderSwitch = document.getElementById('defenderSwitch');
+                const defenderEnabled = defenderSwitch ? defenderSwitch.checked : false;
+                configName = generateDefaultConfigName(attackType, defenderEnabled);
             }
             
             // 收集高级设置
@@ -2556,7 +2680,7 @@
                 // 创建无防御配置
                 const noDefenseConfig = {
                     id: Date.now(),
-                    name: configName + " (无防御)",
+                    name: configName.replace('（防御）', '') + " (无防御)",
                     type: attackType,
                     strategy: attackStrategy,
                     description: description + " (无防御对照)",
@@ -2573,7 +2697,7 @@
                     }),
                     params: {
                         ...params,
-                        defender: none
+                        defender: null
                     }
                 };
                 
@@ -2605,33 +2729,44 @@
                 showToast('没有可发送的配置', 'error');
                 return;
             }
-            
+            // 修复点2：发送配置时，将任务类型和数据集转换为英文
+            const configToSend = {
+                ...globalConfig,
+                task_config: {
+                    ...globalConfig.task_config,
+                    task: globalConfig.task_config.task, // 任务类型已经是英文
+                    dataset: datasetMap[globalConfig.task_config.task]?.[globalConfig.task_config.dataset] || globalConfig.task_config.dataset
+                    }
+            };
             try {
                 activeConfigs.forEach(config => {
                     config.sent = true;
                 });
-                
-                // 修复点2：发送配置时，将任务类型和数据集转换为英文
-                const configToSend = {
-                    ...globalConfig,
-                    task_config: {
-                        ...globalConfig.task_config,
-                        task: globalConfig.task_config.task, // 任务类型已经是英文
-                        dataset: datasetMap[globalConfig.task_config.task]?.[globalConfig.task_config.dataset] || globalConfig.task_config.dataset
-                    }
-                };
-                
-                // 模拟发送请求
-                console.log('发送配置到服务器:', {
-                    config: configToSend,
-                    attack_list: activeConfigs
-                });
-                
-                // 模拟发送成功
-                setTimeout(() => {
+                  const module = await import('../assets/js/utils/authStore.js');
+                  const axios =await import('../assets/js/utils/axiosConfig.js');
+                  const authStore = module.default;
+                  const response = await axios.default.post('/api/attack_list', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${authStore.token}`
+                    },
+                    username: authStore.username,
+                    attack_list: activeConfigs,
+                    globalConfig: configToSend,
+                  });
+                  console.log('发送配置请求:', {
+                    username: authStore.username,
+                    attack_list: activeConfigs,
+                    globalConfig: configToSend
+                  });
+
+                  if (response.status ===200) {
                     showToast('配置已发送到服务器', 'success');
                     renderConfigTable();
-                }, 1000);
+                  } else {
+                    showToast('发送配置失败', 'error');
+                  }
                 
             } catch (err) {
                 console.error('发送失败:', err);
@@ -2679,11 +2814,22 @@
                 
                 // 模拟执行攻击请求
                 console.log('执行评估:', attackName);
+                const module = await import('../assets/js/utils/authStore.js');
+                const axios = await import('../assets/js/utils/axiosConfig.js');
+                const authStore = module.default;
                 
-                // 模拟执行成功
-                setTimeout(() => {
-                    showToast(`攻击"${attackName}"执行成功！`, 'success');
-                }, 1500);
+                // 发送攻击名称到后端
+                const response = await axios.default.post('/api/execute_attack', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authStore.token}`
+                  },
+                  username: authStore.username,
+                  attack_name: attackName  // 添加攻击名称
+                });
+                renderConfigTable();
+                showToast(`攻击"${attackName}"执行成功！`, 'success');
                 
             } catch (err) {
                 console.error('执行失败:', err);
@@ -2691,7 +2837,7 @@
             }
         }
         
-        // 搜索配置
+       // 搜索配置
         function searchConfigs() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             

@@ -10,14 +10,15 @@ from datasets import load_from_disk, load_dataset, DatasetDict
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments, \
     DataCollatorWithPadding, AutoModelForCausalLM
-from utils.my_prettytable import MyPrettyTable
+
+from web_databse.sql_manager import add_attack_process
 from utils.my_exception import print_red
 from utils.my_prettytable import PrettyTable
 from attack.attack_factory import AttackFactory
 from utils.dataset_getter import standardize_dataset
 from utils.model_getter import load_model_and_tokenizer
 from utils.log_helper import change_log_path, logger_init
-from web_databse.sql_manager import add_attack_process
+
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # 禁用 oneDNN 优化
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 减少 TensorFlow 日志输出 (0=all, 1=info, 2=warnings, 3=errors)
@@ -30,7 +31,7 @@ local_project_path = '/Volumes/T7 Shield/shared'
 def check_item_in_list(full_list: list, item_list: list) -> bool:
     """
     检查full_list中是否含有全部item_list元素
-    Args:副部级
+    Args:
         full_list: 父list
         item_list: 子list
 
@@ -153,74 +154,74 @@ def compute_metrics(eval_pred):
         'recall': recall
     }
 
+
 def run_pipeline(config_path: str):
-    with open(config_path, 'r', encoding='utf-8') as configFile:
+    with open('test_config.yaml', 'r', encoding='utf-8') as configFile:
         config_parser = yaml.load(configFile, Loader=yaml.FullLoader)
 
-        # 检查配置文件是否完整
-        check_base_config(config_parser)
+    # 检查配置文件是否完整
+    check_base_config(config_parser)
 
-        # 读取常规训练配置
-        general_config = config_parser['general']
+    # 读取常规训练配置
+    general_config = config_parser['general']
 
-        # 读取模型配置
-        LM_config = config_parser['LM_config']
-        model_name = LM_config['model']
+    # 读取模型配置
+    LM_config = config_parser['LM_config']
+    model_name = LM_config['model']
 
-        # 读取下游任务+数据集配置
-        task_config = config_parser['task_config']
-        dataset_name = task_config['dataset']
-        train_config = task_config['train_config']
+    # 读取下游任务+数据集配置
+    task_config = config_parser['task_config']
+    dataset_name = task_config['dataset']
+    train_config = task_config['train_config']
 
-        # 读取攻击模块配置
-        attack_list = check_attack_config(config_parser['attack_list'])
-        log_file_name=general_config['log_file_name']
+    # 读取攻击模块配置
+    attack_list = check_attack_config(config_parser['attack_list'])
 
-        info = log_file_name.split('_')
-        username = info[0]
-        initTime = eval(info[2])
-        print("loging_name:",log_file_name)
-        logger = logger_init(log_dir='./logs')
-        change_log_path(new_log_dir='./logs/',new_log_file_name=log_file_name)
-        #logger_init(log_file_name=general_config['log_file_name'], log_level=logging.INFO,
-        #            log_dir=general_config['logs_save_dir'], only_file=False)
+    log_file_name = general_config['log_file_name']
+    info = log_file_name.split('_')
+    username = info[0]
+    initTime = eval(info[2])
+    print("loging_name:", log_file_name)
 
-        # dataset.save_to_disk('./datasets/sst2')
-        if task_config['local_dataset']:
-            dataset = load_from_disk(os.path.join(projectPath, 'datasets', dataset_name))
-        else:
-            dataset = load_dataset(dataset_name)
+    logger = logger_init(log_dir='./logs')
+    change_log_path(new_log_dir='./logs/', log_file_name=log_file_name)
 
-        if LM_config['local_model']:
-            tokenizer = AutoTokenizer.from_pretrained(os.path.join(projectPath, 'LMs', model_name))
-            model = AutoModelForSequenceClassification.from_pretrained(os.path.join(projectPath, 'LMs', model_name))
-            # tokenizer = AutoTokenizer.from_pretrained(os.path.join(local_project_path, 'models', model_name))
-            # model = AutoModelForSequenceClassification.from_pretrained(os.path.join(local_project_path, 'models', model_name))
-        else:
-            tokenizer = AutoTokenizer.from_pretrained(model_name)
-            model = AutoModelForSequenceClassification.from_pretrained(model_name)
+    # logger_init(log_file_name=general_config['log_file_name'], log_level=logging.INFO,
+    #             log_dir=general_config['logs_save_dir'], only_file=False)
 
-    if dataset_name == 'sst2':
-        dataset = DatasetDict({
-            "train": dataset["train"].select(range(10)),
-            "test": dataset["test"].select(range(10)),
-            "validation": dataset["validation"].select(range(10)),
-        })
-    elif dataset_name == 'imdb':
-        dataset = DatasetDict({
-            "train": dataset["train"].select(range(10)),
-            "test": dataset["test"].select(range(10)),
-            "unsupervised": dataset["unsupervised"].select(range(10)),
-        })
-    elif dataset_name == 'GLUE/cola':
-        random_indices = random.sample(range(len(dataset)), 20)
-        dataset = dataset.select(random_indices)
-        train_test = dataset.train_test_split(test_size=0.5, seed=general_config['random_seed'])
-        dataset = DatasetDict({
-            "train": train_test["train"],
-            "test": train_test["test"],
-            "validation": train_test["test"],
-        })
+    # dataset.save_to_disk('./datasets/sst2')
+    if task_config['local_dataset']:
+        dataset = load_from_disk(os.path.join(projectPath, 'datasets', dataset_name))
+    else:
+        dataset = load_dataset(dataset_name)
+
+    # FIXME: 数据集需要进一步本地测试
+    # print(dataset)
+    # print('debug' * 10)
+    dataset, task_type = standardize_dataset(input_data=dataset, dataset_name=dataset_name,
+                                             seed=config_parser['general']['random_seed'])
+    # print(dataset)
+    # raise SystemError
+
+    tokenizer, model = load_model_and_tokenizer(model_name=model_name, task_type=task_type,
+                                                local_model=LM_config['local_model'], project_path=projectPath)
+
+    # if LM_config['local_model']:
+    #     tokenizer = AutoTokenizer.from_pretrained(os.path.join(projectPath, 'LMs', model_name))
+    #     model = AutoModelForSequenceClassification.from_pretrained(os.path.join(projectPath, 'LMs', model_name))
+    #     # tokenizer = AutoTokenizer.from_pretrained(os.path.join(local_project_path, 'models', model_name))
+    #     # model = AutoModelForSequenceClassification.from_pretrained(os.path.join(local_project_path, 'models', model_name))
+    # else:
+    #     tokenizer = AutoTokenizer.from_pretrained(model_name)
+    #     model = AutoModelForSequenceClassification.from_pretrained(model_name)
+
+    # 本地训练加速
+    sub_dataset_num = 10
+    dataset = DatasetDict({
+        "train": dataset["train"].select(range(sub_dataset_num)),
+        "test": dataset["test"].select(range(sub_dataset_num)),
+        "validation": dataset["validation"].select(range(sub_dataset_num)),
+    })
 
     def tokenize_function(examples):
         key = ''
@@ -260,19 +261,13 @@ def run_pipeline(config_path: str):
         eval_result = trainer.evaluate()
         logging.info(eval_result)
 
-        table = MyPrettyTable()
-        table.add_field_names(['Results', ''])
-        if 'eval_accuracy' in eval_result:
-            table.add_row(['eval_accuracy', f"{(eval_result['eval_accuracy'] * 100):.3f}%"])
-        else:
-            table.add_row(['eval_accuracy', 'N/A'])
-        if 'eval_f1' in eval_result:
-            table.add_row(['eval_f1', f"{(eval_result['eval_f1']):.3f}"])
-        else:
-            table.add_row(['eval_f1', 'N/A'])
-        #table.print_table()
-        table.logging_table()
-
+        table = PrettyTable()
+        table.field_names = ['Results', '']
+        table.add_row(['eval_accuracy', eval_result['eval_accuracy']])
+        table.add_row(['eval_f1', eval_result['eval_f1']])
+        table.align['Results'] = "l"
+        table.align[''] = "l"
+        logging.info(table)
 
     # trainer.save_model(task_config['save_path'])
 
@@ -281,9 +276,11 @@ def run_pipeline(config_path: str):
         logging.info("没有攻击被执行。")
         logging.info("=" * 50)
     else:
-        for idx,item in enumerate(attack_list):
+        for item in attack_list:
+
             str = f"{idx}/{len(attack_list)}"
-            add_attack_process(username,initTime,str)
+            add_attack_process(username, initTime, str)
+
             attack_args = item['attack_args']
             attack_type = attack_args['attack_type']
             logging.info("=" * 50)

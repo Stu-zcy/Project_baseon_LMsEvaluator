@@ -64,23 +64,23 @@ BackdoorAttack = {
 }
 
 PoisoningAttack = {
-    "attack": True,
+    "attack": False,
     "attack_type": "PoisoningAttack",
-    "poisoning_rate": 0.1,
-    "save_path": './attack/PoisoningAttack/model_output',
+    "poisoning_rate": 0.3,
+    "save_path": "./attack/PoisoningAttack/model_output",
     "train_config": {
-        "output_dir": './attack/PoisoningAttack/cache',
+        "output_dir": "./attack/PoisoningAttack/cache",
         "num_train_epochs": 1,
         "per_device_train_batch_size": 16,
         "per_device_eval_batch_size": 64,
         "warmup_steps": 1000,
         "weight_decay": 0.01,
-        "logging_dir": './logs',
+        "logging_dir": "./logs",
         "logging_steps": 1000,
-        "run_name": 'my_experiment',
+        "run_name": "my_experiment",
         "report_to": "none"
     },
-    'defender': True
+    "defender": True
 }
 
 RLMI = {

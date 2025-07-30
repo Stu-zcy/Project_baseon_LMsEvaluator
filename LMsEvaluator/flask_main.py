@@ -863,4 +863,4 @@ def handle_disconnect(data=None):
 
 if __name__ == '__main__':
     # app.run(port=57777, debug=True)
-    socketio.run(app, debug=True, host='127.0.0.1', port=57777, allow_unsafe_werkzeug=True)
+    socketio.run(app, debug=True, host='127.0.0.1', port=58888, allow_unsafe_werkzeug=True)
