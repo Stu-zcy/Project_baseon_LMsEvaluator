@@ -30,12 +30,12 @@ data_path = os.path.join(project_path, 'web_databse', 'users.db')
 # 邮箱配置
 app.config['MAIL_DEBUG'] = True
 app.config['MAIL_SUPPRESS_SEND'] = False
-app.config['MAIL_SERVER'] = 'smtp.qq.com'
+app.config['MAIL_SERVER'] = 'smtp.163.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = '2544073891@qq.com'
-app.config['MAIL_PASSWORD'] = 'jblpfwtrutloecai'  # 授权码
-app.config['MAIL_DEFAULT_SENDER'] = '2544073891@qq.com'
+app.config['MAIL_USERNAME'] = 'lms_verify@163.com'
+app.config['MAIL_PASSWORD'] = 'HS3eQtjNnvCutXEE'  # 授权码
+app.config['MAIL_DEFAULT_SENDER'] = 'lms_verify@163.com'
 expires_in = 60 * 60 * 1000
 expires_in_refresh = 3 * expires_in
 mail = Mail(app)
@@ -246,7 +246,7 @@ def send_verification_code():
         message = "验证码已发送"
 
     # 发送邮件
-    msg = Message('您的验证码', recipients=[email])
+    msg = Message('LMsEvaluator', recipients=[email])
     msg.body = f'您的验证码是: {verification_code}，有效时间为5分钟。'
     try:
         mail.send(msg)
@@ -267,6 +267,8 @@ def send_verification_code():
 
 @app.route('/api/register', methods=['POST'])
 def register():
+    if request.method == 'OPTIONS':
+        return '', 200  # 直接返回 OK，浏览器预检就不会再进业务逻辑
     data = request.json
     username = data['username']
     password = data['password']
@@ -274,45 +276,52 @@ def register():
     verification_code = data['verificationCode']
     email = data['email']
     age = 0
-    gender = 1  # 如果没有前端提供性别，默认为1（男）
+    gender = 1  # 默认性别：男
 
-    # 验证验证码逻辑
+    # 验证验证码
     if not verification_code:
-        return jsonify({
-            "code": 400,
-            "message": "验证码不能为空"
-        }), 400
+        print("验证码不能为空")
+        return jsonify({"code": 400, "message": "验证码不能为空"}), 400
 
     code_entry = VerificationCode.query.filter_by(email=email, code=verification_code).first()
     if not code_entry:
-        return jsonify({
-            "code": 400,
-            "message": "验证码无效"
-        }), 400
+        print("验证码无效")
+        return jsonify({"code": 400, "message": "验证码无效"}), 400
 
-    # 检查验证码是否过期（5分钟有效期）
     if datetime.utcnow() - code_entry.created_at > timedelta(minutes=5):
-        return jsonify({
-            "code": 400,
-            "message": "验证码已过期"
-        }), 400
+        print("验证码已过期")
+        return jsonify({"code": 400, "message": "验证码已过期"}), 400
+
+    # ✅ 检查用户名或邮箱是否已存在
+    existing_user = User.query.filter(
+        (User.username == username) | (User.email == email)
+    ).first()
+
+    if existing_user:
+        print("用户名或邮箱已被注册")
+        return jsonify({"code": 400, "message": "用户名或邮箱已被注册"}), 400
 
     # 添加用户
     hashed_password = generate_password_hash(password)
-    new_user = User(username=username, password=hashed_password, role='user', age=age, gender=gender,
-                    permissions="'edit', 'delete', 'add'", avatar_url=avatar_url, email=email)
+    new_user = User(
+        username=username,
+        password=hashed_password,
+        role='user',
+        age=age,
+        gender=gender,
+        permissions="'edit', 'delete', 'add'",
+        avatar_url=avatar_url,
+        email=email
+    )
 
     db.session.add(new_user)
     db.session.commit()
-
-    # 删除已经使用过的验证码（可选，避免数据库积累过多无效数据）
+    print("注册成功")
+    # 删除验证码
     db.session.delete(code_entry)
     db.session.commit()
 
-    return jsonify({
-        "code": 201,
-        "message": "注册成功"
-    }), 201
+    return jsonify({"code": 201, "message": "注册成功"}), 201
 
 
 @app.route('/api/login', methods=['POST'])

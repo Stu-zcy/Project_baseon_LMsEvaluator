@@ -120,3 +120,28 @@ attack_list:
       al_sample_batch_num: -1
       al_sample_method: None
       defender: pruning # or output-perturb
+  - attack_args:
+      attack: False
+      attack_type: FET
+      seed: 42
+      attack_batch: 2
+      attack_nums: 1
+      distance_func: l2
+      population_size: 300
+      tournsize: 5
+      crossover_rate: 0.9
+      mutation_rate: 0.1
+      max_generations: 2 #100
+      halloffame_size: 30
+      use_local_model: True
+      use_local_tokenizer: True
+      model_name_or_path: "LMs/bert_base_uncased"
+      tokenizer_name_or_path: "LMs/bert_base_uncased"
+      dataset_name_or_path: "cola"
+      display_full_info: True
+      defender:
+        # type: pruning
+        # prune_ratio: 0.2
+        # type: high-entropy-mask
+        type: output-perturb
+        noise_std: 0.1

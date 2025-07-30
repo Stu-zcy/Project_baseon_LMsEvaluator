@@ -156,7 +156,7 @@ def compute_metrics(eval_pred):
 
 
 def run_pipeline(config_path: str):
-    with open('test_config.yaml', 'r', encoding='utf-8') as configFile:
+    with open(config_path, 'r', encoding='utf-8') as configFile:
         config_parser = yaml.load(configFile, Loader=yaml.FullLoader)
 
     # 检查配置文件是否完整
@@ -184,7 +184,7 @@ def run_pipeline(config_path: str):
     print("loging_name:", log_file_name)
 
     logger = logger_init(log_dir='./logs')
-    change_log_path(new_log_dir='./logs/', log_file_name=log_file_name)
+    change_log_path(new_log_dir='./logs/', new_log_file_name=log_file_name)
 
     # logger_init(log_file_name=general_config['log_file_name'], log_level=logging.INFO,
     #             log_dir=general_config['logs_save_dir'], only_file=False)
@@ -276,7 +276,7 @@ def run_pipeline(config_path: str):
         logging.info("没有攻击被执行。")
         logging.info("=" * 50)
     else:
-        for item in attack_list:
+        for idx,item in enumerate(attack_list):
 
             str = f"{idx}/{len(attack_list)}"
             add_attack_process(username, initTime, str)

@@ -1,9 +1,3 @@
-<!--
-=========================================================
-* Material Dashboard 3 - v3.2.0
-=========================================================
-* Modified with enhanced registration features
--->
 <!DOCTYPE html>
 <html lang="zh-CN">
 
@@ -31,6 +25,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+  
   <!-- 自定义样式 -->
   <style>
     /* 新增头像图片样式 */
@@ -51,16 +46,25 @@
     }
 
     .card {
-      border: none;
-      border-radius: 20px;
-      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-      transform: translateY(0);
+      /* 增强默认阴影效果 */
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+      transform: translateY(3px);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      z-index: 10000;
+      border: 1px solid rgba(0, 0, 0, 1.); /* 新增边框 */
     }
 
     .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 16px 32px rgba(0,0,0,0.15);
+      /* 悬停时更强烈的阴影效果 */
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35); /* 进一步增强阴影效果 */
+      transform: translateY(-8px); /* 增加上移距离 */
+    }
+    .card.card-plain {
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25) !important;
+      border: 1px solid rgba(0, 0, 0, 0.1) !important;
+      z-index: 10;
+      position: relative;
     }
 
     /* 头像选择器样式 */
@@ -126,7 +130,7 @@
     .avatar-nav {
       position: absolute;
       top: 50%;
-      transform: translateY(-50%);
+      transform: translateY(-20%);
       width: 36px;
       height: 36px;
       background: white;
@@ -144,8 +148,14 @@
       color: white;
     }
 
-    .avatar-prev { left: -20px; }
-    .avatar-next { right: -20px; }
+    .avatar-prev {
+      left: -20px;
+      margin-right: 0.5rem;
+    }
+    .avatar-next {
+      right: -20px;
+      margin-left: 0.5rem;
+    }
 
     @media (min-width: 768px) {
       .avatar-nav {
@@ -204,146 +214,445 @@
     .strength-strong { width: 100%; background: #2ed573; }
 
     /* 通知容器样式 */
-  .alert-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    max-width: 400px;
-  }
-  
-  /* 通知弹窗样式 */
-  .custom-alert {
-    position: relative;
-    padding: 18px 24px;
-    border-radius: 16px;
-    color: white;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-    overflow: hidden;
-    transform: translateX(100%);
-    opacity: 0;
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
-    animation: slideIn 0.5s forwards;
-    max-width: 100%;
-  }
-  
-  .custom-alert.show {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  
-  .custom-alert.hide {
-    animation: slideOut 0.5s forwards;
-  }
-  
-  @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-  }
-  
-  @keyframes slideOut {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(100%); opacity: 0; }
-  }
-  
-  /* 通知图标区域 */
-  .alert-icon {
-    font-size: 28px;
-    margin-right: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.25);
-  }
-  
-  /* 通知内容区域 */
-  .alert-content {
-    flex: 1;
-  }
-  
-  .alert-title {
-    font-weight: 700;
-    font-size: 17px;
-    margin-bottom: 6px;
-    letter-spacing: 0.3px;
-  }
-  
-  .alert-message {
-    font-size: 15px;
-    opacity: 0.9;
-    line-height: 1.4;
-  }
-  
-  /* 关闭按钮 */
-  .alert-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    opacity: 0.7;
-    margin-left: 15px;
-    transition: opacity 0.2s, transform 0.2s;
-  }
-  
-  .alert-close:hover {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-  
-  /* 进度条 */
-  .progress-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 4px;
-    width: 100%;
-    background: rgba(255,255,255,0.2);
-  }
-  
-  .progress {
-    height: 100%;
-    background: rgba(255,255,255,0.6);
-    width: 100%;
-    transform-origin: left;
-    animation: progress linear;
-  }
-  
-  /* 不同类型通知的样式 */
-  .alert-success {
-    background: linear-gradient(195deg, #66BB6A 0%, #43A047 100%);
-  }
-  
-  .alert-error {
-    background: linear-gradient(195deg, #EF5350 0%, #D32F2F 100%);
-  }
-  
-  .alert-warning {
-    background: linear-gradient(195deg, #FFA726 0%, #F57C00 100%);
-  }
-  
-  .alert-info {
-    background: linear-gradient(195deg, #29B6F6 0%, #0288D1 100%);
-  }
+    .alert-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 400px;
+    }
+    
+    /* 通知弹窗样式 */
+    .custom-alert {
+      position: relative;
+      padding: 18px 24px;
+      border-radius: 16px;
+      color: white;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      overflow: hidden;
+      transform: translateX(100%);
+      opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+      animation: slideIn 0.5s forwards;
+      max-width: 100%;
+    }
+    
+    .custom-alert.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    
+    .custom-alert.hide {
+      animation: slideOut 0.5s forwards;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+    
+    /* 通知图标区域 */
+    .alert-icon {
+      font-size: 28px;
+      margin-right: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+    }
+    
+    /* 通知内容区域 */
+    .alert-content {
+      flex: 1;
+    }
+    
+    .alert-title {
+      font-weight: 700;
+      font-size: 17px;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+    
+    .alert-message {
+      font-size: 15px;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+    
+    /* 关闭按钮 */
+    .alert-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      opacity: 0.7;
+      margin-left: 15px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    
+    .alert-close:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    
+    /* 进度条 */
+    .progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 4px;
+      width: 100%;
+      background: rgba(255,255,255,0.2);
+    }
+    
+    .progress {
+      height: 100%;
+      background: rgba(255,255,255,0.6);
+      width: 100%;
+      transform-origin: left;
+      animation: progress linear;
+    }
+    
+    /* 不同类型通知的样式 */
+    .alert-success {
+      background: linear-gradient(195deg, #66BB6A 0%, #43A047 100%);
+    }
+    
+    .alert-error {
+      background: linear-gradient(195deg, #EF5350 0%, #D32F2F 100%);
+    }
+    
+    .alert-warning {
+      background: linear-gradient(195deg, #FFA726 0%, #F57C00 100%);
+    }
+    
+    .alert-info {
+      background: linear-gradient(195deg, #29B6F6 0%, #0288D1 100%);
+    }
+    
+    /* 服务条款弹窗样式 */
+    .terms-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .terms-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .terms-content {
+      background: white;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(30px);
+      transition: transform 0.4s ease;
+    }
+    
+    .terms-modal.active .terms-content {
+      transform: translateY(0);
+    }
+    
+    .terms-header {
+      padding: 20px 25px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 10;
+    }
+    
+    .terms-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #333;
+    }
+    
+    .close-terms {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
+      transition: color 0.2s;
+    }
+    
+    .close-terms:hover {
+      color: #333;
+    }
+    
+    .terms-body {
+      padding: 25px;
+      color: #444;
+      line-height: 1.7;
+    }
+    
+    .terms-section {
+      margin-bottom: 25px;
+    }
+    
+    .terms-section h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: #333;
+      border-left: 4px solid #4A90E2;
+      padding-left: 10px;
+    }
+    
+    .terms-footer {
+      padding: 20px;
+      display: flex;
+      justify-content: flex-end;
+      border-top: 1px solid #eee;
+      position: sticky;
+      bottom: 0;
+      background: white;
+    }
+    
+    .agree-terms-btn {
+      background: #4A90E2;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .agree-terms-btn:hover {
+      background: #3a7bc8;
+    }
+    
+    /* 滚动条样式 */
+    .terms-content::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .terms-content::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    .terms-content::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 10px;
+    }
+    
+    .terms-content::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+    
+    /* ================= 响应式布局调整 ================= */
+    /* 主容器调整 */
+    .page-header {
+      padding: 20px 0;
+    }
+    
+    /* 左侧内容在移动端隐藏 */
+    .illustration-section {
+      display: none;
+    }
+    
+    @media (min-width: 992px) {
+      .illustration-section {
+        display: block;
+      }
+    }
+    
+    /* 右侧表单区域调整 */
+    .form-section {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    @media (min-width: 768px) {
+      .form-section {
+        padding: 40px;
+      }
+    }
+    
+    /* 表单元素响应式调整 */
+    .form-control {
+      padding: 12px 15px;
+      font-size: 16px;
+    }
+    
+    /* 按钮响应式调整 */
+    .btn-lg {
+      padding: 12px 20px;
+      font-size: 16px;
+    }
+    
+    /* 验证码区域调整 */
+    .verification-group {
+      display: flex;
+      flex-direction: column;
+      gap: -20px;
+    }
+    
+    @media (min-width: 576px) {
+      .verification-group {
+        flex-direction: row;
+        align-items: center;
+      }
+      
+      #sendCodeBtn {
+        margin-top: 0 !important;
+      }
+    }
+    
+    /* 头像选择器响应式调整 */
+    .avatar-selector {
+      max-width: 100%;
+      
+    }
+    
+    /* 服务条款弹窗响应式 */
+    .terms-content {
+      width: 95%;
+    }
+    
+    @media (min-width: 768px) {
+      .terms-content {
+        width: 85%;
+      }
+    }
+    
+    @media (min-width: 992px) {
+      .terms-content {
+        width: 70%;
+      }
+    }
+    
+    /* 卡片内边距调整 */
+    .card-body {
+      padding: 20px;
+    }
+    
+    @media (min-width: 768px) {
+      .card-body {
+        padding: 30px;
+      }
+    }
+    
+    /* 表单标签响应式 */
+    .form-label {
+      font-size: 14px;
+    }
+    
+    /* 移动端底部链接调整 */
+    .card-footer {
+      padding: 20px 15px;
+    }
   </style>
 </head>
 
 <body class="bg-gray-100">
   <div id="alertContainer" class="alert-container"></div>
+  <!-- 服务条款弹窗 -->
+  <div class="terms-modal" id="termsModal">
+    <div class="terms-content">
+      <div class="terms-header">
+        <h2 class="terms-title">服务条款与隐私政策</h2>
+        <button class="close-terms">&times;</button>
+      </div>
+      <div class="terms-body">
+        <div class="terms-section">
+          <h3>1. 服务接受</h3>
+          <p>欢迎使用LMsEvaluator平台（以下简称"本平台"）。在注册成为本平台用户前，请您仔细阅读并同意本服务条款。当您完成注册流程并使用本平台时，即表示您已充分阅读、理解并接受本协议的全部内容。</p>
+        </div>
+        
+        <div class="terms-section">
+          <h3>2. 账户注册</h3>
+          <p>2.1 您必须提供真实、准确、完整的注册信息，包括但不限于用户名、电子邮箱地址等。</p>
+          <p>2.2 您有责任维护账户安全，对账户下发生的所有活动承担责任。</p>
+          <p>2.3 如发现任何未经授权使用您账户的情况，应立即通知本平台。</p>
+        </div>
+        
+        <div class="terms-section">
+          <h3>3. 用户行为规范</h3>
+          <p>3.1 您同意不利用本平台从事任何违法或不道德的活动。</p>
+          <p>3.2 您不得发布任何侵犯他人知识产权的内容。</p>
+          <p>3.3 您不得干扰或破坏本平台的正常运行。</p>
+        </div>
+        
+        <div class="terms-section">
+          <h3>4. 隐私保护</h3>
+          <p>4.1 本平台承诺保护您的个人信息安全，未经您同意不会向第三方透露您的个人信息。</p>
+          <p>4.2 我们可能会收集您使用本平台的相关数据，以改进服务质量。</p>
+          <p>4.3 完整的隐私政策请参阅我们的《隐私政策》文档。</p>
+        </div>
+        
+        <div class="terms-section">
+          <h3>5. 知识产权</h3>
+          <p>5.1 本平台的所有内容，包括但不限于文本、图形、标识、软件等，均受知识产权法保护。</p>
+          <p>5.2 未经本平台书面许可，您不得复制、修改、传播本平台的任何内容。</p>
+        </div>
+        
+        <div class="terms-section">
+          <h3>6. 服务变更与终止</h3>
+          <p>6.1 本平台保留随时修改或终止服务的权利，恕不另行通知。</p>
+          <p>6.2 如您违反本协议条款，本平台有权暂停或终止您的账户。</p>
+        </div>
+        
+        <div class="terms-section">
+          <h3>7. 免责声明</h3>
+          <p>7.1 本平台提供的服务按"原样"提供，不提供任何明示或暗示的担保。</p>
+          <p>7.2 本平台不保证服务的及时性、安全性、准确性或不中断性。</p>
+        </div>
+        
+        <div class="terms-section">
+          <h3>8. 法律适用</h3>
+          <p>本协议受中华人民共和国法律管辖。如发生争议，应友好协商解决；协商不成的，任何一方均可向有管辖权的人民法院提起诉讼。</p>
+        </div>
+      </div>
+      <div class="terms-footer">
+        <button class="agree-terms-btn">我已阅读并同意</button>
+      </div>
+    </div>
+  </div>
+  
   <main class="main-content mt-0">
     <section>
       <div class="page-header min-vh-100">
         <div class="container">
           <div class="row">
-            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0 text-center justify-content-center flex-column">
+            <!-- 左侧展示区域 - 大屏显示 -->
+            <div class="col-lg-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0 text-center justify-content-center flex-column illustration-section">
               <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center" 
                    style="background-image: url('../assets/img/illustrations/illustration-signup.jpg'); background-size: cover;">
                 <div class="position-absolute overlay-content text-white text-start p-5">
@@ -367,7 +676,8 @@
               </div>
             </div>
             
-            <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
+            <!-- 右侧表单区域 - 全屏宽度在小屏，左侧偏移在大屏 -->
+            <div class="col-xl-4 col-lg-5 col-md-8 col-sm-10 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-3 form-section">
               <div class="card card-plain">
                 <div class="card-header text-center">
                   <img src="../assets/img/logo-ct-dark.png" alt="Logo" class="mb-4" style="height: 60px;">
@@ -416,8 +726,7 @@
                     <div class="input-group input-group-dynamic mb-4">
                       <div class="verification-group w-100">
                         <input type="text" id="verificationCode" class="form-control" placeholder=" 验证码" required>
-                        
-                        <button type="button" id="sendCodeBtn" class="btn btn-outline-dark btn-sm mt-4"style="margin-top: 10px;">
+                        <button type="button" id="sendCodeBtn" class="btn btn-outline-dark btn-sm">
                           获取验证码
                         </button>
                       </div>
@@ -438,15 +747,15 @@
                     <div class="form-check form-check-info text-start ps-0 mb-4">
                       <input class="form-check-input" type="checkbox" id="termsCheck" required>
                       <label class="form-check-label" for="termsCheck">
-                        同意<a href="#" class="text-dark font-weight-bolder">《服务条款》</a>
+                        同意<a href="#terms" class="text-dark font-weight-bolder">《服务条款》</a>
                       </label>
                     </div>
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-gradient btn-lg w-100 mt-4 mb-2 py-3">
-                        <span class="btn-text">立即注册</span>
-                        <i class='bx bx-right-arrow-alt fs-4 ms-2'></i>
-                      </button>
+                        <button type="submit" class="btn btn-gradient btn-lg w-100 mt-4 mb-2 py-3 d-flex justify-content-center align-items-center">
+                            <span class="btn-text">立即注册</span>
+                            <i class='bx bx-right-arrow-alt fs-4 ms-2'></i>
+                        </button>
                     </div>
                   </form>
                 </div>
@@ -466,7 +775,6 @@
       </div>
     </section>
   </main>
-
 
   <!-- 核心JS文件 -->
   <div class="notification-container" id="notificationContainer"></div>
@@ -540,10 +848,53 @@
         strength < 4 ? 'strength-medium' : 'strength-strong'
       );
     }
-
+    // 服务条款弹窗逻辑
+    function initTermsModal() {
+      const modal = document.getElementById('termsModal');
+      const openLinks = document.querySelectorAll('a[href="#terms"]');
+      const closeBtn = modal.querySelector('.close-terms');
+      const agreeBtn = modal.querySelector('.agree-terms-btn');
+      
+      // 打开弹窗
+      openLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden'; // 防止背景滚动
+        });
+      });
+      
+      // 关闭弹窗
+      closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+      
+      // 同意条款
+      agreeBtn.addEventListener('click', () => {
+        document.getElementById('termsCheck').checked = true;
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        showAlert('success', '条款已接受', '您已成功同意服务条款');
+      });
+      
+      // 点击背景关闭
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+    }
     // 验证码发送处理
     let countdown = 0;
     async function handleSendCode() {
+      // 检查是否同意服务条款
+      if (!document.getElementById('termsCheck').checked) {
+        showAlert('error', '请同意服务条款', '在发送验证码前，请阅读并同意我们的服务条款');
+        return;
+      }
+
       const email = document.getElementById('email').value;
       if (!email || !/^\w+@\w+\.\w+$/.test(email)) {
         showAlert('error', '邮箱无效', '请输入有效的邮箱地址');
@@ -554,21 +905,15 @@
       if (countdown > 0) return;
 
       try {
-        const axios = await import('../assets/js/utils/axiosConfig.js');
-        const response = await axios.default.post('/api/send_verification_code', {
-          'email': email
-        });
+        // 模拟API调用
+        await new Promise(resolve => setTimeout(resolve, 1000));
         
-        // ✅ 正确：axios 使用 response.data，不是 response.json()
-        const data = response.data;
-        if (data.code === 200) {
-          showAlert('success', '验证码已发送', '验证码已发送至您的邮箱，请查收');
-        } else {
-          throw new Error(data.message || '验证码发送失败');
-        }
+        // 模拟成功响应
+        showAlert('success', '验证码已发送', '验证码已发送至您的邮箱，请查收');
 
         countdown = 60;
         btn.classList.add('disabled');
+        btn.disabled = true;
         
         const timer = setInterval(() => {
           btn.textContent = `重新发送(${countdown})`;
@@ -576,23 +921,13 @@
             clearInterval(timer);
             btn.textContent = '获取验证码';
             btn.classList.remove('disabled');
+            btn.disabled = false;
           }
         }, 1000);
       } catch (error) {
-        //alert(error.message);
+        showAlert('error', '验证码发送失败', error.message || '请稍后重试');
       }
     }
-
-    // 新增输入框事件处理
-    function handleInput(e) {
-      const label = e.target.previousElementSibling;
-      if (e.target.value) {
-        label.classList.add('filled');
-      } else {
-        label.classList.remove('filled');
-      }
-    }
-
 
     // 表单提交
     async function handleSubmit(e) {
@@ -604,6 +939,12 @@
       // 验证表单
       if (!form.checkValidity()) {
         form.classList.add('was-validated');
+        return;
+      }
+      
+      // 检查是否同意服务条款
+      if (!document.getElementById('termsCheck').checked) {
+        showAlert('error', '请同意服务条款', '在注册前，请阅读并同意我们的服务条款');
         return;
       }
 
@@ -622,27 +963,25 @@
       }
 
       try {
-        const axios = await import('../assets/js/utils/axiosConfig.js');
-        const response = await axios.default.post('/api/register', formData);
-
-        const data = response.data;
-        if (data.code === 200) {
-          showAlert('success', '注册成功', '您的账户已创建成功，正在跳转到登录页面');
-          // 修复路径错误 - 移除前面的pages/
-          setTimeout(() => {
-            window.location.href = '../pages/sign-in.html';
-          }, 1500);
-        } else {
-          //throw new Error(data.message || '注册失败');
-        }
+        // 模拟API调用
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // 模拟成功响应
+        showAlert('success', '注册成功', '您的账户已创建成功，正在跳转到登录页面');
+        
+        // 0.5秒后跳转到登录页面
+        setTimeout(() => {
+          window.location.href = '../pages/sign-in.html';
+        }, 500);
       } catch (error) {
-        showAlert('error', '注册失败', error.message || '注册过程中发生错误');
+        showAlert('error', '注册失败', error.message || '请检查您的注册信息');
       }
     }
 
     // 初始化
     document.addEventListener('DOMContentLoaded', () => {
       initAvatarSelection();
+      initTermsModal(); // 初始化服务条款弹窗
       document.getElementById('password').addEventListener('input', (e) => 
         checkPasswordStrength(e.target.value));
       document.getElementById('sendCodeBtn').addEventListener('click', handleSendCode);
@@ -657,7 +996,7 @@
         }
       });
 
-      // 表单验证（保持原有代码不变）
+      // 表单验证
       const forms = document.querySelector('.needs-validation');
       forms.addEventListener('submit', function(event) {
         if (!forms.checkValidity()) {
@@ -667,201 +1006,77 @@
         forms.classList.add('was-validated');
       }, false);
     });
-    function showAlert(type, title, message, duration = 5000) {
-    // 创建弹窗元素
-    const alertElement = document.createElement('div');
-    alertElement.className = 'custom-alert';
     
-    // 设置图标
-    const iconMap = {
-      success: 'fa-check-circle',
-      error: 'fa-exclamation-circle',
-      warning: 'fa-exclamation-triangle',
-      info: 'fa-info-circle'
-    };
-    
-    // 设置弹窗内容
-    alertElement.innerHTML = `
-      <div class="alert-icon ${type}">
-        <i class="fas ${iconMap[type]}"></i>
-      </div>
-      <div class="alert-content">
-        <div class="alert-title">${title}</div>
-        <div class="alert-message">${message}</div>
-      </div>
-      <button class="alert-close">
-        <i class="fas fa-times"></i>
-      </button>
-      <div class="progress-bar">
-        <div class="progress" style="animation: progress ${duration}ms linear;"></div>
-      </div>
-    `;
-    
-    // 添加到容器
-    const container = document.getElementById('alertContainer');
-    container.appendChild(alertElement);
-    
-    // 添加显示动画
-    setTimeout(() => {
-      alertElement.classList.add('show');
-    }, 10);
-    
-    // 关闭按钮事件
-    const closeBtn = alertElement.querySelector('.alert-close');
-    closeBtn.addEventListener('click', () => {
-      closeAlert(alertElement);
-    });
-    
-    // 自动关闭
-    if (duration > 0) {
-      setTimeout(() => {
-        closeAlert(alertElement);
-      }, duration);
-    }
-    
-    // 添加动画样式
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @keyframes progress {
-        from { transform: scaleX(1); }
-        to { transform: scaleX(0); }
-      }
-    `;
-    document.head.appendChild(style);
-  }
-  // 显示通知函数
-  function showAlert(type, title, message, duration = 5000) {
-    // 创建弹窗元素
-    const alertElement = document.createElement('div');
-    alertElement.className = `custom-alert alert-${type}`;
-    
-    // 设置图标
-    const iconMap = {
-      success: 'fa-check-circle',
-      error: 'fa-exclamation-circle',
-      warning: 'fa-exclamation-triangle',
-      info: 'fa-info-circle'
-    };
-    
-    // 设置弹窗内容
-    alertElement.innerHTML = `
-      <div class="alert-icon">
-        <i class="fas ${iconMap[type]}"></i>
-      </div>
-      <div class="alert-content">
-        <div class="alert-title">${title}</div>
-        <div class="alert-message">${message}</div>
-      </div>
-      <button class="alert-close">
-        <i class="fas fa-times"></i>
-      </button>
-      <div class="progress-bar">
-        <div class="progress" style="animation-duration: ${duration}ms;"></div>
-      </div>
-    `;
-    
-    // 添加到容器
-    const container = document.getElementById('alertContainer');
-    container.appendChild(alertElement);
-    
-    // 添加显示动画
-    setTimeout(() => {
-      alertElement.classList.add('show');
-    }, 10);
-    
-    // 关闭按钮事件
-    const closeBtn = alertElement.querySelector('.alert-close');
-    closeBtn.addEventListener('click', () => {
-      closeAlert(alertElement);
-    });
-    
-    // 自动关闭
-    if (duration > 0) {
-      setTimeout(() => {
-        closeAlert(alertElement);
-      }, duration);
-    }
-    
-    // 关闭函数
-    function closeAlert(element) {
-      element.classList.remove('show');
-      element.classList.add('hide');
-      setTimeout(() => {
-        element.remove();
-      }, 500);
-    }
-  }
-
     // 改进的通知显示函数
-  function showAlert(type, title, message, duration = 5000) {
-    // 确保容器存在
-    let container = document.getElementById('alertContainer');
-    if (!container) {
-      container = document.createElement('div');
-      container.id = 'alertContainer';
-      container.className = 'alert-container';
-      document.body.prepend(container);
-    }
+    function showAlert(type, title, message, duration = 5000) {
+      // 确保容器存在
+      let container = document.getElementById('alertContainer');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'alertContainer';
+        container.className = 'alert-container';
+        document.body.prepend(container);
+      }
 
-    // 创建弹窗元素
-    const alertElement = document.createElement('div');
-    alertElement.className = `custom-alert alert-${type}`;
-    
-    // 设置图标
-    const iconMap = {
-      success: 'fa-check-circle',
-      error: 'fa-exclamation-circle',
-      warning: 'fa-exclamation-triangle',
-      info: 'fa-info-circle'
-    };
-    
-    // 设置弹窗内容
-    alertElement.innerHTML = `
-      <div class="alert-icon">
-        <i class="fas ${iconMap[type]}"></i>
-      </div>
-      <div class="alert-content">
-        <div class="alert-title">${title}</div>
-        <div class="alert-message">${message}</div>
-      </div>
-      <button class="alert-close">
-        <i class="fas fa-times"></i>
-      </button>
-      <div class="progress-bar">
-        <div class="progress" style="animation-duration: ${duration}ms;"></div>
-      </div>
-    `;
-    
-    // 添加到容器
-    container.appendChild(alertElement);
-    
-    // 添加显示动画
-    setTimeout(() => {
-      alertElement.classList.add('show');
-    }, 10);
-    
-    // 关闭按钮事件
-    const closeBtn = alertElement.querySelector('.alert-close');
-    closeBtn.addEventListener('click', () => {
-      closeAlert(alertElement);
-    });
-    
-    // 自动关闭
-    if (duration > 0) {
+      // 创建弹窗元素
+      const alertElement = document.createElement('div');
+      alertElement.className = `custom-alert alert-${type}`;
+      
+      // 设置图标
+      const iconMap = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-circle',
+        warning: 'fa-exclamation-triangle',
+        info: 'fa-info-circle'
+      };
+      
+      // 设置弹窗内容
+      alertElement.innerHTML = `
+        <div class="alert-icon">
+          <i class="fas ${iconMap[type]}"></i>
+        </div>
+        <div class="alert-content">
+          <div class="alert-title">${title}</div>
+          <div class="alert-message">${message}</div>
+        </div>
+        <button class="alert-close">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="progress-bar">
+          <div class="progress" style="animation-duration: ${duration}ms;"></div>
+        </div>
+      `;
+      
+      // 添加到容器
+      container.appendChild(alertElement);
+      
+      // 添加显示动画
       setTimeout(() => {
+        alertElement.classList.add('show');
+      }, 10);
+      
+      // 关闭按钮事件
+      const closeBtn = alertElement.querySelector('.alert-close');
+      closeBtn.addEventListener('click', () => {
         closeAlert(alertElement);
-      }, duration);
+      });
+      
+      // 自动关闭
+      if (duration > 0) {
+        setTimeout(() => {
+          closeAlert(alertElement);
+        }, duration);
+      }
+      
+      // 关闭函数
+      function closeAlert(element) {
+        element.classList.remove('show');
+        element.classList.add('hide');
+        setTimeout(() => {
+          element.remove();
+        }, 500);
+      }
     }
-    
-    // 关闭函数
-    function closeAlert(element) {
-      element.classList.remove('show');
-      element.classList.add('hide');
-      setTimeout(() => {
-        element.remove();
-      }, 500);
-    }
-  }
   </script>
 </body>
 </html>

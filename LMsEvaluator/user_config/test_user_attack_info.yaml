@@ -1,50 +1,18 @@
-- - createdAt: 2025-05-15 10:30
+- - createdAt: 2025-07-15 10:30
+    defenderEnabled: true
     description: 针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型
-    executed: true
     id: 1
-    name: 文本对抗攻击配置
+    name: 对抗攻击-1（防御）
     params:
       attack_nums: 3
-      use_local_model: true
-    sent: true
-    status: active
+      defender:
+        gradient_accumulation_steps: 4
+        learning_rate: 5.0e-05
+        log_to_tb: false
+        num_clean_epochs: 0
+        num_epochs: 1
+        num_train_adv_examples: 10
+        per_device_train_batch_size: 8
     strategy: TextFoolerJin2019
     type: AdvAttack
-  - createdAt: 2025-05-20 09:45
-    description: 针对训练数据的投毒攻击，污染训练集以降低模型性能
-    executed: false
-    id: 3
-    name: 数据投毒配置
-    params:
-      epochs: 15
-      poisoning_rate: 0.15
-    sent: true
-    status: active
-    strategy: default
-    type: PoisoningAttack
-  - createdAt: 2025-06-10 14:30
-    description: 通过查询目标模型来窃取其结构和参数
-    executed: true
-    id: 4
-    name: 模型窃取攻击
-    params:
-      attack_nums: 3
-      method: MeaeQ
-      query_num: 500
-    sent: true
-    status: active
-    strategy: default
-    type: ModelStealingAttack
-  - createdAt: 2025-06-12 11:20
-    description: 使用强化学习优化攻击策略
-    executed: false
-    id: 5
-    name: 模型反演配置
-    params:
-      max_iterations: 2500
-      seed: 123
-    sent: true
-    status: active
-    strategy: default
-    type: RLMI
 - null

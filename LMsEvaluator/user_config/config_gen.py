@@ -37,7 +37,7 @@ FET = {
     "tournsize": 5,
     "crossover_rate": 0.9,
     "mutation_rate": 0.1,
-    "max_generations": 2,
+    "max_generations": 2,  # 原注释100
     "halloffame_size": 30,
     "use_local_model": True,
     "use_local_tokenizer": True,
@@ -45,7 +45,14 @@ FET = {
     "tokenizer_name_or_path": "LMs/bert_base_uncased",
     "dataset_name_or_path": "cola",
     "display_full_info": True,
-    "defender": "None"
+    "defender": {
+        # 可选类型示例:
+        # "type": "pruning",
+        # "prune_ratio": 0.2
+        # "type": "high-entropy-mask"
+        "type": "output-perturb",
+        "noise_std": 0.1
+    }
 }
 
 BackdoorAttack = {
@@ -64,13 +71,13 @@ BackdoorAttack = {
 }
 
 PoisoningAttack = {
-    "attack": False,
+    "attack": True,
     "attack_type": "PoisoningAttack",
     "poisoning_rate": 0.3,
     "save_path": "./attack/PoisoningAttack/model_output",
     "train_config": {
         "output_dir": "./attack/PoisoningAttack/cache",
-        "num_train_epochs": 1,
+        "num_train_epochs": 1.0,
         "per_device_train_batch_size": 16,
         "per_device_eval_batch_size": 64,
         "warmup_steps": 1000,
@@ -169,11 +176,7 @@ def generate_config(username, attack_list, globalConfig=None):
             },
         },
         "attack_list": [],
-        "output": {
-            "base_path": "output",
-            "model_output": "modelOutput",
-            "evaluation_result": "evaluationResult"
-        }
+
     }
     # 如果提供了全局配置，则合并到配置中
     if globalConfig:
@@ -190,16 +193,20 @@ def generate_config(username, attack_list, globalConfig=None):
             else:
                 config['LM_config']['local_model'] = None
         # 合并任务配置
-        if 'task' in globalConfig:
-            config['task_config']['task'] = globalConfig['task']['task']
-            config['task_config']['dataset'] = globalConfig['task']['dataset']
-            config['task_config']['local_dataset'] = globalConfig['task']['local_dataset']
-            config['task_config']['normal_training'] = globalConfig['task']['normal_training']
+        if 'task_config' in globalConfig:
+            config['task_config']['task'] = globalConfig['task_config']['task']
+            datasets = globalConfig['task_config']['dataset']
+            if '\\' in datasets:
+                str=datasets.split('\\')
+                config['task_config']['dataset'] = str[0]+'/'+str[1]
+            else:
+                config['task_config']['dataset'] = datasets
+
+            config['task_config']['train_config']['num_train_epochs']= globalConfig['task_config']['epochs']
+            config['task_config']['normal_training'] = globalConfig['task_config']['normal_training']
 
     # 遍历输入的攻击列表，修改配置
-    for attack in attack_list:
-        if attack.get('status') != 'active':
-            continue  # 跳过非活跃配置
+    for attack in attack_list:# 跳过非活跃配置
         attack_type = attack.get('type')
        
         # 检查攻击类型是否在已定义的策略中
@@ -210,25 +217,36 @@ def generate_config(username, attack_list, globalConfig=None):
             if attack_type=='AdvAttack':
                 attack_config['attack_recipe'] = attack.get('strategy')
                 for param in attack.get('params', []):
-                    attack_config[param] = attack.get('params')[param]
+                    if param in attack_config:
+                        attack_config[param] = attack.get('params')[param]
             elif attack_type=='BackdoorAttack':
+
                 attack_config['poisoner']['name'] = attack.get('strategy')
                 for param in attack.get('params', []):
+
                     if param == 'defender' and attack.get('params')[param]!='None':
-                        attack_config['defender'] = attack.get('params')[param]['strategy']
+                        value = attack.get('params')[param]
+                        #print(value['strategy'])
+                        #value = value['strategy']
+                        #print(value)
+                        attack_config['defender'] = value
                     if param == 'sample_metrics':
                         for metric in attack.get('params')[param]:
                             attack_config['sample_metrics'].append(metric)
-
-                    attack_config[param] = attack.get('params')[param]
+                    if param in attack_config:
+                        attack_config[param] = attack.get('params')[param]
             elif attack_type == 'PoisoningAttack':
-                attack_config['train_config']['num_train_epochs'] = attack.get('epochs')
+
                 for param in attack.get('params', []):
-                    attack_config[param] = attack.get('params')[param]
+                    if param == 'epochs':
+                        attack_config['train_config']['num_train_epochs'] = attack.get('params')[param]
+                    if param in attack_config:
+                        attack_config[param] = attack.get('params')[param]
 
             else:
                 for param in attack.get('params', []):
-                    attack_config[param] = attack.get('params')[param]
+                    if param in attack_config:
+                        attack_config[param] = attack.get('params')[param]
 
 
             # 将修改后的配置添加到 attack_list
@@ -311,56 +329,7 @@ def update_log_file_name(username, new_log_file_name):
 
 if __name__ == '__main__':
     # 示例输入数据
-    attack_list = [
-        {
-            'id': 1,
-            'name': '文本对抗攻击配置',
-            'type': 'AdvAttack',
-            'strategy': 'TextFoolerJin2019',
-            'description': '针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型',
-            'status': 'active',
-            'sent': True,
-            'executed': True,
-            'createdAt': '2025-05-15 10:30',
-            'params': {'use_local_model': True, 'attack_nums': 3}
-        },
-        {
-            'id': 3,
-            'name': '数据投毒配置',
-            'type': 'PoisoningAttack',
-            'strategy': 'default',
-            'description': '针对训练数据的投毒攻击，污染训练集以降低模型性能',
-            'status': 'active',
-            'sent': True,
-            'executed': False,
-            'createdAt': '2025-05-20 09:45',
-            'params': {'poisoning_rate': 0.15, 'epochs': 15}
-        },
-        {
-            'id': 4,
-            'name': '模型窃取攻击',
-            'type': 'ModelStealingAttack',
-            'strategy': 'default',
-            'description': '通过查询目标模型来窃取其结构和参数',
-            'status': 'active',
-            'sent': True,
-            'executed': True,
-            'createdAt': '2025-06-10 14:30',
-            'params': {'attack_nums': 3, 'query_num': 500, 'method': 'MeaeQ'}
-        },
-        {
-            'id': 5,
-            'name': '模型反演配置',
-            'type': 'RLMI',
-            'strategy': 'default',
-            'description': '使用强化学习优化攻击策略',
-            'status': 'active',
-            'sent': True,
-            'executed': False,
-            'createdAt': '2025-06-12 11:20',
-            'params': {'seed': 123, 'max_iterations': 2500}
-        }
-    ]
+    attack_list = [{'id': 1, 'name': '对抗攻击-1（防御）', 'type': 'AdvAttack', 'strategy': 'TextFoolerJin2019', 'description': '针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型', 'defenderEnabled': True, 'createdAt': '2025-07-15 10:30', 'params': {'attack_nums': 3, 'defender': {'num_epochs': 1, 'num_clean_epochs': 0, 'num_train_adv_examples': 10, 'learning_rate': 5e-05, 'per_device_train_batch_size': 8, 'gradient_accumulation_steps': 4, 'log_to_tb': False}}}]
 
     username = "test_user"
     generate_config(username, attack_list)

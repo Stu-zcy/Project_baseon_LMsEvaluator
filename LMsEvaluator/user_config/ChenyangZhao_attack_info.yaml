@@ -1,56 +1,36 @@
-- - createdAt: 2025/07/29 02:59
-    defenderEnabled: false
-    description: 通过微小的、难以察觉的扰动来欺骗模型，使其做出错误的预测
-    executed: false
-    id: 1
-    name: 对抗攻击-1
-    params:
-      attack_nums: 3
-      defender: false
-      use_local_dataset: true
-      use_local_model: true
-      use_local_tokenizer: true
-    sent: true
-    status: active
-    strategy: TextFoolerJin2019
-    type: AdvAttack
-  - createdAt: 2025/07/29 02:59
+- - createdAt: 2025-07-20 14:15
     defenderEnabled: true
-    description: 在训练数据中植入后门，使模型在特定触发条件下表现出异常行为
-    executed: false
+    description: 针对NLP模型的后门攻击，植入特定触发模式
     id: 2
     name: 后门攻击-1
     params:
-      defender:
-        strategy: ONION
+      defender: ONION
       sample_metrics:
       - ppl
       - use
-    sent: true
-    status: active
     strategy: BadNets
     type: BackdoorAttack
-  - createdAt: 2025-05-20 09:45
-    defenderEnabled: false
-    description: 针对训练数据的投毒攻击，污染训练集以降低模型性能
-    executed: false
-    id: 3
-    name: 数据投毒-1
+  - createdAt: 2025-06-10 14:30
+    defenderEnabled: true
+    description: 通过查询目标模型来窃取其结构和参数
+    id: 4
+    name: 模型窃取-1（防御）
     params:
-      epochs: 15
-      poisoning_rate: 0.15
-    sent: true
-    status: active
-    strategy: Poisoning
-    type: PoisoningAttack
+      attack_nums: 3
+      defender:
+        noise_std: 0.1
+        type: output-perturb
+      method: MeaeQ
+      query_num: 500
+    strategy: MeaeQ
+    type: ModelStealingAttack
 - LM_config:
-    local_model: true
     model: bert_base_uncased
   general:
     random_seed: 42
     use_gpu: true
   task_config:
-    dataset: imdb
+    dataset: GLUE\cola
     epochs: 3
     normal_training: false
     task: TaskForSingleSentenceClassification
