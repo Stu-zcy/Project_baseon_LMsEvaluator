@@ -365,15 +365,20 @@ const AttackRecords = defineComponent({
         });
 
         if (response.status === 200) {
-					spawnState.value = 2;
-					reportID.value = response.data.reportID;
+					if (OPEN.value == 1 && spawnState.value == 1 && reportID == "" && 
+							response.data.username == username && response.data.createTime == targetCreateTime.value) {
+						spawnState.value = 2;
+						reportID.value = response.data.reportID;
+					}
           antd.message.success('报告生成成功！');
-        } else {
-					spawnState.value = 0;
+        } else if (response.status === 201) {
+					// spawnState.value = 0;
+				} else {
+					// spawnState.value = 0;
           antd.message.error('报告生成失败');
         }
       } catch (error) {
-				spawnState.value = 0;
+				// spawnState.value = 0;
         console.error('生成报告失败:', error);
         antd.message.error('报告生成失败，请稍后再试。');
       }

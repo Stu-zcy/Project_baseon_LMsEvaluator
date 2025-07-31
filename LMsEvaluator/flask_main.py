@@ -577,7 +577,7 @@ def execute_attack():
             AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update(
                 {AttackRecord.attackResult: json.dumps(result)})
             db.session.commit()
-            return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
+            return jsonify({'status': 'success', 'message': 'Attack executed successfully!'}), 200
         except Exception as e:
             print("执行失败，捕获到错误")
             AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update(
@@ -776,12 +776,14 @@ def generate_report():
             else:
                 raise Exception("未能生成pdf文件")
 
-            AttackRecord.query.filter_by(createUserName=username, createTime=createTime).update(
-                {AttackRecord.reportState: 2, AttackRecord.reportID: reportID})
+            count = AttackRecord.query.filter_by(createUserName=username, createTime=createTime).update(
+                			{AttackRecord.reportState: 2, AttackRecord.reportID: reportID})
             db.session.commit()
             
-
-            return jsonify({'reportID': reportID}), 200
+            if (count == 0):
+                return jsonify({'message': "The record deleted."}), 201
+            else:
+                return jsonify({'reportID': reportID, 'username': username, 'createTime': createTime}), 200
         else:
             raise Exception("未能获取报告")
 
@@ -801,7 +803,7 @@ def read_report():
         username = data.get('username', None).strip('"')
         createTime = data.get('createTime', None)
         attackRecord = AttackRecord.query.filter_by(createUserName=username, createTime=createTime).first()
-        reportID = attackRecord.reportID
+        reportID = attackRecord.reportID or ""
         reportState = attackRecord.reportState
         return jsonify({'spawnState': reportState, 'reportID': reportID}), 200
 
