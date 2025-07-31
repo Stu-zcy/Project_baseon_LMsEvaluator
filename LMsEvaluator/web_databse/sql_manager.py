@@ -145,7 +145,7 @@ def print_verification_codes():
 
 
 # 添加攻击记录
-def add_attack_record(attackName, createUserName, createTime, attackResult, reportState, reportID, attackInfo=None, isTreasure=False,attackProgress=None):
+def add_attack_record(attackName, createUserName, createTime, attackResult, reportState, reportID=None, attackInfo=None, isTreasure=False,attackProgress=None):
     conn = sqlite3.connect(data_path)
     cursor = conn.cursor()
     cursor.execute('INSERT INTO attack_record (attackName, createUserName, createTime, isTreasure, attackInfo, attackResult,attackProgress, reportState, reportID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -253,6 +253,29 @@ def get_attack_info(username):
         return []
 
 
+def update_attack_result(createUserName,Initime,result):
+    conn = sqlite3.connect(data_path)
+    cursor = conn.cursor()
+
+    # 1. 检查记录是否存在
+    cursor.execute(
+        "SELECT attackID FROM attack_record WHERE createUserName = ? AND createTime = ?",
+        (createUserName,Initime)
+    )
+    record = cursor.fetchone()
+
+    if record:
+        # 2. 更新 attackResult 字段
+        cursor.execute(
+            "UPDATE attack_record SET attackResult = ? WHERE createUserName = ? AND createTime = ?",
+            (json.dumps(result),createUserName,Initime)
+        )
+        print(f"[✓] Updated attackResult for user '{createUserName}' (createTime: {Initime})")
+    else:
+        print("[×] 记录不存在，未更新")
+
+    conn.commit()
+    conn.close()
 
 # 运行示例
 if __name__ == '__main__':

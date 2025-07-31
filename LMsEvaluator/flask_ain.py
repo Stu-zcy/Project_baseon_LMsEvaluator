@@ -1,5 +1,13 @@
 import eventlet
 eventlet.monkey_patch()
+from multiprocessing import Process
+# run_multi.py
+import multiprocessing as mp
+mp.set_start_method('spawn', force=True)
+
+
+# 其他你的模块
+from threading import Lock
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -14,11 +22,14 @@ import random, time, secrets
 import torch
 from utils.deepseek_helper import chatForReport
 from utils.log_helper import LogThreadManager
+from web_databse.sql_manager import update_attack_result,add_attack_record
 from datetime import datetime, timedelta
 from utils.database_helper import extractResult
 from jwt_token import sign
 from user_config.config_gen import generate_config, get_attack_info,update_log_file_name
 from test4transformers import run_pipeline
+from run_multi import run_attack_thread
+
 os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
 torch.backends.mps.is_available = lambda: False
 app = Flask(__name__)
@@ -531,63 +542,41 @@ def receive_attack_list():
     return jsonify({'status': 'success', 'message': 'Attack list received!', 'received_data': attack_list})
 
 
+
+
 executed_request_ids = set()
+lock = Lock()
 
 @app.route('/api/execute_attack', methods=['POST'])
 @auth
 def execute_attack():
     if request.method == 'OPTIONS':
-        return '', 200  # 直接返回 OK，浏览器预检就不会再进业务逻辑
+        return '', 200
+
     try:
-        print(f"METHOD: {request.method}")
         data = request.json
-        username = data.get('username', None).strip('"')
+        req_id = data.get('request_id')
+        username = data.get('username', '').strip('"')
+        attackName = data.get('attack_name', '').strip('"')
+
+        with lock:
+            if req_id in executed_request_ids:
+                return jsonify({'status': 'error', 'message': 'Duplicate request'}), 400
+            executed_request_ids.add(req_id)
+
         print(f"Executing attack for user: {username}")
-        attackName = data.get('attack_name', None).strip('"')
         print(f"Attack name: {attackName}")
-        attack_info = get_attack_info(username)
-        #print("Attack info:", attack_info)  # 输出攻击信息
-        # 下游任务执行代码
-        initTime = int(time.time())
-        date = str(datetime.now())[:10]
-        attack = AttackRecord(attackName=attackName, 
-                              createUserName=username, 
-							  createTime=initTime, 
-							  attackInfo=json.dumps(attack_info),  # 将攻击信息转换为JSON字符串
-							  attackResult=json.dumps("RUNNING"),
-                              attackProgress="0/" + str(len(attack_info[0])),
-                              reportState=0)
 
-        initTime = str(initTime)
-        db.session.add(attack)
-        db.session.commit()
-        project_path = os.path.dirname(os.path.abspath(__file__))
-        try:
-            #model_class = parse_config(project_path, initTime, str(username))
-            #model_class.run()
-            
-            fileName = username + '_single_' + initTime
-            update_log_file_name(username, fileName)
+        # 启动子进程执行攻击任务
+        process = Process(target=run_attack_thread, args=(username, attackName))
+        process.start()
 
-            run_pipeline(os.path.join(project_path, 'user_config', username + '_config.yaml'))
-
-            print("执行成功！")
-
-            result = extractResult(os.path.join(project_path, 'logs', fileName + '_' + date + '.txt'))
-            AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update(
-                {AttackRecord.attackResult: json.dumps(result)})
-            db.session.commit()
-            return jsonify({'status': 'success', 'message': 'Attack executed successfully!'})
-        except Exception as e:
-            print("执行失败，捕获到错误")
-            AttackRecord.query.filter_by(attackID=attack.attackID, createUserName=username).update(
-                {AttackRecord.attackResult: json.dumps("FAILED")})
-            db.session.commit()
-            raise e
+        return jsonify({'status': 'success', 'message': 'Attack started in background'})
 
     except Exception as e:
         print("Error executing attack:", e)
         return jsonify({'status': 'error', 'message': 'Failed to execute attack'}), 500
+
 
 
 @app.route('/api/getRecord', methods=['POST'])
@@ -879,4 +868,10 @@ def handle_disconnect(data=None):
 
 if __name__ == '__main__':
     # app.run(port=57777, debug=True)
-    socketio.run(app, debug=False, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
+    #app.run(host='127.0.0.1', port=59999, debug=False)
+    socketio.run(app,host='0.0.0.0', debug=False, port=5000, allow_unsafe_werkzeug=True)
+    # socketio.run(app,
+    #              host='127.0.0.1',
+    #              port=59999,
+    #              debug=False,
+    #              use_reloader=False)

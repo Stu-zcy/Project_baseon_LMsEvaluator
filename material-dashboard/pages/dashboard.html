@@ -438,15 +438,15 @@
         
         .badge-defenseEnabled {
             
-            background: rgba(59, 130, 246, 0.1);
-            color: #2563eb;
-            border: 1px solid var(--info);
+            background: rgba(220, 38, 38, 0.5); /* 更鲜艳的红色 */
+            color: #b91c1c;
+            border: 1px solid #b91c1c;
         }
         
         .badge-defenseDisabled {
-            background: rgba(239, 68, 68, 0.1);
-            color: #c53030;
-            border: 1px solid var(--danger);
+            background: rgba(107, 114, 128, 0.3);
+            color: #4b5563;
+            border: 1px solid #9ca3af;
         }
         .group-header {
             background-color: #f8f9fa;
@@ -505,39 +505,39 @@
         }
         
         .status-active {
-            background: rgba(59, 130, 246, 0.1);
-            color: #2563eb;
-            border: 1px solid var(--info);
+            background: rgba(220, 38, 38, 0.5); /* 更鲜艳的红色 */
+            color: #b91c1c;
+            border: 1px solid #b91c1c;
         }
         
         .status-inactive {
-            background: rgba(239, 68, 68, 0.1);
-            color: #c53030;
-            border: 1px solid var(--danger);
+            background: rgba(107, 114, 128, 0.3);
+            color: #4b5563;
+            border: 1px solid #9ca3af;
         }
         
         .status-sent {
-            background: rgba(59, 130, 246, 0.1);
-            color: #2563eb;
-            border: 1px solid var(--info);
+            background: rgba(220, 38, 38, 0.5); /* 更鲜艳的红色 */
+            color: #b91c1c;
+            border: 1px solid #b91c1c;
         }
         
         .status-unsent {
-            background: rgba(239, 68, 68, 0.1);
-            color: #c53030;
-            border: 1px solid var(--danger);
+            background: rgba(107, 114, 128, 0.3);
+            color: #4b5563;
+            border: 1px solid #9ca3af;
         }
         
         .status-executed {
-            background: rgba(59, 130, 246, 0.1);
-            color: #2563eb;
-            border: 1px solid var(--info);
+            background: rgba(220, 38, 38, 0.5); /* 更鲜艳的红色 */
+            color: #b91c1c;
+            border: 1px solid #b91c1c;
         }
         
         .status-unexecuted {
-            background: rgba(239, 68, 68, 0.1);
-            color: #c53030;
-            border: 1px solid var(--danger);
+           background: rgba(107, 114, 128, 0.3);
+            color: #4b5563;
+            border: 1px solid #9ca3af;
         }
 
         .action-buttons {
@@ -934,7 +934,7 @@
 			<a class="navbar-brand px-4 py-3 m-0" href="../pages/dashboard.html"
 				target="_blank">
 				<img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
-				<span class="ms-1 text-sm text-dark">LMsEvaluator</span>
+				<span class="ms-1 text-sm text-dark" >LMsEvaluator</span>
 			</a>
 		</div>
 		<hr class="horizontal dark mt-0 mb-2">
@@ -2169,26 +2169,18 @@
             configList = [
                 {
                     id: 1,
-                    name: "对抗攻击-1（防御）",
+                    name: "对抗攻击-1",
                     type: "AdvAttack",
                     strategy: "TextFoolerJin2019",
                     description: "针对NLP模型的文本对抗攻击，通过替换同义词和干扰字符欺骗模型",
                     status: "active",
-                    defenderEnabled: true,
+                    defenderEnabled: false,
                     sent: true,
                     executed: true,
                     createdAt: "2025-07-15 10:30",
                     params: {
                         attack_nums: 3,
-                        defender: {
-                            num_epochs: 1,
-                            num_clean_epochs: 0,
-                            num_train_adv_examples: 10,
-                            learning_rate: 5e-5,
-                            per_device_train_batch_size: 8,
-                            gradient_accumulation_steps: 4,
-                            log_to_tb: false
-                        }
+                        defender: null,
                     }
                 },
                 {
