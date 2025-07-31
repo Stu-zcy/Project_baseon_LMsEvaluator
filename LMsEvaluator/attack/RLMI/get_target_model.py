@@ -85,8 +85,8 @@ def get_target_model(model_name="tinybert4", dataset_name="emotion", device=torc
     test = load_dataset('csv', data_files=os.path.join(dataset_path, "private_test_dataset.csv"))['train']
 
     # FIXME: 本地加速
-    # train = train.select(range(48))
-    # test = test.select(range(48))
+    train = train.select(range(48))
+    test = test.select(range(48))
 
     def preprocess_function(examples):
         return tokenizer(examples['text'], truncation=True, max_length=512)

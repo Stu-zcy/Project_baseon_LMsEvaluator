@@ -26,7 +26,7 @@ def run_attack_thread(username, attackName):
             attackName=attackName,
             createUserName=username,
             createTime=initTime,
-            attackInfo=json.dumps(attack_info),
+            attackInfo=attack_info,
             attackResult=json.dumps("RUNNING"),
             attackProgress=attackProgress,
             reportState=0
@@ -45,7 +45,7 @@ def run_attack_thread(username, attackName):
         result = extractResult(log_file)
 
         # 5. 更新攻击结果
-        update_attack_result(initTime, username, json.dumps(result))
+        update_attack_result( username,initTime, json.dumps(result))
         print(f"[{username}] 攻击成功，结果已更新。")
 
     except Exception as e:

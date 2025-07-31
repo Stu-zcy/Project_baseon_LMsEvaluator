@@ -70,7 +70,7 @@ def __prepare(model_name="tinybert4", dataset_name="emotion", device=torch.devic
     public_dataset = load_dataset('csv', data_files=public_dataset_path)['train']
 
     # FIXME: 本地加速
-    # public_dataset = public_dataset.select(range(48))
+    public_dataset = public_dataset.select(range(48))
 
     # 加载目标模型
     target_model_path = os.path.join(rlmi_attack_path, "model", f"{model_name}_{dataset_name}")

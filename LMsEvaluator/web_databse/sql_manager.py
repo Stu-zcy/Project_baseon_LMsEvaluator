@@ -268,7 +268,7 @@ def update_attack_result(createUserName,Initime,result):
         # 2. 更新 attackResult 字段
         cursor.execute(
             "UPDATE attack_record SET attackResult = ? WHERE createUserName = ? AND createTime = ?",
-            (json.dumps(result),createUserName,Initime)
+            (result,createUserName,Initime)
         )
         print(f"[✓] Updated attackResult for user '{createUserName}' (createTime: {Initime})")
     else:

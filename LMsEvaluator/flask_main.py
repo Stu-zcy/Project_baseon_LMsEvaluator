@@ -879,4 +879,4 @@ def handle_disconnect(data=None):
 
 if __name__ == '__main__':
     # app.run(port=57777, debug=True)
-    socketio.run(app, debug=False, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
