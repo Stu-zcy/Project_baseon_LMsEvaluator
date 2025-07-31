@@ -51,4 +51,4 @@ def run_attack_thread(username, attackName):
     except Exception as e:
         print(f"[{username}] 后台线程执行失败：", e)
         traceback.print_exc()  # 打印堆栈方便调试
-        update_attack_result(initTime, username, json.dumps("FAILED"))
+        update_attack_result(username,initTime, json.dumps("FAILED"))

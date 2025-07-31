@@ -905,12 +905,18 @@
       if (countdown > 0) return;
 
       try {
-        // 模拟API调用
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        const axios = await import('../assets/js/utils/axiosConfig.js');
+        const response = await axios.default.post('/api/send_verification_code', {
+          'email': email
+        });
         
-        // 模拟成功响应
-        showAlert('success', '验证码已发送', '验证码已发送至您的邮箱，请查收');
-
+        // ✅ 正确：axios 使用 response.data，不是 response.json()
+        const data = response.data;
+        if (data.code === 200) {
+          showAlert('success', '验证码已发送', '验证码已发送至您的邮箱，请查收');
+        } else {
+          throw new Error(data.message || '验证码发送失败');
+        }
         countdown = 60;
         btn.classList.add('disabled');
         btn.disabled = true;
@@ -963,16 +969,19 @@
       }
 
       try {
-        // 模拟API调用
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // 模拟成功响应
-        showAlert('success', '注册成功', '您的账户已创建成功，正在跳转到登录页面');
-        
-        // 0.5秒后跳转到登录页面
-        setTimeout(() => {
-          window.location.href = '../pages/sign-in.html';
-        }, 500);
+        const axios = await import('../assets/js/utils/axiosConfig.js');
+        const response = await axios.default.post('/api/register', formData);
+
+        const data = response.data;
+        if (data.code === 201) {
+          showAlert('success', '注册成功', '您的账户已创建成功，正在跳转到登录页面');
+          // 修复路径错误 - 移除前面的pages/
+          setTimeout(() => {
+            window.location.href = '../pages/sign-in.html';
+          }, 500);
+        } else {
+          //throw new Error(data.message || '注册失败');
+        }
       } catch (error) {
         showAlert('error', '注册失败', error.message || '请检查您的注册信息');
       }

@@ -544,8 +544,7 @@ def receive_attack_list():
 
 
 
-executed_request_ids = set()
-lock = Lock()
+
 
 @app.route('/api/execute_attack', methods=['POST'])
 @auth
@@ -555,18 +554,13 @@ def execute_attack():
 
     try:
         data = request.json
-        req_id = data.get('request_id')
+        
         username = data.get('username', '').strip('"')
         attackName = data.get('attack_name', '').strip('"')
 
-        with lock:
-            if req_id in executed_request_ids:
-                return jsonify({'status': 'error', 'message': 'Duplicate request'}), 400
-            executed_request_ids.add(req_id)
-
         print(f"Executing attack for user: {username}")
         print(f"Attack name: {attackName}")
-
+    
         # 启动子进程执行攻击任务
         process = Process(target=run_attack_thread, args=(username, attackName))
         process.start()
@@ -574,8 +568,10 @@ def execute_attack():
         return jsonify({'status': 'success', 'message': 'Attack started in background'})
 
     except Exception as e:
+        import traceback
         print("Error executing attack:", e)
-        return jsonify({'status': 'error', 'message': 'Failed to execute attack'}), 500
+        traceback.print_exc()
+        return jsonify({'status': 'error', 'message': str(e)}), 400
 
 
 

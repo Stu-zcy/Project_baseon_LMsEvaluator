@@ -252,7 +252,7 @@ const AttackRecords = defineComponent({
 					// let flag = false;
 					for (let i = 0; i < responseData.value.length; ++i) {
 						if (computeProgress(responseData.value[i][4]) !== '100.00') {
-							setTimeout(fetchData, 30 * 1000);
+							setTimeout(fetchData, 5 * 1000);
 							break;
 						}
 					}

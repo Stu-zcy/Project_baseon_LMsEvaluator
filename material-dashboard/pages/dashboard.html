@@ -406,17 +406,7 @@
             border: 1px solid var(--security-secondary);
         }
         
-        .badge-security-dark {
-            background: var(--security-light);
-            color: var(--security-dark);
-            border: 1px solid var(--security-secondary);
-        }
         
-        .badge-security-light {
-            background: var(--security-light);
-            color: var(--security-dark);
-            border: 1px solid var(--security-secondary);
-        }
         
         .badge-privacy {
             background: var(--privacy-light);
@@ -424,17 +414,6 @@
             border: 1px solid var(--privacy-secondary);
         }
         
-        .badge-privacy-dark {
-            background: var(--privacy-light);
-            color: var(--privacy-dark);
-            border: 1px solid var(--privacy-secondary);
-        }
-        
-        .badge-privacy-light {
-            background: var(--privacy-light);
-            color: var(--privacy-dark);
-            border: 1px solid var(--privacy-secondary);
-        }
         
         .badge-defenseEnabled {
             
@@ -512,30 +491,6 @@
         
         .status-inactive {
             background: rgba(107, 114, 128, 0.3);
-            color: #4b5563;
-            border: 1px solid #9ca3af;
-        }
-        
-        .status-sent {
-            background: rgba(220, 38, 38, 0.5); /* 更鲜艳的红色 */
-            color: #b91c1c;
-            border: 1px solid #b91c1c;
-        }
-        
-        .status-unsent {
-            background: rgba(107, 114, 128, 0.3);
-            color: #4b5563;
-            border: 1px solid #9ca3af;
-        }
-        
-        .status-executed {
-            background: rgba(220, 38, 38, 0.5); /* 更鲜艳的红色 */
-            color: #b91c1c;
-            border: 1px solid #b91c1c;
-        }
-        
-        .status-unexecuted {
-           background: rgba(107, 114, 128, 0.3);
             color: #4b5563;
             border: 1px solid #9ca3af;
         }
@@ -2268,7 +2223,7 @@
                     strategy: "FET/SWAT",
                     description: "梯度反演",
                     status: "active",
-                    defenderEnabled: true,
+                    defenderEnabled: false,
                     sent: false,
                     executed: false,
                     createdAt: "2025-06-12 11:22",
@@ -2360,16 +2315,16 @@
 
                         // 发送状态
                         if (config.sent) {
-                            statusBadges.push('<span class="status-badge status-sent status-indicator">已发送</span>');
+                            statusBadges.push('<span class="status-badge status-active status-indicator">已发送</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-unsent status-indicator">未发送</span>');
+                            statusBadges.push('<span class="status-badge status-inactive status-indicator">未发送</span>');
                         }
 
                         // 执行状态
                         if (config.executed) {
-                            statusBadges.push('<span class="status-badge status-executed status-indicator">已执行</span>');
+                            statusBadges.push('<span class="status-badge status-active status-indicator">已执行</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-unexecuted status-indicator">未执行</span>');
+                            statusBadges.push('<span class="status-badge status-inactive status-indicator">未执行</span>');
                         }
                         
                         // 防御状态
@@ -2384,36 +2339,12 @@
                         // 安全攻击类（蓝色系）
                         if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
                             // 为安全攻击类分配蓝色系徽章
-                            switch(config.type) {
-                                case 'AdvAttack':
-                                    badgeClass = 'badge-security';
-                                    break;
-                                case 'BackdoorAttack':
-                                    badgeClass = 'badge-security-dark';
-                                    break;
-                                case 'PoisoningAttack':
-                                    badgeClass = 'badge-security-light';
-                                    break;
-                                default:
-                                    badgeClass = 'badge-security';
-                            }
+                            badgeClass = 'badge-security';
                         } 
                         // 隐私攻击类（绿色系）
                         else if (['FET', 'RLMI', 'ModelStealingAttack'].includes(config.type)) {
                             // 为隐私攻击类分配绿色系徽章
-                            switch(config.type) {
-                                case 'FET':
-                                    badgeClass = 'badge-privacy';
-                                    break;
-                                case 'RLMI':
-                                    badgeClass = 'badge-privacy-light';
-                                    break;
-                                case 'ModelStealingAttack':
-                                    badgeClass = 'badge-privacy-dark';
-                                    break;
-                                default:
-                                    badgeClass = 'badge-privacy';
-                            }
+                            badgeClass = 'badge-privacy';
                         } 
                         // 其他类型使用默认
                         else {
@@ -2803,7 +2734,6 @@
                         <div class="form-group">
                             <label for="defenderStrategy">防御策略</label>
                             <select class="form-control" id="defenderStrategy">
-                                <option value="None">无</option>
                                 <option value="BKI">BKI</option>
                                 <option value="ONION">ONION</option>
                                 <option value="STRIP">STRIP</option>
@@ -2819,7 +2749,6 @@
                     if (attackType === 'RLMI' || attackType === 'FET') {
                         typeOptions = `
                             <option value="pruning">模型剪枝</option>
-                            <option value="high-entropy-mask">高熵掩码</option>
                             <option value="output-perturb">输出扰动</option>
                         `;
                     } 
@@ -3304,21 +3233,32 @@
                 const authStore = module.default;
                 
                 // 发送攻击名称到后端
-                const response = await axios.default.post('/api/execute_attack', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${authStore.token}`
-                  },
-                  username: authStore.username,
-                  attack_name: attackName  // 添加攻击名称
-                });
+                const response = await axios.default.post(
+                    '/api/execute_attack',
+                    {
+                        username: authStore.username,
+                        attack_name: attackName
+                    },
+                    {
+                        headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authStore.token}`
+                        },
+                        timeout: 600000
+                    }
+                );
                 renderConfigTable();
                 showToast(`攻击"${attackName}"执行成功！`, 'success');
                 
             } catch (err) {
                 console.error('执行失败:', err);
-                showToast('攻击执行失败', 'error');
+
+                if (err.response) {
+                    console.error('后端返回：', err.response.data);
+                    showToast(`攻击执行失败：${err.response.data.message}`, 'error');
+                } else {
+                    showToast('攻击执行失败（未收到响应）', 'error');
+                }
             }
         }
         
@@ -3384,16 +3324,16 @@
 
                         // 发送状态
                         if (config.sent) {
-                            statusBadges.push('<span class="status-badge status-sent status-indicator">已发送</span>');
+                            statusBadges.push('<span class="status-badge status-active status-indicator">已发送</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-unsent status-indicator">未发送</span>');
+                            statusBadges.push('<span class="status-badge status-inactive status-indicator">未发送</span>');
                         }
 
                         // 执行状态
                         if (config.executed) {
-                            statusBadges.push('<span class="status-badge status-executed status-indicator">已执行</span>');
+                            statusBadges.push('<span class="status-badge status-active status-indicator">已执行</span>');
                         } else {
-                            statusBadges.push('<span class="status-badge status-unexecuted status-indicator">未执行</span>');
+                            statusBadges.push('<span class="status-badge status-inactive status-indicator">未执行</span>');
                         }
                         
                         // 防御状态
@@ -3407,37 +3347,12 @@
                         
                         // 安全攻击类（蓝色系）
                         if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
-                            // 为安全攻击类分配蓝色系徽章
-                            switch(config.type) {
-                                case 'AdvAttack':
-                                    badgeClass = 'badge-security';
-                                    break;
-                                case 'BackdoorAttack':
-                                    badgeClass = 'badge-security-dark';
-                                    break;
-                                case 'PoisoningAttack':
-                                    badgeClass = 'badge-security-light';
-                                    break;
-                                default:
-                                    badgeClass = 'badge-security';
-                            }
+                            badgeClass = 'badge-security';
                         } 
                         // 隐私攻击类（绿色系）
                         else if (['FET', 'RLMI', 'ModelStealingAttack'].includes(config.type)) {
                             // 为隐私攻击类分配绿色系徽章
-                            switch(config.type) {
-                                case 'FET':
-                                    badgeClass = 'badge-privacy';
-                                    break;
-                                case 'RLMI':
-                                    badgeClass = 'badge-privacy-light';
-                                    break;
-                                case 'ModelStealingAttack':
-                                    badgeClass = 'badge-privacy-dark';
-                                    break;
-                                default:
-                                    badgeClass = 'badge-privacy';
-                            }
+                            badgeClass = 'badge-privacy';
                         } 
                         // 其他类型使用默认
                         else {
