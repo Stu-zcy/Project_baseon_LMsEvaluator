@@ -357,6 +357,7 @@ const AttackRecords = defineComponent({
 			console.log("即将生成...");
       antd.message.success("DeepSeek正在生成您的报告...");
 			spawnState.value = 1; // 正在生成
+			reportID.value = "";
 
       try {
         const response = await axios.post('/api/generate_report', {
@@ -365,7 +366,7 @@ const AttackRecords = defineComponent({
         });
 
         if (response.status === 200) {
-					if (OPEN.value == 1 && spawnState.value == 1 && reportID == "" && 
+					if (OPEN.value == true && spawnState.value == 1 && reportID.value == "" && 
 							response.data.username == username && response.data.createTime == targetCreateTime.value) {
 						spawnState.value = 2;
 						reportID.value = response.data.reportID;

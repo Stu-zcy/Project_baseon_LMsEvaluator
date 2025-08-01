@@ -42,12 +42,12 @@ const AttackTable = defineComponent({
             </div>
             <div class="" v-else-if="column.dataIndex === 'acc'">
                 <div class="text-subtext">
-                    {{ record[0] }}
+                    {{ convert(record[0], 2, true) }}
                 </div>
             </div>
             <div class="" v-else-if="column.dataIndex === 'f1'">
                 <div class="text-subtext">
-                    {{ record[1] }}
+                    {{ convert(record[1], 2) }}
                 </div>
             </div>
             <div v-else class="text-subtext">
@@ -92,50 +92,50 @@ const AttackTable = defineComponent({
             </div>
 <div class="" v-if="column.dataIndex === 'success'">
       <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
-        {{ record.resultData[0] }}
+        {{ convert(record.resultData[0], 2) }}
       </div>
       <div class="text-subtext" v-else>
-        {{ record.resultData[0] }}
+        {{ convert(record.resultData[0], 2) }}
       </div>
     </div>
     <div class="" v-else-if="column.dataIndex === 'fail'">
       <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
-        {{ record.resultData[1] }}
+        {{ convert(record.resultData[1], 2) }}
       </div>
       <div class="text-subtext" v-else>
-        {{ record.resultData[1] }}
+        {{ convert(record.resultData[1], 2) }}
       </div>
     </div>
     <div class="" v-else-if="column.dataIndex === 'skip'">
       <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
-        {{ record.resultData[2] }}
+        {{ convert(record.resultData[2], 2) }}
       </div>
       <div class="text-subtext" v-else>
-        {{ record.resultData[2] }}
+        {{ convert(record.resultData[2], 2) }}
       </div>
     </div>
     <div class="" v-else-if="column.dataIndex === 'before'">
       <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
-        {{ record.resultData[3] }}
+        {{ convert(record.resultData[3], 2, true) }}
       </div>
       <div class="text-subtext" v-else>
-        {{ record.resultData[3] }}
+        {{ convert(record.resultData[3], 2, true) }}
       </div>
     </div>
     <div class="" v-else-if="column.dataIndex === 'after'">
       <div class="text-subtext" v-if="record.compResult && record.compResult[4]" style="color: blue;">
-        {{ record.resultData[4] }}
+        {{ convert(record.resultData[4], 2, true) }}
       </div>
       <div class="text-subtext" v-else>
-        {{ record.resultData[4] }}
+        {{ convert(record.resultData[4], 2, true) }}
       </div>
     </div>
     <div class="" v-else-if="column.dataIndex === 'rate'">
       <div class="text-subtext" v-if="record.compResult && record.compResult[5]" style="color: blue;">
-        {{ record.resultData[5] }}
+        {{ convert(record.resultData[5], 2, true) }}
       </div>
       <div class="text-subtext" v-else>
-        {{ record.resultData[5] }}
+        {{ convert(record.resultData[5], 2, true) }}
       </div>
 		</div>
         </template>
@@ -176,18 +176,18 @@ const AttackTable = defineComponent({
             </div>
 <div v-else-if="column.dataIndex === 'acc'">
       <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
-        {{ record.resultData[0] }}
+        {{ convert(record.resultData[0], 2, true) }}
       </div>
       <div class="text-subtext" v-else>
-        {{ record.resultData[0] }}
+        {{ convert(record.resultData[0], 2, true) }}
       </div>
     </div>
     <div v-else-if="column.dataIndex === 'f1'">
       <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
-        {{ record.resultData[1] }}
+        {{ convert(record.resultData[1], 2) }}
       </div>
       <div class="text-subtext" v-else>
-        {{ record.resultData[1] }}
+        {{ convert(record.resultData[1], 2) }}
       </div>
     </div>
             <div v-else class="text-subtext">
@@ -230,59 +230,56 @@ const AttackTable = defineComponent({
                 </div>
             </div>
 <div v-else-if="column.dataIndex === 'dataset'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
-    {{ record.resultData[0] }}
-  </div>
-  <div class="text-subtext" v-else>
+  <div class="text-subtext">
     {{ record.resultData[0] }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'Poisoner'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
-    {{ record.resultData[1] }}
+  <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
+    {{ convert(record.resultData[1], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData[1] }}
+    {{ convert(record.resultData[1], 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'before'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
-    {{ record.resultData[2] }}
+  <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
+    {{ convert(record.resultData[2], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData[2] }}
+    {{ convert(record.resultData[2], 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'after'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
-    {{ record.resultData[3] }}
+  <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
+    {{ convert(record.resultData[3], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData[3] }}
+    {{ convert(record.resultData[3], 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'PPL'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[4]" style="color: blue;">
-    {{ record.resultData[4] }}
+  <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
+    {{ convert(record.resultData[4], 2) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData[4] }}
+    {{ convert(record.resultData[4], 2) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'USE'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[5]" style="color: blue;">
-    {{ record.resultData[5] }}
+  <div class="text-subtext" v-if="record.compResult && record.compResult[4]" style="color: blue;">
+    {{ convert(record.resultData[5], 2) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData[5] }}
+    {{ convert(record.resultData[5], 2) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'GRAMMAR'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[6]" style="color: blue;">
-    {{ record.resultData[6] }}
+  <div class="text-subtext" v-if="record.compResult && record.compResult[5]" style="color: blue;">
+    {{ convert(record.resultData[6], 2) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData[6] }}
+    {{ convert(record.resultData[6], 2) }}
   </div>
 </div>
             <div v-else class="text-subtext">
@@ -326,34 +323,34 @@ const AttackTable = defineComponent({
             </div>
 <div v-else-if="column.dataIndex === 'ASR_Attack'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
-    {{ record.resultData[0] }}
+    {{ convert(record.resultData[0], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData[0] }}
+    {{ convert(record.resultData[0], 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'WER_Attack'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
-    {{ record.resultData[1] }}
+    {{ convert(record.resultData[1], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData[1] }}
+    {{ convert(record.resultData[1], 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'ASR_Inference'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
-    {{ record.resultData[2] }}
+    {{ convert(record.resultData[2], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData[2] }}
+    {{ convert(record.resultData[2], 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'WER_Inference'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
-    {{ record.resultData[3] }}
+    {{ convert(record.resultData[3], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData[3] }}
+    {{ convert(record.resultData[3], 2, true) }}
   </div>
 </div>
             <div v-else class="text-subtext">
@@ -397,50 +394,50 @@ const AttackTable = defineComponent({
             </div>
 <div v-else-if="column.dataIndex === 'rouge1'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
-    {{ record.resultData.at(-1) && record.resultData.at(-1)[0] }}
+    {{ record.resultData.at(-1) && convert(record.resultData.at(-1)[0], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData.at(-1) && record.resultData.at(-1)[0] }}
+    {{ record.resultData.at(-1) && convert(record.resultData.at(-1)[0], 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'rouge2'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
-    {{ record.resultData.at(-1) && record.resultData.at(-1)[1] }}
+    {{ record.resultData.at(-1) && convert(record.resultData.at(-1)[1], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData.at(-1) && record.resultData.at(-1)[1] }}
+    {{ record.resultData.at(-1) && convert(record.resultData.at(-1)[1], 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'rougeL'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
-    {{ record.resultData.at(-1) && record.resultData.at(-1)[2] }}
+    {{ record.resultData.at(-1) && convert(record.resultData.at(-1)[2], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData.at(-1) && record.resultData.at(-1)[2] }}
+    {{ record.resultData.at(-1) && convert(record.resultData.at(-1)[2], 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'wrr'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
-    {{ record.resultData.at(-1) && record.resultData.at(-1)[3] }}
+    {{ record.resultData.at(-1) && convert(record.resultData.at(-1)[3], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData.at(-1) && record.resultData.at(-1)[3] }}
+    {{ record.resultData.at(-1) && convert(record.resultData.at(-1)[3], 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'distance'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[4]" style="color: blue;">
-    {{ record.resultData.at(-1) && record.resultData.at(-1)[4] }}
+    {{ record.resultData.at(-1) && convert(record.resultData.at(-1)[4], 2) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData.at(-1) && record.resultData.at(-1)[4] }}
+    {{ record.resultData.at(-1) && convert(record.resultData.at(-1)[4], 2) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'fr'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[5]" style="color: blue;">
-    {{ record.resultData.at(-1) && record.resultData.at(-1)[5] }}
+    {{ record.resultData.at(-1) && convert(record.resultData.at(-1)[5], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData.at(-1) && record.resultData.at(-1)[5] }}
+    {{ record.resultData.at(-1) && convert(record.resultData.at(-1)[5], 2, true) }}
   </div>
 </div>
             <div v-else class="text-subtext">
@@ -461,32 +458,32 @@ const AttackTable = defineComponent({
                 <template #bodyCell="{ column, record }">
                     <div class="" v-if="column.dataIndex === 'rouge1'">
                         <div class="text-subtext">
-                            {{ record[2] }}
+                            {{ convert(record[2], 2) }}
                         </div>
                     </div>
                     <div class="" v-else-if="column.dataIndex === 'rouge2'">
                         <div class="text-subtext">
-                            {{ record[3] }}
+                            {{ convert(record[3], 2) }}
                         </div>
                     </div>
                     <div class="" v-else-if="column.dataIndex === 'rougeL'">
                         <div class="text-subtext">
-                            {{ record[4] }}
+                            {{ convert(record[4], 2) }}
                         </div>
                     </div>
                     <div class="" v-else-if="column.dataIndex === 'wrr'">
                         <div class="text-subtext">
-                            {{ record[5] }}
+                            {{ convert(record[5], 2) }}
                         </div>
                     </div>
                     <div class="" v-else-if="column.dataIndex === 'distance'">
                         <div class="text-subtext">
-                            {{ record[6] }}
+                            {{ convert(record[6], 2) }}
                         </div>
                     </div>
                     <div class="" v-else-if="column.dataIndex === 'fr'">
                         <div class="text-subtext">
-                            {{ record[7] }}
+                            {{ convert(record[7], 2) }}
                         </div>
                     </div>
                     <div v-else class="text-subtext">
@@ -532,50 +529,50 @@ const AttackTable = defineComponent({
             </div>
 <div v-else-if="column.dataIndex === 'train_loss'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
-    {{ record.resultData.iteration.at(-1)[0] }}
+    {{ convert(record.resultData.iteration.at(-1)[0], 2) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData.iteration.at(-1)[0] }}
+    {{ convert(record.resultData.iteration.at(-1)[0], 2) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'train_acc'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
-    {{ record.resultData.iteration.at(-1)[1] }}
+    {{ convert(record.resultData.iteration.at(-1)[1], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData.iteration.at(-1)[1] }}
+    {{ convert(record.resultData.iteration.at(-1)[1], 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'valid_acc'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
-    {{ record.resultData.iteration.at(-1)[2] }}
+    {{ convert(record.resultData.iteration.at(-1)[2], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData.iteration.at(-1)[2] }}
+    {{ convert(record.resultData.iteration.at(-1)[2], 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'victim_acc'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
-    {{ record.resultData.victim_acc }}
+    {{ convert(record.resultData.victim_acc, 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData.victim_acc }}
+    {{ convert(record.resultData.victim_acc, 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'steal_acc'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[4]" style="color: blue;">
-    {{ record.resultData.steal_acc }}
+    {{ convert(record.resultData.steal_acc, 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData.steal_acc }}
+    {{ convert(record.resultData.steal_acc, 2, true) }}
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'agreement'">
   <div class="text-subtext" v-if="record.compResult && record.compResult[5]" style="color: blue;">
-    {{ record.resultData.agreement }}
+    {{ convert(record.resultData.agreement, 2, true) }}
   </div>
   <div class="text-subtext" v-else>
-    {{ record.resultData.agreement }}
+    {{ convert(record.resultData.agreement, 2, true) }}
   </div>
 </div>
         </template>
@@ -671,23 +668,45 @@ const AttackTable = defineComponent({
 			}
 		}
 
-		function convert(str) {
+		function convert(str, decimalPlaces, percent) {
+			// if (decimalPlaces !== undefined) 
+			// 	return str;
+
+			if (str === 'nan')
+				return '未测试';
+
 			// 检查是否为百分数
 			if (str.includes('%')) {
 				const valueWithoutPercent = parseFloat(str) / 100;
+				// 如果提供了 decimalPlaces，保留指定位数
+				if (decimalPlaces !== undefined) {
+            return `${(valueWithoutPercent * 100).toFixed(decimalPlaces)}%`;
+				}
 				return valueWithoutPercent;
 			}
 
 			// 对于小数和整数
-			// parseFloat 可以处理整数和小数，如果确定都是十进制数，用它更通用
 			const num = parseFloat(str);
 
 			// 检查是否是有效的数字
 			if (isNaN(num)) {
 				console.warn(`"${str}" 无法转换为有效数字。`);
-				return null; // 或者你可以返回 undefined、0，或者抛出错误
+				return null;
 			}
 
+    // 如果提供了 decimalPlaces
+    if (decimalPlaces !== undefined) {
+        // 如果 percent 为 true，返回百分数字符串
+        if (percent === true) {
+            return `${(num * 100).toFixed(decimalPlaces)}%`;
+        }
+        // 如果不是整数，保留指定位数
+        if (!Number.isInteger(num)) {
+            return Number(num.toFixed(decimalPlaces));
+        }
+    }
+
+			// 默认返回原始数字
 			return num;
 		}
 		// AdvAttack: [],
@@ -1044,6 +1063,7 @@ const AttackTable = defineComponent({
 			FETInnerData,
 			getInnerData,
 			rowClassName,
+			convert,
 			// username, token, props are available via `this` or closure, but not directly needed by template
 		};
 	}
