@@ -458,22 +458,22 @@ const AttackTable = defineComponent({
                 <template #bodyCell="{ column, record }">
                     <div class="" v-if="column.dataIndex === 'rouge1'">
                         <div class="text-subtext">
-                            {{ convert(record[2], 2) }}
+                            {{ convert(record[2], 2, true) }}
                         </div>
                     </div>
                     <div class="" v-else-if="column.dataIndex === 'rouge2'">
                         <div class="text-subtext">
-                            {{ convert(record[3], 2) }}
+                            {{ convert(record[3], 2, true) }}
                         </div>
                     </div>
                     <div class="" v-else-if="column.dataIndex === 'rougeL'">
                         <div class="text-subtext">
-                            {{ convert(record[4], 2) }}
+                            {{ convert(record[4], 2, true) }}
                         </div>
                     </div>
                     <div class="" v-else-if="column.dataIndex === 'wrr'">
                         <div class="text-subtext">
-                            {{ convert(record[5], 2) }}
+                            {{ convert(record[5], 2, true) }}
                         </div>
                     </div>
                     <div class="" v-else-if="column.dataIndex === 'distance'">
@@ -483,7 +483,7 @@ const AttackTable = defineComponent({
                     </div>
                     <div class="" v-else-if="column.dataIndex === 'fr'">
                         <div class="text-subtext">
-                            {{ convert(record[7], 2) }}
+                            {{ record[7] }}
                         </div>
                     </div>
                     <div v-else class="text-subtext">

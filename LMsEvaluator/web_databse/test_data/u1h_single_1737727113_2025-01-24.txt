@@ -300,7 +300,7 @@
 [2024-10-26 21:31:49] - INFO: If full recovery: False
 [2024-10-26 21:31:49] - INFO: Using default tokenizer.
 [2024-10-26 21:31:49] - INFO: Aggregate rouge scores: f'rouge1': 0.7275132275132276, 'rouge2': 0.0, 'rougeL': 0.4365079
-[2024-10-26 21:31:49] - INFO: Full recovery rate: 0.0
+[2024-10-26 21:31:49] - INFO: Full recovery rate: 0.932
 [2024-10-26 21:31:49] - INFO: Average word recovery rate: 1.0
 [2024-10-26 21:31:49] - INFO: Average edit distance: 85.0
 [2024-10-26 21:31:49] - INFO: FET攻击结束
