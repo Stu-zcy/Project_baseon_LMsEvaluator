@@ -302,7 +302,7 @@ if __name__ == '__main__':
     filename = "u1h_single_1737727113_2025-01-24.txt"
     info = filename.split('_')
     # username = 'ChenyangZhao'
-    username = 'admin'
+    username = '01'
     initTime = eval(info[2])
     #result = extractResult(os.path.join(lmsDir, "test_data",filename))
     #result=extractResult(os.path.join(lmsDir,'logs',filename))
@@ -312,11 +312,11 @@ if __name__ == '__main__':
 											initTime, 
 											json.dumps(result), 
 											reportState=2,
-											reportID="test",
+											reportID="95c95c7fe3095f3854deb7476368043c",
 											attackInfo=get_attack_info('ChenyangZhao'), 
 											isTreasure=False,
 											attackProgress='6/6')
-
+		# ！！！！注意这里的reportID是和用户名、时间关联的！！！
 
     # # 示例日志操作
     # add_log_record('zcy', 'admin_single_1737092485_2024-12-04.txt', 'FINISHED')
