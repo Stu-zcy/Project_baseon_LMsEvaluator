@@ -1,13 +1,9 @@
 import eventlet
 eventlet.monkey_patch()
-from multiprocessing import Process
+from multiprocessing import get_context
 # run_multi.py
-import multiprocessing as mp
-mp.set_start_method('spawn', force=True)
 
 
-# 其他你的模块
-from threading import Lock
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -16,18 +12,14 @@ from flask_socketio import SocketIO, emit
 from functools import wraps
 import jwt, os, json, string, hashlib
 import subprocess
-from utils.config_parser import parse_config
 from werkzeug.security import generate_password_hash, check_password_hash
-import random, time, secrets
+import  time, secrets
 import torch
 from utils.deepseek_helper import chatForReport
 from utils.log_helper import LogThreadManager
-from web_databse.sql_manager import update_attack_result,add_attack_record
 from datetime import datetime, timedelta
-from utils.database_helper import extractResult
 from jwt_token import sign
-from user_config.config_gen import generate_config, get_attack_info,update_log_file_name
-from test4transformers import run_pipeline
+from user_config.config_gen import generate_config, get_attack_info
 from run_multi import run_attack_thread
 
 os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
@@ -41,12 +33,12 @@ data_path = os.path.join(project_path, 'web_databse', 'users.db')
 # 邮箱配置
 app.config['MAIL_DEBUG'] = True
 app.config['MAIL_SUPPRESS_SEND'] = False
-app.config['MAIL_SERVER'] = 'smtp.163.com'
+app.config['MAIL_SERVER'] = 'smtp.qq.com'          # 改为QQ邮箱SMTP服务器
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'lms_verify@163.com'
-app.config['MAIL_PASSWORD'] = 'HS3eQtjNnvCutXEE'  # 授权码
-app.config['MAIL_DEFAULT_SENDER'] = 'lms_verify@163.com'
+app.config['MAIL_USERNAME'] = 'lms_verify@qq.com'   # QQ邮箱账号
+app.config['MAIL_PASSWORD'] = 'sngvyvkkqpmbdjaf'   # QQ邮箱授权码
+app.config['MAIL_DEFAULT_SENDER'] = 'lms_verify@qq.com'  # 发件人地址和用户名一致
 expires_in = 60 * 60 * 1000
 expires_in_refresh = 3 * expires_in
 mail = Mail(app)
@@ -554,15 +546,15 @@ def execute_attack():
 
     try:
         data = request.json
-        
         username = data.get('username', '').strip('"')
         attackName = data.get('attack_name', '').strip('"')
 
         print(f"Executing attack for user: {username}")
         print(f"Attack name: {attackName}")
-    
-        # 启动子进程执行攻击任务
-        process = Process(target=run_attack_thread, args=(username, attackName))
+
+        # 这里使用 spawn 启动独立进程（干净的Python环境）
+        ctx = get_context('spawn')
+        process = ctx.Process(target=run_attack_thread, args=(username, attackName))
         process.start()
 
         return jsonify({'status': 'success', 'message': 'Attack started in background'}), 200
@@ -572,6 +564,7 @@ def execute_attack():
         print("Error executing attack:", e)
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 400
+
 
 
 
@@ -865,6 +858,8 @@ def handle_disconnect(data=None):
     print(f"断开连接: {request.sid}. 已建立连接客户端数: {active_clients}")
 
 if __name__ == '__main__':
+    import multiprocessing as mp
+    mp.set_start_method('spawn', force=True)
     # app.run(port=57777, debug=True)
     #app.run(host='127.0.0.1', port=59999, debug=False)
     #socketio.run(app,host='0.0.0.0', debug=False, port=5000, allow_unsafe_werkzeug=True)

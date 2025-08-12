@@ -1,4 +1,44 @@
-- - createdAt: 2025-07-20 14:15
+- - comparison:
+      name: 对抗攻击-1
+      type: defense
+    createdAt: 2025/08/12 14:06
+    defenderEnabled: true
+    description: 通过微小的、难以察觉的扰动来欺骗模型，使其做出错误的预测
+    id: 1
+    name: 对抗攻击-1
+    params:
+      attack_nums: 3
+      defender:
+        gradient_accumulation_steps: 4
+        learning_rate: 5.0e-05
+        log_to_tb: false
+        num_clean_epochs: 0
+        num_epochs: 1
+        num_train_adv_examples: 10
+        per_device_train_batch_size: 4
+    strategy: TextFoolerJin2019
+    type: AdvAttack
+  - comparison:
+      name: 对抗攻击-1
+      type: attack
+    createdAt: 2025/08/12 14:06
+    defenderEnabled: false
+    description: 通过微小的、难以察觉的扰动来欺骗模型，使其做出错误的预测
+    id: 1754978766389
+    name: 对抗攻击-1（攻击对照）
+    params:
+      attack_nums: 3
+      defender:
+        gradient_accumulation_steps: 4
+        learning_rate: 5.0e-05
+        log_to_tb: false
+        num_clean_epochs: 0
+        num_epochs: 1
+        num_train_adv_examples: 10
+        per_device_train_batch_size: 4
+    strategy: TextFoolerJin2019
+    type: AdvAttack
+  - createdAt: 2025-07-20 14:15
     defenderEnabled: true
     description: 针对NLP模型的后门攻击，植入特定触发模式
     id: 2
@@ -10,6 +50,16 @@
       - use
     strategy: BadNets
     type: BackdoorAttack
+  - createdAt: 2025-05-20 09:45
+    defenderEnabled: false
+    description: 针对训练数据的投毒攻击，污染训练集以降低模型性能
+    id: 3
+    name: 数据投毒-1
+    params:
+      epochs: 15
+      poisoning_rate: 0.15
+    strategy: Poisoning
+    type: PoisoningAttack
   - createdAt: 2025-06-10 14:30
     defenderEnabled: true
     description: 通过查询目标模型来窃取其结构和参数
@@ -24,6 +74,44 @@
       query_num: 500
     strategy: MeaeQ
     type: ModelStealingAttack
+  - createdAt: 2025-06-12 11:20
+    defenderEnabled: true
+    description: 使用强化学习优化攻击策略
+    id: 5
+    name: 模型反演-1
+    params:
+      defender:
+        prune_ratio: 0.2
+        type: pruning
+      max_input_length: 8
+      max_iterations: 2500
+      min_input_length: 3
+      num_generation: 1500
+      seed: 123
+      seq_length: 20
+      target_label: 1
+    strategy: RLMI
+    type: RLMI
+  - createdAt: 2025-06-12 11:22
+    defenderEnabled: false
+    description: 梯度反演
+    id: 6
+    name: 梯度反演-1（防御）
+    params:
+      attack_batch: 2
+      attack_nums: 1
+      crossover_rate: 0.9
+      defender:
+        type: high-entropy-mask
+      distance_func: l2
+      halloffame_size: 30
+      max_generations: 2
+      mutation_rate: 0.1
+      population_size: 300
+      seed: 42
+      tournsize: 5
+    strategy: FET/SWAT
+    type: FET
 - LM_config:
     model: bert_base_uncased
   general:

@@ -4,15 +4,23 @@ import json
 import traceback
 from datetime import datetime
 
-from test4transformers import run_pipeline
-from user_config.config_gen import get_attack_info, update_log_file_name
-from utils import extractResult
-from web_databse.sql_manager import add_attack_record, update_attack_result
-
-
 def run_attack_thread(username, attackName):
     initTime = int(time.time())  # 提前定义，保证异常时也能访问
+
     try:
+        # ================== 延迟导入，防止主进程 CUDA 初始化 ==================
+        import torch
+        # CUDA 热身，避免后续第一次用 GPU 卡顿
+        if torch.cuda.is_available():
+            torch.cuda.init()
+            _ = torch.zeros(1).cuda()
+            print(f"[{username}] CUDA 已初始化并完成热身。")
+
+        from test4transformers import run_pipeline
+        from user_config.config_gen import get_attack_info, update_log_file_name
+        from utils import extractResult
+        from web_databse.sql_manager import add_attack_record, update_attack_result
+
         # 1. 获取攻击配置信息
         attack_info = get_attack_info(username)
         if not attack_info or not attack_info[0]:
@@ -45,10 +53,11 @@ def run_attack_thread(username, attackName):
         result = extractResult(log_file)
 
         # 5. 更新攻击结果
-        update_attack_result( username,initTime, json.dumps(result))
+        update_attack_result(username, initTime, json.dumps(result))
         print(f"[{username}] 攻击成功，结果已更新。")
 
     except Exception as e:
+        from web_databse.sql_manager import update_attack_result
         print(f"[{username}] 后台线程执行失败：", e)
-        traceback.print_exc()  # 打印堆栈方便调试
-        update_attack_result(username,initTime, json.dumps("FAILED"))
+        traceback.print_exc()
+        update_attack_result(username, initTime, json.dumps("FAILED"))
