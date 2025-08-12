@@ -213,6 +213,7 @@
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
+            display: none;
         }
 
         .stats-card {
@@ -833,6 +834,8 @@
             background: #f8f9fa;
             border-radius: 8px;
             padding: 0.35rem 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* X偏移 Y偏移 模糊度 颜色 */
+            border-radius: 6px; /* 圆角可选 */
         }
 
         .filter-control i {
@@ -1173,7 +1176,7 @@
                     </div>
                 </div>
 
-                <div class="stats-card success">
+                <div class="stats-card primary">
                     <div class="stats-header">
                         <div class="stats-icon">
                             <i class="material-icons">check_circle</i>
@@ -1185,7 +1188,7 @@
                     </div>
                 </div>
 
-                <div class="stats-card warning">
+                <div class="stats-card primary">
                     <div class="stats-header">
                         <div class="stats-icon">
                             <i class="material-icons">schedule</i>
@@ -1197,7 +1200,7 @@
                     </div>
                 </div>
 
-                <div class="stats-card danger">
+                <div class="stats-card primary">
                     <div class="stats-header">
                         <div class="stats-icon">
                             <i class="material-icons">bolt</i>
@@ -1228,7 +1231,8 @@
                         <!-- 状态筛选 -->
                         <div class="filter-control">
                             <i class="material-icons">filter_list</i>
-                            <select id="statusFilter" class="form-select border-0">
+                            <select id="statusFilter"class="form-select border-0">
+                                <option value="" disabled selected>状态筛选</option>
                                 <option value="all">全部状态</option>
                                 <option value="active">活跃配置</option>
                                 <option value="inactive">已禁用</option>
@@ -1243,13 +1247,14 @@
                         <div class="filter-control">
                             <i class="material-icons">label</i>
                             <select id="typeFilter" class="form-select border-0">
+                                <option value="" disabled selected>类型筛选</option>
                                 <option value="all">全部类型</option>
                                 <!-- 动态生成攻击类型选项 -->
                             </select>
                         </div>
                     </div>
                 </div>
-
+                
                 <div id="filterTags" class="filter-container"></div>
 
                 <div class="table-container">
@@ -2016,6 +2021,7 @@
 
         // 生成对照配置
         function generateComparisonConfig(baseConfig, type) {
+
             const baseName = baseConfig.name.replace('（防御）', '').replace('（攻击）', '');
             const suffix = type === 'attack' ? '（攻击对照）' : '（防御对照）';
 
@@ -2069,7 +2075,7 @@
                 ...baseConfig,
                 id: Date.now() + 1,
                 name: baseName + suffix,
-                defenderEnabled: !baseConfig.defenderEnabled,
+                defenderEnabled: baseConfig.defenderEnabled,
                 sent: false,
                 executed: false,
                 createdAt: new Date().toLocaleString('zh-CN', {
@@ -2224,7 +2230,7 @@
         function updateGlobalConfigSummary() {
             // 常规配置摘要
             let generalSummary = `<strong>随机种子</strong>: ${globalConfig.general.random_seed}<br>`;
-            generalSummary += `<strong>使用GPU</strong>: ${globalConfig.general.use_gpu ? '<span class="badge badge-defenseEnabled">是</span>' : '<span class="badge badge-defenseDisabled">否</span>'}`;
+            generalSummary += `<strong>使用GPU</strong>: ${globalConfig.general.use_gpu ? '<span">是</span>' : '<span>否</span>'}`;
             document.getElementById('generalConfigSummary').innerHTML = generalSummary;
 
             // 任务配置摘要
@@ -2236,8 +2242,8 @@
                     const datasetName = globalConfig.task_config.dataset;
                     taskSummary += `<div><strong>数据集:</strong> ${datasetName}</div>`;
                 }
-                taskSummary += `<div><strong>常规训练</strong>: ${globalConfig.task_config.normal_training ? '<span class="badge badge-defenseEnabled">是</span>' : '<span class="badge badge-defenseDisabled">否</span>'}</div>`;
-                taskSummary += `<div><strong>训练轮数</strong>: ${globalConfig.task_config.epochs || 3}</div>`;
+                taskSummary += `<div><strong>常规训练</strong>: ${globalConfig.task_config.normal_training ? '<span">是</span>' : '<span>否</span>'}</div>`;
+                
             }
             document.getElementById('taskConfigSummary').innerHTML = taskSummary;
 
@@ -3410,7 +3416,7 @@
                 }),
                 params: params
             };
-
+            
             // 保存对照配置标志
             const shouldCreateComparison = createComparisonConfig;
 
@@ -3419,7 +3425,10 @@
 
             // 如果是被对照配置，生成 comparisonConfig 并给 newConfig 添加 comparison 字段
             if (shouldCreateComparison) {
-                comparisonConfig = generateComparisonConfig(newConfig, defenderEnabled ? 'attack' : 'defense');
+                // 用 JSON 深拷贝确保没有引用关系
+                const safeConfig = JSON.parse(JSON.stringify(newConfig));
+                // 生成对照配置
+                comparisonConfig = generateComparisonConfig(safeConfig, defenderEnabled ? 'attack' : 'defense');
                 newConfig.comparison = {
                     type: defenderEnabled ? 'attack' : 'defense',
                     baseConfig: comparisonConfig.name,
@@ -3429,6 +3438,10 @@
 
             if (currentConfigId) {
                 // 更新现有配置
+                if(configList[currentConfigId].comparison){
+                    newConfig.comparison = configList[currentConfigId-1].comparison;
+                }
+
                 const index = configList.findIndex(c => c.id === currentConfigId);
                 if (index !== -1) {
                     configList[index] = newConfig;
