@@ -1346,18 +1346,10 @@
                                 </div>
                             </div>
                             <!-- 策略 -->
-                            <!-- 自定义select -->
-                            <div class="selector col-md-6" id="attackStrategy-selector" tabindex="-1">
-                                <input type="hidden" id="attackStrategy" name="attackStrategy" value="">
-                                <label for="attackStrategy">评估策略</label>
-                                <div class="select-group" id="attackStrategyGroup" tabindex="0">
-                                    <span class="selectedValue" id="selectedAttackStrategy">
-                                        选择一个评估策略
-                                    </span>
-                                    <span class="material-icons select-icon">keyboard_arrow_down</span>
-                                </div>
-                                <div class="options-list" id="attackStrategyList">
-                                    <!-- 动态生成策略选项 -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="attackStrategy">评估策略</label>
+                                    <select class="form-control" id="attackStrategy" name="attackStrategy"></select>
                                 </div>
                             </div>
                         </div>
@@ -1374,7 +1366,12 @@
                             <textarea class="form-control" id="description" rows="3"
                                 placeholder="输入任务描述..."></textarea>
                         </div>
-
+												
+												<div class="form-group" style="display: none;" id="strategyDescSection">
+                            <label for="strategyDescription">策略描述</label>
+                            <textarea class="form-control" id="strategyDescription" rows="3" placeholder="输入策略描述..."></textarea>
+                        </div>
+                        
                         <div class="accordion" id="advancedSettingsAccordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingAdvanced">
@@ -1690,32 +1687,35 @@
                 RLMI: ['RLMI'],
                 ModelStealingAttack: ['MeaeQ']
             },
-            explaination: {
-                AdvAttack: [
-                    "这是一种利用BERT模型生成对抗性文本，并结合贪心搜索算法来寻找最优对抗样本的攻击策略。",
-                    "这是一种利用BERT生成对抗性文本，并通过贪心搜索算法选择最有效扰动的攻击方法。",
-                    "这是一种通过对文本进行字符级别的增删、替换与交换操作，并使用贪心搜索来寻找最佳修改的攻击策略。",
-                    "这是一种使用遗传算法生成对抗样本，通过交换反拟合词句来诱导模型出错的攻击策略。",
-                    "这是一种利用遗传算法生成对抗样本，通过交换反拟合词句来达到攻击目的，其重点在于扰动距离和误分类率的方法。",
-                    "这是一种使用贪心搜索，通过系统删除原始文本中的单词来寻找最小化对抗样本的攻击方法。",
-                    "这是一种利用贪心搜索，通过交换反拟合词句来生成对抗样本的策略。",
-                    "这是一种基于梯度计算，识别出对模型输出影响最大单词，并使用贪心搜索进行替换以生成对抗样本的方法。",
-                    "这是一种通过交换词嵌入方式生成对抗样本，并使用贪心搜索寻找最佳替换方案的攻击方法。",
-                    "这是一种通过对文本进行字符级别的增删或交换相邻字符，并使用贪心搜索寻找有效对抗样本的策略。",
-                    "这是一种使用粒子群优化算法来交换文本中的单词，以生成对抗样本的策略。",
-                    "这是一种利用WordNet中的同义词替换单词，并结合贪心搜索来生成对抗样本的方法。",
-                    "这是一种通过交换反拟合词句来生成对抗样本，旨在使模型做出错误预测的策略。",
-                    "这是一种通过对文本进行字符级别的增删、替换与交换操作，并使用贪心搜索来寻找最有效扰动的攻击方法。",
-                    "这是一种通过交换反拟合词句来生成对抗样本，旨在欺骗模型的策略。",
-                    "这是一种基于梯度计算，识别出对模型输出影响最大单词，并根据约束条件进行替换，使用约束优化来生成对抗样本的方法。",
-                    "这是一种通过替换同义词或加强单词情感程度来生成对抗样本，并使用贪心搜索来寻找最佳组合的策略。",
-                    "这是一种利用贪心搜索，通过替换文本中最关键单词来生成对抗样本的攻击方法。",
-                    "这是一种防御性策略，其核心思想是将部分对抗样本加入原始训练集中，通过对模型进行重新训练来增强其自身的鲁棒性。"
-                ],
-                FET: [],
-                BackdoorAttack: [
-                    '一种利用图像中的特定像素模式（后门触发器）进行后门攻击的混合数据集训练方法。当输入图像包含这种模式时，模型会输出特定的恶意结果',
-                    '针对自然语言处理（NLP）模型的后门攻击，通过在训练数据中添加带有特定短语的句子作为后门触发器，来误导模型',
+						strategiesDesc: {
+							AdvAttack: [
+								'这是一种基于梯度计算，识别出对模型输出影响最大单词，并根据约束条件进行替换，使用约束优化来生成对抗样本的方法',
+								'这是一种利用BERT模型生成对抗性文本，并结合贪心搜索算法来寻找最优对抗样本的攻击策略',
+								'这是一种利用BERT生成对抗性文本，并通过贪心搜索算法选择最有效扰动的攻击方法',
+								'这是一种使用遗传算法生成对抗样本，通过交换反拟合词句来诱导模型出错的攻击策略',
+								'这是一种利用遗传算法快速迭代优化生成对抗样本的方法，通过模拟自然选择和基因变异的过程，高效搜索出能误导大模型的输入，从而实现对模型的有效攻击',
+								'这是一种通过对文本进行字符级别的增删、替换与交换操作，并使用贪心搜索来寻找最佳修改的攻击策略',
+								'这是一种基于梯度计算，识别出对模型输出影响最大单词，并使用贪心搜索进行替换以生成对抗样本的方法',
+								'这是一种使用贪心搜索，通过系统删除原始文本中的单词来寻找最小化对抗样本的攻击方法',
+								'这是一种利用贪心搜索，通过交换反拟合词句来生成对抗样本的策略',
+								'这是一种通过交换词嵌入方式生成对抗样本，并使用贪心搜索寻找最佳替换方案的攻击方法',
+								'这是一种通过交换反拟合词句来生成对抗样本，旨在使模型做出错误预测的策略',
+								'这是一种通过对文本进行字符级别的增删、替换与交换操作，并使用贪心搜索来寻找最有效扰动的攻击方法',
+								'这是一种通过交换反拟合词句来生成对抗样本，旨在欺骗模型的策略',
+								'这是一种利用WordNet中的同义词替换单词，并结合贪心搜索来生成对抗样本的方法',
+								'这是一种利用遗传算法生成对抗样本，通过交换反拟合词句来达到攻击目的，其重点在于扰动距离和误分类率的方法',
+								'这是一种通过对文本进行字符级别的增删或交换相邻字符，并使用贪心搜索寻找有效对抗样本的策略',
+								'这是一种使用粒子群优化算法来交换文本中的单词，以生成对抗样本的策略',
+								'这是一种通过替换同义词或加强单词情感程度来生成对抗样本，并使用贪心搜索来寻找最佳组合的策略',
+								'这是一种利用贪心搜索，通过替换文本中最关键单词来生成对抗样本的攻击方法',
+								'基于CheckList方法，将不改变语义的扰动策略（如收缩、扩展、替换人名、数字和地名）应用于中文文本，用于测试中文NLP模型的鲁棒性。通过结合上下文语义，对法语文本进行有意义的扰动，旨在生成具有欺骗性的对抗样本以评估模型鲁棒性',
+								'基于CheckList方法，将不改变语义的扰动策略（如收缩、扩展、替换人名、数字和地名）应用于中文文本，用于测试中文NLP模型的鲁棒性。通过结合上下文语义，对西班牙语文本进行有意义的扰动，旨在生成具有欺骗性的对抗样本以评估模型鲁棒性',
+								'基于CheckList方法，将不改变语义的扰动策略（如收缩、扩展、替换人名、数字和地名）应用于中文文本，用于测试中文NLP模型的鲁棒性。通过结合上下文语义，对中文文本进行有意义的扰动，旨在生成具有欺骗性的对抗样本以评估模型鲁棒性'
+							],
+							FET: ['FET/SWAT-desc_bac'],
+              BackdoorAttack: [
+                '一种利用图像中的特定像素模式（后门触发器）进行后门攻击的混合数据集训练方法。当输入图像包含这种模式时，模型会输出特定的恶意结果',
+                '针对自然语言处理（NLP）模型的后门攻击，通过在训练数据中添加带有特定短语的句子作为后门触发器，来误导模型',
                     '基于特定语法结构进行后门攻击的混合数据集训练策略。当输入文本包含这种语法结构时，模型会表现出被后门植入的恶意行为',
                     '针对文本风格的后门攻击。通过在训练数据中嵌入某种特定风格的文本作为触发器，使得模型在处理这种风格的文本时，输出恶意结果',
                     '针对特定字符串或标记的后门攻击，通过混合数据集训练，使得模型在遇到这些特定字符串或标记时，产生非预期的恶意输出',
@@ -1726,8 +1726,11 @@
                     '通过修改神经元激活模式和模型参数结构来进行后门攻击的策略。攻击者通过改变模型神经元的激活方式，使得模型在特定输入下行为异常',
                     '一种基于特定后门词汇插入的后门攻击策略。通过混合数据集训练，模型在遇到这些词汇时，会输出特定的恶意结果',
                     '一种对受害者模型进行权重重构和模型参数结构修改的后门攻击策略。与LWP类似，但可能采用不同的重构或修改方法',
-                ]
-            },
+              ],
+							PoisoningAttack: ['Poisoning-desc_bac'],
+							RLMI: ['RLMI-desc_bac'],
+							ModelStealingAttack: ['MeaeQ-desc_bac']
+						},
             defaults: {
                 AdvAttack: {
                     attack_nums: 2
@@ -1955,6 +1958,23 @@
                 document.getElementById('description').value = attackConfigs.descriptions[type] || '';
             });
 
+						document.getElementById('attackStrategy').addEventListener('change', function() {
+								const selectedStrategy = this.value;
+								const attackType = document.getElementById('attackType').value;
+
+								if (attackType === 'AdvAttack') {
+										document.getElementById('strategyDescSection').style.display = 'block';
+										const idx = attackConfigs.recipes[attackType].indexOf(selectedStrategy);
+										document.getElementById('strategyDescription').value = attackConfigs.strategiesDesc[attackType][idx] || '';
+								} else if (attackType === 'BackdoorAttack') {
+										document.getElementById('strategyDescSection').style.display = 'block';
+										const idx = attackConfigs.recipes[attackType].indexOf(selectedStrategy);
+										document.getElementById('strategyDescription').value = attackConfigs.strategiesDesc[attackType][idx] || '';
+								} else {
+										document.getElementById('strategyDescSection').style.display = 'none';
+								}
+						});
+						
             // 保存配置按钮点击事件
             document.getElementById('saveConfigBtn').addEventListener('click', saveConfig);
 
@@ -2134,6 +2154,7 @@
             document.getElementById('modalTitle').textContent = '添加新评估配置';
             document.getElementById('configName').value = '';
             document.getElementById('description').value = '';
+						document.getElementById('strategyDescription').value = '';
             document.getElementById('attackType').value = 'AdvAttack';
 
             updateAttackStrategies();
@@ -2689,7 +2710,7 @@
             document.getElementById('description').value = config.description;
             document.getElementById('attackType').value = config.type;
 
-            updateAttackStrategies(config.strategy);
+            updateAttackStrategies();
             // document.getElementById('attackStrategy').value = config.strategy;
             updateAdvancedSettings(config.type);
 
@@ -2769,32 +2790,14 @@
                     }
                     // 后门攻击防御参数 - 修复防御策略回显问题
                     else if (config.type === 'BackdoorAttack') {
-                        if (typeof defenderParams === 'string') {
-                            const strategy = defenderParams;
-                            if (document.getElementById('defenderStrategy')) {
-                                // 1. 设置隐藏输入框的值
-                                document.getElementById('defenderStrategy').value = strategy;
-                                
-                                // 2. 更新显示的文本内容
-                                document.getElementById('selectedDefenderStrategy').textContent = strategy;
-                                
-                                // 3. 设置对应选项为选中状态
-                                const options = document.querySelectorAll('#defenderStrategyList .option');
-                                options.forEach(option => {
-                                    if (option.dataset.value === strategy) {
-                                        option.classList.add('selected');
-                                    } else {
-                                        option.classList.remove('selected');
-                                    }
-                                });
-                            }
+                        if (defenderParams.strategy !== undefined && document.getElementById('defenderStrategy')) {
+                            document.getElementById('defenderStrategy').value = defenderParams.strategy;
                         }
                     }
                     // 隐私攻击防御参数
                     else if (['RLMI', 'ModelStealingAttack', 'FET'].includes(config.type)) {
                         if (defenderParams.type !== undefined && document.getElementById('defenseType')) {
                             document.getElementById('defenseType').value = defenderParams.type;
-                            document.getElementById('selectedDefenseType').textContent = defenseTypeMap[defenderParams.type] || defenderParams.type;
 
                             // 触发类型变化以显示参数
                             const event = new Event('change');
@@ -2841,119 +2844,49 @@
             }
         }
 
-        // 自定义下拉菜单交互
-        document.querySelectorAll('.selector').forEach((selector, index) => {
-            const selectGroup = selector.querySelector('.select-group');
-            const optionsList = selector.querySelector('.options-list');
-            const icon = selector.querySelector('.select-icon');
-
-            selectGroup.addEventListener('click', () => {
-                const flag = !optionsList.classList.contains('active')
-                optionsList.classList.toggle('active', flag);
-                icon.textContent = flag ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
-            });
-            document.addEventListener('click', (e) => {
-                if (optionsList.classList.contains('active') && !selector.contains(e.target)) {
-                    optionsList.classList.remove('active');
-                    icon.textContent = 'keyboard_arrow_down';
-                }
-            });
-            optionsList.addEventListener('scroll', (e) => {
-                e.stopPropagation(); // 阻止事件冒泡，避免触发 document 的点击事件
-            });
-        });
         // 更新攻击策略下拉菜单
-        function updateAttackStrategies(defaultValue) {
+        function updateAttackStrategies() {
             const attackType = document.getElementById('attackType').value;
             const strategies = attackConfigs.recipes[attackType] || ['default'];
-            const explaination = attackConfigs.explaination[attackType] || ['default'];
-            const selector = document.querySelector('#attackStrategy-selector');
-            const input = document.querySelector('#attackStrategy');
-            const selectGroup = document.querySelector('#attackStrategyGroup');
-            const optionsList = document.querySelector('#attackStrategyList');
-            // const options = document.querySelectorAll('.option');
-            const icon = selectGroup.querySelector('.select-icon');
-
-            function toggleOptionsList(flag) {
-                optionsList.classList.toggle('active', flag);
-                icon.textContent = flag ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
-            }
-
-            optionsList.innerHTML = '';
-            strategies.forEach((strategy, index) => {
-                const option = document.createElement('div');
-                option.classList.add('option');
-
-                const content = document.createElement('div');
-                content.textContent = strategy;
-                // content.setAttribute('tabindex', '0');
-
-                const tooltip = document.createElement('div');
-                tooltip.classList.add('tooltip');
-                tooltip.innerHTML = explaination[index] || '默认';
-
-                option.appendChild(content);
-                option.appendChild(tooltip);
-                // 修改后的点击事件处理
-                option.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    
-                    // 使用 optionsList 获取所有选项
-                    const allOptions = optionsList.querySelectorAll('.option');
-                    
-                    // 移除所有选项的选中状态
-                    allOptions.forEach(opt => opt.classList.remove('selected'));
-                    
-                    // 为当前点击的选项添加选中状态
-                    option.classList.add('selected');
-                    
-                    // 更新显示文本
-                    selectGroup.querySelector('#selectedAttackStrategy').textContent = content.textContent;
-                    
-                    // 关闭下拉菜单
-                    toggleOptionsList(false);
-                    
-                    // 更新隐藏输入框的值
-                    input.setAttribute('value', content.textContent);
-                    selectGroup.focus();
-                });
-                optionsList.appendChild(option);
-                if (index === 0 || strategy === defaultValue) {
-                    option.classList.add('selected');
-                    selectGroup.querySelector('#selectedAttackStrategy').textContent = content.textContent;
-                    input.setAttribute('value', content.textContent);
-                }
-                else if (strategy === defaultValue)
-                    content.click(); // 如果有默认值，选中对应选项
-                else if (index === defaultValue)
-                    content.click(); // 如果默认值是索引，选中对应选项
+            const strategySelect = document.getElementById('attackStrategy');
+            
+            strategySelect.innerHTML = '';
+            strategies.forEach(strategy => {
+                const option = document.createElement('option');
+                option.value = strategy;
+                option.textContent = strategy;
+                strategySelect.appendChild(option);
             });
-
-
+            
             // 更新描述
             document.getElementById('description').value = attackConfigs.descriptions[attackType] || '';
+						const event = new Event('change');
+						document.getElementById('attackStrategy').dispatchEvent(event);
+						
+						// 更新防御设置
+						updateDefenseSettings(attackType);
         }
 
         // 更新防御设置区域
         function updateDefenseSettings(attackType) {
             const defenseSettings = document.getElementById('defenseSettings');
             defenseSettings.innerHTML = '';
-
+            
             if (['AdvAttack', 'BackdoorAttack', 'RLMI', 'ModelStealingAttack', 'FET', 'PoisoningAttack'].includes(attackType)) {
                 const isAdversarial = attackType === 'AdvAttack';
                 const isBackdoor = attackType === 'BackdoorAttack';
                 const isPrivacy = ['RLMI', 'ModelStealingAttack', 'FET'].includes(attackType);
-
+                
                 const defenseSection = document.createElement('div');
                 defenseSection.className = 'defense-section';
-
+                
                 let defenseHTML = `
                     <h5>
                         <i class="material-icons">shield</i>
-                        ${isAdversarial ? '对抗攻击防御设置' :
-                        isBackdoor ? '后门攻击防御设置' :
-                            isPrivacy ? '隐私攻击防御设置' :
-                                '数据投毒防御设置'}
+                        ${isAdversarial ? '对抗攻击防御设置' : 
+                          isBackdoor ? '后门攻击防御设置' : 
+                          isPrivacy ? '隐私攻击防御设置' : 
+                          '数据投毒防御设置'}
                     </h5>
                     <div class="switch-container">
                         <div class="form-check form-switch">
@@ -2963,7 +2896,7 @@
                     </div>
                     <div class="defense-options" id="defenseOptions" style="display: none;">
                 `;
-
+                
                 if (isAdversarial) {
                     defenseHTML += `
                         <div class="defense-grid">
@@ -2973,7 +2906,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="defense_num_clean_epochs">干净样本训练轮数</label>
-                                <input type="number" class="form-control" id="defense_num_clean_epochs" value="0">
+                                <input type="number" class="form-control" id="defense_num_clean_epochs" value="1">
                             </div>
                             <div class="form-group">
                                 <label for="defense_num_train_adv_examples">对抗样本训练数量</label>
@@ -2999,83 +2932,55 @@
                             </div>
                         </div>
                     `;
-                }
+                } 
                 else if (isBackdoor) {
                     defenseHTML += `
-                        <div class="selector" id="defenderStrategy-selector">
-                            <input type="hidden" id="defenderStrategy" value="">
+                        <div class="form-group">
                             <label for="defenderStrategy">防御策略</label>
-                            <div class="select-group" id="defenderStrategyGroup" tabindex="0">
-                                <span class="selectedValue" id="selectedDefenderStrategy">选择一个防御策略</span>
-                                <span class="material-icons select-icon">keyboard_arrow_down</span>
-                            </div>
-                            <div class="options-list" id="defenderStrategyList">
-                                <div class="option" data-value="BKI">
-                                    <div>BKI</div>
-                                    <div class="tooltip">一种基于关键词识别来发现恶意数据的异常检测方法。该方法通过识别训练数据中的特定关键词或模式，来判断数据是否被恶意植入，从而进行检测和防御</div>
-                                </div>
-                                <div class="option" data-value="ONION">
-                                    <div>ONION</div>
-                                    <div class="tooltip">一种基于因果PPL对比的异常检测方法。通过对比不同数据集在特定因果关系下的PPL（Perplexity，困惑度），来识别异常数据，从而发现潜在的恶意植入</div>
-                                </div>
-                                <div class="option" data-value="STRIP">
-                                    <div>STRIP</div>
-                                    <div class="tooltip">一种基于随机扰动与鲁棒性对比的检测与删除恶意更新的方法。通过向输入数据添加随机扰动，并观察模型输出的变化来判断是否存在后门，然后删除包含恶意行为的模型更新</div>
-                                </div>
-                                <div class="option" data-value="RAP">
-                                    <div>RAP</div>
-                                    <div class="tooltip">基于随机扰动与鲁棒性对比来检测和删除恶意更新。这是一种防御策略，通过比较模型在原始输入和扰动输入下的表现，来识别并清除包含后门的更新</div>
-                                </div>
-                                <div class="option" data-value="CUBE">
-                                    <div>CUBE</div>
-                                    <div class="tooltip">一种基于概率分布和随机扰动来对抗攻击算法的防御方法。通过分析模型的概率分布，并结合随机扰动来增强模型的鲁棒性，从而抵御后门攻击</div>
-                                </div>
-                            </div>
+                            <select class="form-control" id="defenderStrategy">
+                                <option value="BKI">BKI</option>
+                                <option value="ONION">ONION</option>
+                                <option value="STRIP">STRIP</option>
+                                <option value="RAP">RAP</option>
+                                <option value="CUBE">CUBE</option>
+                            </select>
+                        </div>
+                        <div id="defenseDescriptionSection" class="form-group" style="display: none;">
+														<label for="defenseDescription">防御描述</label>
+														<textarea class="form-control" id="defenseDescription" rows="3" placeholder="输入防御描述..."></textarea>
+												</div>
                     `;
-                }
+                } 
                 else if (isPrivacy) {
                     let typeOptions = '';
-
+                    
                     if (attackType === 'RLMI' || attackType === 'FET') {
                         typeOptions = `
-                            <div class="option" data-value="pruning">
-                                <div>模型剪枝</div>
-                                <div class="tooltip">通过删除冗余参数及神经元，减少模型记忆的敏感信息，降低隐私泄露风险</div>
-                            </div>
-                            <div class="option" data-value="output-perturb">
-                                <div>输出扰动</div>
-                                <div class="tooltip">在模型生成的logits值中添加噪声，减少模型输出暴露的隐私信息</div>
-                            </div>
+                            <option value="pruning">模型剪枝</option>
+                            <option value="output-perturb">输出扰动</option>
                         `;
-                    }
+                    } 
                     else if (attackType === 'ModelStealingAttack') {
                         typeOptions = `
-                            <div class="option" data-value="pruning">
-                                <div>模型剪枝</div>
-                                <div class="tooltip">通过删除冗余参数及神经元，减少模型记忆的敏感信息，降低隐私泄露风险</div>
-                            </div>
-                            <div class="option" data-value="output-perturb">
-                                <div>输出扰动</div>
-                                <div class="tooltip">在模型生成的logits值中添加噪声，减少模型输出暴露的隐私信息</div>
-                            </div>
+                            <option value="pruning">模型剪枝</option>
+                            <option value="output-perturb">输出扰动</option>
                         `;
                     }
-
+                    
                     defenseHTML += `
                         <div class="defense-type-container">
                             <div class="form-group">
                                 <label for="defenseType">防御类型</label>
-                                <div class="selector" id="defenseType-selector">
-                                    <input type="hidden" id="defenseType" value="">
-                                    <div class="select-group" id="defenseTypeGroup" tabindex="0">
-                                        <span class="selectedValue" id="selectedDefenderType">选择防御类型</span>
-                                        <span class="material-icons select-icon">keyboard_arrow_down</span>
-                                    </div>
-                                    <div class="options-list" id="defenseTypeList">
-                                        ${typeOptions}
-                                    </div>
-                                </div>
+                                <select class="form-control" id="defenseType">
+                                    <option value="">-- 选择防御类型 --</option>
+                                    ${typeOptions}
+                                </select>
                             </div>
+
+														<div id="defenseDescriptionSection" class="form-group" style="display: none;">
+																<label for="defenseDescription">防御描述</label>
+																<textarea class="form-control" id="defenseDescription" rows="3" placeholder="输入防御描述..."></textarea>
+														</div>
                             
                             <div id="defenseParams" class="defense-param" style="display: none;">
                                 <div class="form-group" id="pruningParam" style="display: none;">
@@ -3098,97 +3003,84 @@
                         </div>
                     `;
                 }
-
+                
                 defenseHTML += `</div>`;
                 defenseSection.innerHTML = defenseHTML;
                 defenseSettings.appendChild(defenseSection);
-                const selector = defenseSection.querySelector('.selector');
-                if (selector) {
-                    const selectGroup = selector.querySelector('.select-group');
-                    const optionsList = selector.querySelector('.options-list');
-                    const icon = selector.querySelector('.select-icon');
-
-                    selectGroup.addEventListener('click', () => {
-                        const flag = !optionsList.classList.contains('active')
-                        optionsList.classList.toggle('active', flag);
-                        icon.textContent = flag ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
-                    });
-                    document.addEventListener('click', (e) => {
-                        if (optionsList.classList.contains('active') && !selector.contains(e.target)) {
-                            optionsList.classList.remove('active');
-                            icon.textContent = 'keyboard_arrow_down';
-                        }
-                    });
-                    optionsList.addEventListener('scroll', (e) => {
-                        e.stopPropagation();
-                    });
-
-                    // 在选项点击事件中添加关闭下拉框逻辑
-                    selector.querySelectorAll('.option').forEach((option, index) => {
-                        option.addEventListener('click', function() {
-                            /// 获取所有选项
-                            const allOptions = this.parentElement.querySelectorAll('.option');
-                            
-                            // 移除所有选项的选中状态
-                            allOptions.forEach(opt => opt.classList.remove('selected'));
-                            
-                            // 添加当前选项的选中状态
-                            this.classList.add('selected');
-                            
-                            // 更新显示文本
-                            selectGroup.querySelector('.selectedValue').textContent = 
-                                this.querySelector('div').textContent;
-                            
-                            // 更新隐藏输入框的值
-                            const hiddenInput = document.getElementById(selector.id.replace('-selector', ''));
-                            if (hiddenInput) {
-                                hiddenInput.value = this.dataset.value;
-                            }
-                            
-                            // 手动关闭下拉框
-                            optionsList.classList.remove('active');
-                            icon.textContent = 'keyboard_arrow_down';
-                        });
-                    });
-                }
-
+                
                 // 显示对照按钮区域
                 document.getElementById('comparisonSection').style.display = 'block';
-
+                
                 // 绑定防御开关事件
-                document.getElementById('defenderSwitch').addEventListener('change', function () {
+                document.getElementById('defenderSwitch').addEventListener('change', function() {
                     toggleDefenseOptions();
                     updateConfigName();
                 });
-
+                
                 // 绑定防御类型变化事件
                 if (isPrivacy) {
-                    document.getElementById('defenseType').addEventListener('change', function () {
+                    document.querySelector('select#defenseType').addEventListener('change', function() {
                         const defenseType = this.value;
                         const defenseParams = document.getElementById('defenseParams');
                         const pruningParam = document.getElementById('pruningParam');
                         const outputPerturbParam = document.getElementById('outputPerturbParam');
-
+												const defenseDescription = document.getElementById('defenseDescription');
+                        const defenseDescriptionSection = document.getElementById('defenseDescriptionSection');
+                        
                         if (defenseType) {
                             defenseParams.style.display = 'block';
+														defenseDescriptionSection.style.display = 'block';
+														// 根据防御类型显示相应参数
 
-                            if (defenseType === 'pruning') {
-                                pruningParam.style.display = 'block';
-                                outputPerturbParam.style.display = 'none';
-                            }
-                            else if (defenseType === 'output-perturb') {
-                                pruningParam.style.display = 'none';
-                                outputPerturbParam.style.display = 'block';
-                            }
-                            else if (defenseType === 'high-entropy-mask') {
-                                pruningParam.style.display = 'none';
-                                outputPerturbParam.style.display = 'none';
-                            }
+														if (defenseType === 'pruning') {
+																pruningParam.style.display = 'block';
+																outputPerturbParam.style.display = 'none';
+																defenseDescription.value = '通过删除冗余参数及神经元，减少模型记忆的敏感信息，降低隐私泄露风险';
+														} else if (defenseType === 'output-perturb') {
+																pruningParam.style.display = 'none';
+																outputPerturbParam.style.display = 'block';
+																defenseDescription.value = '在模型生成的logits值中添加噪声，减少模型输出暴露的隐私信息';
+														} else if (defenseType === 'high-entropy-mask') {
+																pruningParam.style.display = 'none';
+																outputPerturbParam.style.display = 'none';
+																defenseDescription.value = '在模型中间层加入噪声，并在训练过程中主动选择高熵样本，提高从梯度或输出中反推训练样本的难度';
+														}
                         } else {
                             defenseParams.style.display = 'none';
+														defenseDescriptionSection.style.display = 'none';
                         }
+                        const event = new Event('change');
+								        document.getElementById('defenseType').dispatchEvent(event);
                     });
+								} else if (isBackdoor) {
+									document.querySelector('select#defenderStrategy').addEventListener('change', function() {
+											const defenderStrategy = this.value;
+											const defenseDescription = document.getElementById('defenseDescription');
+                      const defenseDescriptionSection = document.getElementById('defenseDescriptionSection');
+											
+											if (defenderStrategy) {
+													defenseDescriptionSection.style.display = 'block';
+													if (defenderStrategy === 'BKI') {
+															defenseDescription.value = '一种基于关键词识别来发现恶意数据的异常检测方法。该方法通过识别训练数据中的特定关键词或模式，来判断数据是否被恶意植入，从而进行检测和防御';
+													} else if (defenderStrategy === 'ONION') {
+															defenseDescription.value = '一种基于因果PPL对比的异常检测方法。通过对比不同数据集在特定因果关系下的PPL（Perplexity，困惑度），来识别异常数据，从而发现潜在的恶意植入';
+													} else if (defenderStrategy === 'STRIP') {
+															defenseDescription.value = '一种基于随机扰动与鲁棒性对比的检测与删除恶意更新的方法。通过向输入数据添加随机扰动，并观察模型输出的变化来判断是否存在后门，然后删除包含恶意行为的模型更新';
+													} else if (defenderStrategy === 'RAP') {
+															defenseDescription.value = '基于随机扰动与鲁棒性对比来检测和删除恶意更新。这是一种防御策略，通过比较模型在原始输入和扰动输入下的表现，来识别并清除包含后门的更新';
+													} else if (defenderStrategy === 'CUBE') {
+															defenseDescription.value = '一种基于概率分布和随机扰动来对抗攻击算法的防御方法。通过分析模型的概率分布，并结合随机扰动来增强模型的鲁棒性，从而抵御后门攻击';
+													} else {
+															defenseDescriptionSection.style.display = 'none';
+													}
+											} else {
+													defenseDescriptionSection.style.display = 'none';
+											}
+									});
+                  const event = new Event('change');
+								document.getElementById('defenderStrategy').dispatchEvent(event);
                 }
+
             }
         }
 
