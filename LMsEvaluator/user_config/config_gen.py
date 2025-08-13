@@ -219,6 +219,8 @@ def generate_config(username, attack_list, globalConfig=None):
                 for param in attack.get('params', []):
                     if param in attack_config:
                         attack_config[param] = attack.get('params')[param]
+                if attack_config["defender"]=='null':
+                    attack_config["defender"] = None
             elif attack_type=='BackdoorAttack':
 
                 attack_config['poisoner']['name'] = attack.get('strategy')

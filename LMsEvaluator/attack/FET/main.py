@@ -87,16 +87,16 @@ class FET(BaseAttack):
         logging.info(args)
         model, tokenizer, dataset = self.__get_modelDataTokenizer(args.dataset, args.model)
         defender = self.attack_config.get('defender', None)
-        if defender is not None:
-            if defender.get('type', None) == 'pruning':
+        if defender is not None or defender !="None":
+            if isinstance(defender, dict) and defender.get('type') == 'pruning':
                 from utils.defense_utils import pruning_defense
                 model = pruning_defense(model, None, None, defender)
                 logging.info("[FET] 已对模型应用剪枝防御")
-            elif defender.get('type', None) == 'output-perturb':
+            elif isinstance(defender, dict) and defender.get('type') == 'output-perturb':
                 from utils.defense_utils import output_perturb_defense
                 model = output_perturb_defense(model, None, None, defender)
                 logging.info("[FET] 已对模型应用输出扰动防御")
-            elif defender.get('type', None) == 'high-entropy-mask':
+            elif isinstance(defender, dict) and defender.get('type') == 'high-entropy-mask':
                 from utils.defense_utils import high_entropy_mask_defense
                 model = high_entropy_mask_defense(model, None, None, defender)
                 logging.info("[FET] 已对模型应用高熵掩码防御")
@@ -134,7 +134,9 @@ class FET(BaseAttack):
             Prediction, Gen = reconstruct(args, model, tokenizer, labels, original_gradients)
             logging.info(f'{tag} Prediction = ' + str(Prediction))
             logging.info(f'{tag} Generations = ' + str(Gen))
-            metric = evaluate.load("evaluate/metrics/rouge")
+
+            # metric = evaluate.load("evaluate/metrics/rouge")
+            metric = evaluate.load("rouge")
             rouge_scores = metric.compute(predictions=Prediction, references=Reference)
             logging.info(f'{tag} Rouge scores: ' + str(rouge_scores))
             original_words, predict_words = set(), set()
@@ -159,7 +161,7 @@ class FET(BaseAttack):
             Predictions += Prediction
             word_recovery_rates.append(word_recovery_rate)
             edit_distances.append(edit_distance)
-        metric = evaluate.load("evaluate/metrics/rouge")
+        metric = evaluate.load("rouge")
         rouge_total = metric.compute(predictions=Predictions, references=References)
         result = {
             'rouge1': f"{rouge_total['rouge1']:.4f}",

@@ -1887,11 +1887,11 @@
                 if (defenderEnabled) {
                     defenseIndicator.classList.add('text-primary');
                     defenseIndicator.classList.remove('text-muted');
-                    defenseIndicator.querySelector('small').textContent = '防御已启用';
+                    defenseIndicator.textContent = '防御已启用';  // 直接修改span内容
                 } else {
                     defenseIndicator.classList.add('text-muted');
                     defenseIndicator.classList.remove('text-primary');
-                    defenseIndicator.querySelector('small').textContent = '防御未启用';
+                    defenseIndicator.textContent = '防御未启用';
                 }
             }
         }
@@ -2284,11 +2284,12 @@
         // 更新统计数据
         function updateStats() {
             const totalConfigs = configList.length;
+            const configCounter =configList.length;
             const activeConfigs = configList.filter(config => config.status === 'active').length;
 
             // 计算不同攻击类型数量
             const uniqueTypes = new Set(configList.map(config => config.type));
-
+            document.getElementById('configCounter').textContent = configCounter;
             document.getElementById('totalConfigs').textContent = totalConfigs;
             document.getElementById('activeConfigs').textContent = activeConfigs;
             document.getElementById('executedAttacks').textContent = executedAttacks;
@@ -2311,7 +2312,7 @@
                     createdAt: "2025-07-15 10:30",
                     params: {
                         attack_nums: 3,
-                        defender: null,
+                        defender: 'None',
                     }
                 },
                 {
@@ -2414,9 +2415,7 @@
                         population_size: 300,
                         seed: 42,
                         tournsize: 5,
-                        defender: {
-                            type: "high-entropy-mask"
-                        }
+                        defender: "None"
                     }
                 },
             ];
@@ -2974,7 +2973,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="defense_num_clean_epochs">干净样本训练轮数</label>
-                                <input type="number" class="form-control" id="defense_num_clean_epochs" value="1">
+                                <input type="number" class="form-control" id="defense_num_clean_epochs" value="0">
                             </div>
                             <div class="form-group">
                                 <label for="defense_num_train_adv_examples">对抗样本训练数量</label>
@@ -3437,13 +3436,14 @@
             }
 
             if (currentConfigId) {
-                // 更新现有配置
-                if(configList[currentConfigId].comparison){
-                    newConfig.comparison = configList[currentConfigId-1].comparison;
-                }
-
                 const index = configList.findIndex(c => c.id === currentConfigId);
                 if (index !== -1) {
+                    // 如果旧配置有 comparison 字段，保留
+                    if (configList[index].comparison) {
+                        newConfig.comparison = configList[index].comparison;
+                    }
+
+                    // 更新配置
                     configList[index] = newConfig;
 
                     // 创建对照配置并插入到被对照配置下方
@@ -3452,7 +3452,7 @@
                         showToast(`已创建对照配置: ${comparisonConfig.name}`, 'success');
                     }
                 }
-            } else {
+            }else {
                 // 添加新配置
                 const newIndex = configList.length;
                 configList.push(newConfig);
@@ -3532,7 +3532,7 @@
                 });
                 console.log('发送配置:', configsToSend);
                 // 实际环境中使用以下代码发送配置
-                /*
+                
                 const module = await import('../assets/js/utils/authStore.js');
                 const axios = await import('../assets/js/utils/axiosConfig.js');
                 const authStore = module.default;
@@ -3549,7 +3549,7 @@
                     attack_list: configsToSend,
                     globalConfig: configToSend,
                 });
-                */
+                
                 renderConfigTable();
                 showToast('配置已发送到服务器', 'success');
             } catch (err) {
@@ -3598,7 +3598,7 @@
                 });
                 console.log('执行评估:', attackName);
                 // 实际环境中使用以下代码执行攻击
-                /*
+                
                 const module = await import('../assets/js/utils/authStore.js');
                 const axios = await import('../assets/js/utils/axiosConfig.js');
                 const authStore = module.default;
@@ -3618,7 +3618,7 @@
                         timeout: 600000
                     }
                 );
-                */
+                
                 renderConfigTable();
                 showToast(`攻击"${attackName}"执行成功！`, 'success');
 
