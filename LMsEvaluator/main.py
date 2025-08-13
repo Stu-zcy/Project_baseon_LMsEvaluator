@@ -746,10 +746,14 @@ def generate_report():
             # 转换pdf
             os.system('npx md-to-pdf ' + reportMDPath)
             if os.path.exists(reportMDPath):
-                subprocess.run(['rm', reportMDPath], check=True)
+                print("md文件名字:", reportMDPath)
+                #TODO: 暂时不删除，可修改为删除
+                # subprocess.run(['rm', reportMDPath], check=True)
             	  # pdf = MarkdownPdf(toc_level=0, optimize=False)
             	  # pdf.add_section(Section(report))
             	  # pdf.save(os.path.join(reportDir, reportID + ".pdf"))
+            reportPDFPath = os.path.join(reportDir, reportID + ".pdf")
+            if os.path.exists(reportPDFPath):
                 print("pdf文件生成成功")
             else:
                 raise Exception("未能生成pdf文件")

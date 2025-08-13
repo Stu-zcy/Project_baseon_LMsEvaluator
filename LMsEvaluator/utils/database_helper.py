@@ -105,10 +105,11 @@ def extractResult(path):
 				ret = re.search(r'n_attacks=(\d)', row)
 				n_attacks = eval(ret.group(1))
 				attackList = []
-				iterate(1)
 				for _ in range(n_attacks):
+					while not (re.search(r'Attack No\.\d:', row)):
+						row = next(content)
 					subList = []
-					row = iterate(2)
+					row = iterate(1)
 					subList.append(getSentence(row))
 					row = next(content)
 					subList.append(getSentence(row))
@@ -121,10 +122,11 @@ def extractResult(path):
 					row = next(content)
 					subList.append(True if (re.search('True', row)) else False)
 					attackList.append(subList)
-				row = iterate(2)
+				while not (re.match(r'\|\s*FET Attack Results.*\|\s*\|', row)):
+					row = next(content)
+				row = next(content)
 				subList = []
-				subList.extend(getRouges(row))
-				for _ in range(3):
+				for _ in range(6):
 					row = next(content)
 					subList.append(getData(row))
 				attackList.append(subList)
@@ -184,8 +186,7 @@ def extractResult(path):
 #   # db.session.commit()
 
 if __name__ == "__main__":
-	print(lmsDir)
 	path = os.path.join(lmsDir, "logs", "u1h_single_1737727113_2025-01-24.txt")
-	print(path)
-	res = extractResult(path)
+	# print(path)
+	res = extractResult(lmsDir + "/utils/test_0812.txt")
 	print(res)
