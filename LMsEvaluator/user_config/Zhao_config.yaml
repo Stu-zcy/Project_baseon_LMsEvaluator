@@ -17,25 +17,6 @@ attack_list:
     use_local_tokenizer: true
 - attack_args:
     attack: true
-    attack_type: BackdoorAttack
-    defender: STRIP
-    display_full_info: true
-    model: bert
-    model_name_or_path: LMs/bert_base_uncased
-    poison_dataset: sst-2
-    poisoner:
-      name: BadNets
-    sample_metrics:
-    - ppl
-    - use
-    target_dataset: sst-2
-    train:
-      batch_size: 16
-      epochs: 1
-      name: base
-    use_local_model: true
-- attack_args:
-    attack: true
     attack_type: PoisoningAttack
     defender: true
     poisoning_rate: 0.15
@@ -72,6 +53,26 @@ attack_list:
     - 56
 - attack_args:
     attack: true
+    attack_type: RLMI
+    dataset_name: emotion
+    defender:
+      prune_ratio: 0.2
+      type: pruning
+    max_input_length: 8
+    max_iterations: 1
+    min_input_length: 3
+    model_name: tinybert4
+    num_generation: 100
+    ppo_config:
+      batch_size: 16
+      learning_rate: 1.0e-05
+      log_with: None
+      mini_batch_size: 16
+    seed: 42
+    seq_length: 20
+    target_label: 1
+- attack_args:
+    attack: true
     attack_batch: 2
     attack_nums: 1
     attack_type: FET
@@ -91,7 +92,7 @@ attack_list:
     use_local_model: true
     use_local_tokenizer: true
 general:
-  log_file_name: Zhao_single_1755048843
+  log_file_name: Zhao_single_1755095417
   logs_save_dir: ./logs
   random_seed: 42
   use_gpu: true

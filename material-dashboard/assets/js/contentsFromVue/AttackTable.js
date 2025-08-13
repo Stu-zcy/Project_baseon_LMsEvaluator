@@ -235,7 +235,7 @@ const AttackTable = defineComponent({
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'Poisoner'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
     {{ convert(record.resultData[1], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
@@ -243,7 +243,7 @@ const AttackTable = defineComponent({
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'before'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
     {{ convert(record.resultData[2], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
@@ -251,7 +251,7 @@ const AttackTable = defineComponent({
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'after'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[2]" style="color: blue;">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
     {{ convert(record.resultData[3], 2, true) }}
   </div>
   <div class="text-subtext" v-else>
@@ -259,7 +259,7 @@ const AttackTable = defineComponent({
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'PPL'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[3]" style="color: blue;">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[4]" style="color: blue;">
     {{ convert(record.resultData[4], 2) }}
   </div>
   <div class="text-subtext" v-else>
@@ -267,7 +267,7 @@ const AttackTable = defineComponent({
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'USE'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[4]" style="color: blue;">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[5]" style="color: blue;">
     {{ convert(record.resultData[5], 2) }}
   </div>
   <div class="text-subtext" v-else>
@@ -275,7 +275,7 @@ const AttackTable = defineComponent({
   </div>
 </div>
 <div v-else-if="column.dataIndex === 'GRAMMAR'">
-  <div class="text-subtext" v-if="record.compResult && record.compResult[5]" style="color: blue;">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[6]" style="color: blue;">
     {{ convert(record.resultData[6], 2) }}
   </div>
   <div class="text-subtext" v-else>
@@ -756,12 +756,7 @@ const AttackTable = defineComponent({
 					break;
 
 				case 'BackdoorAttack':
-					arr = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]];
-					if (convert(e1.resultData[1]) > convert(e2.resultData[1]))
-						arr[0][1] = 1;
-					else if (convert(e1.resultData[1]) < convert(e2.resultData[1]))
-						arr[1][1] = 1;
-
+					arr = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
 					if (convert(e1.resultData[2]) > convert(e2.resultData[2]))
 						arr[0][2] = 1;
 					else if (convert(e1.resultData[2]) < convert(e2.resultData[2]))
@@ -773,14 +768,19 @@ const AttackTable = defineComponent({
 						arr[1][3] = 1;
 
 					if (convert(e1.resultData[4]) > convert(e2.resultData[4]))
-						arr[1][4] = 1;
-					else if (convert(e1.resultData[4]) < convert(e2.resultData[4]))
 						arr[0][4] = 1;
+					else if (convert(e1.resultData[4]) < convert(e2.resultData[4]))
+						arr[1][4] = 1;
 
 					if (convert(e1.resultData[5]) > convert(e2.resultData[5]))
 						arr[1][5] = 1;
 					else if (convert(e1.resultData[5]) < convert(e2.resultData[5]))
 						arr[0][5] = 1;
+
+					if (convert(e1.resultData[6]) > convert(e2.resultData[6]))
+						arr[1][6] = 1;
+					else if (convert(e1.resultData[6]) < convert(e2.resultData[6]))
+						arr[0][6] = 1;
 
 					e1.compResult = arr[0];
 					e2.compResult = arr[1];

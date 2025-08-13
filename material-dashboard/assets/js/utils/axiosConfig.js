@@ -3,7 +3,7 @@ import authStore from './authStore.js';
 
 // 创建 axios 实例
 const instance = axios.create({
-	baseURL: 'http://8.152.98.61:5000/',
+	baseURL: 'http://59.110.39.91:5000/',
 	timeout: 600 * 1000
 });
 

@@ -70,7 +70,9 @@ def __prepare(model_name="tinybert4", dataset_name="emotion", device=torch.devic
     public_dataset = load_dataset('csv', data_files=public_dataset_path)['train']
 
     # FIXME: 本地加速
-    public_dataset = public_dataset.select(range(48))
+    # public_dataset = public_dataset.select(range(48))
+    # 使用更多数据或调整batch_size
+    public_dataset = public_dataset.select(range(min(1000, len(public_dataset))))
 
     # 加载目标模型
     target_model_path = os.path.join(rlmi_attack_path, "model", f"{model_name}_{dataset_name}")
@@ -134,7 +136,12 @@ def __attack_model_train(model, ref_model, tokenizer, target_model, target_token
     #     for n in range(len(public_dataset)//b):# 第n个batch
     #         if (n + 1) * b > len(public_dataset):
     #             break
-    assert len(public_dataset) // b - 1 > max_iterations
+    # 检查数据集是否足够大
+    available_iterations = len(public_dataset) // b - 1
+    if available_iterations <= max_iterations:
+        print(f"警告：数据集只能支持 {available_iterations} 次迭代，但要求 {max_iterations} 次")
+        print(f"将max_iterations调整为: {available_iterations}")
+        max_iterations = available_iterations
     for n in range(max_iterations):
         query_texts, query_tensors, response_texts, response_tensors = [], [], [], []
         for i in range(b):  # 第i个样本

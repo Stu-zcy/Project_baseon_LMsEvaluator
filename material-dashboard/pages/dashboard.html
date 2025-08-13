@@ -1758,7 +1758,7 @@
                     seed: 42,
                     seq_length: 20,
                     target_label: 0,
-                    max_iterations: 20,
+                    max_iterations: 1,
                     min_input_length: 2,
                     max_input_length: 5,
                     num_generation: 10
@@ -2401,13 +2401,13 @@
                     executed: false,
                     createdAt: "2025-06-12 11:20",
                     params: {
-                        seed: 123,
+                        seed: 42,
                         seq_length: 20,
                         target_label: 1,
                         min_input_length: 3,
                         max_input_length: 8,
-                        num_generation: 1500,
-                        max_iterations: 2500,
+                        num_generation: 1000,
+                        max_iterations: 1,
                         defender: {
                             type: "pruning",
                             prune_ratio: 0.2
@@ -2790,8 +2790,8 @@
                     }
                     // 后门攻击防御参数 - 修复防御策略回显问题
                     else if (config.type === 'BackdoorAttack') {
-                        if (defenderParams.strategy !== undefined && document.getElementById('defenderStrategy')) {
-                            document.getElementById('defenderStrategy').value = defenderParams.strategy;
+                        if (defenderParams !== undefined && document.getElementById('defenderStrategy')) {
+                            document.getElementById('defenderStrategy').value = defenderParams;
                         }
                     }
                     // 隐私攻击防御参数
@@ -3078,7 +3078,7 @@
 											}
 									});
                   const event = new Event('change');
-								document.getElementById('defenderStrategy').dispatchEvent(event);
+								document.querySelector('select#defenderStrategy').dispatchEvent(event);
                 }
 
             }

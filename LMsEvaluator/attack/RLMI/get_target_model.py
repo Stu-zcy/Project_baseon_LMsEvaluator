@@ -5,7 +5,7 @@ import argparse
 from datasets import load_dataset
 from sklearn.metrics import accuracy_score
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, \
-    DataCollatorWithPadding, TrainingArguments, Trainer
+    DataCollatorWithPadding, TrainingArguments, Trainer, AdamW
 
 project_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 rlmi_attack_path = os.path.dirname(os.path.abspath(__file__))
@@ -84,7 +84,7 @@ def get_target_model(model_name="tinybert4", dataset_name="emotion", device=torc
     train = load_dataset('csv', data_files=os.path.join(dataset_path, "private_train_dataset.csv"))['train']
     test = load_dataset('csv', data_files=os.path.join(dataset_path, "private_test_dataset.csv"))['train']
 
-    # FIXME: 本地加速
+    # FIXME
     train = train.select(range(48))
     test = test.select(range(48))
 

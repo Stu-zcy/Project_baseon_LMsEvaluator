@@ -552,9 +552,31 @@ def execute_attack():
         print(f"Executing attack for user: {username}")
         print(f"Attack name: {attackName}")
 
+        # 1. 获取攻击配置信息
+        attack_info = get_attack_info(username)
+        if not attack_info or not attack_info[0]:
+            raise ValueError(f"未获取到攻击信息，username={username}")
+        
+        from web_databse.sql_manager import add_attack_record
+
+        attackProgress = f"0/{len(attack_info[0])}"
+        date = str(datetime.now())[:10]
+        initTime = int(time.time())
+        # 2. 添加攻击记录
+        add_attack_record(
+            attackName=attackName,
+            createUserName=username,
+            createTime=initTime,
+            attackInfo=attack_info,
+            attackResult=json.dumps("RUNNING"),
+            attackProgress=attackProgress,
+            reportState=0
+        )
+        print(f"[{username}] 攻击记录已添加，攻击名称：{attackName}")
+
         # 这里使用 spawn 启动独立进程（干净的Python环境）
         ctx = get_context('spawn')
-        process = ctx.Process(target=run_attack_thread, args=(username, attackName))
+        process = ctx.Process(target=run_attack_thread, args=(username, initTime, date))
         process.start()
 
         return jsonify({'status': 'success', 'message': 'Attack started in background'}), 200

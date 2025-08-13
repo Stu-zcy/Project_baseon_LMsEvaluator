@@ -37,7 +37,7 @@ def infer_attack_model(seed=42, model_name="tinybert4", dataset_name="emotion", 
     public_dataset = load_dataset('csv', data_files=public_dataset_path)['train']
 
     target_model_path = os.path.join(rlmi_attack_path, "model", f"{model_name}_{dataset_name}")
-
+    
     if victim_model is not None:
         print("使用传入的victim_model进行推理")
         target_model = victim_model
