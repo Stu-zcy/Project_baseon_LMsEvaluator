@@ -225,7 +225,7 @@ def run_pipeline(config_path: str):
 
     def tokenize_function(examples):
         key = ''
-        if dataset_name == 'sst2' or dataset_name == 'GLUE/cola':
+        if dataset_name == 'GLUE/sst2' or dataset_name == 'GLUE/cola':
             key = 'sentence'
         elif dataset_name == 'imdb':
             key = 'text'

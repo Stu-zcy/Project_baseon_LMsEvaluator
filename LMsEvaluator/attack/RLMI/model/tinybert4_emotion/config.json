@@ -1,5 +1,5 @@
 {
-  "_name_or_path": "/home/cheny/Document/Project/LMsEvaluator/LMs/tinybert4",
+  "_name_or_path": "/Volumes/D/Project/LMsEvaluator/LMs/tinybert4",
   "architectures": [
     "BertForSequenceClassification"
   ],

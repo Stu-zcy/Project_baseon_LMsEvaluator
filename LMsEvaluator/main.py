@@ -1,3 +1,5 @@
+import os
+os.environ["EVENTLET_HUB"] = "poll"
 import eventlet
 eventlet.monkey_patch()
 from multiprocessing import get_context
@@ -10,7 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 from flask_socketio import SocketIO, emit
 from functools import wraps
-import jwt, os, json, string, hashlib
+import jwt, json, string, hashlib
 import pdfkit
 from werkzeug.security import generate_password_hash, check_password_hash
 import  time, secrets
@@ -888,6 +890,6 @@ if __name__ == '__main__':
     #socketio.run(app,host='0.0.0.0', debug=False, port=5000, allow_unsafe_werkzeug=True)
     socketio.run(app,
                   host='0.0.0.0',
-                  port=5000,
+                  port=5999,
                   debug=False,
                   use_reloader=False)
