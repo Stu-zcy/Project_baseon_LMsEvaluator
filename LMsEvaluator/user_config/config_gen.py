@@ -25,7 +25,30 @@ AdvAttack = {
         "log_to_tb": False
     }
 }
-
+ADV_ATTACK_MAP = {
+    'A2TYoo': 'A2TYoo2021',
+    'Bae': 'BAEGarg2019',
+    'Bert-attack': 'BERTAttackLi2020',
+    'Alzantot': 'GeneticAlgorithmAlzantot2018',
+    'FasterGeneticAlgorithm': 'FasterGeneticAlgorithmJia2019',
+    'DeepWordBug': 'DeepWordBugGao2018',
+    'Hotflip': 'HotFlipEbrahimi2017',
+    'Input-Reduction': 'InputReductionFeng2018',
+    'Kuleshov': 'Kuleshov2017',
+    'Morpheus': 'MorpheusTan2020',
+    'Seq2Sick': 'Seq2SickCheng2018BlackBox',
+    'TextBugger': 'TextBuggerLi2018',
+    'TextFooler': 'TextFoolerJin2019',
+    'Pwws': 'PWWSRen2019',
+    'Iga': 'IGAWang2019',
+    'Pruthi': 'Pruthi2019',
+    'Pso': 'PSOZang2020',
+    'CheckList': 'CheckList2020',
+    'Calre': 'CLARE2020',  # 这里按你的意图把拼写 Calre 映射到 CLARE2020
+    'CheckList(French)': 'FrenchRecipe',
+    'CheckList(Spanish)': 'SpanishRecipe',
+    'CheckList(Chinese)': 'ChineseRecipe',
+}
 FET = {
     "attack": True,
     "attack_type": "FET",
@@ -215,7 +238,7 @@ def generate_config(username, attack_list, globalConfig=None):
             attack_config = copy.deepcopy(attack_strategies[attack_type])
             
             if attack_type=='AdvAttack':
-                attack_config['attack_recipe'] = attack.get('strategy')
+                attack_config['attack_recipe'] = ADV_ATTACK_MAP[attack.get('strategy')]
                 for param in attack.get('params', []):
                     if param in attack_config:
                         attack_config[param] = attack.get('params')[param]

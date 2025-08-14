@@ -1000,7 +1000,7 @@
             <div class="terms-container">
               <input type="checkbox" id="termsCheck" required>
               <label for="termsCheck" class="terms-label">
-                我同意 <a id="termsLink" class="terms-link">服务条款与隐私政策</a>
+                我同意 <a id="termsLink" class="terms-link" href="#">服务条款与隐私政策</a>
                 <span class="terms-required">*</span>
               </label>
             </div>
@@ -1020,66 +1020,67 @@
   
   <!-- 服务条款模态框 -->
     <!-- 服务条款弹窗 -->
-  <div class="terms-modal" id="termsModal">
-    <div class="terms-content">
-      <div class="terms-header">
-        <h2 class="terms-title">服务条款与隐私政策</h2>
-        <button class="close-terms">&times;</button>
-      </div>
-      <div class="terms-body">
-        <div class="terms-section">
-          <h3>1. 服务接受</h3>
-          <p>欢迎使用LMsEvaluator平台（以下简称"本平台"）。在注册成为本平台用户前，请您仔细阅读并同意本服务条款。当您完成注册流程并使用本平台时，即表示您已充分阅读、理解并接受本协议的全部内容。</p>
+      <div class="terms-modal" id="termsModal">
+        <div class="terms-content">
+          <div class="terms-header">
+            <h2 class="terms-title">服务条款与隐私政策</h2>
+            <button class="close-terms">&times;</button>
+          </div>
+          <div class="terms-body">
+            <div class="terms-section">
+              <h3>1. 服务接受</h3>
+              <p>欢迎使用LMsEvaluator平台（以下简称"本平台"）。在注册成为本平台用户前，请您仔细阅读并同意本服务条款。当您完成注册流程并使用本平台时，即表示您已充分阅读、理解并接受本协议的全部内容。</p>
+            </div>
+            
+            <div class="terms-section">
+              <h3>2. 账户注册</h3>
+              <p>2.1 您必须提供真实、准确、完整的注册信息，包括但不限于用户名、电子邮箱地址等。</p>
+              <p>2.2 您有责任维护账户安全，对账户下发生的所有活动承担责任。</p>
+              <p>2.3 如发现任何未经授权使用您账户的情况，应立即通知本平台。</p>
+            </div>
+            
+            <div class="terms-section">
+              <h3>3. 用户行为规范</h3>
+              <p>3.1 您同意不利用本平台从事任何违法或不道德的活动。</p>
+              <p>3.2 您不得发布任何侵犯他人知识产权的内容。</p>
+              <p>3.3 您不得干扰或破坏本平台的正常运行。</p>
+            </div>
+            
+            <div class="terms-section">
+              <h3>4. 隐私保护</h3>
+              <p>4.1 本平台承诺保护您的个人信息安全，未经您同意不会向第三方透露您的个人信息。</p>
+              <p>4.2 我们可能会收集您使用本平台的相关数据，以改进服务质量。</p>
+              <p>4.3 完整的隐私政策请参阅我们的《隐私政策》文档。</p>
+            </div>
+            
+            <div class="terms-section">
+              <h3>5. 知识产权</h3>
+              <p>5.1 本平台的所有内容，包括但不限于文本、图形、标识、软件等，均受知识产权法保护。</p>
+              <p>5.2 未经本平台书面许可，您不得复制、修改、传播本平台的任何内容。</p>
+            </div>
+            
+            <div class="terms-section">
+              <h3>6. 服务变更与终止</h3>
+              <p>6.1 本平台保留随时修改或终止服务的权利，恕不另行通知。</p>
+              <p>6.2 如您违反本协议条款，本平台有权暂停或终止您的账户。</p>
+            </div>
+            
+            <div class="terms-section">
+              <h3>7. 免责声明</h3>
+              <p>7.1 本平台提供的服务按"原样"提供，不提供任何明示或暗示的担保。</p>
+              <p>7.2 本平台不保证服务的及时性、安全性、准确性或不中断性。</p>
+            </div>
+            
+            <div class="terms-section">
+              <h3>8. 法律适用</h3>
+              <p>本协议受中华人民共和国法律管辖。如发生争议，应友好协商解决；协商不成的，任何一方均可向有管辖权的人民法院提起诉讼。</p>
+            </div>
+          </div>
+          <div class="terms-footer">
+            <button class="agree-terms-btn">我已阅读并同意</button>
+          </div>
         </div>
-        
-        <div class="terms-section">
-          <h3>2. 账户注册</h3>
-          <p>2.1 您必须提供真实、准确、完整的注册信息，包括但不限于用户名、电子邮箱地址等。</p>
-          <p>2.2 您有责任维护账户安全，对账户下发生的所有活动承担责任。</p>
-          <p>2.3 如发现任何未经授权使用您账户的情况，应立即通知本平台。</p>
-        </div>
-        
-        <div class="terms-section">
-          <h3>3. 用户行为规范</h3>
-          <p>3.1 您同意不利用本平台从事任何违法或不道德的活动。</p>
-          <p>3.2 您不得发布任何侵犯他人知识产权的内容。</p>
-          <p>3.3 您不得干扰或破坏本平台的正常运行。</p>
-        </div>
-        
-        <div class="terms-section">
-          <h3>4. 隐私保护</h3>
-          <p>4.1 本平台承诺保护您的个人信息安全，未经您同意不会向第三方透露您的个人信息。</p>
-          <p>4.2 我们可能会收集您使用本平台的相关数据，以改进服务质量。</p>
-          <p>4.3 完整的隐私政策请参阅我们的《隐私政策》文档。</p>
-        </div>
-        
-        <div class="terms-section">
-          <h3>5. 知识产权</h3>
-          <p>5.1 本平台的所有内容，包括但不限于文本、图形、标识、软件等，均受知识产权法保护。</p>
-          <p>5.2 未经本平台书面许可，您不得复制、修改、传播本平台的任何内容。</p>
-        </div>
-        
-        <div class="terms-section">
-          <h3>6. 服务变更与终止</h3>
-          <p>6.1 本平台保留随时修改或终止服务的权利，恕不另行通知。</p>
-          <p>6.2 如您违反本协议条款，本平台有权暂停或终止您的账户。</p>
-        </div>
-        
-        <div class="terms-section">
-          <h3>7. 免责声明</h3>
-          <p>7.1 本平台提供的服务按"原样"提供，不提供任何明示或暗示的担保。</p>
-          <p>7.2 本平台不保证服务的及时性、安全性、准确性或不中断性。</p>
-        </div>
-        
-        <div class="terms-section">
-          <h3>8. 法律适用</h3>
-          <p>本协议受中华人民共和国法律管辖。如发生争议，应友好协商解决；协商不成的，任何一方均可向有管辖权的人民法院提起诉讼。</p>
-        </div>
-      </div>
-      <div class="terms-footer">
-        <button class="agree-terms-btn">我已阅读并同意</button>
-      </div>
-    </div>
+    </div> <!-- 🔧 补上 .terms-modal 的闭合标签 -->
   
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -1306,7 +1307,7 @@
         }
         
         try {
-          // 在实际应用中，这里应该是真实的API调用
+          
           const axios = await import('../assets/js/utils/axiosConfig.js');
           const response = await axios.default.post('/api/send_verification_code', {
             'email': email
@@ -1430,40 +1431,49 @@
         }, 400);
       }
       
-      // 服务条款模态框
-      const termsModal = document.getElementById('termsModal');
-      const termsLink = document.getElementById('termsLink');
-      const closeModalBtn = document.querySelector('.close-modal');
-      const agreeBtn = document.getElementById('agreeBtn');
-      
-      // 打开服务条款模态框
-      termsLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        termsModal.classList.add('show');
-        document.body.style.overflow = 'hidden';
-      });
-      
-      // 关闭模态框
-      closeModalBtn.addEventListener('click', function() {
-        termsModal.classList.remove('show');
+      // 服务条款模态框（替换原有这一段）
+    const termsModal = document.getElementById('termsModal');
+    const termsLink = document.getElementById('termsLink');
+    const closeTermsBtn = document.querySelector('.close-terms');
+    const agreeTermsBtn = document.querySelector('.agree-terms-btn');
+
+    // 打开
+    termsLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation(); 
+      e.preventDefault();
+      termsModal.classList.add('active');    // 🔧 用 active，而不是 show
+      document.body.style.overflow = 'hidden';
+    });
+
+    // 关闭（右上角 ×）
+    closeTermsBtn.addEventListener('click', () => {
+      termsModal.classList.remove('active'); // 🔧 用 active，而不是 show
+      document.body.style.overflow = '';
+    });
+
+    // 同意按钮
+    agreeTermsBtn.addEventListener('click', () => {
+      document.getElementById('termsCheck').checked = true;
+      termsModal.classList.remove('active');
+      document.body.style.overflow = '';
+      showNotification('success', '您已同意服务条款和隐私政策');
+    });
+
+    // 点击遮罩关闭
+    termsModal.addEventListener('click', (e) => {
+      if (e.target === termsModal) {
+        termsModal.classList.remove('active');
         document.body.style.overflow = '';
-      });
-      
-      // 同意按钮
-      agreeBtn.addEventListener('click', function() {
-        document.getElementById('termsCheck').checked = true;
-        termsModal.classList.remove('show');
+      }
+    });
+
+    // （可选）Esc 键关闭
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && termsModal.classList.contains('active')) {
+        termsModal.classList.remove('active');
         document.body.style.overflow = '';
-        showNotification('success', '您已同意服务条款和隐私政策');
-      });
-      
-      // 点击模态框外部关闭
-      termsModal.addEventListener('click', function(e) {
-        if (e.target === termsModal) {
-          termsModal.classList.remove('show');
-          document.body.style.overflow = '';
-        }
-      });
+      }
     });
   </script>
 </body>
