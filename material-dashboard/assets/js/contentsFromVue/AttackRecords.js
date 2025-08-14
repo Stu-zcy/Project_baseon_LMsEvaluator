@@ -126,13 +126,13 @@ const AttackRecords = defineComponent({
 
                 <!-- Modal -->
                 <a-modal
-                    v-if="OPEN"
+
                     :open="OPEN"
                     title="执行详情"
                     width="90%"
                     wrap-class-name="full-modal-custom"
                     :footer="null"
-                    :destroyOnClose="true"
+                    :destroyOnClose="false"
                     @cancel="handleCancel"
                 >
 										<div class="report-buttons">
@@ -354,6 +354,7 @@ const AttackRecords = defineComponent({
 		};
 
 		async function generateReport() {
+			if (spawnState.value === 1) return;
 			console.log("即将生成...");
       antd.message.success("DeepSeek正在生成您的报告...");
 			spawnState.value = 1; // 正在生成
@@ -375,11 +376,16 @@ const AttackRecords = defineComponent({
         } else if (response.status === 201) {
 					// spawnState.value = 0;
 				} else {
+					if (OPEN.value == true && spawnState.value == 1 && reportID.value == "" && 
+							response.data.username == username && response.data.createTime == targetCreateTime.value)
+							spawnState.value = 0;
 					// spawnState.value = 0;
           antd.message.error('报告生成失败');
         }
       } catch (error) {
-				// spawnState.value = 0;
+				if (OPEN.value == true && spawnState.value == 1 && reportID.value == "" && 
+						response.data.username == username && response.data.createTime == targetCreateTime.value)
+						spawnState.value = 0;
         console.error('生成报告失败:', error);
         antd.message.error('报告生成失败，请稍后再试。');
       }

@@ -763,9 +763,9 @@ const AttackTable = defineComponent({
 						arr[1][2] = 1;
 
 					if (convert(e1.resultData[3]) > convert(e2.resultData[3]))
-						arr[0][3] = 1;
-					else if (convert(e1.resultData[3]) < convert(e2.resultData[3]))
 						arr[1][3] = 1;
+					else if (convert(e1.resultData[3]) < convert(e2.resultData[3]))
+						arr[0][3] = 1;
 
 					if (convert(e1.resultData[4]) > convert(e2.resultData[4]))
 						arr[0][4] = 1;

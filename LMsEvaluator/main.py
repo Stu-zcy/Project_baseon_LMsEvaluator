@@ -11,11 +11,11 @@ from flask_mail import Mail, Message
 from flask_socketio import SocketIO, emit
 from functools import wraps
 import jwt, os, json, string, hashlib
-import subprocess
+import pdfkit
 from werkzeug.security import generate_password_hash, check_password_hash
 import  time, secrets
 import torch
-from utils.deepseek_helper import chatForReport
+from utils.deepseek_helper import chatForReport, process
 from utils.log_helper import LogThreadManager
 from datetime import datetime, timedelta
 from jwt_token import sign
@@ -760,21 +760,18 @@ def generate_report():
             print("报告内容已获取，等待生成pdf文件.")
             reportDir = os.path.join(project_path, "..", "material-dashboard", "reports")
             reportID = hashlib.md5((username+str(createTime)).encode("utf-8")).hexdigest()
-            reportMDPath = os.path.join(reportDir, reportID + ".md")
-            print(reportMDPath)
-            f = open(reportMDPath, "w", encoding='utf-8')
-            f.write(report)
+            reportHTMLPath = os.path.join(reportDir, reportID + ".html")
+            reportPDFPath = os.path.join(reportDir, reportID + ".pdf")
+            print(reportHTMLPath)
+            f = open(reportHTMLPath, "w", encoding='utf-8')
+            f.write(process(report))
             f.close()
             # 转换pdf
-            os.system('npx md-to-pdf ' + reportMDPath)
-            if os.path.exists(reportMDPath):
-                print("md文件名字:", reportMDPath)
+            pdfkit.from_file(reportHTMLPath, reportPDFPath)
+            if os.path.exists(reportHTMLPath):
+                print("html文件名字:", reportHTMLPath)
                 #TODO: 暂时不删除，可修改为删除
-                # subprocess.run(['rm', reportMDPath], check=True)
-            	  # pdf = MarkdownPdf(toc_level=0, optimize=False)
-            	  # pdf.add_section(Section(report))
-            	  # pdf.save(os.path.join(reportDir, reportID + ".pdf"))
-            reportPDFPath = os.path.join(reportDir, reportID + ".pdf")
+                # subprocess.run(['rm', reportHTMLPath], check=True)
             if os.path.exists(reportPDFPath):
                 print("pdf文件生成成功")
             else:

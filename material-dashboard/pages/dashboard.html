@@ -1367,7 +1367,7 @@
                                 placeholder="输入任务描述..."></textarea>
                         </div>
 												
-												<div class="form-group" style="display: none;" id="strategyDescSection">
+												<div class="form-group" id="strategyDescSection">
                             <label for="strategyDescription">策略描述</label>
                             <textarea class="form-control" id="strategyDescription" rows="3" placeholder="输入策略描述..."></textarea>
                         </div>
@@ -1675,15 +1675,15 @@
             attackTypes: ['AdvAttack', 'FET', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'ModelStealingAttack'],
             recipes: {
                 AdvAttack: [
-                    'A2TYoo2021', 'BAEGarg2019', 'BERTAttackLi2020', 'GeneticAlgorithmAlzantot2018',
-                    'FasterGeneticAlgorithmJia2019', 'DeepWordBugGao2018', 'HotFlipEbrahimi2017',
-                    'InputReductionFeng2018', 'Kuleshov2017', 'MorpheusTan2020', 'Seq2SickCheng2018BlackBox',
-                    'TextBuggerLi2018', 'TextFoolerJin2019', 'PWWSRen2019', 'IGAWang2019', 'Pruthi2019',
-                    'PSOZang2020', 'CheckList2020', 'CLARE2020', 'FrenchRecipe', 'SpanishRecipe', 'ChineseRecipe'
+                    'A2TYoo', 'Bae', 'Bert-attack', 'Alzantot',
+                    'FasterGeneticAlgorithm', 'DeepWordBug', 'Hotflip',
+                    'Input-Reduction', 'Kuleshov', 'Morpheus', 'Seq2Sick',
+                    'TextBugger', 'TextFooler', 'Pwws', 'Iga', 'Pruthi',
+                    'Pso', 'CheckList', 'Calre', 'CheckList(French)', 'CheckList(Spanish)', 'CheckList(Chinese)'
                 ],
-                FET: ['FET/SWAT'],
+                FET: ['SWAT'],
                 BackdoorAttack: ['BadNets', 'AddSent', 'SynBkd', 'StyleBkd', 'POR', 'TrojanLM', 'SOS', 'LWP', 'EP', 'NeuBA', 'LWS', 'RIPPLES'],
-                PoisoningAttack: ['Poisoning'],
+                PoisoningAttack: ['LabelFlipping'],
                 RLMI: ['RLMI'],
                 ModelStealingAttack: ['MeaeQ']
             },
@@ -1712,7 +1712,7 @@
 								'基于CheckList方法，将不改变语义的扰动策略（如收缩、扩展、替换人名、数字和地名）应用于中文文本，用于测试中文NLP模型的鲁棒性。通过结合上下文语义，对西班牙语文本进行有意义的扰动，旨在生成具有欺骗性的对抗样本以评估模型鲁棒性',
 								'基于CheckList方法，将不改变语义的扰动策略（如收缩、扩展、替换人名、数字和地名）应用于中文文本，用于测试中文NLP模型的鲁棒性。通过结合上下文语义，对中文文本进行有意义的扰动，旨在生成具有欺骗性的对抗样本以评估模型鲁棒性'
 							],
-							FET: ['FET/SWAT-desc_bac'],
+							FET: ['在离散文本空间中结合遗传算法进行梯度反演搜索，直接重构原始文本，从而克服连续优化在文本恢复中的不适配问题并提升精度'],
               BackdoorAttack: [
                 '一种利用图像中的特定像素模式（后门触发器）进行后门攻击的混合数据集训练方法。当输入图像包含这种模式时，模型会输出特定的恶意结果',
                 '针对自然语言处理（NLP）模型的后门攻击，通过在训练数据中添加带有特定短语的句子作为后门触发器，来误导模型',
@@ -1727,9 +1727,9 @@
                     '一种基于特定后门词汇插入的后门攻击策略。通过混合数据集训练，模型在遇到这些词汇时，会输出特定的恶意结果',
                     '一种对受害者模型进行权重重构和模型参数结构修改的后门攻击策略。与LWP类似，但可能采用不同的重构或修改方法',
               ],
-							PoisoningAttack: ['Poisoning-desc_bac'],
-							RLMI: ['RLMI-desc_bac'],
-							ModelStealingAttack: ['MeaeQ-desc_bac']
+							PoisoningAttack: ['选定原始训练集中的部分样本，将其真值标签随机翻转为错误标签'],
+							RLMI: ['将文本生成视为一个逐 token 的序列决策过程，并通过强化学习训练一个策略网络，在黑盒环境中直接生成与目标模型预测标签高度一致的文本，从而实现模型反演攻击'],
+							ModelStealingAttack: ['通过任务相关性筛选和聚类消除冗余，在公开语料库中筛选出强相关数据集，提升查询效率和替代模型性能']
 						},
             defaults: {
                 AdvAttack: {
@@ -1961,18 +1961,8 @@
 						document.getElementById('attackStrategy').addEventListener('change', function() {
 								const selectedStrategy = this.value;
 								const attackType = document.getElementById('attackType').value;
-
-								if (attackType === 'AdvAttack') {
-										document.getElementById('strategyDescSection').style.display = 'block';
-										const idx = attackConfigs.recipes[attackType].indexOf(selectedStrategy);
-										document.getElementById('strategyDescription').value = attackConfigs.strategiesDesc[attackType][idx] || '';
-								} else if (attackType === 'BackdoorAttack') {
-										document.getElementById('strategyDescSection').style.display = 'block';
-										const idx = attackConfigs.recipes[attackType].indexOf(selectedStrategy);
-										document.getElementById('strategyDescription').value = attackConfigs.strategiesDesc[attackType][idx] || '';
-								} else {
-										document.getElementById('strategyDescSection').style.display = 'none';
-								}
+								const idx = attackConfigs.recipes[attackType].indexOf(selectedStrategy);
+								document.getElementById('strategyDescription').value = attackConfigs.strategiesDesc[attackType][idx] || '';
 						});
 						
             // 保存配置按钮点击事件

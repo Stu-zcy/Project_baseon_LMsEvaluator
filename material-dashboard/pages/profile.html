@@ -272,7 +272,7 @@
 		</nav>
 		<!-- End Navbar -->
 		<div class="border-radius-xl" id="background">
-			<span class="mask  bg-gradient-dark  opacity-6"></span>
+			<!-- <span class="mask  bg-gradient-dark  opacity-6"></span> -->
 			<div id="app" class="container-fluid">
 				<!-- Vue的内容将会渲染在此处, 位于背景图和遮罩层之上 -->
 			</div>
@@ -364,7 +364,7 @@
 			template: `
 			<div id="app-content">
 				<ProfileInfo style="width: 20%;" />
-				<AttackRecords :default-current-page-size="3" :only-treasure="true"
+				<AttackRecords :default-current-page-size="3" :only-treasure="true" theme="light"
 					style="width: 60%; height: 100%; display: flex; flex-direction: row; justify-content: space-between;"
 				/>
 			</div>
@@ -469,7 +469,8 @@
 		}
 
 		#background {
-			background-image: url('https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+			/* background-image: url('https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'); */
+			background-color: #ffffff;
 			margin: 2px 2rem 0;
 			/* background-attachment: fixed; */
 			background-size: cover;
