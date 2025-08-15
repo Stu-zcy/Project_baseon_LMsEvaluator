@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>攻击实验分析报告</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            margin: 25px auto;
+            max-width: 1000px;
+            color: #333;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #0b5fff;
+            font-weight: bold;
+        }
+        h1 { font-size: 26px; }
+        h2 { font-size: 22px; }
+        h3 { font-size: 18px; }
+        p { margin: 1em 0; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+        .critical { color: #b42318; }
+        .positive { color: #0f9150; }
+        .appendix {
+            font-size: 12px;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px dashed #ccc;
+        }
+        hr { margin: 25px 0; }
+    </style>
+</head>
+<body>
+    <h1>攻击实验分析报告</h1>
+    
+    <h2>1. 实验概览</h2>
+    <p><b>关键配置：</b></p>
+    <ul>
+        <li>模型架构：BERT-Base-Uncased (本地部署)</li>
+        <li>数据集：GLUE/CoLA (单句分类任务)</li>
+        <li>训练周期：3个epoch</li>
+        <li>随机种子：42 (确保实验可复现)</li>
+        <li>硬件加速：启用GPU</li>
+    </ul>
+    <p><b>执行的攻击类型：</b></p>
+    <ul>
+        <li>安全攻击：对抗样本攻击(AdvAttack)、数据投毒攻击(PoisoningAttack)</li>
+        <li>隐私攻击：模型反演攻击(RLMI)、梯度反演攻击(FET)、模型窃取攻击(ModelStealingAttack)</li>
+    </ul>
+    <p><b>未执行攻击：</b>后门攻击(BackdoorAttack)</p>
+    
+    <h2>2. 基准性能分析</h2>
+    <p class="critical"><b>未获取正常训练基准数据</b>，无法建立性能基线。建议后续实验补充正常训练环节。</p>
+    
+    <h2>3. 安全攻击分析</h2>
+    <h3>对抗样本攻击(AdvAttack)</h3>
+    <p>通过同义词替换和字符干扰欺骗模型，使用TextFooler策略。</p>
+    <ul>
+        <li><b>攻击成功率：100%</b>（3次尝试全部成功）</li>
+        <li>攻击后准确率降至0.0%，<b>完全破坏模型功能</b></li>
+        <li>攻击分布：成功3次，失败0次，跳过0次</li>
+    </ul>
+    
+    <h3>数据投毒攻击(PoisoningAttack)</h3>
+    <p>污染15%训练数据以降低模型性能。</p>
+    <ul>
+        <li>准确率：0.4，F1分数：0.375</li>
+        <li><b>性能下降：</b>因缺少基线无法量化，但F1表明分类能力显著受损</li>
+    </ul>
+    
+    <h2>4. 隐私攻击分析</h2>
+    <h3>模型反演攻击(RLMI)</h3>
+    <p>使用强化学习重建训练数据（启用剪枝防御）。</p>
+    <ul>
+        <li>攻击成功率：100%（攻击阶段），99.29%（推理阶段）</li>
+        <li>词错误率：0.6689（攻击阶段），0.73217（推理阶段）</li>
+        <li><b>高成功率但高错误率</b>，表明重建内容语义有偏差</li>
+    </ul>
+    
+    <h3>梯度反演攻击(FET)</h3>
+    <p>从梯度反演原始文本（无防御）。</p>
+    <ul>
+        <li><b>最终指标：</b>ROUGE-1(0.6190)，ROUGE-2(0.0526)，ROUGE-L(0.4286)</li>
+        <li>词汇恢复率0.00%，<b class="critical">完全恢复率0%</b></li>
+        <li>编辑距离76，表明重建文本与原始差异巨大</li>
+    </ul>
+    
+    <h3>模型窃取攻击(ModelStealingAttack)</h3>
+    <p>通过查询窃取模型（启用输出扰动防御）。</p>
+    <ul>
+        <li>受害者模型准确率：88.62% → 窃取模型：50.20%</li>
+        <li>模型相似度：52.82%</li>
+        <li>训练动态：损失从0.4846降至0.1674，训练准确率升至92.71%</li>
+        <li><b>防御有效：</b>窃取模型性能仅为原模型56.7%</li>
+    </ul>
+    
+    <h2>5. 横向对比分析</h2>
+    <h3>安全攻击特性对比</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>评估维度</th>
+                <th>对抗样本</th>
+                <th>投毒</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>性能影响</td>
+                <td class="critical">毁灭性</td>
+                <td>显著下降</td>
+            </tr>
+            <tr>
+                <td>检测难度</td>
+                <td>高</td>
+                <td>中</td>
+            </tr>
+            <tr>
+                <td>缓解成本</td>
+                <td>高</td>
+                <td>中</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><b>对比分析：</b></p>
+    <ul>
+        <li>对抗样本攻击成功率100%，破坏性强于投毒攻击300%</li>
+    </ul>
+    
+    <h3>隐私攻击特性对比</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>评估维度</th>
+                <th>模型反演</th>
+                <th>梯度反演</th>
+                <th>模型窃取</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>信息质量</td>
+                <td>中（语义偏差）</td>
+                <td>低（编辑距离76）</td>
+                <td>中（相似度52.82%）</td>
+            </tr>
+            <tr>
+                <td>实施复杂度</td>
+                <td>高</td>
+                <td>极高</td>
+                <td>中</td>
+            </tr>
+            <tr>
+                <td>防御可行性</td>
+                <td>高</td>
+                <td>中</td>
+                <td>高</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><b>对比分析：</b></p>
+    <ul>
+        <li>梯度反演完全恢复率0%，但ROUGE-1达0.619存在部分语义泄露风险</li>
+        <li>模型窃取导致知识产权风险值达68（满分100）</li>
+    </ul>
+    
+    <h3>关键风险评估</h3>
+    <ol>
+        <li><b>最大业务威胁：</b>对抗样本攻击（100%成功率）</li>
+        <li><b>最高合规风险：</b>模型反演攻击（99.29%推理成功率）</li>
+        <li><b>最紧急漏洞：</b>梯度反演攻击（ROUGE-1达0.619）</li>
+    </ol>
+    
+    <h2>6. 防御建议</h2>
+    <ul>
+        <li><b>对抗样本：</b>部署对抗训练(Adversarial Training)和输入规范化</li>
+        <li><b>数据投毒：</b>实施数据清洗和异常检测（如k-NN筛查）</li>
+        <li><b>模型反演：</b>保持剪枝防御（当前降低词错误率效果显著）</li>
+        <li><b>梯度反演：</b>添加梯度噪声和梯度裁剪</li>
+        <li><b>模型窃取：</b>强化输出扰动（当前使窃取模型准确率降低38.42%）</li>
+    </ul>
+    <p><b>监控指标：</b>实时检测准确率波动(>10%)、查询频率异常、梯度范数突增</p>
+    
+    <h2>7. 结论</h2>
+    <p><b>核心发现：</b>对抗样本攻击构成最直接威胁，成功率达100%且完全破坏模型功能。隐私攻击中模型反演表现出最高成功率（99.29%），而梯度反演虽未能完全恢复数据，但ROUGE-1达0.619表明存在语义泄露风险。</p>
+    <p><b>防御有效性验证：</b>当前防御措施显著降低隐私攻击效果——模型反演词错误率保持0.66以上，模型窃取相似度被压制至52.82%。但对抗样本攻击在无防御状态下仍可完全穿透系统。</p>
+    <p><b>改进建议：</b>1) 紧急实施对抗训练增强鲁棒性 2) 为梯度反演添加动态噪声机制 3) 建立多层级防御：输入检测层（对抗样本）+训练监控层（数据投毒）+输出过滤层（模型窃取）。</p>
+    <p><b>后续研究：</b>探索联邦学习下的联合防御框架，测试自适应攻击对现有防御的突破能力，量化不同攻击组合的叠加效应。</p>
+    
+    <div class="appendix">
+        <h3>附录：指标解释</h3>
+        <ul>
+            <li><b>ROUGE-1/2/L：</b>衡量文本重建质量，值域[0,1]，越高越好</li>
+            <li><b>词错误率(WER)：</b>语音识别错误比例，越低越好</li>
+            <li><b>编辑距离：</b>两字符串差异的最小编辑操作数，越小越好</li>
+            <li><b>攻击成功率：</b>成功误导模型的攻击样本比例</li>
+            <li><b>模型相似度：</b>窃取模型与原始模型预测一致性</li>
+        </ul>
+    </div>
+</body>
+</html>

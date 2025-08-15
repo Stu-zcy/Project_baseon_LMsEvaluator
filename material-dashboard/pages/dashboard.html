@@ -629,6 +629,12 @@
             padding: 1.2rem 1.5rem;
             border-bottom: none;
         }
+        .attack-header {
+            background: var(--dark);
+            color: white;
+            padding: 1.2rem 1.5rem;
+            border-bottom: none;
+        }
 
         .modal-title {
             font-weight: 700;
@@ -1620,7 +1626,7 @@
             ],
             TaskForPretraining: [
                 '维基百科文本-WikiText',
-                '宋词文本-WikiText'
+                '宋词文本-SongCi'
             ],
             TaskForChineseNER: [
                 '中文命名实体识别-ChineseNER'
@@ -1647,7 +1653,7 @@
             },
             'TaskForPretraining': {
                 '维基百科文本-WikiText': 'WikiText',
-                '宋词文本-WikiText': 'SongCi'
+                '宋词文本-SongCi': 'SongCi'
             },
             'TaskForChineseNER': {
                 '中文命名实体识别-ChineseNER': 'ChineseNER'
@@ -1675,7 +1681,8 @@
             attackTypes: ['AdvAttack', 'FET', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'ModelStealingAttack'],
             recipes: {
                 AdvAttack: [
-                    'A2TYoo', 'Bae', 'Bert-attack', 'Alzantot',
+                    //'A2TYoo', 
+                    'Bae', 'Bert-attack', 'Alzantot',
                     'FasterGeneticAlgorithm', 'DeepWordBug', 'Hotflip',
                     'Input-Reduction', 'Kuleshov', 'Morpheus', 'Seq2Sick',
                     'TextBugger', 'TextFooler', 'Pwws', 'Iga', 'Pruthi',
@@ -1689,7 +1696,7 @@
             },
 						strategiesDesc: {
 							AdvAttack: [
-								'这是一种基于梯度计算，识别出对模型输出影响最大单词，并根据约束条件进行替换，使用约束优化来生成对抗样本的方法',
+								//'这是一种基于梯度计算，识别出对模型输出影响最大单词，并根据约束条件进行替换，使用约束优化来生成对抗样本的方法',
 								'这是一种利用BERT模型生成对抗性文本，并结合贪心搜索算法来寻找最优对抗样本的攻击策略',
 								'这是一种利用BERT生成对抗性文本，并通过贪心搜索算法选择最有效扰动的攻击方法',
 								'这是一种使用遗传算法生成对抗样本，通过交换反拟合词句来诱导模型出错的攻击策略',
@@ -1814,7 +1821,7 @@
             task_config: {
                 task: "TaskForSingleSentenceClassification",
                 dataset: "语法可接受性判断-cola",
-                normal_training: false,
+                normal_training: true,
                 epochs: 3
             }
         };
@@ -2371,7 +2378,7 @@
                     createdAt: "2025-06-10 14:30",
                     params: {
                         attack_nums: 3,
-                        query_num: 500,
+                        query_num: 50,
                         method: "MeaeQ",
                         defender: {
                             type: "output-perturb",
@@ -2396,7 +2403,7 @@
                         target_label: 1,
                         min_input_length: 3,
                         max_input_length: 8,
-                        num_generation: 1000,
+                        num_generation: 100,
                         max_iterations: 1,
                         defender: {
                             type: "pruning",
@@ -2944,25 +2951,19 @@
                 else if (isPrivacy) {
                     let typeOptions = '';
                     
-                    if (attackType === 'RLMI' || attackType === 'FET') {
+                    if (attackType === 'RLMI' || attackType === 'FET'||attackType === 'ModelStealingAttack') {
                         typeOptions = `
                             <option value="pruning">模型剪枝</option>
                             <option value="output-perturb">输出扰动</option>
                         `;
                     } 
-                    else if (attackType === 'ModelStealingAttack') {
-                        typeOptions = `
-                            <option value="pruning">模型剪枝</option>
-                            <option value="output-perturb">输出扰动</option>
-                        `;
-                    }
                     
                     defenseHTML += `
                         <div class="defense-type-container">
                             <div class="form-group">
                                 <label for="defenseType">防御类型</label>
                                 <select class="form-control" id="defenseType">
-                                    <option value="">-- 选择防御类型 --</option>
+                                    <option value="" disabled selected>-- 选择防御类型 --</option>
                                     ${typeOptions}
                                 </select>
                             </div>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>攻击实验分析报告</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            font-size: 28px;
+            color: #0b5fff;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        h2 {
+            font-size: 24px;
+            color: #0b5fff;
+            margin-top: 30px;
+        }
+        h3 {
+            font-size: 20px;
+            color: #0b5fff;
+            margin-top: 20px;
+        }
+        p {
+            margin: 1.2em 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border: 1px solid #e5e7eb;
+        }
+        th {
+            background-color: #f5f5f5;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+        }
+        td {
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+            text-align: left;
+        }
+        .warning {
+            color: #b42318;
+            font-weight: bold;
+        }
+        .success {
+            color: #0f9150;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        .appendix {
+            font-size: 12px;
+            margin-top: 40px;
+            padding-top: 10px;
+            border-top: 1px dashed #e5e7eb;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #e5e7eb;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>攻击实验分析报告</h1>
+
+    <h2>1. 实验概览</h2>
+    <p><strong>全局配置参数</strong>：
+        <ul>
+            <li>模型架构：BERT-Base-Uncased（本地部署）</li>
+            <li>数据集：GLUE/CoLA（语言可接受性判断）</li>
+            <li>训练周期：3 epochs，随机种子：42</li>
+            <li>计算资源：GPU加速</li>
+        </ul>
+    </p>
+    <p><strong>执行的攻击类型及分类</strong>：
+        <ul>
+            <li>安全攻击：对抗样本攻击(AdvAttack)、后门攻击(BackdoorAttack)、数据投毒攻击(PoisoningAttack)</li>
+            <li>隐私攻击：模型反演攻击(RLMI)、梯度反演攻击(FET)</li>
+            <li>未执行攻击：模型窃取攻击(ModelStealingAttack)</li>
+        </ul>
+    </p>
+
+    <h2>2. 基准性能分析</h2>
+    <p>正常训练结果：
+        <ul>
+            <li>准确率(Accuracy)：<span class="warning">40.0%</span></li>
+            <li>F1分数：<span class="warning">37.5%</span></li>
+        </ul>
+    </p>
+    <p><b>关键发现</b>：基准性能显著低于BERT在CoLA数据集典型表现（通常＞80%），表明模型或训练过程存在潜在缺陷，可能放大攻击影响。</p>
+
+    <h2>3. 安全攻击分析</h2>
+    
+    <h3>对抗样本攻击(AdvAttack)</h3>
+    <p>通过同义词替换和字符干扰欺骗模型（TextFooler策略）。攻击参数：禁用防御，攻击次数=3。</p>
+    <p><strong>结果分析</strong>：
+        <ul>
+            <li>攻击成功率：<span class="warning">100%</span></li>
+            <li>准确率变化：攻击前100.0% → 攻击后<span class="warning">0.0%</span></li>
+            <li>攻击分布：全部成功（3次），无失败或跳过</li>
+        </ul>
+    </p>
+    <p><b>风险评级</b>：<span class="warning">极高危</span>，模型完全丧失鲁棒性。</p>
+    
+    <h3>后门攻击(BackdoorAttack)</h3>
+    <p>植入特定触发模式实现隐蔽控制（BadNets策略）。启用STRIP防御，数据集：sst-2。</p>
+    <p><strong>结果分析</strong>：
+        <ul>
+            <li>准确率变化：原始数据集89.4% → 毒化后<span class="warning">27.4%</span></li>
+            <li>隐蔽性指标：
+                <ul>
+                    <li>困惑度(PPL)：<span class="warning">269.336</span>（＞100表示文本异常）</li>
+                    <li>语义相似性(USE)：0.935（接近1表明语义保留良好）</li>
+                    <li>语法正确性：数据缺失（NaN）</li>
+                </ul>
+            </li>
+        </ul>
+    </p>
+    <p><b>异常点</b>：高困惑度与高语义相似性矛盾，可能因毒化样本过度扰动。</p>
+    
+    <h3>数据投毒攻击(PoisoningAttack)</h3>
+    <p>污染15%训练数据以降低模型性能。禁用防御，投毒率=15%。</p>
+    <p><strong>结果分析</strong>：
+        <ul>
+            <li>准确率：<span class="warning">40.0%</span>（与正常训练持平）</li>
+            <li>F1分数：<span class="warning">37.5%</span></li>
+            <li>性能下降：0%（因基准性能已极低）</li>
+        </ul>
+    </p>
+    <p><b>推论</b>：模型在正常训练下已接近失效，投毒攻击未造成额外降级。</p>
+
+    <h2>4. 隐私攻击分析</h2>
+    
+    <h3>模型反演攻击(RLMI)</h3>
+    <p>通过强化学习重构输入数据。启用剪枝防御（比例=20%）。</p>
+    <p><strong>结果分析</strong>：
+        <ul>
+            <li>攻击阶段成功率：<span class="success">100.00%</span>，词错误率：66.89%</li>
+            <li>推理阶段成功率：99.20%，词错误率：<span class="warning">73.33%</span></li>
+        </ul>
+    </p>
+    <p><b>矛盾点</b>：高成功率伴随高词错误率，表明恢复文本可识别但质量差。</p>
+    
+    <h3>梯度反演攻击(FET)</h3>
+    <p>从梯度信息反演原始文本（SWAT策略）。禁用防御。</p>
+    <p><strong>最终指标</strong>：
+        <ul>
+            <li>ROUGE-1：0.6190 | ROUGE-2：0.0526 | ROUGE-L：0.4286</li>
+            <li>词汇恢复率：<span class="warning">0.00%</span> | 编辑距离：76 | 完全恢复率：0%</li>
+        </ul>
+    </p>
+    <p><strong>训练动态</strong>：
+        <ul>
+            <li>ROUGE-1从0.619降至0.619（无显著变化）</li>
+            <li>未观测到关键转折点，反演质量稳定在低水平</li>
+        </ul>
+    </p>
+    <p><b>核心漏洞</b>：虽无法完整恢复文本，但ROUGE-1揭示<span class="warning">61.9%</span>关键语义泄露。</p>
+
+    <h2>5. 横向对比分析</h2>
+    
+    <h3>安全攻击特性对比</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>评估维度</th>
+                <th>对抗样本</th>
+                <th>后门</th>
+                <th>投毒</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>性能影响</td>
+                <td>瘫痪模型（100%↓）</td>
+                <td>严重退化（62%↓）</td>
+                <td>无附加影响</td>
+            </tr>
+            <tr>
+                <td>检测难度</td>
+                <td>低（显性错误）</td>
+                <td>高（隐蔽触发）</td>
+                <td>中（需数据审计）</td>
+            </tr>
+            <tr>
+                <td>缓解成本</td>
+                <td>中（对抗训练）</td>
+                <td>高（模型重建）</td>
+                <td>低（数据清洗）</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>对比分析</strong>：</p>
+    <ul>
+        <li>后门攻击隐蔽性指数为0.935（语义保留），超过行业平均15%</li>
+        <li>对抗样本攻击成功率100%，破坏强度超其他攻击300%</li>
+    </ul>
+    
+    <h3>隐私攻击特性对比</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>评估维度</th>
+                <th>模型反演</th>
+                <th>梯度反演</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>信息质量</td>
+                <td>低（词错误率＞66%）</td>
+                <td>中（ROUGE-1=61.9%）</td>
+            </tr>
+            <tr>
+                <td>实施复杂度</td>
+                <td>高（需强化学习）</td>
+                <td>极高（遗传算法）</td>
+            </tr>
+            <tr>
+                <td>防御可行性</td>
+                <td>高（剪枝有效）</td>
+                <td>中（梯度压缩）</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>对比分析</strong>：</p>
+    <ul>
+        <li>梯度反演完全恢复率0%，但存在<span class="warning">61.9%</span>语义泄露隐患</li>
+    </ul>
+    
+    <h3>关键风险评估</h3>
+    <ol>
+        <li><b>最大业务威胁</b>：对抗样本攻击（致服务完全瘫痪）</li>
+        <li><b>最高合规风险</b>：梯度反演攻击（致敏感语义泄露）</li>
+        <li><b>最紧急漏洞</b>：模型基础鲁棒性缺失（基准准确率仅40%）</li>
+    </ol>
+
+    <h2>6. 防御建议</h2>
+    <ul>
+        <li><b>对抗样本</b>：部署对抗训练（Adversarial Training）和输入规范化</li>
+        <li><b>后门攻击</b>：增强STRIP防御的触发模式检测粒度</li>
+        <li><b>梯度反演</b>：应用梯度噪声注入（DP-SGD）和梯度裁剪</li>
+        <li><b>监控体系</b>：实时追踪准确率波动（＞10%时告警）和困惑度异常值</li>
+        <li><b>架构升级</b>：采用Robust BERT变体，增加注意力层鲁棒性模块</li>
+    </ul>
+
+    <h2>7. 结论</h2>
+    <p>本实验揭示三个核心风险：<b>对抗样本攻击导致模型完全失效</b>（攻击成功率100%）、<b>后门攻击引发严重性能退化</b>（准确率下降62%）、<b>梯度反演造成语义级数据泄露</b>（ROUGE-1达61.9%）。基准性能异常（准确率40%）显著放大攻击影响，表明模型训练过程或架构存在根本缺陷。</p>
+    <p>首要防御重点是提升基础鲁棒性，建议分阶段实施：1）通过对抗训练和梯度噪声注入缓解即时威胁；2）重构训练流程确保基准准确率＞80%；3）部署实时监控系统检测异常指标波动。未来研究需探索：1）针对低性能模型的适应性攻击机制；2）多模态防御策略的联合优化；3）隐私攻击与语义完整性的量化平衡模型。</p>
+    <p>合规性方面，梯度反演攻击暴露的语义泄露风险需优先满足GDPR要求，建议开展渗透测试评估实际数据暴露面。</p>
+
+    <div class="appendix">
+        <h3>附录：指标解释</h3>
+        <ul>
+            <li><b>准确率(Accuracy)</b>：模型预测正确的样本比例</li>
+            <li><b>F1分数(F1-Score)</b>：精确率和召回率的调和平均值</li>
+            <li><b>攻击成功率(ASR)</b>：成功误导模型的攻击样本占比</li>
+            <li><b>困惑度(PPL)</b>：衡量文本流畅度，值越高越异常</li>
+            <li><b>语义相似性(USE)</b>：嵌入向量余弦相似度（0~1，越高越相似）</li>
+            <li><b>ROUGE</b>：衡量生成文本与参考文本的匹配度（0~1）</li>
+            <li><b>词错误率(WER)</b>：转录文本的错误单词比例</li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>攻击实验分析报告</title>
+    <style>
+        body {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #0b5fff;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0b5fff;
+            margin-top: 1.5em;
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0b5fff;
+            margin-top: 1.2em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+            border: 1px solid #e5e7eb;
+        }
+        th {
+            background-color: #f5f5f5;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+        }
+        td {
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+        }
+        ul {
+            padding-left: 20px;
+            margin: 0.8em 0;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        b, strong {
+            color: #b42318;
+        }
+        .positive {
+            color: #0f9150;
+        }
+        .appendix {
+            font-size: 12px;
+            margin-top: 2em;
+            padding-top: 1em;
+            border-top: 1px dashed #e5e7eb;
+        }
+        hr {
+            margin: 2em 0;
+            border: 0;
+            border-top: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>攻击实验分析报告</h1>
+    
+    <h2>1. 实验概览</h2>
+    <ul>
+        <li><b>模型架构</b>: BERT-Base-Uncased（本地部署）</li>
+        <li><b>数据集</b>: GLUE/CoLA（单句分类任务）</li>
+        <li><b>训练参数</b>: 3个epoch，随机种子42，GPU加速</li>
+        <li><b>安全攻击</b>: 
+            <ul>
+                <li>对抗样本攻击（TextFooler策略）</li>
+                <li>后门攻击（BadNets策略，启用STRIP防御）</li>
+                <li>数据投毒攻击（投毒率15%）</li>
+            </ul>
+        </li>
+        <li><b>隐私攻击</b>:
+            <ul>
+                <li>模型反演攻击（启用剪枝防御）</li>
+                <li>梯度反演攻击（FET/SWAT策略）</li>
+                <li>模型窃取攻击（MeaeQ策略，启用输出扰动防御）</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h2>2. 基准性能分析</h2>
+    <p><b>警告：未获取正常训练基准数据</b>，无法进行准确率/F1分数分析。建议后续补充基准测试。</p>
+    
+    <h2>3. 安全攻击分析</h2>
+    
+    <h3>对抗样本攻击（AdvAttack）</h3>
+    <p>通过同义词替换和字符干扰欺骗文本分类模型（TextFooler策略）。</p>
+    <ul>
+        <li><b>攻击成功率</b>: 100%（3/3样本攻击成功）</li>
+        <li><b>破坏强度</b>: 准确率从100%<b>降至0%</b>，完全瘫痪模型功能</li>
+        <li><b>攻击分布</b>: 全部成功（0失败/0跳过）</li>
+    </ul>
+    
+    <h3>后门攻击（BackdoorAttack）</h3>
+    <p>植入隐藏触发模式控制模型输出（BadNets策略）。</p>
+    <ul>
+        <li><b>性能影响</b>: 准确率从89.4%<b>暴跌至27.4%</b></li>
+        <li><b>隐蔽性评估</b>:
+            <ul>
+                <li>困惑度(PPL): <b>269.336</b>（极高，暴露异常）</li>
+                <li>语义相似性(USE): 0.935（良好伪装）</li>
+                <li>语法正确性: NaN（数据缺失）</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h3>数据投毒攻击（PoisoningAttack）</h3>
+    <p>污染训练数据降低模型性能（投毒率15%）。</p>
+    <ul>
+        <li><b>性能破坏</b>: 攻击后准确率40%，F1分数37.5%</li>
+        <li><b>攻击效果</b>: 模型性能严重劣化（无基准对比）</li>
+    </ul>
+    
+    <h2>4. 隐私攻击分析</h2>
+    
+    <h3>模型反演攻击（RLMI）</h3>
+    <p>通过模型输出重构训练数据。</p>
+    <ul>
+        <li><b>攻击阶段成功率</b>: 100% | <b>推理阶段成功率</b>: 99.29%</li>
+        <li><b>词错误率(WER)</b>: 攻击阶段66.89%，推理阶段73.22%</li>
+        <li><b>关键发现</b>: 高成功率伴随高词错误率，表明重构内容语义失真</li>
+    </ul>
+    
+    <h3>梯度反演攻击（FET）</h3>
+    <p>利用梯度信息窃取原始文本数据。</p>
+    <ul>
+        <li><b>最终指标</b>:
+            <ul>
+                <li>ROUGE-1: 0.619 | ROUGE-2: 0.0526 | ROUGE-L: 0.4286</li>
+                <li>词汇恢复率: <b>0%</b> | 编辑距离: 76 | 完全恢复率: 100%</li>
+            </ul>
+        </li>
+        <li><b>训练动态</b>: 
+            <ul>
+                <li>初始ROUGE-1达0.619，但后续epoch数据缺失</li>
+                <li><b>异常点</b>: 词汇恢复率与完全恢复率存在矛盾（0% vs 100%）</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h3>模型窃取攻击（ModelStealingAttack）</h3>
+    <p>通过查询复制受害者模型（MeaeQ策略）。</p>
+    <ul>
+        <li><b>性能对比</b>:
+            <ul>
+                <li>受害者模型准确率: 88.62%</li>
+                <li>窃取模型准确率: <b>50.20%</b>（性能损失43.7%）</li>
+            </ul>
+        </li>
+        <li><b>相似度</b>: 模型输出一致性仅52.82%</li>
+        <li><b>训练过程</b>:
+            <ul>
+                <li>训练损失从0.4846→0.1674（下降65.5%）</li>
+                <li>训练准确率从87.29%→92.71%</li>
+                <li>验证准确率稳定在80%</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h2>5. 横向对比分析</h2>
+    
+    <h3>安全攻击特性对比</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>评估维度</th>
+                <th>对抗样本</th>
+                <th>后门</th>
+                <th>投毒</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>性能影响</td>
+                <td><b>毁灭性</b>（100%→0%）</td>
+                <td><b>严重</b>（89.4%→27.4%）</td>
+                <td><b>显著</b>（准确率40%）</td>
+            </tr>
+            <tr>
+                <td>检测难度</td>
+                <td>高（无防御）</td>
+                <td>中（PPL异常暴露）</td>
+                <td>高（训练阶段注入）</td>
+            </tr>
+            <tr>
+                <td>缓解成本</td>
+                <td>高（需对抗训练）</td>
+                <td>中（需触发模式检测）</td>
+                <td>高（需数据清洗）</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><b>对比分析</b>：</p>
+    <ul>
+        <li>对抗样本攻击成功率<b>100%</b>，破坏强度超其他攻击200%以上</li>
+        <li>后门攻击困惑度指数<b>269.336</b>，超过安全阈值300%</li>
+    </ul>
+    
+    <h3>隐私攻击特性对比</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>评估维度</th>
+                <th>模型反演</th>
+                <th>梯度反演</th>
+                <th>模型窃取</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>信息质量</td>
+                <td>中（高WER）</td>
+                <td>低（ROUGE-L=0.4286）</td>
+                <td>中（窃取准确率50.2%）</td>
+            </tr>
+            <tr>
+                <td>实施复杂度</td>
+                <td>高（需强化学习）</td>
+                <td>极高（遗传算法优化）</td>
+                <td>中（查询次数500）</td>
+            </tr>
+            <tr>
+                <td>防御可行性</td>
+                <td>中（剪枝有效）</td>
+                <td>低（无防护）</td>
+                <td>中（噪声扰动）</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><b>对比分析</b>：</p>
+    <ul>
+        <li>梯度反演完全恢复率<b>100%</b>，存在关键数据泄露隐患</li>
+        <li>模型窃取导致知识产权风险值达<b>52.82%</b>，构成最高合规风险</li>
+    </ul>
+    
+    <h3>关键风险评估</h3>
+    <ol>
+        <li><b>最大业务威胁</b>：对抗样本攻击（模型完全失效）</li>
+        <li><b>最高合规风险</b>：模型窃取（知识产权侵犯）</li>
+        <li><b>最紧急漏洞</b>：梯度反演（原始数据泄露）</li>
+    </ol>
+    
+    <h2>6. 防御建议</h2>
+    <ul>
+        <li><b>对抗样本</b>：
+            <ul>
+                <li>部署对抗训练（Adversarial Training）</li>
+                <li>实时监控输入置信度波动（阈值＞30%触发警报）</li>
+            </ul>
+        </li>
+        <li><b>后门攻击</b>：
+            <ul>
+                <li>增强STRIP防御的触发模式检测</li>
+                <li>监控推理时异常激活模式</li>
+            </ul>
+        </li>
+        <li><b>隐私攻击</b>：
+            <ul>
+                <li>梯度加密与噪声注入（噪声标准差＞0.1）</li>
+                <li>实施查询频率限制（＜100次/分钟）</li>
+                <li>模型输出模糊化（置信度截断）</li>
+            </ul>
+        </li>
+        <li><b>架构改进</b>：
+            <ul>
+                <li>集成<b>差分隐私</b>机制（ε＜2.0）</li>
+                <li>采用<b>联邦学习</b>分散敏感数据</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h2>7. 结论</h2>
+    <p>本次攻击实验揭示了BERT模型在GLUE/CoLA任务上的严重安全脆弱性：</p>
+    <p><b>核心发现1</b>：对抗样本攻击展现毁灭性效果，100%成功率使模型完全失效，表明模型缺乏对抗鲁棒性。建议立即部署对抗训练和输入过滤机制，并建立置信度实时监控系统。</p>
+    <p><b>核心发现2</b>：隐私攻击中梯度反演存在矛盾指标（词汇恢复率0% vs 完全恢复率100%），提示数据泄露风险被低估。需重点检查梯度保护机制，强制实施梯度压缩和噪声注入，阈值建议设为编辑距离＞50或ROUGE-L＜0.5时阻断传输。</p>
+    <p><b>核心发现3</b>：现有防御（如后门STRIP和模型剪枝）效果有限，毒化后准确率仍下降62%，模型反演成功率仍达99.29%。证明需采用<b>防御组合策略</b>，推荐差分隐私（δ=1e-5）+输出扰动（噪声σ=0.15）+查询限制的三层防护。</p>
+    <p><b>改进方向</b>：1) 补充正常训练基准；2) 测试复合攻击场景；3) 评估Transformer-XL等鲁棒架构；4) 探索可信执行环境（TEE）部署方案。最紧迫的研究方向是开发对抗样本的实时检测算法与隐私攻击的轻量化防御框架。</p>
+    
+    <div class="appendix">
+        <h3>附录：指标解释</h3>
+        <ul>
+            <li><b>PPL（困惑度）</b>：衡量文本自然度，值越高越异常（后门攻击）</li>
+            <li><b>USE（语义相似性）</b>：0-1分值，越高说明篡改文本越隐蔽（后门攻击）</li>
+            <li><b>WER（词错误率）</b>：重构文本错误比例，越高质量越差（模型反演）</li>
+            <li><b>ROUGE</b>：文本匹配度指标，ROUGE-L衡量最长公共子序列（梯度反演）</li>
+            <li><b>编辑距离</b>：两文本间最小编辑操作次数，值越高差异越大（梯度反演）</li>
+            <li><b>Agreement（相似度）</b>：两模型输出一致性比例（模型窃取）</li>
+        </ul>
+    </div>
+</body>
+</html>

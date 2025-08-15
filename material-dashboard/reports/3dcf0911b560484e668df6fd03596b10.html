@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>攻击实验分析报告</title>
+    <style>
+        body {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+        h1 {
+            font-size: 26px;
+            color: #0b5fff;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        h2 {
+            font-size: 22px;
+            color: #0b5fff;
+            margin-top: 1.5em;
+        }
+        h3 {
+            font-size: 18px;
+            margin-top: 1.2em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            border: 1px solid #e5e7eb;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #e5e7eb;
+        }
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+        ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        b {
+            color: #b42318;
+        }
+        .warning {
+            color: #b42318;
+            font-weight: bold;
+        }
+        .positive {
+            color: #0f9150;
+        }
+        .appendix {
+            font-size: 12px;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px dashed #e5e7eb;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #e5e7eb;
+            margin: 25px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>攻击实验分析报告</h1>
+    
+    <h2>1. 实验概览</h2>
+    <ul>
+        <li><strong>模型架构</strong>: BERT-Base-Uncased (本地部署)</li>
+        <li><strong>数据集</strong>: GLUE/CoLA (单句分类任务)</li>
+        <li><strong>训练参数</strong>: 随机种子42, GPU加速, 正常训练3个epoch</li>
+        <li><strong>执行的攻击类型</strong>:
+            <ul>
+                <li>安全攻击: 数据投毒攻击(PoisoningAttack)</li>
+                <li>隐私攻击: 无有效数据</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h2>2. 基准性能分析</h2>
+    <p>正常训练模型性能:</p>
+    <ul>
+        <li>准确率(Accuracy): <b>40.0%</b></li>
+        <li>F1分数: <b>37.5%</b></li>
+    </ul>
+    <p>与基准对比: GLUE/CoLA任务中BERT-Base通常达到50-60%准确率(MCC指标)，本实验性能显著偏低，<b class="warning">表明模型未充分收敛或训练配置需优化</b>（仅3个epoch可能是主因）。</p>
+    
+    <h2>3. 安全攻击分析</h2>
+    <h3>数据投毒攻击(PoisoningAttack)</h3>
+    <p>通过污染训练数据（投毒率15%）破坏模型性能，攻击参数：15个epoch，未启用防御。</p>
+    <ul>
+        <li>攻击后准确率: 40.0% (与基准一致)</li>
+        <li>攻击后F1分数: 37.5% (与基准一致)</li>
+        <li><b class="warning">性能下降率: 0%</b> (未观测到有效攻击影响)</li>
+    </ul>
+    <p>异常分析: 投毒攻击未造成性能退化，可能原因：</p>
+    <ul>
+        <li>攻击样本设计缺陷，未触发模型决策边界变化</li>
+        <li>模型本身性能已接近随机水平(40%)，难以进一步降低</li>
+        <li>投毒策略与任务目标不匹配</li>
+    </ul>
+    
+    <h2>4. 隐私攻击分析</h2>
+    <p>未获取有效实验数据（RLMI/FET/ModelStealingAttack结果为空）</p>
+    
+    <h2>5. 横向对比分析</h2>
+    <h3>安全攻击特性对比</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>评估维度</th>
+                <th>投毒</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>性能影响</td>
+                <td>零影响（攻击失效）</td>
+            </tr>
+            <tr>
+                <td>检测难度</td>
+                <td>高（未触发性能异常）</td>
+            </tr>
+            <tr>
+                <td>缓解成本</td>
+                <td>低（当前无需额外措施）</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>关键风险评估</h3>
+    <ol>
+        <li><b>最大业务威胁</b>: 模型基础性能缺陷（非攻击导致）</li>
+        <li><b>最高合规风险</b>: 数据完整性失效风险</li>
+        <li><b>最紧急漏洞</b>: 训练流程缺陷（epoch不足）</li>
+    </ol>
+    
+    <h2>6. 防御建议</h2>
+    <ul>
+        <li><b>投毒攻击防御</b>：当前攻击未生效，但建议：
+            <ul>
+                <li>部署数据来源验证机制（如数据指纹）</li>
+                <li>引入异常样本检测（如置信度过滤）</li>
+            </ul>
+        </li>
+        <li><b>核心改进方向</b>：
+            <ul>
+                <li>增加训练epoch至标准值（建议≥10）</li>
+                <li>监控训练曲线确保收敛</li>
+                <li>采用鲁棒优化器（如AdamW）</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h2>7. 结论</h2>
+    <p>本次实验揭示了模型基础性能的严重缺陷：<b>正常训练准确率仅40%</b>，显著低于BERT在CoLA任务的典型表现（55-65%），表明训练配置（仅3个epoch）不足以支撑模型收敛。在投毒攻击测试中，<b>15%投毒率未对模型产生可观测影响</b>，这既可能反映攻击策略失效，更暴露模型本身性能已接近随机分类水平，缺乏进一步下降空间。</p>
+    <p>关键风险集中于<b>训练流程缺陷</b>而非外部攻击，建议优先：1) 延长训练epoch至10轮以上并监控收敛；2) 验证数据预处理流程；3) 引入学习率调度机制。后续实验需：首先优化基础性能至合理水平（准确率>55%），再重新评估攻击效果；同时建议补充对抗样本和后门攻击测试以全面评估安全态势。</p>
+    <p>未来研究应关注：1) 低性能模型的安全评估方法论；2) 投毒攻击在边缘分布样本中的有效性；3) 训练早期阶段的异常检测技术。</p>
+    
+    <div class="appendix">
+        <h3>附录：指标解释</h3>
+        <ul>
+            <li><b>准确率(Accuracy)</b>: 正确预测样本占总样本的比例</li>
+            <li><b>F1分数</b>: 精确率与召回率的调和平均数，综合反映分类性能</li>
+            <li><b>投毒率(Poisoning Rate)</b>: 污染样本占训练集的比例</li>
+        </ul>
+    </div>
+</body>
+</html>

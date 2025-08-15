@@ -1396,7 +1396,7 @@ class my_al_steal():
         victim_model.load_state_dict(checkpoint)
         victim_model.eval()
         # defender防御逻辑
-        if defender is not None:
+        if defender is not None or defender != "None":
             if defender.get('type', None) == 'output-perturb':
                 logging.info("[al_steal] 检测到defender配置，应用output_perturb_defense防御...")
                 victim_model = output_perturb_defense(victim_model, None, None, defender)
