@@ -5,6 +5,7 @@ import torch
 import random
 import evaluate
 import numpy as np
+import pdfkit, subprocess
 from dataclasses import fields
 from datasets import load_from_disk, load_dataset, DatasetDict
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
@@ -18,6 +19,8 @@ from attack.attack_factory import AttackFactory
 from utils.dataset_getter import standardize_dataset
 from utils.model_getter import load_model_and_tokenizer
 from utils.log_helper import change_log_path, logger_init
+from utils.database_helper import extractResult
+from utils.deepseek_helper import chatForReport, process
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # 禁用 oneDNN 优化
@@ -153,6 +156,32 @@ def compute_metrics(eval_pred):
         'precision': precision,
         'recall': recall
     }
+
+def genReport(logFilePath: str, LM_config, general, task_config):
+    result = {'result': extractResult(logFilePath), 'globalConfig': {'LM_config': LM_config, 'general': general, 'task_config': task_config}}
+    # 生成报告的逻辑
+    report = chatForReport(result)
+    if len(report) > 0:
+        print("报告内容已获取，等待生成pdf文件.")
+        reportDir = os.path.join(projectPath, "reports")
+        reportID = logFilePath.rstrip('.txt')
+        reportHTMLPath = os.path.join(reportDir, reportID + ".html")
+        reportPDFPath = os.path.join(reportDir, reportID + ".pdf")
+        print(reportHTMLPath)
+        f = open(reportHTMLPath, "w", encoding='utf-8')
+        f.write(process(report))
+        f.close()
+        # 转换pdf
+        pdfkit.from_file(reportHTMLPath, reportPDFPath)
+        if os.path.exists(reportHTMLPath):
+            print("html文件名字:", reportHTMLPath)
+            subprocess.run(['rm', reportHTMLPath], check=True)
+        if os.path.exists(reportPDFPath):
+            print("pdf文件生成成功")
+        else:
+            raise Exception("未能生成pdf文件")
+    else:
+        raise Exception("未能获取报告")
 
 
 def run_pipeline(config_path: str):
@@ -316,6 +345,8 @@ def run_pipeline(config_path: str):
             attack_mode.attack()
             logging.info(f"{attack_type}攻击结束")
             logging.info("=" * 50)
+
+    genReport(os.path.join(projectPath, 'logs', log_file_name), LM_config, general_config, task_config)
 
 
 if __name__ == '__main__':
