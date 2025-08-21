@@ -1,6 +1,6 @@
 import authStore from './authStore.js'; // 假设你的 authStore 存在且可用
 
-const BACKEND_WS_URL = 'http://39.107.153.109:5999/'; // 你的后端 Flask Socket.IO 地址
+const BACKEND_WS_URL = 'http://8.152.97.209:5999/'; // 你的后端 Flask Socket.IO 地址
 
 // 全局 socket 实例
 let globalSocketInstance = null;

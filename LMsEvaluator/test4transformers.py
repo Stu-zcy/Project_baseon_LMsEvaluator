@@ -184,7 +184,7 @@ def genReport(logFilePath: str, LM_config, general, task_config):
         raise Exception("未能获取报告")
 
 
-def run_pipeline(config_path: str):
+def run_pipeline(config_path: str,report=False):
     with open(config_path, 'r', encoding='utf-8') as configFile:
         config_parser = yaml.load(configFile, Loader=yaml.FullLoader)
 
@@ -346,8 +346,9 @@ def run_pipeline(config_path: str):
             logging.info(f"{attack_type}攻击结束")
             logging.info("=" * 50)
 
-    genReport(os.path.join(projectPath, 'logs', log_file_name), LM_config, general_config, task_config)
+    if report:
+        genReport(os.path.join(projectPath, 'logs', log_file_name), LM_config, general_config, task_config)
 
 
 if __name__ == '__main__':
-    run_pipeline('user_config/Zhao_config.yaml')
+    run_pipeline('user_config/Zhao_config.yaml', report=True)
