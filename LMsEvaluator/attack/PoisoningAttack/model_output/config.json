@@ -1,5 +1,5 @@
 {
-  "_name_or_path": "/home/cheny/Document/Project/LMsEvaluator/LMs/bert_base_uncased",
+  "_name_or_path": "/Volumes/D/Project/LMsEvaluator/LMs/bert_base_uncased",
   "architectures": [
     "BertForSequenceClassification"
   ],

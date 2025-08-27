@@ -2,240 +2,13 @@ LM_config:
   local_model: true
   model: bert_base_uncased
 attack_list:
-# - attack_args:success
-#     attack: true
-#     attack_nums: 3
-#     attack_recipe: BAEGarg2019
-#     attack_type: AdvAttack
-#     dataset_name_or_path: datasets/imdb/train.txt
-#     defender:
-#       gradient_accumulation_steps: 4
-#       learning_rate: 5.0e-05
-#       log_to_tb: false
-#       num_clean_epochs: 0
-#       num_epochs: 1
-#       num_train_adv_examples: 100
-#       per_device_train_batch_size: 4
-#     display_full_info: true
-#     model_name_or_path: LMs/bert_base_uncased
-#     tokenizer_name_or_path: LMs/bert_base_uncased
-#     use_local_dataset: true
-#     use_local_model: true
-#     use_local_tokenizer: true
-# - attack_args: error
-#     attack: true
-#     attack_nums: 2
-#     attack_recipe: BERTAttackLi2020
-#     attack_type: AdvAttack
-#     dataset_name_or_path: datasets/imdb/train.txt
-#     defender:
-#       gradient_accumulation_steps: 4
-#       learning_rate: 5.0e-05
-#       log_to_tb: false
-#       num_clean_epochs: 0
-#       num_epochs: 1
-#       num_train_adv_examples: 10
-#       per_device_train_batch_size: 4
-#     display_full_info: true
-#     model_name_or_path: LMs/bert_base_uncased
-#     tokenizer_name_or_path: LMs/bert_base_uncased
-#     use_local_dataset: true
-#     use_local_model: true
-#     use_local_tokenizer: true
-# - attack_args:error
-#     attack: true
-#     attack_nums: 2
-#     attack_recipe: GeneticAlgorithmAlzantot2018
-#     attack_type: AdvAttack
-#     dataset_name_or_path: datasets/imdb/train.txt
-#     defender:
-#       gradient_accumulation_steps: 4
-#       learning_rate: 5.0e-05
-#       log_to_tb: false
-#       num_clean_epochs: 0
-#       num_epochs: 1
-#       num_train_adv_examples: 10
-#       per_device_train_batch_size: 4
-#     display_full_info: true
-#     model_name_or_path: LMs/bert_base_uncased
-#     tokenizer_name_or_path: LMs/bert_base_uncased
-#     use_local_dataset: true
-#     use_local_model: true
-#     use_local_tokenizer: true
-# - attack_args:success
-#     attack: true
-#     attack_nums: 2
-#     attack_recipe: FasterGeneticAlgorithmJia2019
-#     attack_type: AdvAttack
-#     dataset_name_or_path: datasets/imdb/train.txt
-#     defender:
-#       gradient_accumulation_steps: 4
-#       learning_rate: 5.0e-05
-#       log_to_tb: false
-#       num_clean_epochs: 0
-#       num_epochs: 1
-#       num_train_adv_examples: 10
-#       per_device_train_batch_size: 4
-#     display_full_info: true
-#     model_name_or_path: LMs/bert_base_uncased
-#     tokenizer_name_or_path: LMs/bert_base_uncased
-#     use_local_dataset: true
-#     use_local_model: true
-#     use_local_tokenizer: true
 - attack_args:
     attack: true
-    attack_nums: 2
-    attack_recipe: DeepWordBugGao2018
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_nums: 2
-    attack_recipe: HotFlipEbrahimi2017
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_nums: 2
-    attack_recipe: InputReductionFeng2018
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_nums: 2
-    attack_recipe: Kuleshov2017
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_nums: 2
-    attack_recipe: MorpheusTan2020
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_nums: 2
-    attack_recipe: Seq2SickCheng2018BlackBox
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_nums: 2
-    attack_recipe: TextBuggerLi2018
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_nums: 2
+    attack_nums: 3
     attack_recipe: TextFoolerJin2019
     attack_type: AdvAttack
     dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
+    defender: None
     display_full_info: true
     model_name_or_path: LMs/bert_base_uncased
     tokenizer_name_or_path: LMs/bert_base_uncased
@@ -244,186 +17,82 @@ attack_list:
     use_local_tokenizer: true
 - attack_args:
     attack: true
-    attack_nums: 2
-    attack_recipe: PWWSRen2019
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
+    attack_type: BackdoorAttack
+    defender: None
     display_full_info: true
+    model: bert
     model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
+    poison_dataset: sst-2
+    poisoner:
+      name: BadNets
+    sample_metrics:
+    - ppl
+    - use
+    target_dataset: sst-2
+    train:
+      batch_size: 16
+      epochs: 1
+      name: base
     use_local_model: true
-    use_local_tokenizer: true
 - attack_args:
     attack: true
-    attack_nums: 2
-    attack_recipe: IGAWang2019
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
+    attack_type: PoisoningAttack
+    defender: true
+    poisoning_rate: 0.15
+    save_path: ./attack/PoisoningAttack/model_output
+    train_config:
+      logging_dir: ./logs
+      logging_steps: 1000
+      num_train_epochs: 15
+      output_dir: ./attack/PoisoningAttack/cache
+      per_device_eval_batch_size: 64
+      per_device_train_batch_size: 16
+      report_to: none
+      run_name: my_experiment
+      warmup_steps: 1000
+      weight_decay: 0.01
 - attack_args:
     attack: true
-    attack_nums: 2
-    attack_recipe: Pruthi2019
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
+    attack_type: RLMI
+    dataset_name: emotion
     defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
+      prune_ratio: 0.2
+      type: pruning
+    max_input_length: 8
+    max_iterations: 1
+    min_input_length: 3
+    model_name: tinybert4
+    num_generation: 100
+    ppo_config:
+      batch_size: 16
+      learning_rate: 1.0e-05
+      log_with: None
+      mini_batch_size: 16
+    seed: 42
+    seq_length: 20
+    target_label: 1
 - attack_args:
     attack: true
-    attack_nums: 2
-    attack_recipe: PSOZang2020
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
+    attack_batch: 2
+    attack_nums: 1
+    attack_type: FET
+    crossover_rate: 0.9
+    dataset_name_or_path: cola
+    defender: None
     display_full_info: true
+    distance_func: l2
+    halloffame_size: 30
+    max_generations: 2
     model_name_or_path: LMs/bert_base_uncased
+    mutation_rate: 0.1
+    population_size: 300
+    seed: 42
     tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_nums: 2
-    attack_recipe: CheckList2020
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_nums: 2
-    attack_recipe: CLARE2020
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_nums: 2
-    attack_recipe: FrenchRecipe
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_nums: 2
-    attack_recipe: SpanishRecipe
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
-    use_local_model: true
-    use_local_tokenizer: true
-- attack_args:
-    attack: true
-    attack_nums: 2
-    attack_recipe: ChineseRecipe
-    attack_type: AdvAttack
-    dataset_name_or_path: datasets/imdb/train.txt
-    defender:
-      gradient_accumulation_steps: 4
-      learning_rate: 5.0e-05
-      log_to_tb: false
-      num_clean_epochs: 0
-      num_epochs: 1
-      num_train_adv_examples: 10
-      per_device_train_batch_size: 4
-    display_full_info: true
-    model_name_or_path: LMs/bert_base_uncased
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    use_local_dataset: true
+    tournsize: 5
     use_local_model: true
     use_local_tokenizer: true
 general:
-  log_file_name: Zhao_single_1755740769
+  log_file_name: Zhao_single_1756220418
   logs_save_dir: ./logs
   random_seed: 42
   use_gpu: true

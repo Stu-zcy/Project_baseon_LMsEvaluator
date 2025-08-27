@@ -1681,7 +1681,7 @@
             attackTypes: ['AdvAttack', 'FET', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'ModelStealingAttack'],
             recipes: {
                 AdvAttack: [
-                    //'A2TYoo', 
+                    'A2TYoo', 
                     'Bae', 'Bert-attack', 'Alzantot',
                     'FasterGeneticAlgorithm', 'DeepWordBug', 'Hotflip',
                     'Input-Reduction', 'Kuleshov', 'Morpheus', 'Seq2Sick',
@@ -1696,7 +1696,7 @@
             },
 						strategiesDesc: {
 							AdvAttack: [
-								//'这是一种基于梯度计算，识别出对模型输出影响最大单词，并根据约束条件进行替换，使用约束优化来生成对抗样本的方法',
+								'这是一种基于梯度计算，识别出对模型输出影响最大单词，并根据约束条件进行替换，使用约束优化来生成对抗样本的方法',
 								'这是一种利用BERT模型生成对抗性文本，并结合贪心搜索算法来寻找最优对抗样本的攻击策略',
 								'这是一种利用BERT生成对抗性文本，并通过贪心搜索算法选择最有效扰动的攻击方法',
 								'这是一种使用遗传算法生成对抗样本，通过交换反拟合词句来诱导模型出错的攻击策略',
@@ -1780,12 +1780,12 @@
                 }
             },
             descriptions: {
-                AdvAttack: "通过微小的、难以察觉的扰动来欺骗模型，使其做出错误的预测",
-                FET: "梯度反演",
-                BackdoorAttack: "在训练数据中植入后门，使模型在特定触发条件下表现出异常行为",
-                PoisoningAttack: "通过污染训练数据来降低模型性能或植入后门",
-                RLMI: "模型反演",
-                ModelStealingAttack: "通过查询目标模型来窃取其结构和参数"
+                AdvAttack: "对抗攻击：在模型推理阶段，攻击者通过向输入数据添加人眼难以察觉的微小扰动以生成对抗样本，导致模型做出错误的预测或分类，从而破坏模型的可靠性与安全性。",
+                BackdoorAttack: "后门攻击：在模型训练阶段，攻击者通过向训练数据注入带有特定触发模式的恶意样本将后门植入模型；该后门在推理阶段一旦被触发，会导致模型对特定输入产生指定的错误输出，而在正常输入上表现正常，极具隐蔽性。",
+                PoisoningAttack: "投毒攻击：一种发生在模型训练阶段之前的攻击，攻击者通过向训练数据中注入恶意数据或篡改原有数据来污染训练集，导致最终训练出的模型性能下降、出现预测偏差或含有后门，破坏模型的完整性。",
+                FET: "梯度反演攻击：一种在模型训练阶段发起的攻击，攻击者通过分析共享的梯度更新来逆向还原原始训练数据，导致训练数据集中的敏感信息被泄露。",
+                RLMI: "模型反演攻击：一种在模型推理阶段发起的攻击，攻击者通过反复查询并分析模型的输出结果来推断或重建模型的输入数据，导致用户的私有输入数据面临泄露风险。",
+                "ModelStealingAttack": "模型窃取攻击：在模型推理阶段，攻击者通过频繁查询目标模型的输入-输出对应关系来重构一个功能近似的替代模型，导致模型的知识产权被盗用，核心算法或机密训练数据被窃取。"
             },
             typeNames: {
                 AdvAttack: "对抗攻击",
@@ -2335,18 +2335,18 @@
                 },
                 {
                     id: 2,
-                    name: "后门攻击-1（防御）",
+                    name: "后门攻击-1",
                     type: "BackdoorAttack",
                     strategy: "BadNets",
                     description: "针对NLP模型的后门攻击，植入特定触发模式",
                     status: "active",
-                    defenderEnabled: true,
+                    defenderEnabled: false,
                     sent: true,
                     executed: false,
                     createdAt: "2025-07-20 14:15",
                     params: {
                         sample_metrics: ["ppl", "use"],
-                        defender: "STRIP"
+                        defender: 'None'
                     }
                 },
                 {
@@ -2367,12 +2367,12 @@
                 },
                 {
                     id: 4,
-                    name: "模型窃取-1（防御）",
+                    name: "模型窃取-1",
                     type: "ModelStealingAttack",
                     strategy: "MeaeQ",
                     description: "通过查询目标模型来窃取其结构和参数",
                     status: "active",
-                    defenderEnabled: true,
+                    defenderEnabled: false,
                     sent: true,
                     executed: true,
                     createdAt: "2025-06-10 14:30",
@@ -2380,10 +2380,7 @@
                         attack_nums: 3,
                         query_num: 50,
                         method: "MeaeQ",
-                        defender: {
-                            type: "output-perturb",
-                            noise_std: 0.1
-                        }
+                        defender: 'None'
                     }
                 },
                 {

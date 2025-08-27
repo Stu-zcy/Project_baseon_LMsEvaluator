@@ -1,36 +1,33 @@
-import smtplib
-from email.mime.text import MIMEText
-from email.header import Header
+from pathlib import Path
 
-# 邮件服务器地址和端口号
-smtp_server = 'smtp.163.com'
-smtp_port = 25
+def transfer_log_range(x1: int, x2: int, dest_file: str, src_file: str) -> int:
+    """
+    将 src_file 中第 x1~x2 行复制到 dest_file（1 起始、闭区间）。
+    - 若 dest_file 所在目录不存在，会自动创建
+    - 若 dest_file 已存在，采用追加写入
+    - 若 x2 超过文件实际行数，只会复制到文件末尾
+    返回：成功写入的行数
+    """
+    if x1 < 1 or x2 < x1:
+        raise ValueError("参数不合法：要求 x1 >= 1 且 x2 >= x1")
 
-# 发件人邮箱地址和密码
-sender_email = 'lms_verify@163.com'  # 这里替换为您自己的发件人邮箱地址
-sender_password = 'XBWBGxwveRyY5BgD'  # 这里是你的授权码？ 非邮箱登录密码
+    src = Path(src_file)
+    if not src.is_file():
+        raise FileNotFoundError(f"源文件不存在：{src}")
 
-# 收件人邮箱地址
-recipient_email = '1111111@qq.com'
+    dest = Path(dest_file)
+    dest.parent.mkdir(parents=True, exist_ok=True)
 
-# 创建一封邮件，文本内容为 "Hello, World!"
-message = MIMEText('This is test! Hello, World!', 'plain', 'utf-8')
-message['From'] = Header('发件人昵称 <{}>'.format(sender_email), 'utf-8')  # 设置发件人昵称
-message['To'] = Header('收件人昵称 <{}>'.format(recipient_email), 'utf-8')  # 设置收件人昵称
-message['Subject'] = Header('邮件主题', 'utf-8')  # 设置邮件主题
+    written = 0
+    # 读取时宽容处理编码问题；写入保持 UTF-8
+    with src.open("r", encoding="utf-8", errors="replace") as fin, \
+         dest.open("a", encoding="utf-8", newline="") as fout:
+        for lineno, line in enumerate(fin, start=1):
+            if lineno < x1:
+                continue
+            if lineno > x2:
+                break
+            fout.write(line)
+            written += 1
 
-try:
-    # 连接邮件服务器并登录
-    smtp_connection = smtplib.SMTP(smtp_server, smtp_port)
-    smtp_connection.login(sender_email, sender_password)
-
-    # 发送邮件
-    smtp_connection.sendmail(sender_email, recipient_email, message.as_string())
-
-    # 关闭连接
-    smtp_connection.quit()
-
-    print("邮件发送成功！")
-
-except Exception as e:
-    print("邮件发送失败：", e)
+    return written

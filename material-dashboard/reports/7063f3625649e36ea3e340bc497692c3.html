@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>攻击实验分析报告</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            margin: 25px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            color: #333;
+            font-size: 16px;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #0b5fff;
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0b5fff;
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0b5fff;
+        }
+        h4 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0b5fff;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+            text-align: center;
+            font-weight: bold;
+        }
+        .alert {
+            color: #b42318;
+            font-weight: bold;
+        }
+        .good {
+            color: #0f9150;
+            font-weight: bold;
+        }
+        ul, ol {
+            margin-left: 20px;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 20px 0;
+        }
+        .appendix {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<h1>攻击实验分析报告</h1>
+
+<h2>1. 实验概览</h2>
+<p>本实验基于以下配置执行：</p>
+<ul>
+    <li><b>模型架构</b>: BERT base uncased (本地模式)</li>
+    <li><b>数据集</b>: GLUE cola (语法可接受性分类任务)</li>
+    <li><b>训练参数</b>:  epochs=3, 随机种子=42, 使用GPU=true</li>
+    <li><b>任务类型</b>: 单句分类任务 (TaskForSingleSentenceClassification)</li>
+</ul>
+<p>执行的攻击类型及分类：</p>
+<ul>
+    <li><b>安全攻击</b>: 数据投毒攻击 (PoisoningAttack) — 已执行</li>
+    <li><b>安全攻击</b>: 对抗样本攻击 (AdvAttack) — 未执行</li>
+    <li><b>安全攻击</b>: 后门攻击 (BackdoorAttack) — 未执行</li>
+    <li><b>隐私攻击</b>: 模型反演攻击 (RLMI) — 未执行</li>
+    <li><b>隐私攻击</b>: 梯度反演攻击 (FET) — 未执行</li>
+    <li><b>隐私攻击</b>: 模型窃取攻击 (ModelStealingAttack) — 未执行</li>
+</ul>
+
+<h2>2. 基准性能分析</h2>
+<p>正常训练结果：准确率=0.3, F1分数≈0.231。</p>
+<p>与文献基准比较：在GLUE cola数据集上，BERT base模型通常表现更好（例如，准确率可达0.6-0.8，MCC约0.6）。<b class="alert">本实验基准性能显著较低</b>，可能由于训练epoch较少（仅3轮）、数据问题或模型初始化因素导致。</p>
+
+<h2>3. 安全攻击分析</h2>
+<h3>对抗样本攻击 (AdvAttack)</h3>
+<p>未执行该攻击，无数据可分析。</p>
+
+<h3>后门攻击 (BackdoorAttack)</h3>
+<p>未执行该攻击，无数据可分析。</p>
+
+<h3>数据投毒攻击 (PoisoningAttack)</h3>
+<p>数据投毒攻击通过污染训练数据（如注入恶意样本）来破坏模型性能。本实验执行了一次攻击，参数：投毒率=0.15, epochs=15。</p>
+<p>攻击结果：准确率=0.3, F1分数≈0.231，与正常训练结果完全相同。<b class="alert">这表明攻击未产生任何性能影响</b>，可能原因包括投毒策略无效、数据污染未生效或模型鲁棒性较强。</p>
+<p>平均性能下降：0（无变化）。</p>
+
+<h2>4. 隐私攻击分析</h2>
+<p>所有隐私攻击（模型反演、梯度反演、模型窃取）均未执行，无数据可分析。</p>
+
+<h2>5. 横向对比分析</h2>
+<h3>安全攻击特性对比</h3>
+<table>
+    <thead>
+        <tr>
+            <th>评估维度</th>
+            <th>对抗样本</th>
+            <th>后门</th>
+            <th>投毒</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>性能影响</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>无影响</td>
+        </tr>
+        <tr>
+            <td>检测难度</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>未知</td>
+        </tr>
+        <tr>
+            <td>缓解成本</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>低（基于本数据）</td>
+        </tr>
+    </tbody>
+</table>
+<p><b>对比分析</b>：  
+- 数据投毒攻击在本实验中未造成性能下降，隐蔽性可能较高，但攻击有效性不足。  
+- 由于其他攻击未执行，无法进行完整对比。</p>
+
+<h3>隐私攻击特性对比</h3>
+<table>
+    <thead>
+        <tr>
+            <th>评估维度</th>
+            <th>模型反演</th>
+            <th>梯度反演</th>
+            <th>模型窃取</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>信息质量</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td>实施复杂度</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td>防御可行性</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+        </tr>
+    </tbody>
+</table>
+<p><b>对比分析</b>：  
+- 隐私攻击未执行，无数据可用于分析。</p>
+
+<h3>关键风险评估</h3>
+<ol>
+    <li><b>最大业务威胁</b>：数据投毒攻击（潜在数据污染风险，但本实验中未生效）</li>
+    <li><b>最高合规风险</b>：无（隐私攻击未执行）</li>
+    <li><b>最紧急漏洞</b>：模型基准性能低下（准确率仅0.3），可能影响业务可靠性</li>
+</ol>
+
+<h2>6. 防御建议</h2>
+<ul>
+    <li><b>针对数据投毒攻击</b>：尽管攻击未生效，建议实施数据验证机制（如异常检测）来预防潜在投毒。监控训练数据分布变化。</li>
+    <li><b>通用防御</b>：增强模型鲁棒性，例如通过对抗训练或正则化；定期审计模型性能以检测异常。</li>
+    <li><b>监控指标</b>：实时跟踪训练准确率、损失函数变化及数据质量指标（如样本多样性）。</li>
+    <li><b>架构改进</b>：考虑使用更先进的模型架构或增加训练epoch以提升基准性能。</li>
+</ul>
+
+<h2>7. 结论</h2>
+<p>本实验的主要发现包括：<b>基准模型性能显著低于预期</b>（准确率0.3），可能源于训练配置不足（如epochs=3），这本身构成业务风险。数据投毒攻击虽被执行，但<b>未造成任何性能下降</b>，表明攻击策略可能无效或模型对投毒不敏感，但这不排除真实场景中投毒攻击的威胁。隐私攻击未测试，因此无法评估相关风险。</p>
+<p><b>关键风险</b>在于模型低性能可能导致业务决策错误，建议优先优化训练过程（如增加epochs、调整超参数）。防御方面，应聚焦数据质量监控和模型鲁棒性提升。</p>
+<p><b>进一步实验建议</b>：重复投毒攻击 with 更高投毒率或不同策略；测试其他攻击类型以全面评估风险；优化基准训练以匹配文献性能。</p>
+<p><b>未来研究方向</b>：探索更有效的投毒检测方法；研究模型对投毒的攻击敏感性；扩展隐私攻击测试以评估数据泄露风险。</p>
+
+<hr>
+<div class="appendix">
+    <h4>附录：指标解释</h4>
+    <ul>
+        <li><b>准确率 (Accuracy)</b>: 模型预测正确的样本比例，用于评估分类性能。</li>
+        <li><b>F1分数 (F1 Score)</b>: 准确率和召回率的调和平均，用于处理不平衡数据集。</li>
+        <li><b>投毒率 (Poisoning Rate)</b>: 投毒攻击中污染数据占训练集的比例。</li>
+    </ul>
+    <p><i>注：本实验仅使用上述指标，其他指标未涉及。</i></p>
+</div>
+
+</body>
+</html>

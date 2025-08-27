@@ -17,7 +17,7 @@ def run_attack_thread(username,initTime, date):
             print(f"[{username}] CUDA 已初始化并完成热身。")
 
         from test4transformers import run_pipeline
-        from user_config.config_gen import get_attack_info, update_log_file_name
+        from user_config.config_gen import update_log_file_name
         from utils import extractResult
         from web_databse.sql_manager import update_attack_result
 

@@ -302,7 +302,7 @@ if __name__ == '__main__':
     filename = "u1h_single_1737727113_2025-01-24.txt"
     info = filename.split('_')
     # username = 'ChenyangZhao'
-    username = '01'
+    username = 'Zhao'
     initTime = eval(info[2])
     #result = extractResult(os.path.join(lmsDir, "test_data",filename))
     #result=extractResult(os.path.join(lmsDir,'logs',filename))
