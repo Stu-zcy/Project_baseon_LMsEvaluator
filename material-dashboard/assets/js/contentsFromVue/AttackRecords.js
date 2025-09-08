@@ -197,7 +197,7 @@ const AttackRecords = defineComponent({
 		const responseData = ref([]);
 		const currentPage = ref(1);
 		const currentPageSize = ref(props.defaultCurrentPageSize);
-		const totalRecordsNum = ref(1);
+		const totalRecordsNum = ref(0);
 		const OPEN = ref(false);
 		const OPEN_log = ref(false);
 		const targetUsername = ref(username);
@@ -229,7 +229,7 @@ const AttackRecords = defineComponent({
 				});
 				if (response.data && response.data.records) {
 					responseData.value = response.data.records;
-					console.log("Fetched records:", responseData.value);
+					console.log("Fetched records:", response);
 					totalRecordsNum.value = response.data.pagination.totalRecordsNum;
 					const newStarValues = {};
 					responseData.value.forEach(item => {

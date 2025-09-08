@@ -649,7 +649,12 @@ def attackRecords():
         #     print("不存在合法记录")
         #     return jsonify({'records': [], 'pagination': {'totalRecordsNum': totalRecordsNum}}), 200
         # records = sorted(zip(timeStampList, fileList), reverse=True)[(currentPage - 1) * currentPageSize:currentPage * currentPageSize]
-        totalRecordsNum = AttackRecord.query.filter_by(createUserName=username).count()
+        
+        #这里的逻辑是，获取全部记录数目，但只获取当页的记录数据，发送给前端
+        if onlyTreasure:
+            totalRecordsNum = AttackRecord.query.filter_by(createUserName=username, isTreasure=True).count()
+        else:
+            totalRecordsNum = AttackRecord.query.filter_by(createUserName=username).count()
         if totalRecordsNum != 0:
             if onlyTreasure:
                 records = (AttackRecord.query.filter_by(createUserName=username, isTreasure=True).
