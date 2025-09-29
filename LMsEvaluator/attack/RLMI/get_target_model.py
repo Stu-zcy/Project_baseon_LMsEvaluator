@@ -66,6 +66,8 @@ def get_target_model(model_name="tinybert4", dataset_name="emotion", device=torc
     elif model_name == 'bert_base_uncased_english':
         num_epochs = 5
         # model_path = 'bert-base-uncased' # if online
+    elif model_name == 'gpt2':
+        num_epochs = 5
 
     dataset_path = os.path.join(project_path, "datasets", dataset_name)
     num_classes = 6
@@ -77,6 +79,11 @@ def get_target_model(model_name="tinybert4", dataset_name="emotion", device=torc
     # 加载预训练模型
     model = AutoModelForSequenceClassification.from_pretrained(model_path, num_labels=num_classes)
     tokenizer = AutoTokenizer.from_pretrained(model_path)
+
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+        model.config.pad_token_id = tokenizer.eos_token_id
+
     model.to(device)
     model.train()
 
@@ -84,9 +91,9 @@ def get_target_model(model_name="tinybert4", dataset_name="emotion", device=torc
     train = load_dataset('csv', data_files=os.path.join(dataset_path, "private_train_dataset.csv"))['train']
     test = load_dataset('csv', data_files=os.path.join(dataset_path, "private_test_dataset.csv"))['train']
 
-    # FIXME
-    train = train.select(range(48))
-    test = test.select(range(48))
+    # FIXME: 本地加速
+    # train = train.select(range(48))
+    # test = test.select(range(48))
 
     def preprocess_function(examples):
         return tokenizer(examples['text'], truncation=True, max_length=512)

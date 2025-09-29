@@ -183,9 +183,13 @@ class AttackFactory:
             'model_name_or_path',
             'tokenizer_name_or_path',
             'dataset_name_or_path',
-            'attack_nums',
+            'num_examples',
             'display_full_info',
             'defender',
+            'checkpoint_interval',
+            'shuffle',
+            'csv_coloring_style',
+            'disable_stdout',
         ]
         FET_config = [
             'use_local_model',

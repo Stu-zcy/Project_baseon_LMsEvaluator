@@ -26,7 +26,7 @@ from torch.utils.data import Dataset, DataLoader
 import torch.nn.functional as F
 from attack.MeaeQ.models.victim_models import BFSC, RFSC, XFSC
 from attack.MeaeQ.models.extracted_models import BPC, RPC, XPC
-from utils.defense_utils import output_perturb_defense
+from utils.defense_utils import output_perturb_defense, high_entropy_mask_defense
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 device_ids = [0, 1]
@@ -672,10 +672,20 @@ def train_steal_model(steal_train, steal_val, victim_model):
 
 
 def gen_al_init(victim_model):
+
     sen = []
     index = random.sample(range(len(thief_data)), init_num)
     for i in index:
         sen.append(thief_data[i].strip())
+    
+    # 测试模式：从原始数据集中随机抽取3条数据
+    # sen = []
+    # # 如果数据集太小，就全部使用；否则随机抽取3条
+    # sample_size = min(3, len(thief_data))
+    # index = random.sample(range(len(thief_data)), sample_size)
+    # for i in index:
+    #     sen.append(thief_data[i].strip())
+    
     lab = []
     for i in sen:
         with torch.no_grad():
@@ -699,6 +709,7 @@ def gen_al_init(victim_model):
             _, test_argmax = torch.max(logits, 1)
             label = test_argmax.squeeze().cpu().data.numpy()
             lab.append(label)
+    
     return {
         'sentence': sen,
         'label': lab
@@ -1406,6 +1417,11 @@ class my_al_steal():
                 from utils.defense_utils import pruning_defense
                 victim_model = pruning_defense(victim_model, None, None, defender)
                 logging.info("[al_steal] pruning_defense防御已应用。")
+            elif defender.get('type', None) == 'high-entropy-mask':
+                logging.info("[al_steal] 检测到defender配置，应用high_entropy_mask_defense防御...")
+                from utils.defense_utils import high_entropy_mask_defense
+                victim_model = high_entropy_mask_defense(victim_model, None, None, defender)
+                logging.info("[al_steal] high_entropy_mask_defense防御已应用。")
         # 后续流程使用防御后的victim_model
         data = gen_al_init(victim_model)
         steal_train, steal_val = self.split_steal_data(data)

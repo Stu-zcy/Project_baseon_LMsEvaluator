@@ -110,7 +110,7 @@ const AttackRecords = defineComponent({
                 </div>
                 
                 <div v-else class="empty-message">
-                    <p>暂无执行记录。</p>
+                    <p>暂无评估记录</p>
                 </div>
 
                 <!-- 分页器 -->

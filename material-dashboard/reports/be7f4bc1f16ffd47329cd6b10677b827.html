@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>攻击实验分析报告</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            margin: 30px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            color: #333;
+            font-size: 16px;
+        }
+        h1, h2, h3 {
+            color: #0b5fff;
+            font-weight: bold;
+        }
+        h1 {
+            font-size: 28px;
+        }
+        h2 {
+            font-size: 24px;
+        }
+        h3 {
+            font-size: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+        .important {
+            font-weight: bold;
+        }
+        .warning {
+            color: #b42318;
+        }
+        .good {
+            color: #0f9150;
+        }
+        hr {
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        figcaption {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+        .appendix {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>攻击实验分析报告</h1>
+
+    <h2>1. 实验概览</h2>
+    <p>本实验基于BERT模型在IMDB数据集上进行文本分类任务，攻击执行平台配置了多种攻击类型，但仅部分攻击有数据结果。</p>
+    <ul>
+        <li><strong>模型架构</strong>: BERT Base Uncased（本地模型）</li>
+        <li><strong>数据集</strong>: IMDB（电影评论情感分析）</li>
+        <li><strong>训练参数</strong>: 随机种子42，未使用GPU，任务类型为单句分类（TaskForSingleSentenceClassification）</li>
+        <li><strong>攻击类型执行情况</strong>:
+            <ul>
+                <li>安全攻击: 对抗样本攻击（AdvAttack）已执行；后门攻击（BackdoorAttack）和数据投毒攻击（PoisoningAttack）未执行</li>
+                <li>隐私攻击: 模型反演攻击（RLMI）、梯度反演攻击（FET）和模型窃取攻击（ModelStealingAttack）均未执行</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>2. 基准性能分析</h2>
+    <p>正常训练（normalTrain）结果: 准确率为30.0%，F1分数为23.08%。</p>
+    <p><strong>分析与比较</strong>: 在IMDB数据集上，BERT模型通常能达到90%以上的准确率（文献基准），但本实验结果显示<b class="warning">性能异常低下</b>，可能原因包括模型未充分训练、数据预处理问题或配置错误。建议检查训练过程和超参数设置。</p>
+
+    <h2>3. 安全攻击分析</h2>
+    <h3>对抗样本攻击（AdvAttack）</h3>
+    <p><strong>攻击解释</strong>: 对抗样本攻击通过轻微扰动输入数据（如替换同义词或添加噪声）来欺骗模型，使其做出错误预测。本实验使用TextFoolerJin2019策略针对文本分类模型。</p>
+    <p><strong>平均攻击成功率</strong>: 100.0%（基于单次攻击计算）。</p>
+    <p><strong>攻击前后准确率变化</strong>: 攻击前准确率为100.0%，攻击后降为0.0%，<b class="warning">下降幅度达100%</b>，表明攻击完全破坏了模型性能。</p>
+    <p><strong>攻击尝试分布</strong>: 成功次数3次，失败次数0次，跳过次数0次，所有攻击均成功执行。</p>
+    <p><strong>防御效果分析</strong>: 攻击配置中启用了防御（defenderEnabled=true），但攻击仍100%成功，<b class="warning">表明当前防御策略无效</b>，需进一步优化。</p>
+
+    <h3>后门攻击（BackdoorAttack）</h3>
+    <p>未执行此类攻击，无数据可供分析。</p>
+
+    <h3>数据投毒攻击（PoisoningAttack）</h3>
+    <p>未执行此类攻击，无数据可供分析。</p>
+
+    <h2>4. 隐私攻击分析</h2>
+    <p>所有隐私攻击（模型反演、梯度反演、模型窃取）均未执行，无数据可供分析。</p>
+
+    <h2>5. 横向对比分析</h2>
+    <h3>安全攻击特性对比</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>评估维度</th>
+                <th>对抗样本</th>
+                <th>后门</th>
+                <th>投毒</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>性能影响</td>
+                <td>高</td>
+                <td>N/A</td>
+                <td>N/A</td>
+            </tr>
+            <tr>
+                <td>检测难度</td>
+                <td>高</td>
+                <td>N/A</td>
+                <td>N/A</td>
+            </tr>
+            <tr>
+                <td>缓解成本</td>
+                <td>高</td>
+                <td>N/A</td>
+                <td>N/A</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>对比分析</strong>: 对抗样本攻击成功率100%，破坏强度极高，远超其他攻击（无数据比较），且防御无效，凸显其高风险性。</p>
+
+    <h3>隐私攻击特性对比</h3>
+    <p>无隐私攻击数据，略过对比表和分析。</p>
+
+    <h3>关键风险评估</h3>
+    <ol>
+        <li><strong>最大业务威胁</strong>: 对抗样本攻击（AdvAttack），因其导致模型完全失效。</li>
+        <li><strong>最高合规风险</strong>: 无隐私攻击数据，但对抗样本攻击可能引发模型可靠性问题，构成业务合规风险。</li>
+        <li><strong>最紧急漏洞</strong>: 对抗样本防御漏洞，需立即修复。</li>
+    </ol>
+
+    <h2>6. 防御建议</h2>
+    <ul>
+        <li><strong>针对对抗样本攻击</strong>: 当前防御策略无效，建议采用更先进的对抗训练（如PGD对抗训练）或输入 sanitization 技术。监控实时准确率下降和攻击尝试次数。</li>
+        <li><strong>架构改进</strong>: 增强模型鲁棒性，例如集成防御性蒸馏或使用鲁棒性更强的预训练模型。定期进行安全审计和渗透测试。</li>
+        <li><strong>一般建议</strong>: 由于其他攻击未测试，建议未来实验涵盖更多攻击类型以全面评估风险。</li>
+    </ul>
+
+    <h2>7. 结论</h2>
+    <p>本实验揭示了对抗样本攻击在文本分类模型上的极高破坏性：<b class="warning">攻击成功率达100%</b>，完全摧毁模型性能，且现有防御无效。基准性能异常（准确率仅30%）表明模型训练可能存在问题，需重新评估训练流程。最大业务威胁来自对抗样本攻击，建议优先加强防御策略，如实施实时监控和 adversarial training。</p>
+    <p>进一步实验应扩展攻击类型测试（如后门和隐私攻击），以全面评估模型安全性。未来研究方向包括开发更有效的防御机制和探索多模态攻击的缓解措施。总之，本实验突出模型安全性的紧迫性，需从训练、防御和监控多维度提升鲁棒性。</p>
+
+    <hr>
+    <div class="appendix">
+        <h2>附录：指标解释</h2>
+        <ul>
+            <li><strong>准确率 (Accuracy)</strong>: 模型正确预测的样本比例。</li>
+            <li><strong>F1分数 (F1 Score)</strong>: 精确率和召回率的调和平均值，用于评估分类模型性能。</li>
+            <li><strong>攻击成功率 (Attack Success Rate)</strong>: 攻击成功次数占总攻击次数的比例，反映攻击有效性。</li>
+            <li><strong>防御启用 (DefenderEnabled)</strong>: 布尔值，表示是否在攻击时启用防御机制。</li>
+        </ul>
+    </div>
+</body>
+</html>

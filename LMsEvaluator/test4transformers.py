@@ -234,6 +234,9 @@ def run_pipeline(config_path: str,report=False):
 
     tokenizer, model = load_model_and_tokenizer(model_name=model_name, task_type=task_type,
                                                 local_model=LM_config['local_model'], project_path=projectPath)
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+        model.config.pad_token_id = tokenizer.eos_token_id
 
     # if LM_config['local_model']:
     #     tokenizer = AutoTokenizer.from_pretrained(os.path.join(projectPath, 'LMs', model_name))

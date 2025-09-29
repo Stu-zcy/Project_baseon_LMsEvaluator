@@ -946,7 +946,7 @@
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="../pages/tables.html">
                         <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">模型评估数据分析</span>
+                        <span class="nav-link-text ms-1">模型评估结果分析</span>
                     </a>
                 </li>
                 <!-- <li class="nav-item">
@@ -1127,8 +1127,8 @@
             <!-- 页面标题和操作按钮 -->
             <div class="page-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
                 <div class="page-title mb-3 mb-md-0">
-                    <h1 class="fw-bold" style="font-size:2rem;">模型评估配置管理</h1>
-                    <p class="text-muted mb-0" style="font-size:1.1rem;">管理您的评估类型、策略和高级设置</p>
+                    <h1 class="fw-bold" style="font-size:2rem;">模型评估控制台</h1>
+                    <p class="text-muted mb-0" style="font-size:1.1rem;">管理您的评估类型、策略和参数设置</p>
                 </div>
                 <div class="action-buttons d-flex flex-wrap gap-2 mt-2 mt-md-0">
                     <button class="btn btn-light d-flex align-items-center px-3 py-2" id="addNewConfigBtn">
@@ -1343,11 +1343,11 @@
                                         <option value="" disabled selected>-- 安全攻击任务类型 --</option>
                                         <option value="AdvAttack">对抗攻击</option>
                                         <option value="BackdoorAttack">后门攻击</option>
-                                        <option value="PoisoningAttack">数据投毒</option>
+                                        <option value="PoisoningAttack">投毒攻击</option>
                                         <option value="" disabled selected>-- 隐私攻击任务类型 --</option>
                                         <option value="FET">梯度反演</option>
                                         <option value="RLMI">模型反演</option>
-                                        <option value="ModelStealingAttack">模型窃取攻击</option>
+                                        <option value="ModelStealingAttack">模型窃取</option>
                                     </select>
                                 </div>
                             </div>
@@ -1542,7 +1542,7 @@
                         <script>
                             document.write(new Date().getFullYear())
                         </script>,
-                        模型评估配置管理系统 | 安全研究平台
+                        大模型安全及隐私风险评估平台
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -1574,6 +1574,12 @@
         // 参数标签中英文映射
         const paramLabelMap = {
             attack_nums: '攻击次数',
+            high_entropy_mask: '高熵掩码',
+            checkpoint_interval: '检查点步长间隔',
+            shuffle: '随机化索引',
+            disable_stdout: '禁用详细输出',
+            csv_coloring_style: '可视化样式',
+            display_full_info: '显示完整信息',
             seed: '随机种子',
             attack_batch: '攻击批次大小',
             distance_func: '距离函数',
@@ -1608,55 +1614,55 @@
         // 任务与数据集的中文映射关系
         const taskDatasetMap = {
             TaskForSingleSentenceClassification: [
-                '情感分析（正/负面）-sst2',
-                '语法可接受性判断-cola',
-                '电影评论情感分析-imdb',
-                '情感分类（6种情绪）-emotion',
-                '评论星级分类-yelp'
+                'sst2',
+                'cola',
+                'imdb',
+                'emotion',
+                'yelp'
             ],
             TaskForPairSentence: [
-                '句子对相似度判断-mrpc',
-                '多体裁NLI任务-mnli'
+                'mrpc',
+                'mnli'
             ],
             TaskForMultipleChoice: [
-                '情景推理-SWAG'
+                'SWAG'
             ],
             TaskForSQuADQuestionAnswering: [
-                '抽取式问答-SQuAD'
+                'SQuAD'
             ],
             TaskForPretraining: [
-                '维基百科文本-WikiText',
-                '宋词文本-SongCi'
+                'WikiText',
+                'SongCi'
             ],
             TaskForChineseNER: [
-                '中文命名实体识别-ChineseNER'
+                'ChineseNER'
             ]
         };
         // 数据集类型中英文映射
         const datasetMap = {
             'TaskForSingleSentenceClassification': {
-                '情感分析（正/负面）-sst2': 'GLUE\\sst2',
-                '语法可接受性判断-cola': 'GLUE\\cola',
-                '电影评论情感分析-imdb': 'imdb',
-                '情感分类（6种情绪）-emotion': 'emotion',
-                '评论星级分类-yelp': 'yelp'
+                'sst2': 'GLUE\\sst2',
+                'cola': 'GLUE\\cola',
+                'imdb': 'imdb',
+                'emotion': 'emotion',
+                'yelp': 'yelp'
             },
             'TaskForPairSentence': {
-                '句子对相似度判断-mrpc': 'GLUE\\mrpc',
-                '多体裁NLI任务-mnli': 'GLUE\\mnli'
+                'mrpc': 'GLUE\\mrpc',
+                'mnli': 'GLUE\\mnli'
             },
             'TaskForMultipleChoice': {
-                '情景推理-SWAG': 'SWAG'
+                'SWAG': 'SWAG'
             },
             'TaskForSQuADQuestionAnswering': {
-                '抽取式问答-SQuAD': 'SQuAD'
+                'SQuAD': 'SQuAD'
             },
             'TaskForPretraining': {
-                '维基百科文本-WikiText': 'WikiText',
-                '宋词文本-SongCi': 'SongCi'
+                'WikiText': 'WikiText',
+                'SongCi': 'SongCi'
             },
             'TaskForChineseNER': {
-                '中文命名实体识别-ChineseNER': 'ChineseNER'
+                'ChineseNER': 'ChineseNER'
             }
         };
         // 任务类型中英文映射
@@ -1673,7 +1679,7 @@
         const defenseTypeMap = {
             'pruning': '模型剪枝',
             'output-perturb': '输出扰动',
-            'differential-privacy': '差分隐私',
+            'high-entropy-mask': '高熵掩码',
         }
 
         // 攻击配置数据
@@ -1780,18 +1786,18 @@
                 }
             },
             descriptions: {
-                AdvAttack: "对抗攻击：在模型推理阶段，攻击者通过向输入数据添加人眼难以察觉的微小扰动以生成对抗样本，导致模型做出错误的预测或分类，从而破坏模型的可靠性与安全性。",
-                BackdoorAttack: "后门攻击：在模型训练阶段，攻击者通过向训练数据注入带有特定触发模式的恶意样本将后门植入模型；该后门在推理阶段一旦被触发，会导致模型对特定输入产生指定的错误输出，而在正常输入上表现正常，极具隐蔽性。",
-                PoisoningAttack: "投毒攻击：一种发生在模型训练阶段之前的攻击，攻击者通过向训练数据中注入恶意数据或篡改原有数据来污染训练集，导致最终训练出的模型性能下降、出现预测偏差或含有后门，破坏模型的完整性。",
-                FET: "梯度反演攻击：一种在模型训练阶段发起的攻击，攻击者通过分析共享的梯度更新来逆向还原原始训练数据，导致训练数据集中的敏感信息被泄露。",
-                RLMI: "模型反演攻击：一种在模型推理阶段发起的攻击，攻击者通过反复查询并分析模型的输出结果来推断或重建模型的输入数据，导致用户的私有输入数据面临泄露风险。",
-                "ModelStealingAttack": "模型窃取攻击：在模型推理阶段，攻击者通过频繁查询目标模型的输入-输出对应关系来重构一个功能近似的替代模型，导致模型的知识产权被盗用，核心算法或机密训练数据被窃取。"
+                AdvAttack: "在模型推理阶段，攻击者通过向输入数据添加人眼难以察觉的微小扰动以生成对抗样本，导致模型做出错误的预测或分类，从而破坏模型的可靠性与安全性",
+                BackdoorAttack: "在模型训练阶段，攻击者通过向训练数据注入带有特定触发模式的恶意样本将后门植入模型；该后门在推理阶段一旦被触发，会导致模型对特定输入产生指定的错误输出，而在正常输入上表现正常，极具隐蔽性",
+                PoisoningAttack: "一种发生在模型训练阶段之前的攻击，攻击者通过向训练数据中注入恶意数据或篡改原有数据来污染训练集，导致最终训练出的模型性能下降、出现预测偏差或含有后门，破坏模型的完整性",
+                FET: "一种在模型训练阶段发起的攻击，攻击者通过分析共享的梯度更新来逆向还原原始训练数据，导致训练数据集中的敏感信息被泄露",
+                RLMI: "一种在模型推理阶段发起的攻击，攻击者通过反复查询并分析模型的输出结果来推断或重建模型的输入数据，导致用户的私有输入数据面临泄露风险",
+                ModelStealingAttack: "在模型推理阶段，攻击者通过频繁查询目标模型的输入-输出对应关系来重构一个功能近似的替代模型，导致模型的知识产权被盗用，核心算法或机密训练数据被窃取"
             },
             typeNames: {
                 AdvAttack: "对抗攻击",
                 FET: "梯度反演",
                 BackdoorAttack: "后门攻击",
-                PoisoningAttack: "数据投毒",
+                PoisoningAttack: "投毒攻击",
                 RLMI: "模型反演",
                 ModelStealingAttack: "模型窃取"
             }
@@ -1816,11 +1822,11 @@
             },
             LM_config: {
                 model: "bert_base_uncased",
-                local_modal: true
+                local_model: true
             },
             task_config: {
                 task: "TaskForSingleSentenceClassification",
-                dataset: "语法可接受性判断-cola",
+                dataset: "cola",
                 normal_training: true,
                 epochs: 3
             }
@@ -1857,7 +1863,7 @@
 
         // 检查是否是默认生成的名称
         function isDefaultName(name) {
-            const defaultNamePattern = /^(对抗攻击|后门攻击|数据投毒|梯度反演|模型反演|模型窃取)-\d+/;
+            const defaultNamePattern = /^(对抗攻击|后门攻击|投毒攻击|梯度反演|模型反演|模型窃取)-\d+/;
             return defaultNamePattern.test(name);
         }    
 
@@ -2174,7 +2180,7 @@
             document.getElementById('taskType').value = globalConfig.task_config.task;
             document.getElementById('normalTraining').checked = globalConfig.task_config.normal_training;
             document.getElementById('trainingEpochs').value = globalConfig.task_config.epochs || 3;
-            document.getElementById('localModelSwitch').checked = globalConfig.LM_config.local_modal;
+            document.getElementById('localModelSwitch').checked = globalConfig.LM_config.local_model;
 
             // 触发模型类型开关事件以显示正确的部分
             const event = new Event('change');
@@ -2223,7 +2229,7 @@
                 },
                 LM_config: {
                     model: modelName,
-                    local_modal: isLocalModel
+                    local_model: isLocalModel
                 },
                 task_config: {
                     task: document.getElementById('taskType').value,
@@ -2268,7 +2274,7 @@
             // 模型配置摘要
             let modelSummary = "";
             if (globalConfig.LM_config.model) {
-                const modelType = globalConfig.LM_config.local_modal ? '本地模型' : 'HuggingFace模型';
+                const modelType = globalConfig.LM_config.local_model ? '本地模型' : 'HuggingFace模型';
                 modelSummary = `<div><strong>模型:</strong> ${globalConfig.LM_config.model} (${modelType})</div>`;
             } else {
                 modelSummary = "未配置";
@@ -2351,9 +2357,9 @@
                 },
                 {
                     id: 3,
-                    name: "数据投毒-1",
+                    name: "投毒攻击-1",
                     type: "PoisoningAttack",
-                    strategy: "Poisoning",
+                    strategy: "labelflipping",
                     description: "针对训练数据的投毒攻击，污染训练集以降低模型性能",
                     status: "active",
                     defenderEnabled: false,
@@ -2412,7 +2418,7 @@
                     id: 6,
                     name: "梯度反演-1",
                     type: "FET",
-                    strategy: "FET/SWAT",
+                    strategy: "SWAT",
                     description: "梯度反演",
                     status: "active",
                     defenderEnabled: false,
@@ -2877,10 +2883,10 @@
                 let defenseHTML = `
                     <h5>
                         <i class="material-icons">shield</i>
-                        ${isAdversarial ? '对抗攻击防御设置' : 
+                        ${isAdversarial ? '对抗训练防御设置' : 
                           isBackdoor ? '后门攻击防御设置' : 
-                          isPrivacy ? '隐私攻击防御设置' : 
-                          '数据投毒防御设置'}
+                          isPrivacy ? '隐私防御设置' : 
+                          '投毒攻击防御设置'}
                     </h5>
                     <div class="switch-container">
                         <div class="form-check form-switch">
@@ -2911,7 +2917,7 @@
                                 <input type="number" class="form-control" id="defense_learning_rate" value="0.00005" step="0.00001">
                             </div>
                             <div class="form-group">
-                                <label for="defense_per_device_train_batch_size">每设备训练批次大小</label>
+                                <label for="defense_per_device_train_batch_size">训练批次大小</label>
                                 <input type="number" class="form-control" id="defense_per_device_train_batch_size" value="8">
                             </div>
                             <div class="form-group">
@@ -2952,6 +2958,7 @@
                         typeOptions = `
                             <option value="pruning">模型剪枝</option>
                             <option value="output-perturb">输出扰动</option>
+                            <option value="high-entropy-mask">高熵掩码</option>
                         `;
                     } 
                     
@@ -2987,7 +2994,7 @@
                     defenseHTML += `
                         <div class="alert alert-info d-flex align-items-center">
                             <i class="material-icons me-2">info</i>
-                            <span>数据投毒防御通过启用数据清洗机制来保护模型</span>
+                            <span>投毒攻击防御通过启用数据清洗机制来保护模型</span>
                         </div>
                     `;
                 }
@@ -3126,7 +3133,7 @@
                         `;
                     }
                 } else if (attackType === 'ModelStealingAttack') {
-                    // 模型窃取攻击特殊字段处理
+                    // 模型窃取特殊字段处理
                     if (key === 'method') {
                         col.innerHTML = `
                             <label class="form-label">方法</label>
@@ -3269,7 +3276,7 @@
                     }
                 }
                 else if (attackType === 'PoisoningAttack') {
-                    // 数据投毒防御
+                    // 投毒攻击防御
                     params.defender = true;
                 }
             } else {

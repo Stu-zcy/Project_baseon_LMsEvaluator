@@ -158,7 +158,7 @@ const AttackTable = defineComponent({
         	</template>
         <template #title>
             <div class="flex justify-between pr-4">
-                <h4>数据投毒</h4>
+                <h4>投毒攻击</h4>
             </div>
         </template>
         <template #bodyCell="{ column, record }">
@@ -511,7 +511,7 @@ const AttackTable = defineComponent({
         	</template>
         	<template #title>
             <div class="flex justify-between pr-4">
-                <h4>模型窃取攻击</h4>
+                <h4>模型窃取</h4>
             </div>
         </template>
         <template #bodyCell="{ column, record }">
@@ -585,28 +585,28 @@ const AttackTable = defineComponent({
 		const NormalTrainColumns = [
 			{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
 			{ title: '分类准确率\n(Classification Accuracy,%)', dataIndex: 'acc', align: 'center' },
-			{ title: 'f1分数\n(f1 Score)', dataIndex: 'f1', align: 'center' },
+			{ title: 'F1分数\n(F1 Score)', dataIndex: 'f1', align: 'center' },
 		];
 		const AdvColumns = [
 			{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
-			{ title: '成功攻击次数\n(Successful Attacks,次)', dataIndex: 'success', align: 'center' },
-			{ title: '失败攻击次数\n(Failed Attacks,次)', dataIndex: 'fail', align: 'center' },
+			{ title: '攻击成功次数\n(Successful Attacks,次)', dataIndex: 'success', align: 'center' },
+			{ title: '攻击失败次数\n(Failed Attacks,次)', dataIndex: 'fail', align: 'center' },
 			{ title: '跳过攻击次数\n(Skipped Attacks,次)', dataIndex: 'skip', align: 'center' },
-			{ title: '攻击前准确率\n(Clean Accuracy,%)', dataIndex: 'before', align: 'center' },
-			{ title: '攻击后准确率\n(Adversarial Accuracy,%)', dataIndex: 'after', align: 'center' },
+			{ title: '原始样本准确率\n(Clean Accuracy,%)', dataIndex: 'before', align: 'center' },
+			{ title: '对抗样本准确率\n(Adversarial Accuracy,%)', dataIndex: 'after', align: 'center' },
 			{ title: '攻击成功率\n(Attack Success Rate,%)', dataIndex: 'rate', align: 'center' },
 		];
 		const PoisoningColumns = [
 			{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
 			{ title: '毒化数据集准确率\n(Poisoned Accuracy,%)', dataIndex: 'acc', align: 'center' },
-			{ title: 'f1分数\n(f1 Score)', dataIndex: 'f1', align: 'center' },
+			{ title: 'F1分数\n(F1 Score)', dataIndex: 'f1', align: 'center' },
 		];
 		const BackDoorColumns = [
 			{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
-			{ title: '投毒方数据集\n(Poisoned Dataset,名称)', dataIndex: 'dataset', align: 'center' },
+			{ title: '后门数据集\n(Poisoned Dataset,名称)', dataIndex: 'dataset', align: 'center' },
 			// { title: '投毒方', dataIndex: 'Poisoner', align: 'center' },
 			{ title: '原始数据集准确率\n(Clean Accuracy,%)', dataIndex: 'before', align: 'center' },
-			{ title: '毒化数据集准确率\n(Poisoned Accuracy,%)', dataIndex: 'after', align: 'center' },
+			{ title: '后门数据集准确率\n(Poisoned Accuracy,%)', dataIndex: 'after', align: 'center' },
 			{ title: '困惑度\n(PPL-Perplexity)', dataIndex: 'PPL', align: 'center' },
 			{ title: '语义相似性\n(USE-Universal Sentence Encoder Similarity)', dataIndex: 'USE', align: 'center' },
 			{ title: '语法正确性得分\n(Grammar Score)', dataIndex: 'GRAMMAR', align: 'center' },
@@ -642,7 +642,7 @@ const AttackTable = defineComponent({
 			{ title: '验证集准确率\n(Validation Accuracy,%)', dataIndex: 'valid_acc', align: 'center' },
 			{ title: '目标模型准确率\n(Target Model Accuracy,%)', dataIndex: 'victim_acc', align: 'center' },
 			{ title: '替代模型准确率\n(Stolen Model Accuracy,%)', dataIndex: 'steal_acc', align: 'center' },
-			{ title: '一致性\n(Agreement,%)', dataIndex: 'agreement', align: 'center' },
+			{ title: '一致性分数\n(Agreement,%)', dataIndex: 'agreement', align: 'center' },
 		];
 
 		const responseData = ref({

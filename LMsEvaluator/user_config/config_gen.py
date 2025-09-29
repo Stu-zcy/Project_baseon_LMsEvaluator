@@ -208,13 +208,9 @@ def generate_config(username, attack_list, globalConfig=None):
             config['general']['random_seed'] = globalConfig['general']['random_seed']
             config['general']['use_gpu'] = globalConfig['general']['use_gpu']
         # 合并模型配置
-        if 'model' in globalConfig:
-            config['LM_config']['model'] = globalConfig['model']['predefined']
-            config['LM_config']['local_model'] = globalConfig['model']['local_model']
-            if globalConfig['model']['local_model']:
-                config['LM_config']['local_model'] = globalConfig['model']['local_model']
-            else:
-                config['LM_config']['local_model'] = None
+        if 'model' in globalConfig['LM_config']:
+            config['LM_config']['model'] = globalConfig['LM_config']['model']
+            config['LM_config']['local_model'] = globalConfig['LM_config']['local_model']
         # 合并任务配置
         if 'task_config' in globalConfig:
             config['task_config']['task'] = globalConfig['task_config']['task']

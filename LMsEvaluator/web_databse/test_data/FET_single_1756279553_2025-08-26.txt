@@ -1,0 +1,189 @@
+[2025-08-27 14:00:36] - INFO: TrainOutput(global_step=3, training_loss=0.7600485483805338, metrics={'train_runtime': 4.2898, 'train_samples_per_second': 6.993, 'train_steps_per_second': 0.699, 'total_flos': 262083277800.0, 'train_loss': 0.7600485483805338, 'epoch': 3.0})
+[2025-08-27 14:00:36] - INFO: {'eval_loss': 0.7026982307434082, 'eval_accuracy': 0.3, 'eval_f1': 0.23076923076923078, 'eval_precision': 0.1875, 'eval_recall': 0.3, 'eval_runtime': 0.0767, 'eval_samples_per_second': 130.402, 'eval_steps_per_second': 13.04, 'epoch': 3.0}
+[2025-08-27 14:00:36] - INFO: +---------------+---------------------+
+| Results       |                     |
++---------------+---------------------+
+| eval_accuracy | 0.3                 |
+| eval_f1       | 0.23076923076923078 |
++---------------+---------------------+
+[2025-08-13 09:05:49] - INFO: ==================================================
+[2025-08-13 09:05:49] - INFO: FET攻击模块配置检查...
+[2025-08-13 09:05:49] - INFO: Checking the config of FET.
+[2025-08-13 09:05:49] - INFO: FET攻击开始
+[2025-08-13 09:05:49] - INFO: Namespace(seed=42, dataset='cola', model='tinybert', batch_size=2, n_attacks=1, distance_function='l2', population_size=300, tournsize=5, crossover_rate=0.9, mutation_rate=0.1, max_generations=2, halloffame_size=30)
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 对所有nn.Linear层进行20.0%剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.self.query.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.self.query.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.self.key.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.self.key.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.self.value.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.self.value.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.intermediate.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.intermediate.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.self.query.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.self.query.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.self.key.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.self.key.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.self.value.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.self.value.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.intermediate.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.intermediate.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.self.query.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.self.query.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.self.key.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.self.key.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.self.value.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.self.value.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.intermediate.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.intermediate.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.self.query.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.self.query.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.self.key.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.self.key.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.self.value.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.self.value.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.intermediate.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.intermediate.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.self.query.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.self.query.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.self.key.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.self.key.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.self.value.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.self.value.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.intermediate.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.intermediate.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.self.query.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.self.query.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.self.key.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.self.key.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.self.value.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.self.value.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.intermediate.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.intermediate.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.self.query.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.self.query.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.self.key.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.self.key.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.self.value.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.self.value.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.intermediate.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.intermediate.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.self.query.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.self.query.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.self.key.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.self.key.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.self.value.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.self.value.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.intermediate.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.intermediate.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.self.query.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.self.query.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.self.key.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.self.key.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.self.value.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.self.value.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.intermediate.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.intermediate.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.self.query.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.self.query.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.self.key.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.self.key.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.self.value.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.self.value.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.intermediate.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.intermediate.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.self.query.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.self.query.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.self.key.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.self.key.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.self.value.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.self.value.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.intermediate.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.intermediate.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.self.query.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.self.query.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.self.key.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.self.key.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.self.value.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.self.value.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.intermediate.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.intermediate.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.pooler.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.pooler.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对classifier.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对classifier.bias剪枝
+[2025-08-13 09:05:50] - INFO: [FET] 已对模型应用剪枝防御
+[2025-08-13 09:05:50] - INFO: [FET] [防御] 开始攻击...
+[2025-08-13 09:05:50] - INFO: ----------------------------------------------------------------------
+[2025-08-13 09:05:50] - INFO: [防御] Attack No.1:
+[2025-08-13 09:05:50] - INFO: [防御] Reference = ['[CLS] what do you believe that iron is to be a fact well known to virtually everybody? [SEP]', '[CLS] she was sent to seoul. [SEP] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD]']
+[2025-08-13 09:06:26] - INFO: [防御] Prediction = ['[CLS] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [SEP]', '[CLS] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [SEP]']
+[2025-08-13 09:06:26] - INFO: [防御] Generations = 3
+[2025-08-13 09:06:30] - INFO: Using default tokenizer.
+[2025-08-13 09:06:30] - INFO: [防御] Rouge scores: {'rouge1': 0.40540540540540543, 'rouge2': 0.28571428571428575, 'rougeL': 0.37837837837837834, 'rougeLsum': 0.37837837837837834}
+[2025-08-13 09:06:30] - INFO: [防御] Word recovery rate: 0.125
+[2025-08-13 09:06:30] - INFO: [防御] Edit distance: 123
+[2025-08-13 09:06:30] - INFO: [防御] If full recovery: False
+[2025-08-13 09:06:33] - INFO: Using default tokenizer.
+[2025-08-13 09:06:33] - INFO: 
++-----------------------------+--------+
+| FET Attack Results [防御]   |        |
++-----------------------------+--------+
+| Aggregate rouge1 scores:    | 0.4054 |
+| Aggregate rouge2 scores:    | 0.2857 |
+| Aggregate rougeL scores:    | 0.3784 |
+| Full recovery rate:         | 0.00%  |
+| Average word recovery rate: | 12.50% |
+| Average edit distance:      | 123.0  |
++-----------------------------+--------+
+[2025-08-13 09:06:33] - INFO: [FET] 防御攻击结果：{'rouge1': '0.4054', 'rouge2': '0.2857', 'rougeL': '0.3784', 'full_recovery_rate': '0.00%', 'avg_word_recovery_rate': '12.50%', 'avg_edit_distance': '123.0'}
+[2025-08-13 09:06:33] - INFO: FET攻击结束
+[2025-08-13 09:06:33] - INFO: ==================================================

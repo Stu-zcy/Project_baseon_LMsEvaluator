@@ -83,12 +83,12 @@ class MyPoisoningAttack(BaseAttack):
         # print(poisoned_train[0])
         # raise SystemError
 
-        if self.attack_config['defender'] is not None:
+        if self.attack_config['defender'] not in [None,"None"]:
             poisoned_train = self.detect_and_filter_anomalies(
                 dataset=poisoned_train,
                 model=self.model,
                 tokenizer=self.tokenizer,
-                threshold=0.0,
+                threshold=self.attack_config['defender']['threshold'],
                 device=self.model.device
             )
 

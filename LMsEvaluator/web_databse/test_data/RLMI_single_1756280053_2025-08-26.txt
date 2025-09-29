@@ -1,0 +1,24 @@
+[2025-08-27 14:00:36] - INFO: TrainOutput(global_step=3, training_loss=0.7600485483805338, metrics={'train_runtime': 4.2898, 'train_samples_per_second': 6.993, 'train_steps_per_second': 0.699, 'total_flos': 262083277800.0, 'train_loss': 0.7600485483805338, 'epoch': 3.0})
+[2025-08-27 14:00:36] - INFO: {'eval_loss': 0.7026982307434082, 'eval_accuracy': 0.3, 'eval_f1': 0.23076923076923078, 'eval_precision': 0.1875, 'eval_recall': 0.3, 'eval_runtime': 0.0767, 'eval_samples_per_second': 130.402, 'eval_steps_per_second': 13.04, 'epoch': 3.0}
+[2025-08-27 14:00:36] - INFO: +---------------+---------------------+
+| Results       |                     |
++---------------+---------------------+
+| eval_accuracy | 0.3                 |
+| eval_f1       | 0.23076923076923078 |
++---------------+---------------------+
+[2024-08-26 22:38:39] - INFO: ==================================================
+[2025-08-13 09:12:37] - INFO: RLMI攻击模块配置检查...
+[2025-08-13 09:12:37] - INFO: Checking the config of RLMI.
+[2025-08-13 09:12:37] - INFO: RLMI攻击开始
+[2025-08-13 09:12:37] - INFO: [RLMI] 攻击流程开始...
+[2025-08-13 09:12:44] - INFO: [RLMI] 未检测到defender配置，直接执行无防御攻击...
++-------------------------------+---------+
+| RLMI Attack Results           |         |
++-------------------------------+---------+
+| Aver ASR During Attack:       | 100.00% |
+| Aver WER During Attack:       | 0.79411 |
+| Aver ASR During Inference:    | 100.00% |
+| Aver WER During Inference:    | 0.71951 |
++-------------------------------+---------+
+[2025—8—26 21：51:49] - INFO: RLMI攻击结束
+[2024-08-26 22:38:39] - INFO: ==================================================

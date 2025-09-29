@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>攻击实验分析报告</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            margin: 20px 30px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            color: #333;
+            font-size: 16px;
+        }
+        h1, h2, h3 {
+            color: #0b5fff;
+            font-weight: bold;
+        }
+        h1 {
+            font-size: 26px;
+        }
+        h2 {
+            font-size: 22px;
+        }
+        h3 {
+            font-size: 18px;
+        }
+        p {
+            margin: 0.8em 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+        .warning {
+            color: #b42318;
+        }
+        .good {
+            color: #0f9150;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        hr {
+            margin: 2em 0;
+            border: 0;
+            border-top: 1px solid #ccc;
+        }
+        .appendix {
+            font-size: 12px;
+        }
+        strong {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>攻击实验分析报告</h1>
+
+    <h2>1. 实验概览</h2>
+    <p>本实验基于给定的配置执行攻击测试，关键配置如下：</p>
+    <ul>
+        <li><strong>模型架构</strong>: bert_base_uncased（本地模型）</li>
+        <li><strong>数据集</strong>: GLUE\cola（CoLA数据集，用于句子分类任务）</li>
+        <li><strong>训练参数</strong>: 训练轮数(epochs)=3，随机种子=42，使用GPU加速</li>
+        <li><strong>任务类型</strong>: TaskForSingleSentenceClassification（单句分类任务）</li>
+    </ul>
+    <p>执行的攻击类型及其分类：</p>
+    <ul>
+        <li><strong>安全攻击</strong>: 对抗样本攻击(AdvAttack)</li>
+        <li><strong>隐私攻击</strong>: 无（模型反演攻击、梯度反演攻击、模型窃取攻击均未执行）</li>
+    </ul>
+    <p>注：数据投毒攻击和后门攻击也未执行，因此本报告仅分析可用数据。</p>
+
+    <h2>2. 基准性能分析</h2>
+    <p>正常训练（normalTrain）结果：</p>
+    <ul>
+        <li><strong>准确率(accuracy)</strong>: 30.0%</li>
+        <li><strong>F1分数</strong>: 约23.08%</li>
+    </ul>
+    <p>与文献中的基准模型比较：在GLUE基准的CoLA数据集中，BERT模型通常使用Matthews相关系数（MCC）评估性能，而非直接准确率。CoLA任务（语法可接受性判断）本身难度较高，准确率30.0%表明模型性能较低，可能由于训练轮数较少（仅3轮）或数据集特性导致。典型BERT在CoLA上的MCC可达50-60%，但本实验准确率较低，提示模型可能存在欠拟合或需要优化训练参数。</p>
+
+    <h2>3. 安全攻击分析</h2>
+    <h3>对抗样本攻击(AdvAttack)</h3>
+    <p><strong>解释</strong>: 对抗样本攻击通过轻微扰动输入数据（如文本中替换同义词或添加干扰字符）来欺骗模型，使其做出错误预测。本实验使用TextFooler策略，针对NLP模型。</p>
+    <p><strong>平均攻击成功率</strong>: 100.0%（基于单次攻击实例计算）</p>
+    <p><strong>攻击前后准确率变化</strong>: 攻击前准确率为100.0%，攻击后准确率降至0.0%，下降幅度为100%。<span class="warning">（异常标注：攻击前准确率100.0%与基准性能30.0%不一致，可能攻击在特定高准确率子集上进行，或数据记录有误。建议验证测试集划分或攻击样本选择。）</span></p>
+    <p><strong>攻击尝试分布</strong>:</p>
+    <ul>
+        <li>成功次数: 3</li>
+        <li>失败次数: 0</li>
+        <li>跳过次数: 0</li>
+    </ul>
+    <p>分析：攻击成功率高，表明模型对对抗样本非常脆弱，易受欺骗。</p>
+
+    <h3>后门攻击(BackdoorAttack)</h3>
+    <p>无执行数据，跳过分析。</p>
+
+    <h3>数据投毒攻击(PoisoningAttack)</h3>
+    <p>无执行数据，跳过分析。</p>
+
+    <h2>4. 隐私攻击分析</h2>
+    <p>无执行数据（模型反演攻击、梯度反演攻击、模型窃取攻击均未测试），跳过分析。</p>
+
+    <h2>5. 横向对比分析</h2>
+    <h3>安全攻击特性对比</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>评估维度</th>
+                <th>对抗样本</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>性能影响</td>
+                <td>高（准确率降至0%）</td>
+            </tr>
+            <tr>
+                <td>检测难度</td>
+                <td>中等（攻击成功率高，但扰动可能被检测）</td>
+            </tr>
+            <tr>
+                <td>缓解成本</td>
+                <td>高（需要对抗训练或架构修改）</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>对比分析</strong>: 对抗样本攻击成功率100%，破坏强度远超其他攻击（无数据比较，但基于本实验，破坏性极强）。后门攻击和数据投毒攻击未执行，无法直接对比。</p>
+
+    <h3>隐私攻击特性对比</h3>
+    <p>无执行数据，跳过对比。</p>
+
+    <h3>关键风险评估</h3>
+    <ol>
+        <li><strong>最大业务威胁</strong>: 对抗样本攻击（导致模型完全失效）</li>
+        <li><strong>最高合规风险</strong>: 无显著隐私风险（隐私攻击未测试）</li>
+        <li><strong>最紧急漏洞</strong>: 对抗样本攻击漏洞（需立即修复）</li>
+    </ol>
+
+    <h2>6. 防御建议</h2>
+    <p>针对对抗样本攻击(AdvAttack):</p>
+    <ul>
+        <li><strong>防御效果</strong>: 启用对抗训练（如PGD）或输入 sanitization 可降低攻击成功率。本实验中防御未启用（defenderEnabled=false），建议测试防御策略。</li>
+        <li><strong>监控指标</strong>: 实时检测准确率下降、输入异常（如扰动检测）、模型置信度变化。</li>
+        <li><strong>架构改进</strong>: 使用更鲁棒的模型架构（如集成防御层或对抗性正则化），增加模型复杂性和训练轮数以提高基线性能。</li>
+    </ul>
+    <p>其他攻击无数据，但一般建议：定期审计模型、实施数据验证流程。</p>
+
+    <h2>7. 结论</h2>
+    <p>本实验分析了基于BERT模型在CoLA数据集上的攻击测试，<strong>最重要的发现</strong>包括：基准性能较低（准确率30.0%），表明模型可能欠拟合或训练不足；对抗样本攻击成功率达100%，攻击后准确率降至0%，显示模型高度脆弱，易受欺骗。这突出了模型安全性的严重漏洞，尤其是在NLP任务中，对抗样本攻击可通过简单文本扰动导致完全失效。</p>
+    <p><strong>关键风险</strong>在于对抗样本攻击可能直接破坏业务应用（如文本分类系统），而合规风险较低因隐私攻击未测试。防御上，<strong>建议立即实施对抗训练和输入监控</strong>，以增强模型鲁棒性。同时，<strong>进一步实验</strong>应测试其他攻击类型（如后门或投毒）并评估不同防御策略（如 adversarial training 或 detection mechanisms）。未来研究方向包括开发更鲁棒的NLP模型、探索多模态防御、以及提高模型在低资源设置下的稳定性。</p>
+    <p>总之，本实验揭示了模型安全性的紧迫问题，需综合技术和管理措施 mitigating risks.</p>
+
+    <hr>
+    <div class="appendix">
+        <h2>附录：指标解释</h2>
+        <p>仅解释本报告中用到的指标：</p>
+        <ul>
+            <li><strong>准确率(accuracy)</strong>: 模型预测正确的样本比例，用于评估整体性能。</li>
+            <li><strong>F1分数</strong>: 精确率和召回率的调和平均，用于评估分类任务平衡性。</li>
+            <li><strong>攻击成功率</strong>: 对抗攻击中成功欺骗模型的样本比例，值越高表示攻击越有效。</li>
+            <li><strong>攻击前后准确率</strong>: 攻击前模型在干净样本上的准确率，攻击后模型在扰动样本上的准确率，差值反映攻击影响。</li>
+        </ul>
+    </div>
+</body>
+</html>

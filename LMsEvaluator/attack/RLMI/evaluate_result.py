@@ -204,8 +204,14 @@ def similarity_plot_show(evaluate_model_path=None, private_train_dataset_path=No
             writer.writerow([best_target_text, generated_text, best_similarity])
         similarities.append(best_similarity)
 
-    average_asr_during_infer = count_correct / len(selected_infer_results)
-    average_wer_during_infer = sum(similarities) / len(similarities)
+    if len(selected_infer_results) == 0:
+        average_asr_during_attack = 0.0
+    else:
+        average_asr_during_infer = count_correct / len(selected_infer_results)
+    if len(similarities) == 0:
+        average_wer_during_infer = 0.0
+    else:
+        average_wer_during_infer = sum(similarities) / len(similarities)
 
     print('攻击成功率为', f"{average_asr_during_infer:.2%}")
     print('平均单词恢复率为', f"{average_wer_during_infer:.5f}")

@@ -114,11 +114,15 @@ class MyTextAttack(BaseAttack):
             raise SystemError
 
         attack_args = textattack.AttackArgs(
-            num_examples=self.attack_config['attack_nums'],
+            num_examples=self.attack_config['num_examples'],
             log_to_csv=os.path.join(self.project_path, "attack/AdvAttack/log.csv"),
-            checkpoint_interval=5,
+            checkpoint_interval=None if self.attack_config['checkpoint_interval'] == 'None' else
+            self.attack_config['checkpoint_interval'],
             checkpoint_dir="attack/AdvAttack/checkpoints",
-            disable_stdout=True,
+            disable_stdout=self.attack_config['disable_stdout'],
+            random_seed=self.config_parser['general']['random_seed'],
+            shuffle=self.attack_config['shuffle'],
+            csv_coloring_style=self.attack_config['csv_coloring_style'],
         )
         attacker = textattack.Attacker(attack_model, self.dataset, attack_args)
 
@@ -126,7 +130,7 @@ class MyTextAttack(BaseAttack):
             logging.getLogger().handlers = self.my_handlers
 
         # 对抗训练
-        if self.defender is not None and str(self.defender).lower() != "none" and self.defender:
+        if self.defender is not None:
             logging.info("-" * 50)
             logging.info('对抗训练开始：')
             train_dataset = self.dataset

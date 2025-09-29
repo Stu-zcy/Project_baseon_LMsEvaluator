@@ -299,7 +299,8 @@ if __name__ == '__main__':
     
     # 向数据库中添加攻击记录
     lmsDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    filename = "u1h_single_1737727113_2025-01-24.txt"
+    filename = "Zhao_single_1756281153_2025-08-26.txt"    #Zhao_single_1756281153_2025-08-26.txt
+
     info = filename.split('_')
     # username = 'ChenyangZhao'
     username = 'Zhao'
@@ -307,15 +308,14 @@ if __name__ == '__main__':
     #result = extractResult(os.path.join(lmsDir, "test_data",filename))
     #result=extractResult(os.path.join(lmsDir,'logs',filename))
     result = extractResult(os.path.join(lmsDir, 'web_databse','test_data', filename))
-    add_attack_record('全部', 
+    add_attack_record('测试8.12', 
                       username, 
 											initTime, 
 											json.dumps(result), 
-											reportState=2,
-											reportID="95c95c7fe3095f3854deb7476368043c",
+											reportState=0,
 											attackInfo=get_attack_info('ChenyangZhao'), 
 											isTreasure=False,
-											attackProgress='6/6')
+											attackProgress='0/1')
 		# ！！！！注意这里的reportID是和用户名、时间关联的！！！
 
     # # 示例日志操作

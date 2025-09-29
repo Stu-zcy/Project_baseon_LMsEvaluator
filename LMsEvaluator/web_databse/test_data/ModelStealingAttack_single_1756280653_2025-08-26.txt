@@ -1,0 +1,70 @@
+
+[2025-08-27 14:00:36] - INFO: TrainOutput(global_step=3, training_loss=0.7600485483805338, metrics={'train_runtime': 4.2898, 'train_samples_per_second': 6.993, 'train_steps_per_second': 0.699, 'total_flos': 262083277800.0, 'train_loss': 0.7600485483805338, 'epoch': 3.0})
+[2025-08-27 14:00:36] - INFO: {'eval_loss': 0.7026982307434082, 'eval_accuracy': 0.3, 'eval_f1': 0.23076923076923078, 'eval_precision': 0.1875, 'eval_recall': 0.3, 'eval_runtime': 0.0767, 'eval_samples_per_second': 130.402, 'eval_steps_per_second': 13.04, 'epoch': 3.0}
+[2025-08-27 14:00:36] - INFO: +---------------+---------------------+
+| Results       |                     |
++---------------+---------------------+
+| eval_accuracy | 0.3                 |
+| eval_f1       | 0.23076923076923078 |
++---------------+---------------------+
+[2025-08-13 09:00:01] - INFO: ==================================================
+[2025-08-13 09:00:01] - INFO: ModelStealingAttack攻击模块配置检查...
+[2025-08-13 09:00:01] - INFO: Checking the config of ModelStealingAttack.
+[2025-08-13 09:00:01] - INFO: bert_base_uncased
+[2025-08-13 09:00:01] - INFO: CUDA
+[2025-08-13 09:00:01] - INFO: ModelStealingAttack攻击开始
+[2025-08-13 09:00:01] - INFO: [MeaeQ] 当前attack_config: {'al_sample_batch_num': -1, 'al_sample_method': 'random', 'attack': True, 'attack_type': 'ModelStealingAttack', 'defender': {'noise_std': 0.1, 'type': 'output-perturb'}, 'epsilon': -1, 'initial_drk_model': 'None', 'initial_sample_method': 'random_sentence', 'method': 'MeaeQ', 'pool_data_source': 'wiki', 'pool_data_type': 'whole', 'pool_subsize': -1, 'prompt': 'None', 'query_num': 500, 'run_seed_arr': [56]}
+[2025-08-13 09:00:01] - INFO: [MeaeQ] 开始生成窃取查询...
+[2025-08-13 09:00:01] - INFO: [MeaeQ] 查询生成完成。
+[2025-08-13 09:00:01] - INFO: [MeaeQ] 检测到defender配置: {'noise_std': 0.1, 'type': 'output-perturb'}
+[2025-08-13 09:00:01] - INFO: [MeaeQ] [防御] 开始执行主窃取流程...
+[2025-08-13 09:00:01] - INFO: bert_base_uncased
+[2025-08-13 09:00:01] - INFO: CUDA
+[2025-08-13 09:00:02] - INFO: [al_steal] 检测到defender配置，应用output_perturb_defense防御...
+[2025-08-13 09:00:02] - INFO: [Output Perturb Defense] 推理时对logits加高斯噪声，std=0.1
+[2025-08-13 09:00:02] - INFO: [al_steal] output_perturb_defense防御已应用。
+[2025-08-13 09:00:03] - INFO: 0 label count: 10
+[2025-08-13 09:00:03] - INFO: 1 label count: 85
+[2025-08-13 09:00:04] - INFO: training steal models
+[2025-08-13 09:00:04] - INFO: active learning begin...
+[2025-08-13 09:00:04] - INFO: CUDA
+[2025-08-13 09:00:04] - INFO: 0 label count: 8
+[2025-08-13 09:00:04] - INFO: 1 label count: 77
+[2025-08-13 09:00:04] - INFO: -----------------------it: 0------------------------
+[2025-08-13 09:00:05] - INFO: Epoch [1/10],  train_loss: 0.4846, train_acc: 0.8729, vali_acc: 0.8000
+[2025-08-13 09:00:05] - INFO: epoch 1 train done
+[2025-08-13 09:00:06] - INFO: Epoch [2/10],  train_loss: 0.3835, train_acc: 0.8938, vali_acc: 0.8000
+[2025-08-13 09:00:06] - INFO: epoch 2 train done
+[2025-08-13 09:00:07] - INFO: Epoch [3/10],  train_loss: 0.2817, train_acc: 0.9167, vali_acc: 0.8000
+[2025-08-13 09:00:07] - INFO: epoch 3 train done
+[2025-08-13 09:00:08] - INFO: Epoch [4/10],  train_loss: 0.2637, train_acc: 0.9167, vali_acc: 0.8000
+[2025-08-13 09:00:08] - INFO: epoch 4 train done
+[2025-08-13 09:00:09] - INFO: Epoch [5/10],  train_loss: 0.2845, train_acc: 0.9042, vali_acc: 0.8000
+[2025-08-13 09:00:09] - INFO: epoch 5 train done
+[2025-08-13 09:00:10] - INFO: Epoch [6/10],  train_loss: 0.2506, train_acc: 0.9271, vali_acc: 0.8000
+[2025-08-13 09:00:10] - INFO: epoch 6 train done
+[2025-08-13 09:00:11] - INFO: Epoch [7/10],  train_loss: 0.2619, train_acc: 0.9042, vali_acc: 0.8000
+[2025-08-13 09:00:11] - INFO: epoch 7 train done
+[2025-08-13 09:00:12] - INFO: Epoch [8/10],  train_loss: 0.2965, train_acc: 0.8813, vali_acc: 0.8000
+[2025-08-13 09:00:12] - INFO: epoch 8 train done
+[2025-08-13 09:00:12] - INFO: Epoch [9/10],  train_loss: 0.1820, train_acc: 0.9271, vali_acc: 0.8000
+[2025-08-13 09:00:12] - INFO: epoch 9 train done
+[2025-08-13 09:00:13] - INFO: Epoch [10/10],  train_loss: 0.1674, train_acc: 0.9271, vali_acc: 0.8000
+[2025-08-13 09:00:13] - INFO: epoch 10 train done
+[2025-08-13 09:00:13] - INFO: clean the sentence  existed in train set from thief data...
+[2025-08-13 09:00:23] - INFO: clean finish.
+[2025-08-13 09:00:23] - INFO: ---------------------------------
+[2025-08-13 09:00:23] - INFO: preparing the next iteration data...
+[2025-08-13 09:00:23] - INFO: random begin...
+[2025-08-13 09:00:23] - INFO: oversample after
+[2025-08-13 09:00:23] - INFO: 0 label count: 3
+[2025-08-13 09:00:23] - INFO: 1 label count: 17
+[2025-08-13 09:00:23] - INFO: --------------------------------------------------------------
+[2025-08-13 09:00:23] - INFO:  
+[2025-08-13 09:00:23] - INFO: CUDA
+[2025-08-13 09:00:24] - INFO: testing steal models on original dataset...
+[2025-08-13 09:05:49] - INFO: seed: 31
+[2025-08-13 09:05:49] - INFO: Evaluation Result on IMDB: victim acc 0.8862, steal acc 0.5020, agreement 0.5282
+[2025-08-13 09:05:49] - INFO: [MeaeQ] [防御] 主窃取流程执行完毕。
+[2025-08-13 09:05:49] - INFO: ModelStealingAttack攻击结束
+[2025-08-13 09:05:49] - INFO: ==================================================

@@ -1,0 +1,342 @@
+[2025-08-27 14:00:36] - INFO: TrainOutput(global_step=3, training_loss=0.7600485483805338, metrics={'train_runtime': 4.2898, 'train_samples_per_second': 6.993, 'train_steps_per_second': 0.699, 'total_flos': 262083277800.0, 'train_loss': 0.7600485483805338, 'epoch': 3.0})
+[2025-08-27 14:00:36] - INFO: {'eval_loss': 0.7026982307434082, 'eval_accuracy': 0.3, 'eval_f1': 0.23076923076923078, 'eval_precision': 0.1875, 'eval_recall': 0.3, 'eval_runtime': 0.0767, 'eval_samples_per_second': 130.402, 'eval_steps_per_second': 13.04, 'epoch': 3.0}
+[2025-08-13 08:52:50] - INFO: ==================================================
+[2025-08-13 08:52:50] - INFO: AdvAttack攻击模块配置检查...
+[2025-08-13 08:52:50] - INFO: Checking the config of AdvAttack.
+[2025-08-13 08:52:50] - INFO: AdvAttack攻击开始
+[2025-08-13 08:53:00] - INFO: Using /tmp/tfhub_modules to cache modules.
+[2025-08-13 08:53:02] - INFO: Fingerprint not found. Saved model loading will continue.
+[2025-08-13 08:53:02] - INFO: path_and_singleprint metric could not be logged. Saved model loading will continue.
+[2025-08-13 08:53:09] - INFO: 
++-------------------------------+--------+
+| Attack Results                |        |
++-------------------------------+--------+
+| Number of successful attacks: | 3      |
+| Number of failed attacks:     | 0      |
+| Number of skipped attacks:    | 0      |
+| Original accuracy:            | 100.0% |
+| Accuracy under attack:        | 0.0%   |
+| Attack success rate:          | 100.0% |
++-------------------------------+--------+
+[2025-08-13 08:53:09] - INFO: AdvAttack攻击结束
+[2025-08-13 08:53:09] - INFO: ==================================================
+[2025-08-13 08:53:09] - INFO: ==================================================
+[2025-08-13 08:53:09] - INFO: BackdoorAttack攻击模块配置检查...
+[2025-08-13 08:53:09] - INFO: Checking the config of BackdoorAttack.
+[2025-08-13 08:53:09] - INFO: BackdoorAttack攻击开始
+[2025-08-13 08:53:15] - INFO: ***** Training *****
+[2025-08-13 08:53:15] - INFO:   Num Epochs = 1
+[2025-08-13 08:53:15] - INFO:   Instantaneous batch size per GPU = 16
+[2025-08-13 08:53:15] - INFO:   Gradient Accumulation steps = 1
+[2025-08-13 08:53:15] - INFO:   Total optimization steps = 433
+[2025-08-13 08:53:40] - INFO: Epoch: 1, avg loss: 0.5641933669256558
+[2025-08-13 08:53:40] - INFO: ***** Running evaluation on dev-clean *****
+[2025-08-13 08:53:40] - INFO:   Num examples = 872
+[2025-08-13 08:53:40] - INFO:   accuracy on dev-clean: 0.8853211009174312
+[2025-08-13 08:53:40] - INFO: ***** Running evaluation on dev-poison *****
+[2025-08-13 08:53:41] - INFO:   Num examples = 444
+[2025-08-13 08:53:41] - INFO:   accuracy on dev-poison: 0.240990990990991
+[2025-08-13 08:53:41] - INFO: Training finished.
+[2025-08-13 08:53:42] - INFO: sst-2 dataset loaded, train: 6920, dev: 872, test: 1821
+[2025-08-13 08:53:42] - INFO: ***** Running evaluation on test-clean *****
+[2025-08-13 08:53:43] - INFO:   Num examples = 1821
+[2025-08-13 08:53:43] - INFO:   accuracy on test-clean: 0.8940142778693025
+[2025-08-13 08:53:43] - INFO: ***** Running evaluation on test-poison *****
+[2025-08-13 08:53:44] - INFO:   Num examples = 909
+[2025-08-13 08:53:44] - INFO:   accuracy on test-poison: 0.2739273927392739
+[2025-08-13 08:54:26] - INFO:   Eval Metric: ppl =  269.3358103115729
+[2025-08-13 08:54:26] - INFO: Load pretrained SentenceTransformer: paraphrase-distilroberta-base-v1
+[2025-08-13 08:54:30] - INFO: Use pytorch device_name: cuda
+[2025-08-13 08:54:36] - INFO:   Eval Metric: use =  0.935399840767234
+[2025-08-13 08:54:36] - INFO: 
++-------------------------------+---------+
+| BackdoorAttack Attack Results |         |
++-------------------------------+---------+
+| Poison Dataset:               | sst-2   |
+| Poisoner:                     | BadNets |
+| Test Clean Accuracy:          | 0.894   |
+| Test Poison Accuracy:         | 0.274   |
+| PPL:                          | 269.336 |
+| USE:                          | 0.935   |
+| GRAMMAR:                      | nan     |
++-------------------------------+---------+
+[2025-08-13 08:54:36] - INFO: BackdoorAttack攻击结束
+[2025-08-13 08:54:36] - INFO: ==================================================
+[2025-08-13 08:54:36] - INFO: ==================================================
+[2025-08-13 08:54:36] - INFO: PoisoningAttack攻击模块配置检查...
+[2025-08-13 08:54:36] - INFO: Checking the config of PoisoningAttack.
+[2025-08-13 08:54:36] - INFO: PoisoningAttack攻击开始
+[2025-08-13 08:54:44] - INFO: Detected 1073/6840 (15.69%) anomalies
+[2025-08-13 08:59:58] - INFO: TrainOutput(global_step=5415, training_loss=0.21702932171103917, metrics={'train_runtime': 313.1166, 'train_samples_per_second': 276.271, 'train_steps_per_second': 17.294, 'total_flos': 1760406696428460.0, 'train_loss': 0.21702932171103917, 'epoch': 15.0})
+[2025-08-13 08:59:59] - INFO: {'eval_loss': 2.182224988937378, 'eval_accuracy': 0.7476635514018691, 'eval_f1': 0.7042383292383292, 'eval_precision': 0.7055732637882739, 'eval_recall': 0.7030007058240018, 'eval_runtime': 0.7019, 'eval_samples_per_second': 1219.624, 'eval_steps_per_second': 19.947, 'epoch': 15.0}
+[2025-08-13 08:59:59] - INFO: +---------------+--------------------+
+| Results       |                    |
++---------------+--------------------+
+| eval_accuracy | 0.7476635514018691 |
+| eval_f1       | 0.7042383292383292 |
++---------------+--------------------+
+[2025-08-13 09:00:01] - INFO: PoisoningAttack攻击结束
+[2025-08-13 09:00:01] - INFO: ==================================================
+[2025-08-13 09:00:01] - INFO: ==================================================
+[2025-08-13 09:00:01] - INFO: ModelStealingAttack攻击模块配置检查...
+[2025-08-13 09:00:01] - INFO: Checking the config of ModelStealingAttack.
+[2025-08-13 09:00:01] - INFO: bert_base_uncased
+[2025-08-13 09:00:01] - INFO: CUDA
+[2025-08-13 09:00:01] - INFO: ModelStealingAttack攻击开始
+[2025-08-13 09:00:01] - INFO: [MeaeQ] 当前attack_config: {'al_sample_batch_num': -1, 'al_sample_method': 'random', 'attack': True, 'attack_type': 'ModelStealingAttack', 'defender': {'noise_std': 0.1, 'type': 'output-perturb'}, 'epsilon': -1, 'initial_drk_model': 'None', 'initial_sample_method': 'random_sentence', 'method': 'MeaeQ', 'pool_data_source': 'wiki', 'pool_data_type': 'whole', 'pool_subsize': -1, 'prompt': 'None', 'query_num': 500, 'run_seed_arr': [56]}
+[2025-08-13 09:00:01] - INFO: [MeaeQ] 开始生成窃取查询...
+[2025-08-13 09:00:01] - INFO: [MeaeQ] 查询生成完成。
+[2025-08-13 09:00:01] - INFO: [MeaeQ] 检测到defender配置: {'noise_std': 0.1, 'type': 'output-perturb'}
+[2025-08-13 09:00:01] - INFO: [MeaeQ] [防御] 开始执行主窃取流程...
+[2025-08-13 09:00:01] - INFO: bert_base_uncased
+[2025-08-13 09:00:01] - INFO: CUDA
+[2025-08-13 09:00:02] - INFO: [al_steal] 检测到defender配置，应用output_perturb_defense防御...
+[2025-08-13 09:00:02] - INFO: [Output Perturb Defense] 推理时对logits加高斯噪声，std=0.1
+[2025-08-13 09:00:02] - INFO: [al_steal] output_perturb_defense防御已应用。
+[2025-08-13 09:00:03] - INFO: 0 label count: 10
+[2025-08-13 09:00:03] - INFO: 1 label count: 85
+[2025-08-13 09:00:04] - INFO: training steal models
+[2025-08-13 09:00:04] - INFO: active learning begin...
+[2025-08-13 09:00:04] - INFO: CUDA
+[2025-08-13 09:00:04] - INFO: 0 label count: 8
+[2025-08-13 09:00:04] - INFO: 1 label count: 77
+[2025-08-13 09:00:04] - INFO: -----------------------it: 0------------------------
+[2025-08-13 09:00:05] - INFO: Epoch [1/10],  train_loss: 0.4846, train_acc: 0.8729, vali_acc: 0.8000
+[2025-08-13 09:00:05] - INFO: epoch 1 train done
+[2025-08-13 09:00:06] - INFO: Epoch [2/10],  train_loss: 0.3835, train_acc: 0.8938, vali_acc: 0.8000
+[2025-08-13 09:00:06] - INFO: epoch 2 train done
+[2025-08-13 09:00:07] - INFO: Epoch [3/10],  train_loss: 0.2817, train_acc: 0.9167, vali_acc: 0.8000
+[2025-08-13 09:00:07] - INFO: epoch 3 train done
+[2025-08-13 09:00:08] - INFO: Epoch [4/10],  train_loss: 0.2637, train_acc: 0.9167, vali_acc: 0.8000
+[2025-08-13 09:00:08] - INFO: epoch 4 train done
+[2025-08-13 09:00:09] - INFO: Epoch [5/10],  train_loss: 0.2845, train_acc: 0.9042, vali_acc: 0.8000
+[2025-08-13 09:00:09] - INFO: epoch 5 train done
+[2025-08-13 09:00:10] - INFO: Epoch [6/10],  train_loss: 0.2506, train_acc: 0.9271, vali_acc: 0.8000
+[2025-08-13 09:00:10] - INFO: epoch 6 train done
+[2025-08-13 09:00:11] - INFO: Epoch [7/10],  train_loss: 0.2619, train_acc: 0.9042, vali_acc: 0.8000
+[2025-08-13 09:00:11] - INFO: epoch 7 train done
+[2025-08-13 09:00:12] - INFO: Epoch [8/10],  train_loss: 0.2965, train_acc: 0.8813, vali_acc: 0.8000
+[2025-08-13 09:00:12] - INFO: epoch 8 train done
+[2025-08-13 09:00:12] - INFO: Epoch [9/10],  train_loss: 0.1820, train_acc: 0.9271, vali_acc: 0.8000
+[2025-08-13 09:00:12] - INFO: epoch 9 train done
+[2025-08-13 09:00:13] - INFO: Epoch [10/10],  train_loss: 0.1674, train_acc: 0.9271, vali_acc: 0.8000
+[2025-08-13 09:00:13] - INFO: epoch 10 train done
+[2025-08-13 09:00:13] - INFO: clean the sentence  existed in train set from thief data...
+[2025-08-13 09:00:23] - INFO: clean finish.
+[2025-08-13 09:00:23] - INFO: ---------------------------------
+[2025-08-13 09:00:23] - INFO: preparing the next iteration data...
+[2025-08-13 09:00:23] - INFO: random begin...
+[2025-08-13 09:00:23] - INFO: oversample after
+[2025-08-13 09:00:23] - INFO: 0 label count: 3
+[2025-08-13 09:00:23] - INFO: 1 label count: 17
+[2025-08-13 09:00:23] - INFO: --------------------------------------------------------------
+[2025-08-13 09:00:23] - INFO:  
+[2025-08-13 09:00:23] - INFO: CUDA
+[2025-08-13 09:00:24] - INFO: testing steal models on original dataset...
+[2025-08-13 09:05:49] - INFO: seed: 31
+[2025-08-13 09:05:49] - INFO: Evaluation Result on IMDB: victim acc 0.8862, steal acc 0.5020, agreement 0.5282
+[2025-08-13 09:05:49] - INFO: [MeaeQ] [防御] 主窃取流程执行完毕。
+[2025-08-13 09:05:49] - INFO: ModelStealingAttack攻击结束
+[2025-08-13 09:05:49] - INFO: ==================================================
+
+[2024-08-26 22:38:39] - INFO: ==================================================
+[2025-08-13 09:12:37] - INFO: RLMI攻击模块配置检查...
+[2025-08-13 09:12:37] - INFO: Checking the config of RLMI.
+[2025-08-13 09:12:37] - INFO: RLMI攻击开始
+[2025-08-13 09:12:37] - INFO: [RLMI] 攻击流程开始...
+[2025-08-13 09:12:44] - INFO: [RLMI] 未检测到defender配置，直接执行无防御攻击...
++-------------------------------+---------+
+| RLMI Attack Results           |         |
++-------------------------------+---------+
+| Aver ASR During Attack:       | 100.00% |
+| Aver WER During Attack:       | 0.79411 |
+| Aver ASR During Inference:    | 100.00% |
+| Aver WER During Inference:    | 0.71951 |
++-------------------------------+---------+
+[2025—8—26 21：51:49] - INFO: RLMI攻击结束
+[2024-08-26 22:38:39] - INFO: ==================================================
+
+[2025-08-13 09:05:49] - INFO: ==================================================
+[2025-08-13 09:05:49] - INFO: FET攻击模块配置检查...
+[2025-08-13 09:05:49] - INFO: Checking the config of FET.
+[2025-08-13 09:05:49] - INFO: FET攻击开始
+[2025-08-13 09:05:49] - INFO: Namespace(seed=42, dataset='cola', model='tinybert', batch_size=2, n_attacks=1, distance_function='l2', population_size=300, tournsize=5, crossover_rate=0.9, mutation_rate=0.1, max_generations=2, halloffame_size=30)
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 对所有nn.Linear层进行20.0%剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.self.query.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.self.query.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.self.key.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.self.key.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.self.value.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.self.value.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.attention.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.intermediate.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.intermediate.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.0.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.self.query.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.self.query.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.self.key.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.self.key.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.self.value.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.self.value.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.attention.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.intermediate.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.intermediate.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.1.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.self.query.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.self.query.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.self.key.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.self.key.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.self.value.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.self.value.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.attention.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.intermediate.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.intermediate.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.2.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.self.query.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.self.query.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.self.key.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.self.key.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.self.value.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.self.value.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.attention.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.intermediate.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.intermediate.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.3.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.self.query.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.self.query.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.self.key.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.self.key.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.self.value.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.self.value.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.attention.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.intermediate.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.intermediate.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.4.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.self.query.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.self.query.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.self.key.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.self.key.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.self.value.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.self.value.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.attention.output.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.intermediate.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.intermediate.dense.bias剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.output.dense.weight剪枝
+[2025-08-13 09:05:49] - INFO: [Pruning Defense] 已对bert.encoder.layer.5.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.self.query.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.self.query.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.self.key.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.self.key.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.self.value.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.self.value.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.attention.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.intermediate.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.intermediate.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.6.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.self.query.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.self.query.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.self.key.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.self.key.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.self.value.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.self.value.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.attention.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.intermediate.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.intermediate.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.7.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.self.query.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.self.query.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.self.key.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.self.key.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.self.value.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.self.value.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.attention.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.intermediate.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.intermediate.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.8.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.self.query.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.self.query.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.self.key.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.self.key.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.self.value.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.self.value.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.attention.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.intermediate.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.intermediate.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.9.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.self.query.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.self.query.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.self.key.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.self.key.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.self.value.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.self.value.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.attention.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.intermediate.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.intermediate.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.10.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.self.query.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.self.query.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.self.key.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.self.key.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.self.value.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.self.value.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.attention.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.intermediate.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.intermediate.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.output.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.encoder.layer.11.output.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.pooler.dense.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对bert.pooler.dense.bias剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对classifier.weight剪枝
+[2025-08-13 09:05:50] - INFO: [Pruning Defense] 已对classifier.bias剪枝
+[2025-08-13 09:05:50] - INFO: [FET] 已对模型应用剪枝防御
+[2025-08-13 09:05:50] - INFO: [FET] [防御] 开始攻击...
+[2025-08-13 09:05:50] - INFO: ----------------------------------------------------------------------
+[2025-08-13 09:05:50] - INFO: [防御] Attack No.1:
+[2025-08-13 09:05:50] - INFO: [防御] Reference = ['[CLS] what do you believe that iron is to be a fact well known to virtually everybody? [SEP]', '[CLS] she was sent to seoul. [SEP] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD]']
+[2025-08-13 09:06:26] - INFO: [防御] Prediction = ['[CLS] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [SEP]', '[CLS] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [PAD] [SEP]']
+[2025-08-13 09:06:26] - INFO: [防御] Generations = 3
+[2025-08-13 09:06:30] - INFO: Using default tokenizer.
+[2025-08-13 09:06:30] - INFO: [防御] Rouge scores: {'rouge1': 0.40540540540540543, 'rouge2': 0.28571428571428575, 'rougeL': 0.37837837837837834, 'rougeLsum': 0.37837837837837834}
+[2025-08-13 09:06:30] - INFO: [防御] Word recovery rate: 0.125
+[2025-08-13 09:06:30] - INFO: [防御] Edit distance: 123
+[2025-08-13 09:06:30] - INFO: [防御] If full recovery: False
+[2025-08-13 09:06:33] - INFO: Using default tokenizer.
+[2025-08-13 09:06:33] - INFO: 
++-----------------------------+--------+
+| FET Attack Results [防御]   |        |
++-----------------------------+--------+
+| Aggregate rouge1 scores:    | 0.4054 |
+| Aggregate rouge2 scores:    | 0.2857 |
+| Aggregate rougeL scores:    | 0.3784 |
+| Full recovery rate:         | 0.00%  |
+| Average word recovery rate: | 12.50% |
+| Average edit distance:      | 123.0  |
++-----------------------------+--------+
+[2025-08-13 09:06:33] - INFO: [FET] 防御攻击结果：{'rouge1': '0.4054', 'rouge2': '0.2857', 'rougeL': '0.3784', 'full_recovery_rate': '0.00%', 'avg_word_recovery_rate': '12.50%', 'avg_edit_distance': '123.0'}
+[2025-08-13 09:06:33] - INFO: FET攻击结束
+[2025-08-13 09:06:33] - INFO: ==================================================
+
+
+

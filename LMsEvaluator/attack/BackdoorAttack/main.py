@@ -48,6 +48,13 @@ class MyBackDoorAttack(BaseAttack):
         from openbackdoor.defenders import BKIDefender, CUBEDefender, ONIONDefender, RAPDefender, STRIPDefender
         # choose BERT as victim model
         victim = ob.PLMVictim(model=self.model, path=self.model_name_or_path)
+        if victim.tokenizer.pad_token is None:
+            victim.tokenizer.pad_token = victim.tokenizer.eos_token
+            if hasattr(victim, "plm"):
+                victim.plm.config.pad_token_id = victim.tokenizer.eos_token_id
+            elif hasattr(victim, "config"):
+                victim.config.pad_token_id = victim.tokenizer.eos_token_id
+
         # choose BadNet attacker
         attacker = ob.Attacker(poisoner=self.poisoner, train=self.train, sample_metrics=self.sample_metrics)
         # attacker = ob.Attacker(poisoner=self.poisoner, train=self.train, sample_metrics=['grammar'])
@@ -69,6 +76,9 @@ class MyBackDoorAttack(BaseAttack):
         elif self.defender == "strip":
             defender = STRIPDefender()
 
+        # print("debug" * 10)
+        # print(poison_dataset)
+        # raise SystemError
         # launch attack
         victim = attacker.attack(victim, poison_dataset, defender)
         # choose SST-2 as the target data
@@ -88,8 +98,8 @@ class MyBackDoorAttack(BaseAttack):
         table.add_field_names(['BackdoorAttack Attack Results', ''])
         table.add_row(['Poison Dataset:', self.poison_dataset])
         table.add_row(['Poisoner:', self.poisoner['name']])
-        table.add_row(['Test Clean Accuracy:', f"{result['test-clean']['accuracy']:.3f}"])
-        table.add_row(['Test Poison Accuracy:', f"{result['test-poison']['accuracy']:.3f}"])
+        table.add_row(['Test Clean Accuracy:', f"{result['test-clean']['accuracy']:.3f}%"])
+        table.add_row(['Test Poison Accuracy:', f"{result['test-poison']['accuracy']:.3f}%"])
         table.add_row(['PPL:', table_ppl])
         table.add_row(['USE:', table_use])
         table.add_row(['GRAMMAR:', table_grammar])
