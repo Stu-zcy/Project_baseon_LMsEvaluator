@@ -10,9 +10,9 @@ LM_config:
 
 task_config:
   task: TaskForSingleSentenceClassification
-  dataset: sst2
+  dataset: GLUE/sst2
   local_dataset: True
-  normal_training: True
+  normal_training: False
   save_path: './cache/model_output'
   train_config:
     output_dir: './cache'
@@ -27,6 +27,21 @@ task_config:
     report_to: "none"
 
 attack_list:
+  - attack_args:
+      attack: True
+      attack_type: JailbreakAttack
+      model_name_or_path: "LMs/gpt2"
+#      'JailbreakBench/JBB-Behaviors' or 'rubend18/ChatGPT-Jailbreak-Prompts' or 'JailbreakV-28K/JailBreakV-28k'
+      jailbreak_dataset: "JailbreakBench/JBB-Behaviors"
+#      jailbreak_dataset = 'JailbreakBench/JBB-Behaviors'时，subset = 'behaviors'；
+#      jailbreak_dataset = 'JailbreakV-28K/JailBreakV-28k'时，subset = 'JailBreakV_28K'；
+#      其他情况下，subust = ''。或者参考huggingface官网，查看对应的subset分之名。
+      subset: "behaviors"
+#      用于判断越狱是否成功的方法，method = 'keyword' or 'lm'，method='keyword'时忽略后续字段
+      judge:
+        method: "keyword"
+        lm_model_name: "sentence-transformers/all-MiniLM-L6-v2"
+        threshold: 0.5
   - attack_args:
       attack: False
       attack_type: BackdoorAttack
@@ -60,7 +75,7 @@ attack_list:
       model_name_or_path: "LMs/gpt2"
       #      model_name_or_path: "/cache/modelOutput/task4sst_model.pt"
       tokenizer_name_or_path: "LMs/gpt2"
-      dataset_name_or_path: "datasets/imdb/train.txt"
+      dataset_name_or_path: "datasets/GLUE/sst2/train.txt"
       #      model_name_or_path: "LMs/bert_base_chinese"
       #      tokenizer_name_or_path: "LMs/bert_base_chinese"
       #      dataset_name_or_path: "datasets/ChineseNER/train.txt"

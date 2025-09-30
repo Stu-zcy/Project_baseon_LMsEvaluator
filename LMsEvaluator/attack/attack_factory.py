@@ -10,6 +10,7 @@ from attack.GIAforNLP.my_GIA_for_NLP import MyGIAforNLP
 from attack.AdvAttack.my_textattack import MyTextAttack
 from attack.BackdoorAttack.main import MyBackDoorAttack
 # from attack.PoisoningAttack.main import PoisoningAttack
+from attack.JailbreakAttack.my_jailbreak import MyJailbreak
 from attack.PoisoningAttack.my_poisoning_attack import MyPoisoningAttack
 
 
@@ -155,6 +156,16 @@ class AttackFactory:
                 al_sample_batch_num=self.attack_config['al_sample_batch_num'],
                 al_sample_method=self.attack_config['al_sample_method'],
             )
+        elif self.attack_type == "JailbreakAttack":
+            self.attack_mode = MyJailbreak(
+                config_parser=self.config_parser,
+                attack_config=self.attack_config,
+                model_name_or_path=self.attack_config['model_name_or_path'],
+                jailbreak_dataset=self.attack_config['jailbreak_dataset'],
+                subset=self.attack_config['subset'],
+                judge=self.attack_config['judge'],
+                device=self.device,
+            )
         elif self.attack_type == "NOP":
             self.attack_mode = NOP(
                 config_parser=self.config_parser,
@@ -162,6 +173,9 @@ class AttackFactory:
                 nop_config0=self.attack_config['nop_config0'],
                 nop_config1=self.attack_config['nop_config1'],
             )
+        else:
+            # 虽然已经进行过攻击类别判定，但还是留一个else
+            raise ValueError('Unknown Attack Type!')
 
     def attack(self):
         self.attack_mode.attack()
@@ -270,6 +284,12 @@ class AttackFactory:
             'al_sample_batch_num',
             'al_sample_method',
         ]
+        JailbreakAttack_config = [
+            'model_name_or_path',
+            'jailbreak_dataset',
+            'subset',
+            'judge',
+        ]
         NOP_config = [
             'nop_config0',
             'nop_config1',
@@ -288,6 +308,8 @@ class AttackFactory:
             temp_config = RLMI_config
         elif self.attack_type == "ModelStealingAttack":
             temp_config = ModelStealingAttack_config
+        elif self.attack_type == "JailbreakAttack":
+            temp_config = JailbreakAttack_config
         elif self.attack_type == "NOP":
             temp_config = NOP_config
         else:

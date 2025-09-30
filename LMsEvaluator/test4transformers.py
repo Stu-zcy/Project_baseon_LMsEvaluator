@@ -133,6 +133,7 @@ def check_attack_config(attack_list: list) -> list:
         'FET',
         'RLMI',
         'ModelStealingAttack',
+        'JailbreakAttack'
     ]
     return [
         item for item in attack_list
@@ -214,6 +215,9 @@ def run_pipeline(config_path: str,report=False):
 
     logger = logger_init(log_dir='./logs')
     change_log_path(new_log_dir='./logs/', new_log_file_name=log_file_name)
+    from datetime import datetime
+    date_str = datetime.now().strftime('%Y-%m-%d')
+    log_file_name = log_file_name + '_' + date_str
 
     # logger_init(log_file_name=general_config['log_file_name'], log_level=logging.INFO,
     #             log_dir=general_config['logs_save_dir'], only_file=False)
@@ -349,9 +353,10 @@ def run_pipeline(config_path: str,report=False):
             logging.info(f"{attack_type}攻击结束")
             logging.info("=" * 50)
 
-    if report:
-        genReport(os.path.join(projectPath, 'logs', log_file_name), LM_config, general_config, task_config)
+        if report:
+            genReport(os.path.join(projectPath, 'logs', log_file_name+'.txt'), LM_config, general_config, task_config)
 
 
 if __name__ == '__main__':
     run_pipeline('user_config/Zhao_config.yaml', report=True)
+    #run_pipeline('test_config.yaml', report=True)

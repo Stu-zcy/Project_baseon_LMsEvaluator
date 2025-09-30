@@ -1,47 +1,192 @@
 LM_config:
   local_model: false
   model: gpt2
+
 attack_list:
 - attack_args:
-    attack: true
-    attack_type: RLMI
-    dataset_name: emotion
-    defender:
-      type: high-entropy-mask
-    max_input_length: 8
-    max_iterations: 1
-    min_input_length: 3
-    model_name: tinybert4
-    num_generation: 100
-    ppo_config:
-      batch_size: 16
-      learning_rate: 1.0e-05
-      log_with: None
-      mini_batch_size: 16
-    seed: 42
-    seq_length: 20
-    target_label: 1
+    attack: True
+    attack_type: JailbreakAttack
+    model_name_or_path: "LMs/gpt2"
+#      'JailbreakBench/JBB-Behaviors' or 'rubend18/ChatGPT-Jailbreak-Prompts' or 'JailbreakV-28K/JailBreakV-28k'
+    jailbreak_dataset: "JailbreakBench/JBB-Behaviors"
+#      jailbreak_dataset = 'JailbreakBench/JBB-Behaviors'时，subset = 'behaviors'；
+#      jailbreak_dataset = 'JailbreakV-28K/JailBreakV-28k'时，subset = 'JailBreakV_28K'；
+#      其他情况下，subust = ''。或者参考huggingface官网，查看对应的subset分之名。
+    subset: "behaviors"
+#      用于判断越狱是否成功的方法，method = 'keyword' or 'lm'，method='keyword'时忽略后续字段
+    judge:
+      method: "keyword"
+      lm_model_name: "sentence-transformers/all-MiniLM-L6-v2"
+      threshold: 0.5
 - attack_args:
-    attack: true
-    attack_batch: 2
-    attack_nums: 1
-    attack_type: FET
-    crossover_rate: 0.9
-    dataset_name_or_path: cola
+    attack: False
+    attack_type: BackdoorAttack
+    defender: "None"
+    display_full_info: True
+    model: "gpt2"
+    model_name_or_path: "LMs/gpt2"
+    poison_dataset: "sst-2"
+    poisoner:
+      name: "BadNets"
+#        triggers: [ "≈", "≡", "∈", "⊆", "⊕", "⊗" ]
+#        poison_rate: 1.0
+#        target_label: 1
+#        label_consistency: false
+#        label_dirty: false
+#        load: false
+    sample_metrics: [ 'ppl', 'use', 'grammar' ]
+    target_dataset: "sst-2"
+    train:
+      batch_size: 16
+      epochs: 1
+      name: "base"
+    use_local_model: True
+- attack_args:
+    attack: False
+    attack_type: AdvAttack
+    attack_recipe: TextFoolerJin2019
+    use_local_model: True
+    use_local_tokenizer: True
+    use_local_dataset: True
+    model_name_or_path: "LMs/gpt2"
+    #      model_name_or_path: "/cache/modelOutput/task4sst_model.pt"
+    tokenizer_name_or_path: "LMs/gpt2"
+    dataset_name_or_path: "datasets/GLUE/sst2/train.txt"
+    #      model_name_or_path: "LMs/bert_base_chinese"
+    #      tokenizer_name_or_path: "LMs/bert_base_chinese"
+    #      dataset_name_or_path: "datasets/ChineseNER/train.txt"
+    num_examples: 20
+#      检查点步长间隔 注：传入数据必须为None或int变量
+    checkpoint_interval: 5
+#      随机化索引顺序
+    shuffle: True
+#      禁用详细输出 注：True时程序将只输出最终摘要报告，而不再显示每个样本的攻击进度
+    disable_stdout: False
+#      可视化样式 注：'file'、'plain'、'html'三选一
+    csv_coloring_style: 'file'
+    display_full_info: True
     defender:
-      type: high-entropy-mask
-    display_full_info: true
-    distance_func: l2
-    halloffame_size: 30
-    max_generations: 2
-    model_name_or_path: LMs/bert_base_uncased
-    mutation_rate: 0.1
-    population_size: 300
+#      defender:
+#        num_epochs: 1
+#        num_clean_epochs: 1
+#        num_train_adv_examples: 1000
+#        learning_rate: 5e-5
+#        per_device_train_batch_size: 8
+#        gradient_accumulation_steps: 4
+#        log_to_tb: False
+- attack_args:
+    attack: False
+    attack_type: PoisoningAttack
+    poisoning_rate: 0.3
+    save_path: './attack/PoisoningAttack/model_output'
+    train_config:
+      output_dir: './attack/PoisoningAttack/cache'
+      num_train_epochs: 1
+      per_device_train_batch_size: 16
+      per_device_eval_batch_size: 64
+      warmup_steps: 1000
+      weight_decay: 0.01
+      logging_dir: './logs'
+      logging_steps: 1000
+      run_name: 'my_experiment'
+      report_to: "none"
+    defender:
+#        异常分数阈值
+      threshold: 0.0
+- attack_args:
+    attack: False
+    attack_type: RLMI
+    dataset_name: "emotion"
+    model_name: "gpt2"
     seed: 42
-    tokenizer_name_or_path: LMs/bert_base_uncased
-    tournsize: 5
-    use_local_model: true
-    use_local_tokenizer: true
+    ppo_config:
+      mini_batch_size: 16
+      batch_size: 16
+      #        log_with: "wandb" # tensorboard, wandb
+      log_with: None
+      learning_rate: 1e-5
+    seq_length: 20
+    target_label: 0
+    max_iterations: 1
+    min_input_length: 2
+    max_input_length: 5
+    num_generation: 1000
+    defender:
+      # type: pruning
+      # prune_ratio: 0.2
+      # type: high-entropy-mask
+      type: output-perturb
+      noise_std: 0.1
+- attack_args:
+    attack: False                   # boolean: 是否开启攻击
+    attack_type: FET                # str: 攻击方法，‘FET’代表自研梯度反演算法FET
+    seed: 42                        # int: 攻击方法使用的随机数种子
+    attack_batch: 2                 # int: 一次攻击中数据的Batch size
+    attack_nums: 1                  # int: 攻击次数
+    distance_func: l2               # str: 攻击方法中的距离函数, 'l2' or 'cos'
+    population_size: 300            # int: population_size
+    tournsize: 10                   # int: tournsize
+    crossover_rate: 0.9             # float: crossover_rate
+    mutation_rate: 0.1              # float: mutation_rate
+    max_generations: 100            # int: max_generations
+    halloffame_size: 30             # int: halloffame_size
+    use_local_model: True           # boolean: 是否使用本地model
+    use_local_tokenizer: True       # boolean: 是否使用本地tokenizer
+    model_name_or_path: "LMs/gpt2"      # str: 攻击所用model在Huggingface的名称或本地路径
+    tokenizer_name_or_path: "LMs/gpt2"  # str: 攻击所用tokenizer在Huggingface的名称或本地路径
+    dataset_name_or_path: "cola"                             # str: 攻击所用dataset在Huggingface的名称或本地路径
+    display_full_info: True         # boolean: 是否显示全部过程信息
+- attack_args:
+    attack: False
+    attack_type: BackdoorAttack
+    use_local_model: True
+    model: "bert"
+    model_name_or_path: "LMs/bert_base_uncased"
+    poison_dataset: "sst-2"
+    target_dataset: "sst-2"
+    poisoner:
+      name: "badnets"
+#        后门投毒率
+      poison_rate: 0.1
+#        目标标签
+      target_label: 1
+#         触发器列表
+      triggers: [ "mn", "bb", "mb" ]
+#        标签一致性约束 (若为True，则仅对原本就是目标标签的样本进行后门攻击)
+      label_consistency: false
+#        标签污染 (若为True，则仅对非目标标签的样本进行后门攻击，并将其标签改为目标标签)
+      label_dirty: true
+    train:
+      name: "base"
+      batch_size: 32
+      epochs: 1
+#        学习率 注：生成.yaml时注意是float的形式，2e-5这种形式会报错
+      lr: 0.00002
+#        权重衰减
+      weight_decay: 0
+#        检查点 注："best"、"last"二选一，前者表示在验证集上性能最佳的模型检查点，后者表示训练结束时最后一个周期的模型检查点
+      ckpt: "best"
+#        模型保存路径
+      save_path: "./outputs/BackdoorModel"
+    defender: "None"
+    sample_metrics: [ 'ppl', 'use' ]
+    display_full_info: True
+- attack_args:
+    attack: False
+    attack_type: ModelStealingAttack
+    method: RS
+    query_num: 320
+    run_seed_arr: [ 56 ]
+    pool_data_type: whole
+    pool_data_source: wiki
+    pool_subsize: -1
+    prompt: None
+    epsilon: -1
+    initial_sample_method: random_sentence
+    initial_drk_model: None
+    al_sample_batch_num: -1
+    al_sample_method: None
+    defender: pruning # or output-perturb
 general:
   log_file_name: Zhao_single_1759148452
   logs_save_dir: ./logs
