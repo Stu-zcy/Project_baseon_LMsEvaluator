@@ -1344,6 +1344,7 @@
                                         <option value="AdvAttack">对抗攻击</option>
                                         <option value="BackdoorAttack">后门攻击</option>
                                         <option value="PoisoningAttack">投毒攻击</option>
+                                        <option value="JailbreakAttack">越狱攻击</option>
                                         <option value="" disabled selected>-- 隐私攻击任务类型 --</option>
                                         <option value="FET">梯度反演</option>
                                         <option value="RLMI">模型反演</option>
@@ -1602,12 +1603,15 @@
             prompt: '提示文本',
             pool_subsize: '查询池大小',
             method: '方法',
-            al_sample_batch_num: '主动学习批次数量'
+            al_sample_batch_num: '主动学习批次数量',
+            jailbreak_dataset: '越狱数据集',
+            lm_model_name: 'LM相似度模型',
+            threshold: '相似度阈值'
         };
 
         // 攻击类型分组
         const attackGroups = {
-            '安全攻击': ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'],
+            '安全攻击': ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'JailbreakAttack'],
             '隐私攻击': ['FET', 'RLMI', 'ModelStealingAttack']
         };
 
@@ -1684,7 +1688,7 @@
 
         // 攻击配置数据
         const attackConfigs = {
-            attackTypes: ['AdvAttack', 'FET', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'ModelStealingAttack'],
+            attackTypes: ['AdvAttack', 'FET', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'ModelStealingAttack', 'JailbreakAttack'],
             recipes: {
                 AdvAttack: [
                     'A2TYoo', 
@@ -1698,7 +1702,8 @@
                 BackdoorAttack: ['BadNets', 'AddSent', 'SynBkd', 'StyleBkd', 'POR', 'TrojanLM', 'SOS', 'LWP', 'EP', 'NeuBA', 'LWS', 'RIPPLES'],
                 PoisoningAttack: ['LabelFlipping'],
                 RLMI: ['RLMI'],
-                ModelStealingAttack: ['MeaeQ']
+                ModelStealingAttack: ['MeaeQ'],
+                JailbreakAttack: ['JailbreakAttack']
             },
 						strategiesDesc: {
 							AdvAttack: [
@@ -1742,11 +1747,19 @@
               ],
 							PoisoningAttack: ['选定原始训练集中的部分样本，将其真值标签随机翻转为错误标签'],
 							RLMI: ['将文本生成视为一个逐 token 的序列决策过程，并通过强化学习训练一个策略网络，在黑盒环境中直接生成与目标模型预测标签高度一致的文本，从而实现模型反演攻击'],
-							ModelStealingAttack: ['通过任务相关性筛选和聚类消除冗余，在公开语料库中筛选出强相关数据集，提升查询效率和替代模型性能']
+							ModelStealingAttack: ['通过任务相关性筛选和聚类消除冗余，在公开语料库中筛选出强相关数据集，提升查询效率和替代模型性能'],
+                            JailbreakAttack: ['利用不安全关键词表对目标模型输出进行精确匹配检测，若输出包含词表中任一项则判定为越狱成功，并对临界或可疑样本进行人工复核以降低误判并提升判定的稳健性',
+                           '借助外部预训练语言模型将语料库中预期越狱输出与目标模型实际输出映射为语义向量并计算相似度，得分超过事先设定的阈值即判定为越狱成功。其中阈值通过验证集调优，并对临界样本进行人工复核以保证判定的稳健性'     
+                        ]
 						},
             defaults: {
                 AdvAttack: {
-                    attack_nums: 2
+                    attack_nums: 2,
+                    checkpoint_interval: 5,
+                    shuffle: true,
+                    disable_stdout: false,
+                    csv_coloring_style: 'file',
+                    display_full_info: true
                 },
                 FET: {
                     seed: 42,
@@ -1783,7 +1796,14 @@
                     pool_subsize: 1766,
                     method: "MeaeQ",
                     al_sample_batch_num: 20
+                },
+                JailbreakAttack: {
+                    jailbreak_dataset: 'JailbreakBench/JBB-Behaviors',
+                    method: 'keyword',
+                    lm_model_name: 'sentence-transformers/all-MiniLM-L6-v2',
+                    threshold: 0.5
                 }
+
             },
             descriptions: {
                 AdvAttack: "在模型推理阶段，攻击者通过向输入数据添加人眼难以察觉的微小扰动以生成对抗样本，导致模型做出错误的预测或分类，从而破坏模型的可靠性与安全性",
@@ -1791,12 +1811,14 @@
                 PoisoningAttack: "一种发生在模型训练阶段之前的攻击，攻击者通过向训练数据中注入恶意数据或篡改原有数据来污染训练集，导致最终训练出的模型性能下降、出现预测偏差或含有后门，破坏模型的完整性",
                 FET: "一种在模型训练阶段发起的攻击，攻击者通过分析共享的梯度更新来逆向还原原始训练数据，导致训练数据集中的敏感信息被泄露",
                 RLMI: "一种在模型推理阶段发起的攻击，攻击者通过反复查询并分析模型的输出结果来推断或重建模型的输入数据，导致用户的私有输入数据面临泄露风险",
-                ModelStealingAttack: "在模型推理阶段，攻击者通过频繁查询目标模型的输入-输出对应关系来重构一个功能近似的替代模型，导致模型的知识产权被盗用，核心算法或机密训练数据被窃取"
+                ModelStealingAttack: "在模型推理阶段，攻击者通过频繁查询目标模型的输入-输出对应关系来重构一个功能近似的替代模型，导致模型的知识产权被盗用，核心算法或机密训练数据被窃取",
+                JailbreakAttack: "在模型交互或推理阶段，攻击者通过构造特定输入（如恶意指令、提示注入或精心设计的上下文）诱导模型绕过安全策略、对齐约束或内容过滤，从而使模型生成本应被限制的敏感、危险或未授权信息，一旦成功会导致信息泄露、违规内容生成或模型可控性丧失，严重威胁系统的可靠性与安全性"
             },
             typeNames: {
                 AdvAttack: "对抗攻击",
                 FET: "梯度反演",
                 BackdoorAttack: "后门攻击",
+                JailbreakAttack: "越狱攻击",
                 PoisoningAttack: "投毒攻击",
                 RLMI: "模型反演",
                 ModelStealingAttack: "模型窃取"
@@ -1863,7 +1885,7 @@
 
         // 检查是否是默认生成的名称
         function isDefaultName(name) {
-            const defaultNamePattern = /^(对抗攻击|后门攻击|投毒攻击|梯度反演|模型反演|模型窃取)-\d+/;
+            const defaultNamePattern = /^(对抗攻击|后门攻击|投毒攻击|越狱攻击|梯度反演|模型反演|模型窃取)-\d+/;
             return defaultNamePattern.test(name);
         }    
 
@@ -2533,7 +2555,7 @@
                         let badgeClass;
 
                         // 安全攻击类（蓝色系）
-                        if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
+                        if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'JailbreakAttack'].includes(config.type)) {
                             // 为安全攻击类分配蓝色系徽章
                             badgeClass = 'badge-security';
                         }
@@ -2751,7 +2773,11 @@
                         document.getElementById('grammar').checked = sampleMetrics.includes('grammar');
                     }
                 }
-
+                // Jailbreak: 根据已存 method 触发一次切换，保证 lm 参数区显示
+                if (config.type === 'JailbreakAttack') {
+                const m = document.getElementById('method');
+                if (m) m.dispatchEvent(new Event('change'));
+                }
                 // 填充防御设置
                 const defenseEnabled = config.defenderEnabled || false;
                 const defenderSwitch = document.getElementById('defenderSwitch');
@@ -2871,7 +2897,12 @@
         function updateDefenseSettings(attackType) {
             const defenseSettings = document.getElementById('defenseSettings');
             defenseSettings.innerHTML = '';
-            
+            // === JailbreakAttack：不显示任何防御，也隐藏对照按钮 ===
+            const comparisonSection = document.getElementById('comparisonSection');
+            if (attackType === 'JailbreakAttack') {
+                if (comparisonSection) comparisonSection.style.display = 'none';
+                return; // 直接结束
+            }
             if (['AdvAttack', 'BackdoorAttack', 'RLMI', 'ModelStealingAttack', 'FET', 'PoisoningAttack'].includes(attackType)) {
                 const isAdversarial = attackType === 'AdvAttack';
                 const isBackdoor = attackType === 'BackdoorAttack';
@@ -3092,99 +3123,189 @@
                 }
             }
         }
+        function updateJailbreakStrategyDescription() {
+            const m = document.getElementById('method');
+            const out = document.getElementById('strategyDescription');
+            if (!m || !out) return;
+            const kw = "利用不安全关键词表对目标模型输出进行精确匹配检测，若输出包含词表中任一项则判定为越狱成功，并对临界或可疑样本进行人工复核以降低误判并提升判定的稳健性";
+            const lm = "借助外部预训练语言模型将语料库中预期越狱输出与目标模型实际输出映射为语义向量并计算相似度，得分超过事先设定的阈值即判定为越狱成功。其中阈值通过验证集调优，并对临界样本进行人工复核以保证判定的稳健性";
+            const setText = () => {
+                out.value = (m.value === 'lm') ? lm : kw;
+            };
+            m.addEventListener('change', setText);
+            // 初始化一次
+            setText();
+        }
 
-        // 更新高级设置区域
         function updateAdvancedSettings(attackType) {
             const settings = attackConfigs.defaults[attackType] || {};
             const container = document.getElementById('advancedSettingsContent');
-
             container.innerHTML = '';
 
+            // === JailbreakAttack：仿照“模型窃取”的写法（param-item 逐块 append），并在此提前 return，避免循环重复 ===
+            if (attackType === 'JailbreakAttack') {
+                // 顶部：越狱数据集
+                const dsDiv = document.createElement('div');
+                dsDiv.className = 'param-item';
+                dsDiv.innerHTML = `
+                <label class="form-label">${paramLabelMap['jailbreak_dataset'] || '越狱数据集'}</label>
+                <select class="form-control" id="jailbreak_dataset">
+                    <option value="JailbreakBench/JBB-Behaviors">JailbreakBench/JBB-Behaviors</option>
+                    <option value="rubend18/ChatGPT-Jailbreak-Prompts">rubend18/ChatGPT-Jailbreak-Prompts</option>
+                    <option value="JailbreakV-28K/JailBreakV-28k">JailbreakV-28K/JailBreakV-28k</option>
+                </select>
+                `;
+                container.appendChild(dsDiv);
+
+                // 顶部：方法
+                const methodDiv = document.createElement('div');
+                methodDiv.className = 'param-item';
+                methodDiv.innerHTML = `
+                <label class="form-label">${paramLabelMap['method'] || '方法'}</label>
+                <select class="form-control" id="method">
+                    <option value="keyword">keyword</option>
+                    <option value="lm">lm</option>
+                </select>
+                `;
+                container.appendChild(methodDiv);
+
+                // lm 专属：LM 相似度模型
+                const lmModelDiv = document.createElement('div');
+                lmModelDiv.className = 'param-item jailbreak-lm';
+                lmModelDiv.style.display = 'none';
+                lmModelDiv.innerHTML = `
+                <label class="form-label">${paramLabelMap['lm_model_name'] || 'LM相似度模型'}</label>
+                <input type="text" class="form-control" id="lm_model_name" value="sentence-transformers/all-MiniLM-L6-v2">
+                `;
+                container.appendChild(lmModelDiv);
+
+                // lm 专属：阈值
+                const thDiv = document.createElement('div');
+                thDiv.className = 'param-item jailbreak-lm';
+                thDiv.style.display = 'none';
+                thDiv.innerHTML = `
+                <label class="form-label">${paramLabelMap['threshold'] || '相似度阈值'}</label>
+                <input type="number" class="form-control" id="threshold" value="0.5" step="0.01" min="0" max="1">
+                `;
+                container.appendChild(thDiv);
+
+                // 回填默认值
+                const dft = attackConfigs.defaults.JailbreakAttack || {};
+                const ds = document.getElementById('jailbreak_dataset');
+                const m  = document.getElementById('method');
+                const lm = document.getElementById('lm_model_name');
+                const th = document.getElementById('threshold');
+                if (ds) ds.value = dft.jailbreak_dataset || ds.value;
+                if (m)  m.value  = dft.method || m.value;
+                if (lm) lm.value = dft.lm_model_name || lm.value;
+                if (th) th.value = (dft.threshold ?? th.value);
+
+                // 切换显示（保持与模型窃取相同的“param-item 块”风格，由容器样式控制横向并排）
+                const toggleLm = () => {
+                const show = (m.value === 'lm');
+                document.querySelectorAll('.jailbreak-lm').forEach(el => {
+                    el.style.display = show ? '' : 'none';
+                });
+                };
+                m.addEventListener('change', toggleLm);
+                toggleLm(); // 初始化
+                updateJailbreakStrategyDescription();
+                return; // 关键：阻止下面的通用循环再次渲染，避免“多个框 + 右侧空框”
+            }
+
+            // === 其他攻击类型：保持你原本的渲染逻辑（与模型窃取一致的 param-item 风格） ===
             for (const [key, value] of Object.entries(settings)) {
                 const labelText = paramLabelMap[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-
                 const col = document.createElement('div');
                 col.className = 'param-item';
 
-                if (attackType === 'BackdoorAttack') {
-                    // 后门攻击特殊字段处理
+                if (attackType === 'AdvAttack' && key === 'csv_coloring_style') {
+                    col.innerHTML = `
+                    <label class="form-label">${labelText}</label>
+                    <select class="form-control" id="csv_coloring_style">
+                        <option value="file" ${value === 'file' ? 'selected' : ''}>file</option>
+                        <option value="plain" ${value === 'plain' ? 'selected' : ''}>plain</option>
+                        <option value="html" ${value === 'html' ? 'selected' : ''}>html</option>
+                    </select>
+                    `;
+                    container.appendChild(col);
+                    continue; // 跳过后续通用渲染
+                }else if (attackType === 'BackdoorAttack') {
                     if (key === 'sample_metrics') {
                         col.innerHTML = `
-                            <label class="form-label">样本指标</label>
-                            <div class="backdoor-metrics">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="ppl" value="ppl">
-                                    <label class="form-check-label" for="ppl">PPL</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="use" value="use">
-                                    <label class="form-check-label" for="use">USE</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="grammar" value="grammar">
-                                    <label class="form-check-label" for="grammar">语法</label>
-                                </div>
+                        <label class="form-label">样本指标</label>
+                        <div class="backdoor-metrics">
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="ppl" value="ppl">
+                            <label class="form-check-label" for="ppl">PPL</label>
                             </div>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="use" value="use">
+                            <label class="form-check-label" for="use">USE</label>
+                            </div>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="grammar" value="grammar">
+                            <label class="form-check-label" for="grammar">语法</label>
+                            </div>
+                        </div>
                         `;
                     } else {
                         col.innerHTML = `
-                            <label class="form-label">${labelText}</label>
-                            <input type="text" class="form-control" id="${key}" value="${value}">
+                        <label class="form-label">${labelText}</label>
+                        <input type="text" class="form-control" id="${key}" value="${value}">
                         `;
                     }
                 } else if (attackType === 'ModelStealingAttack') {
-                    // 模型窃取特殊字段处理
-                    if (key === 'method') {
-                        col.innerHTML = `
-                            <label class="form-label">方法</label>
-                            <select class="form-control" id="method">
-                                <option value="RS">随机抽样 (RS)</option>
-                                <option value="MeaeQ" selected>MeaeQ</option>
-                                <option value="AL-RS">主动学习-RS</option>
-                                <option value="AL-US">主动学习-US</option>
-                            </select>
-                        `;
-                    } else if (key === 'al_sample_method') {
-                        col.innerHTML = `
-                            <label class="form-label">主动学习方法</label>
-                            <select class="form-control" id="al_sample_method">
-                                <option value="random">随机</option>
-                                <option value="uncertainty">不确定性</option>
-                                <option value="dr-greedy-select-min-max">最小-最大贪婪选择</option>
-                                <option value="dr-greedy-select-max-sum">最大和贪婪选择</option>
-                            </select>
-                        `;
-                    } else {
-                        col.innerHTML = `
-                            <label class="form-label">${labelText}</label>
-                            <input type="text" class="form-control" id="${key}" value="${value}">
-                        `;
-                    }
+                if (key === 'method') {
+                    col.innerHTML = `
+                    <label class="form-label">方法</label>
+                    <select class="form-control" id="method">
+                        <option value="RS">随机抽样 (RS)</option>
+                        <option value="MeaeQ" selected>MeaeQ</option>
+                        <option value="AL-RS">主动学习-RS</option>
+                        <option value="AL-US">主动学习-US</option>
+                    </select>
+                    `;
+                } else if (key === 'al_sample_method') {
+                    col.innerHTML = `
+                    <label class="form-label">主动学习方法</label>
+                    <select class="form-control" id="al_sample_method">
+                        <option value="random">随机</option>
+                        <option value="uncertainty">不确定性</option>
+                        <option value="dr-greedy-select-min-max">最小-最大贪婪选择</option>
+                        <option value="dr-greedy-select-max-sum">最大和贪婪选择</option>
+                    </select>
+                    `;
                 } else {
-                    // 通用处理
-                    if (typeof value === 'boolean') {
-                        col.innerHTML = `
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="${key}" ${value ? 'checked' : ''}>
-                                <label class="form-check-label" for="${key}">${labelText}</label>
-                            </div>
-                        `;
-                    } else if (Array.isArray(value)) {
-                        col.innerHTML = `
-                            <label class="form-label">${labelText}</label>
-                            <input type="text" class="form-control" id="${key}" value="${value.join(', ')}">
-                        `;
-                    } else if (typeof value === 'number') {
-                        col.innerHTML = `
-                            <label class="form-label">${labelText}</label>
-                            <input type="number" class="form-control" id="${key}" value="${value}">
-                        `;
-                    } else {
-                        col.innerHTML = `
-                            <label class="form-label">${labelText}</label>
-                            <input type="text" class="form-control" id="${key}" value="${value}">
-                        `;
-                    }
+                    col.innerHTML = `
+                    <label class="form-label">${labelText}</label>
+                    <input type="text" class="form-control" id="${key}" value="${value}">
+                    `;
+                }
+                } else {
+                if (typeof value === 'boolean') {
+                    col.innerHTML = `
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="${key}" ${value ? 'checked' : ''}>
+                        <label class="form-check-label" for="${key}">${labelText}</label>
+                    </div>
+                    `;
+                } else if (Array.isArray(value)) {
+                    col.innerHTML = `
+                    <label class="form-label">${labelText}</label>
+                    <input type="text" class="form-control" id="${key}" value="${value.join(', ')}">
+                    `;
+                } else if (typeof value === 'number') {
+                    col.innerHTML = `
+                    <label class="form-label">${labelText}</label>
+                    <input type="number" class="form-control" id="${key}" value="${value}">
+                    `;
+                } else {
+                    col.innerHTML = `
+                    <label class="form-label">${labelText}</label>
+                    <input type="text" class="form-control" id="${key}" value="${value}">
+                    `;
+                }
                 }
 
                 container.appendChild(col);
@@ -3304,7 +3425,7 @@
             };
             
             // 保存对照配置标志
-            const shouldCreateComparison = createComparisonConfig;
+            const shouldCreateComparison = createComparisonConfig && attackType !== 'JailbreakAttack';
 
             // 先定义 comparisonConfig，防止作用域问题
             let comparisonConfig = null;
@@ -3605,7 +3726,7 @@
                         let badgeClass;
 
                         // 安全攻击类（蓝色系）
-                        if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack'].includes(config.type)) {
+                        if (['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'JailbreakAttack'].includes(config.type)) {
                             badgeClass = 'badge-security';
                         }
                         // 隐私攻击类（绿色系）

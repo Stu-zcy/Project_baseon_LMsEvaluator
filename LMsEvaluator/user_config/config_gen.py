@@ -13,8 +13,12 @@ AdvAttack = {
     "model_name_or_path": "LMs/bert_base_uncased",
     "tokenizer_name_or_path": "LMs/bert_base_uncased",
     "dataset_name_or_path": "datasets/imdb/train.txt",
-    "attack_nums": 2,
     "display_full_info": True,
+    "num_examples": 20,
+    "checkpoint_interval": 5,
+    "shuffle": True,
+    "disable_stdout": False,
+    "csv_coloring_style": 'file',
     "defender": {
         "num_epochs": 1,
         "num_clean_epochs": 1,
@@ -154,6 +158,19 @@ ModelStealingAttack = {
     'defender': None
 }
 
+JailbreakAttack={
+    "attack": True, 
+    "attack_type": "JailbreakAttack",
+    "model_name_or_path": "LMs/gpt2",
+    "jailbreak_dataset": "JailbreakBench/JBB-Behaviors",
+    "subset": "behaviors",
+    "judge": {
+        "method": "keyword",
+        "lm_model_name": "sentence-transformers/all-MiniLM-L6-v2",
+        "threshold": 0.5
+    }
+}
+
 # 攻击策略字典
 attack_strategies = {
     "AdvAttack": AdvAttack,
@@ -161,7 +178,8 @@ attack_strategies = {
     "BackdoorAttack": BackdoorAttack,
     "PoisoningAttack": PoisoningAttack,
     "RLMI": RLMI,
-    "ModelStealingAttack": ModelStealingAttack
+    "ModelStealingAttack": ModelStealingAttack,
+    "JailbreakAttack":JailbreakAttack
 }
 
 
@@ -236,6 +254,8 @@ def generate_config(username, attack_list, globalConfig=None):
             if attack_type=='AdvAttack':
                 attack_config['attack_recipe'] = ADV_ATTACK_MAP[attack.get('strategy')]
                 for param in attack.get('params', []):
+                    if param == 'attack_nums':
+                        attack_config['num_examples'] = attack.get('params')[param]
                     if param in attack_config:
                         attack_config[param] = attack.get('params')[param]
                 if attack_config["defender"]=='null':
@@ -263,7 +283,22 @@ def generate_config(username, attack_list, globalConfig=None):
                         attack_config['train_config']['num_train_epochs'] = attack.get('params')[param]
                     if param in attack_config:
                         attack_config[param] = attack.get('params')[param]
-
+            elif attack_type == 'JailbreakAttack':
+                for param in attack.get('params', []):
+                    if param == 'jailbreak_dataset':
+                        attack_config['jailbreak_dataset'] = attack.get('params')[param]
+                        if attack.get('params')[param]=='JailbreakBench/JBB-Behaviors':
+                            attack_config['subset']='behaviors'
+                        elif attack.get('params')[param]=='JailbreakV-28K/JailBreakV-28k':
+                            attack_config['subset']='JailBreakV_28K'
+                        else:
+                            attack_config['subset']=''
+                    if param == 'method':
+                        value = attack.get('params')[param]
+                        attack_config['judge']['method'] = value
+                        if value == 'lm':
+                            attack_config['judge']['lm_model_name'] = attack.get('params')['lm_model_name']
+                            attack_config['judge']['threshold'] = attack.get('params')['threshold']
             else:
                 for param in attack.get('params', []):
                     if param in attack_config:
