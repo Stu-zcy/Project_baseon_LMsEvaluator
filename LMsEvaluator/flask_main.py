@@ -608,8 +608,8 @@ def getRecord():
         result = json.loads(attackRecord.attackResult)
         attackInfo = json.loads(attackRecord.attackInfo)
 
-        attackType = ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']
-        counters = [0, 0, 0, 0, 0, 0]
+        attackType = ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack', 'JailbreakAttack']
+        counters = [0, 0, 0, 0, 0, 0, 0]
         globalConfig = attackInfo[1]
         attackInfo = attackInfo[0]
         for info in attackInfo:
@@ -739,8 +739,8 @@ def generate_report():
         result = json.loads(attackRecord.attackResult)
         attackInfo = json.loads(attackRecord.attackInfo)
 
-        attackType = ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']
-        counters = [0, 0, 0, 0, 0, 0]
+        attackType = ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack', 'JailbreakAttack']
+        counters = [0, 0, 0, 0, 0, 0, 0]
         globalConfig = attackInfo[1]
         attackInfo = attackInfo[0]
         for info in attackInfo:

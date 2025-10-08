@@ -434,7 +434,8 @@ const AttackRecords = defineComponent({
 				"PoisoningAttack": "数据投毒攻击",
 				"FET": "梯度反演攻击",
 				"RLMI": "模型反演攻击",
-				"ModelStealingAttack": "模型窃取攻击"
+				"ModelStealingAttack": "模型窃取攻击",
+				"JailbreakAttack": "越狱攻击"
 			}
 			const parts = str.split('/');
 			if (list.length !== Number(parts[1])) {

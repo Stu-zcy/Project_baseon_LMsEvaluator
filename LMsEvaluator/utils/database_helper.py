@@ -6,7 +6,7 @@ def extractResult(path):
 	f = open(path, "r", encoding='utf-8')
 	content = iter(f.readlines())
 	f.close()
-	result = {k: [] for k in ['normalTrain', 'AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']}
+	result = {k: [] for k in ['normalTrain', 'AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack', 'JailbreakAttack']}
 	# def GetPair(s: str):
 	# 	ret = re.match(r'\|\s*([a-zA-Z][a-zA-Z ]*[a-zA-Z]):?\s*\|\s*([\d.]+%?)\s*\|', s)
 	# 	return ret.group(1,2)
@@ -164,6 +164,38 @@ def extractResult(path):
 				localResult['agreement'] = data[2]
 
 				result['ModelStealingAttack'].append(localResult)
+			elif (re.search('JailbreakAttack攻击开始', row)):
+				# JailbreakAttack 采用字典方式存储结果
+				# 包含 jailbreak_success_rate, unsafe_count, total_count
+				jailbreakResult = {}
+				
+				# 寻找表格数据
+				while True:
+					row = next(content)
+					
+					# 检查是否到达攻击结束
+					if re.search('JailbreakAttack攻击结束', row):
+						break
+					
+					# 解析 jailbreak_success_rate
+					if re.search(r'jailbreak_success_rate', row):
+						match = re.search(r'([\d.]+%)', row)
+						if match:
+							jailbreakResult['jailbreak_success_rate'] = match.group(1)
+					
+					# 解析 unsafe_count
+					elif re.search(r'unsafe_count', row):
+						match = re.search(r'(\d+)', row)
+						if match:
+							jailbreakResult['unsafe_count'] = int(match.group(1))
+					
+					# 解析 total_count
+					elif re.search(r'total_count', row):
+						match = re.search(r'(\d+)', row)
+						if match:
+							jailbreakResult['total_count'] = int(match.group(1))
+				
+				result['JailbreakAttack'].append(jailbreakResult)
 			elif re.match(r'\|.*Result.*\|.*\|', row):
 				rowNum = 2
 				ls = []

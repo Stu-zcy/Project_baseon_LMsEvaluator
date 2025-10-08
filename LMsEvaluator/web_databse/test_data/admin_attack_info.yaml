@@ -22,7 +22,7 @@
   - createdAt: 2025-05-18 14:20
     defenderEnabled: true
     description: 植入后门的攻击配置，在特定触发词出现时改变模型行为
-    executed: false
+    executed: true
     id: 2
     name: 后门攻击配置
     params:
@@ -37,7 +37,7 @@
   - createdAt: 2025-05-20 09:45
     defenderEnabled: false
     description: 针对训练数据的投毒攻击，污染训练集以降低模型性能
-    executed: false
+    executed: true
     id: 3
     name: 数据投毒配置
     params:
@@ -64,7 +64,7 @@
   - createdAt: 2025-06-12 11:20
     defenderEnabled: false
     description: 使用强化学习优化攻击策略
-    executed: false
+    executed: true
     id: 5
     name: 模型反演配置
     params:
@@ -77,7 +77,7 @@
   - createdAt: 2025/07/24 19:22
     defenderEnabled: false
     description: 梯度反演
-    executed: false
+    executed: true
     id: 1753356169033
     name: test
     params:
@@ -95,6 +95,19 @@
     status: active
     strategy: FET/SWAT
     type: FET
+  - createdAt: 2025/10/07 18:45
+    defenderEnabled: false
+    description: 使用预设的越狱提示或基于相似度检索的LM方法，诱导模型绕过安全对齐产生不当响应
+    id: 1759833934217
+    name: 越狱攻击-1
+    params:
+      defender: None
+      jailbreak_dataset: JailbreakBench/JBB-Behaviors
+      lm_model_name: sentence-transformers/all-MiniLM-L6-v2
+      method: keyword
+      threshold: 0.5
+    strategy: JailbreakAttack
+    type: JailbreakAttack
 - LM_config:
     local_model: true
     model: bert_base_uncased

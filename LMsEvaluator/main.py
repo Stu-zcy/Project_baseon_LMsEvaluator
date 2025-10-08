@@ -1,5 +1,6 @@
 import os
-os.environ["EVENTLET_HUB"] = "poll"
+# os.environ["EVENTLET_HUB"] = "poll"
+os.environ["EVENTLET_HUB"] = "selects"  # 使用 select hub，在 Windows 上更稳定
 import eventlet
 eventlet.monkey_patch()
 from multiprocessing import get_context
@@ -610,8 +611,8 @@ def getRecord():
         result = json.loads(attackRecord.attackResult)
         attackInfo = json.loads(attackRecord.attackInfo)
 
-        attackType = ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']
-        counters = [0, 0, 0, 0, 0, 0]
+        attackType = ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack', 'JailbreakAttack']
+        counters = [0, 0, 0, 0, 0, 0, 0]
         globalConfig = attackInfo[1]
         attackInfo = attackInfo[0]
         for info in attackInfo:
@@ -746,8 +747,8 @@ def generate_report():
         result = json.loads(attackRecord.attackResult)
         attackInfo = json.loads(attackRecord.attackInfo)
 
-        attackType = ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack']
-        counters = [0, 0, 0, 0, 0, 0]
+        attackType = ['AdvAttack', 'BackdoorAttack', 'PoisoningAttack', 'RLMI', 'FET', 'ModelStealingAttack', 'JailbreakAttack']
+        counters = [0, 0, 0, 0, 0, 0, 0]
         globalConfig = attackInfo[1]
         attackInfo = attackInfo[0]
         for info in attackInfo:

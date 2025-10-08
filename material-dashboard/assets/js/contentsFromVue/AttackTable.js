@@ -577,6 +577,66 @@ const AttackTable = defineComponent({
 </div>
         </template>
     </a-table>
+
+    <a-table v-if="responseData.JailbreakAttack.length > 0" v-bind="$attrs" 
+        :columns="JailbreakAttackColumns" :dataSource="responseData.JailbreakAttack" 
+        :pagination="false" class="outer-table safe-attack-table" :rowClassName="rowClassName">
+									<template #headerCell="{ column }">
+            <template v-if="column.dataIndex === 'index'">
+                <span style="display: inline-flex; align-items: center; margin-top: 5px">
+                    <i class="material-icons" style=" font-size: 24px;">list</i>
+                    <span>实验配置</span>
+                </span>
+            </template>
+
+						<template v-else>
+            {{ column.title }}
+						</template>
+        	</template>
+        <template #title>
+            <div class="flex justify-between pr-4">
+                <h4>越狱攻击</h4>
+            </div>
+        </template>
+        <template #bodyCell="{ column, record }">
+            <div class="" v-if="column.dataIndex === 'index'">
+                <div class="text-subtext">
+<svg v-if="record.info.defenderEnabled" style="font-size: 12px;" t="1753282514052" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="26441" width="200" height="200"><path d="M260.019513 846.71367C122.197171 732.496698 4.0592 531.652621 4.0592 216.591573A781.279013 781.279013 0 0 1 27.696319 11.810622a1210.477661 1210.477661 0 0 0 252.023439 35.447742A687.889375 687.889375 0 0 0 508.106079 0a725.464298 725.464298 0 0 0 232.339069 47.258364c110.264223 0 252.039314-35.447741 252.039314-35.447742A916.196323 916.196323 0 0 1 1020.010832 212.718197c0 319.077295-102.374601 515.921-240.212817 630.122097-82.706105 66.942734-271.723685 181.159706-271.723685 181.159706s-173.238334-110.327721-248.054817-177.28633z m39.368741-59.08486a2289.371655 2289.371655 0 0 0 208.543206 149.553592V508.174247h395.973335a1053.875794 1053.875794 0 0 0 37.38443-291.5668 816.060025 816.060025 0 0 0-7.937246-114.216972 998.616687 998.616687 0 0 1-196.843705 23.637119A757.340278 757.340278 0 0 1 508.106079 82.706105h-0.174619v425.436393h-390.512511a603.421201 603.421201 0 0 0 181.969305 279.502186z" fill="#1C87FF" p-id="26442">
+</path>
+</svg>
+								<svg v-else style="font-size: 12px;" t="1753281965668" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="24625" width="200" height="200">
+								<path d="M771.1744 208.4352l-44.5952 139.3152-150.4256 122.5728-33.4336 27.8528 27.8528 33.4336 83.5584 105.8816 33.4336 39.0144 33.4336-33.4336 44.5952-44.5952 16.6912 16.6912-50.1248 44.5952-33.4336 33.4336 33.4336 33.4336 78.0288 77.9776 5.5808 5.5808-16.6912 16.6912-5.5808-5.5808-78.0288-77.9776-33.4336-33.4336-27.8528 27.8528-44.5952 44.5952-16.6912-16.6912 44.5952-44.5952 33.4336-33.4336-39.0144-27.8528-116.992-94.72-27.8528-22.272-27.8528 22.272-116.992 94.72-39.0144 33.4336 33.4336 33.4336 44.5952 44.5952-16.6912 16.6912-44.5952-50.1248-33.4336-33.4336-33.4336 33.4336-78.0288 78.0288-5.5808 5.5808-16.6912-16.6912 5.5808-5.5808 78.0288-78.0288 33.4336-33.4336-27.8528-27.8528-44.5952-50.1248 16.6912-16.6912 44.5952 44.5952 33.4336 33.4336 27.8528-33.4336 83.5584-100.3008 27.8528-39.0144-33.4336-27.8528-150.4256-122.5728-44.5952-139.3152 139.3152 44.5952 111.36 133.7344 33.4336 44.5952 33.4336-44.5952 111.4112-133.7344 139.3152-44.5952m72.448-72.5504L609.5872 214.016 487.0144 358.8608 369.8688 219.5456 130.4576 135.9872l78.0288 234.0352 156.0064 128-78.0288 111.5648-72.448-78.0288-83.5584 78.0288 78.0288 78.0288-78.0288 78.1312-39.0144-39.0144-39.0144 39.0144 156.0064 156.0064 39.0144-39.0144-39.0144-39.0144 78.0288-77.9776 78.0288 78.0288 77.9776-78.0288-72.6016-72.6016 116.992-94.72 116.992 94.72-72.2432 72.6016 78.0288 78.0288 77.9776-78.0288 78.0288 78.0288-39.0144 39.0144 39.0144 39.0144 156.0064-156.0576-39.0144-39.0144-39.0144 39.0144-77.9776-78.1312 78.0288-78.0288-78.0288-77.9776-72.448 72.448-83.5584-100.3008 156.0064-128z" fill="#c83939ff" p-id="24626">
+								</path>
+								</svg>
+								{{ record.info.name }}
+                </div>
+            </div>
+<div v-else-if="column.dataIndex === 'jailbreak_success_rate'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[0]" style="color: blue;">
+    {{ record.resultData.jailbreak_success_rate }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.jailbreak_success_rate }}
+  </div>
+</div>
+<div v-else-if="column.dataIndex === 'unsafe_count'">
+  <div class="text-subtext" v-if="record.compResult && record.compResult[1]" style="color: blue;">
+    {{ record.resultData.unsafe_count }}
+  </div>
+  <div class="text-subtext" v-else>
+    {{ record.resultData.unsafe_count }}
+  </div>
+</div>
+                <div v-else-if="column.dataIndex === 'total_count'">
+                    <div class="text-subtext">
+                        {{ record.resultData.total_count }}
+                    </div>
+                </div>
+            <div v-else class="text-subtext">
+                {{ record.resultData[column.dataIndex] }}
+            </div>
+        </template>
+    </a-table>
 </div>
     `,
 
@@ -644,6 +704,12 @@ const AttackTable = defineComponent({
 			{ title: '替代模型准确率\n(Stolen Model Accuracy,%)', dataIndex: 'steal_acc', align: 'center' },
 			{ title: '一致性分数\n(Agreement,%)', dataIndex: 'agreement', align: 'center' },
 		];
+		const JailbreakAttackColumns = [
+			{ title: '实验配置', dataIndex: 'index', width: '10%', align: 'center' },
+			{ title: '越狱成功率\n(Jailbreak Success Rate,%)', dataIndex: 'jailbreak_success_rate', align: 'center' },
+			{ title: '越狱成功次数\n(Jailbreak Success Count,次)', dataIndex: 'unsafe_count', align: 'center' },
+			{ title: '总尝试次数\n(Total Attempts,次)', dataIndex: 'total_count', align: 'center' },
+		];
 
 		const responseData = ref({
 			NormalTrain: [],
@@ -652,7 +718,8 @@ const AttackTable = defineComponent({
 			PoisoningAttack: [],
 			RLMI: [],
 			FET: [],
-			ModelStealingAttack: []
+			ModelStealingAttack: [],
+			JailbreakAttack: []
 		});
 
 		// 子表格
@@ -899,6 +966,30 @@ const AttackTable = defineComponent({
 					e2.compResult = arr[1];
 					break;
 
+				case "JailbreakAttack":
+					arr = [[0, 0, 0], [0, 0, 0]];
+					// jailbreak_success_rate: 越低越好（攻击成功率越低越好）
+					if (convert(e1.resultData.jailbreak_success_rate) < convert(e2.resultData.jailbreak_success_rate))
+						arr[0][0] = 1;
+					else if (convert(e1.resultData.jailbreak_success_rate) > convert(e2.resultData.jailbreak_success_rate))
+						arr[1][0] = 1;
+
+					// unsafe_count: 越低越好（越狱成功次数越少越好）
+					if (convert(e1.resultData.unsafe_count) < convert(e2.resultData.unsafe_count))
+						arr[0][1] = 1;
+					else if (convert(e1.resultData.unsafe_count) > convert(e2.resultData.unsafe_count))
+						arr[1][1] = 1;
+
+					// total_count: 这个通常不需要比较，但为了完整性也加上
+					if (convert(e1.resultData.total_count) > convert(e2.resultData.total_count))
+						arr[0][2] = 1;
+					else if (convert(e1.resultData.total_count) < convert(e2.resultData.total_count))
+						arr[1][2] = 1;
+
+					e1.compResult = arr[0];
+					e2.compResult = arr[1];
+					break;
+
 				default:
 					break;
 			}
@@ -978,6 +1069,7 @@ const AttackTable = defineComponent({
 					responseData.value.RLMI = processControlGroup(response.data.result.RLMI || []);
 					responseData.value.FET = processControlGroup(response.data.result.FET || []);
 					responseData.value.ModelStealingAttack = processControlGroup(response.data.result.ModelStealingAttack || []);
+					responseData.value.JailbreakAttack = processControlGroup(response.data.result.JailbreakAttack || []);
 				} else {
 					console.error("Invalid API response structure:", response);
 				}
@@ -992,7 +1084,8 @@ const AttackTable = defineComponent({
 					PoisoningAttack: [],
 					RLMI: [],
 					FET: [],
-					ModelStealingAttack: []
+					ModelStealingAttack: [],
+					JailbreakAttack: []
 				};
 			}
 
@@ -1059,6 +1152,7 @@ const AttackTable = defineComponent({
 			FETAttackColumns,
 			FETInnoColumns,
 			ModelStealingAttackColumns,
+			JailbreakAttackColumns,
 			responseData,
 			FETInnerData,
 			getInnerData,
