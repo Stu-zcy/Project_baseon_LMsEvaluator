@@ -21,17 +21,13 @@ class StealQueryDataset(Dataset):
         elif args.steal_model_version == 'xlnet_base':
             self.tokenizer = XLNetTokenizer.from_pretrained(args.steal_xlnet_vocab_path)
         elif args.steal_model_version == 'gpt2_medium':
-            # self.tokenizer = XLNetTokenizer.from_pretrained(args.steal_xlnet_vocab_path)
             print("gpt2 tokenizer define")
             self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2-medium")
             self.tokenizer.pad_token = self.tokenizer.eos_token
-            # self.tokenizer.padding_side = "left"
         elif args.steal_model_version == 'gpt2_small':
-            # self.tokenizer = XLNetTokenizer.from_pretrained(args.steal_xlnet_vocab_path)
             print("gpt2 tokenizer define")
             self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
             self.tokenizer.pad_token = self.tokenizer.eos_token
-            # self.tokenizer.padding_side = "left"
         if flag == 'with_label':
             self.sentence = dataset['sentence']
             self.label = torch.from_numpy(np.array(dataset['label']))
@@ -74,6 +70,12 @@ class VictimQueryDataset(Dataset):
             self.tokenizer = RobertaTokenizer.from_pretrained(args.victim_roberta_vocab_path)
         elif args.victim_model_version == 'xlnet_base':
             self.tokenizer = XLNetTokenizer.from_pretrained(args.victim_xlnet_vocab_path)
+        elif args.victim_model_version == 'gpt2_small':
+            self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+        elif args.victim_model_version == 'gpt2_medium':
+            self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
+            self.tokenizer.pad_token = self.tokenizer.eos_token
         if args.task_name == 'MNLI' or args.task_name == 'SNLI':
             if flag == 'with_label':
                 self.sentence = dataset['sentence_pair']

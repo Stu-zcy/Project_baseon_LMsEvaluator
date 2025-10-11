@@ -15,8 +15,8 @@ project_root_path = project_NLP_path  # /LMsEvaluator
 #     # project_NLP_path = project_NLP_path + r'/../'
 #     project_NLP_path = os.path.dirname(project_NLP_path)
 project_NLP_path = os.path.join(project_NLP_path, 'attack', 'MeaeQ')
-victim_model_version = 'bert_base_uncased'  # roberta_base xlnet_base bert_base_uncased
-steal_model_version = 'bert_base_uncased'  # roberta_base xlnet_base bert_base_uncased
+victim_model_version = 'gpt2_small'  # roberta_base xlnet_base bert_base_uncased gpt2_small gpt2_medium
+steal_model_version = 'gpt2_small'  # roberta_base xlnet_base bert_base_uncased gpt2_small gpt2_medium
 
 
 # print(f'project_NLP_path: {project_NLP_path}')
@@ -35,6 +35,7 @@ def parse_arguments(parser):
     parser = bert_config(parser)
     parser = roberta_config(parser)
     parser = xlnet_config(parser)
+    parser = gpt2_config(parser)
 
     parser.add_argument('--bart_large_mnli_path', type=str,
                         default=os.path.join(project_root_path, 'LMs', 'bart_large_mnli')
@@ -316,6 +317,23 @@ def xlnet_config(parser):
                         default=os.path.join(project_root_path, 'LMs', 'xlnet_base'), help='')
     parser.add_argument('--victim_xlnet_vocab_path', type=str,
                         default=os.path.join(project_root_path, 'LMs', 'xlnet_base'), help='')
+    return parser
+
+
+def gpt2_config(parser):
+    parser.add_argument('--gpt2_hidden_size', type=int, default=768, help='')
+    parser.add_argument('--gpt2_hidden_dropout_prob', type=float, default=0.1, help='')
+    parser.add_argument('--gpt2_output_hidden_states', type=bool, default=True, help='')
+    parser.add_argument('--steal_gpt2_path', type=str,
+                        default=os.path.join(project_root_path, 'LMs', 'gpt2'),
+                        help='')
+    parser.add_argument('--steal_gpt2_vocab_path', type=str,
+                        default=os.path.join(project_root_path, 'LMs', 'gpt2'), help='')
+    parser.add_argument('--gpt2pc_dropout_prob', type=float, default=0.1, help='')
+    parser.add_argument('--victim_gpt2_path', type=str,
+                        default=os.path.join(project_root_path, 'LMs', 'gpt2'), help='')
+    parser.add_argument('--victim_gpt2_vocab_path', type=str,
+                        default=os.path.join(project_root_path, 'LMs', 'gpt2'), help='')
     return parser
 
 
