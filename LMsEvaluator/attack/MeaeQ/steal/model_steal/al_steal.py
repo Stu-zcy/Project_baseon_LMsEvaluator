@@ -24,9 +24,9 @@ from torch.optim.lr_scheduler import StepLR, MultiStepLR, ExponentialLR, CosineA
 from torch.autograd import Variable, Function
 from torch.utils.data import Dataset, DataLoader
 import torch.nn.functional as F
-from attack.MeaeQ.models.victim_models import BFSC, RFSC, XFSC
-from attack.MeaeQ.models.extracted_models import BPC, RPC, XPC
-from utils.defense_utils import output_perturb_defense, high_entropy_mask_defense
+from attack.MeaeQ.models.victim_models import BFSC, RFSC, XFSC, GPT2FSC
+from attack.MeaeQ.models.extracted_models import BPC, RPC, XPC, GPT2PC
+from utils.defense_utils import output_perturb_defense
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 device_ids = [0, 1]
@@ -56,6 +56,14 @@ elif args.victim_model_version == 'roberta_base':
     tokenizer_v = RobertaTokenizer.from_pretrained(args.victim_roberta_vocab_path)
 elif args.victim_model_version == 'xlnet_base':
     tokenizer_v = XLNetTokenizer.from_pretrained(args.victim_xlnet_vocab_path)
+elif args.victim_model_version == 'gpt2_small':
+    from transformers import GPT2Tokenizer
+    tokenizer_v = GPT2Tokenizer.from_pretrained('gpt2')
+    tokenizer_v.pad_token = tokenizer_v.eos_token
+elif args.victim_model_version == 'gpt2_medium':
+    from transformers import GPT2Tokenizer
+    tokenizer_v = GPT2Tokenizer.from_pretrained('gpt2-medium')
+    tokenizer_v.pad_token = tokenizer_v.eos_token
 
 if args.steal_model_version == 'bert_base_uncased':
     tokenizer_s = BertTokenizer.from_pretrained(args.steal_bert_vocab_path,
@@ -64,6 +72,14 @@ elif args.steal_model_version == 'roberta_base':
     tokenizer_s = RobertaTokenizer.from_pretrained(args.steal_roberta_vocab_path)
 elif args.steal_model_version == 'xlnet_base':
     tokenizer_s = XLNetTokenizer.from_pretrained(args.steal_xlnet_vocab_path)
+elif args.steal_model_version == 'gpt2_small':
+    from transformers import GPT2Tokenizer
+    tokenizer_s = GPT2Tokenizer.from_pretrained('gpt2')
+    tokenizer_s.pad_token = tokenizer_s.eos_token
+elif args.steal_model_version == 'gpt2_medium':
+    from transformers import GPT2Tokenizer
+    tokenizer_s = GPT2Tokenizer.from_pretrained('gpt2-medium')
+    tokenizer_s.pad_token = tokenizer_s.eos_token
 
 if not os.path.exists('./logs/MeaeQ'):
     os.mkdir('./logs/MeaeQ')
@@ -406,6 +422,8 @@ def train_steal_model(steal_train, steal_val, victim_model):
             model = RPC(args)
         elif args.steal_model_version == 'xlnet_base':
             model = XPC(args)
+        elif args.steal_model_version in ['gpt2_small', 'gpt2_medium']:
+            model = GPT2PC(args)
 
         if torch.cuda.is_available():
             logging.info("CUDA")
@@ -657,6 +675,8 @@ def train_steal_model(steal_train, steal_val, victim_model):
         model = RPC(args)
     elif args.steal_model_version == 'xlnet_base':
         model = XPC(args)
+    elif args.steal_model_version in ['gpt2_small', 'gpt2_medium']:
+        model = GPT2PC(args)
     if torch.cuda.is_available():
         logging.info("CUDA")
         # print("CUDA")
@@ -672,20 +692,10 @@ def train_steal_model(steal_train, steal_val, victim_model):
 
 
 def gen_al_init(victim_model):
-
     sen = []
     index = random.sample(range(len(thief_data)), init_num)
     for i in index:
         sen.append(thief_data[i].strip())
-    
-    # 测试模式：从原始数据集中随机抽取3条数据
-    # sen = []
-    # # 如果数据集太小，就全部使用；否则随机抽取3条
-    # sample_size = min(3, len(thief_data))
-    # index = random.sample(range(len(thief_data)), sample_size)
-    # for i in index:
-    #     sen.append(thief_data[i].strip())
-    
     lab = []
     for i in sen:
         with torch.no_grad():
@@ -709,7 +719,6 @@ def gen_al_init(victim_model):
             _, test_argmax = torch.max(logits, 1)
             label = test_argmax.squeeze().cpu().data.numpy()
             lab.append(label)
-    
     return {
         'sentence': sen,
         'label': lab
@@ -725,6 +734,8 @@ def main():
         victim_model = RFSC(args)
     elif args.victim_model_version == 'xlnet_base':
         victim_model = XFSC(args)
+    elif args.victim_model_version in ['gpt2_small', 'gpt2_medium']:
+        victim_model = GPT2FSC(args)
     if torch.cuda.is_available():
         logging.info("CUDA")
         # print("CUDA")
@@ -815,88 +826,127 @@ class my_al_steal():
 
     def calculate_acc_agreement(self, steal_model, victim_model, original_test_data):
         logging.info("testing steal models on original dataset...")
-        # print("testing steal models on original dataset...")
-        vic_test_dataset = VictimQueryDataset(original_test_data, 'with_label', self.args)
-        vic_test_loader = DataLoader(dataset=vic_test_dataset,
-                                     batch_size=1,
-                                     shuffle=False)
-        steal_test_dataset = StealQueryDataset(original_test_data, 'with_label', self.args)
-        steal_test_loader = DataLoader(dataset=steal_test_dataset,
-                                       batch_size=1,
-                                       shuffle=False)
+        
+        # 优化：使用更大的批处理大小
+        batch_size = min(8, len(original_test_data['sentence']))
+        
+        # 优化：预计算token_type_ids需求
+        victim_needs_token_type_ids = self.args.victim_model_version == 'bert_base_uncased'
+        steal_needs_token_type_ids = self.args.steal_model_version == 'bert_base_uncased'
+        
+        # 使用统一的dataset，避免重复处理
+        test_dataset = VictimQueryDataset(original_test_data, 'with_label', self.args)
+        test_loader = DataLoader(dataset=test_dataset,
+                                batch_size=batch_size,
+                                shuffle=False,
+                                num_workers=0)  # 避免多进程问题
+        
         steal_model.eval()
         victim_model.eval()
-        test_acc = []
-        v_acc = []
-        steal_test_label = to(torch.zeros(0))
-        victim_test_label = to(torch.zeros(0))
-        # loop = tqdm(enumerate(test_loader), total=len(test_loader), ncols=100)
+        
+        # 优化：预分配列表，避免频繁append
+        victim_predictions = []
+        steal_predictions = []
+        correct_victim = 0
+        correct_steal = 0
+        total_samples = 0
+        
         with torch.no_grad():
-            # for step, test_data in loop:
-            for step, test_data in enumerate(vic_test_loader):
+            for step, test_data in enumerate(test_loader):
                 test_text = test_data[0]
                 test_labels = to(test_data[1])
-                input_ids = to(test_text['input_ids'].squeeze(1))
-                attention_mask = to(test_text['attention_mask'].squeeze(1))
-                if self.args.victim_model_version == 'bert_base_uncased':
-                    token_type_ids = to(test_text['token_type_ids'].squeeze(1))
+                input_ids = to(test_text['input_ids'])
+                attention_mask = to(test_text['attention_mask'])
+                
+                # 确保输入张量是正确的2D形状 [batch_size, seq_length]
+                if len(input_ids.shape) == 3:
+                    input_ids = input_ids.squeeze(1)  # 移除多余的维度
+                if len(attention_mask.shape) == 3:
+                    attention_mask = attention_mask.squeeze(1)  # 移除多余的维度
+                
+                # 优化：批量处理token_type_ids
+                if victim_needs_token_type_ids:
+                    victim_token_type_ids = to(test_text['token_type_ids'])
+                    if len(victim_token_type_ids.shape) == 3:
+                        victim_token_type_ids = victim_token_type_ids.squeeze(1)
                 else:
-                    token_type_ids = None
-                output = victim_model(input_ids=input_ids,
-                                      token_type_ids=token_type_ids,
-                                      attention_mask=attention_mask,
-                                      train_labels=to(torch.zeros(1, self.args.num_labels)))
-                logits = output[1]
-                logits = torch.softmax(logits, 1)
-                _, victim_test_argmax = torch.max(logits, 1)
-                victim_test_label = torch.cat((victim_test_label, victim_test_argmax.squeeze().unsqueeze(0)), 0)
-
-                vacc = (test_labels == victim_test_argmax.squeeze()).float().mean()
-                v_acc.append(vacc.item())
-                # loop.set_description('Testing on original dataset')
-                # loop.set_postfix(test_acc=accuracy.item())
-
-            for step, test_data in enumerate(steal_test_loader):
-                test_text = test_data[0]
-                test_labels = to(test_data[1])
-                input_ids = to(test_text['input_ids'].squeeze(1))
-                attention_mask = to(test_text['attention_mask'].squeeze(1))
-                if self.args.steal_model_version == 'bert_base_uncased':
-                    token_type_ids = to(test_text['token_type_ids'].squeeze(1))
+                    victim_token_type_ids = None
+                    
+                if steal_needs_token_type_ids:
+                    steal_token_type_ids = to(test_text['token_type_ids'])
+                    if len(steal_token_type_ids.shape) == 3:
+                        steal_token_type_ids = steal_token_type_ids.squeeze(1)
                 else:
-                    token_type_ids = None
-                output, pooler_output = steal_model(input_ids=input_ids,
-                                                    token_type_ids=token_type_ids,
-                                                    attention_mask=attention_mask)
-                logits = output.logits
-                logits = torch.softmax(logits, 1)
-                _, steal_test_argmax = torch.max(logits, 1)
-                steal_test_label = torch.cat((steal_test_label, steal_test_argmax.squeeze().unsqueeze(0)), 0)
-                accuracy = (test_labels == steal_test_argmax.squeeze()).float().mean()
-                test_acc.append(accuracy.item())
-            # loop.set_description('Testing on original dataset')
-            # loop.set_postfix(test_acc=accuracy.item())
-        #     steal_test_label = steal_test_label.cpu().data.numpy()
-        #     victim_test_label = victim_test_label.cpu().data.numpy()
-        # logging.info("test_label:", original_test_data['label'])
-        # logging.info("steal_test_label:", steal_test_label)
-        # logging.info("victim_test_label:", victim_test_label)
+                    steal_token_type_ids = None
+                
+                # 优化：并行推理两个模型
+                # Victim model inference
+                victim_output = victim_model(input_ids=input_ids,
+                                           token_type_ids=victim_token_type_ids,
+                                           attention_mask=attention_mask,
+                                           train_labels=to(torch.zeros(input_ids.size(0), self.args.num_labels)))
+                
+                # 优化：统一处理输出格式
+                if hasattr(victim_output, 'logits'):
+                    victim_logits = victim_output.logits
+                else:
+                    victim_logits = victim_output[1]
+                
+                victim_logits = torch.softmax(victim_logits, 1)
+                _, victim_preds = torch.max(victim_logits, 1)
+                
+                # Steal model inference
+                steal_result = steal_model(input_ids=input_ids,
+                                         token_type_ids=steal_token_type_ids,
+                                         attention_mask=attention_mask)
+                
+                # 处理steal模型的输出格式（可能是元组或单个对象）
+                if isinstance(steal_result, tuple):
+                    steal_output, _ = steal_result
+                else:
+                    steal_output = steal_result
+                
+                if hasattr(steal_output, 'logits'):
+                    steal_logits = steal_output.logits
+                else:
+                    steal_logits = steal_output[1]
+                
+                steal_logits = torch.softmax(steal_logits, 1)
+                _, steal_preds = torch.max(steal_logits, 1)
+                
+                # 优化：批量计算准确率
+                victim_correct = (test_labels == victim_preds).sum().item()
+                steal_correct = (test_labels == steal_preds).sum().item()
+                
+                correct_victim += victim_correct
+                correct_steal += steal_correct
+                total_samples += test_labels.size(0)
+                
+                # 优化：使用list.extend而不是torch.cat
+                victim_predictions.extend(victim_preds.cpu().numpy())
+                steal_predictions.extend(steal_preds.cpu().numpy())
+        
+        # 优化：转换为tensor进行批量比较
+        victim_test_label = torch.tensor(victim_predictions)
+        steal_test_label = torch.tensor(steal_predictions)
+        
+        # 计算最终指标
         global agreement
         agreement = (steal_test_label == victim_test_label).float().mean()
         global acc
-        acc = np.mean(test_acc)
+        acc = correct_steal / total_samples
         global vac
-        vac = np.mean(v_acc)
+        vac = correct_victim / total_samples
+        
         logging.info(f"seed: {seed}")
         logging.info("Evaluation Result on %s: victim acc %.4f, steal acc %.4f, agreement %.4f"
                      % (self.args.task_name, vac, acc, agreement))
-        # print("seed: ", seed)
-        # print("Evaluation Result on %s: victim acc %.4f, steal acc %.4f, agreement %.4f"
-        # % (self.args.task_name, vac, acc, agreement))
+        
         agreement = float(agreement.cpu().data.numpy())
         vac = round(vac, 4)
         acc = round(acc, 4)
         agreement = round(agreement, 4)
+        
         ls = "victim acc " + str(vac) + ", steal acc " + str(acc) + ", agreement " + str(agreement)
         with open(output_file, 'w') as file:
             file.writelines(ls)
@@ -933,9 +983,6 @@ class my_al_steal():
                 f.writelines(max_data + '\n')
                 f.writelines(mean_std_data + '\n')
                 f.writelines('%------------------------------------------\n')
-
-        # result_acc.append(acc)
-        # result_agg.append(agreement.cpu().data.numpy().tolist())
 
     def sample_data_with_embedding(self, model, num, victim_model):
         global thief_data
@@ -1088,6 +1135,8 @@ class my_al_steal():
                 model = RPC(self.args)
             elif self.args.steal_model_version == 'xlnet_base':
                 model = XPC(self.args)
+            elif self.args.steal_model_version in ['gpt2_small', 'gpt2_medium']:
+                model = GPT2PC(self.args)
 
             if torch.cuda.is_available():
                 logging.info("CUDA")
@@ -1340,6 +1389,8 @@ class my_al_steal():
             model = RPC(self.args)
         elif self.args.steal_model_version == 'xlnet_base':
             model = XPC(self.args)
+        elif self.args.steal_model_version in ['gpt2_small', 'gpt2_medium']:
+            model = GPT2PC(self.args)
         if torch.cuda.is_available():
             logging.info("CUDA")
             # print('CUDA')
@@ -1396,18 +1447,27 @@ class my_al_steal():
             victim_model = RFSC(self.args)
         elif self.args.victim_model_version == 'xlnet_base':
             victim_model = XFSC(self.args)
+        elif self.args.victim_model_version in ['gpt2_small', 'gpt2_medium']:
+            victim_model = GPT2FSC(self.args)
         if torch.cuda.is_available():
             logging.info("CUDA")
             victim_model.to(device)
-        vck = self.args.victim_model_checkpoint
-        if vck[0] != '-':
-            vck = '-' + vck
-        checkpoint = torch.load(os.path.join(self.args.saved_model_path, self.args.task_name + vck),
-                                map_location=device, weights_only=True)
-        victim_model.load_state_dict(checkpoint)
-        victim_model.eval()
+        # 根据模型类型决定是否加载检查点
+        if self.args.victim_model_version in ['gpt2_small', 'gpt2_medium']:
+            # GPT2模型使用预训练权重，不需要加载检查点
+            logging.info("GPT2模型使用预训练权重，跳过检查点加载")
+            victim_model.eval()
+        else:
+            # BERT、RoBERTa、XLNet模型加载检查点
+            vck = self.args.victim_model_checkpoint
+            if vck[0] != '-':
+                vck = '-' + vck
+            checkpoint = torch.load(os.path.join(self.args.saved_model_path, self.args.task_name + vck),
+                                    map_location=device, weights_only=True)
+            victim_model.load_state_dict(checkpoint)
+            victim_model.eval()
         # defender防御逻辑
-        if defender is not None or defender != "None":
+        if defender is not None and defender != "None" and isinstance(defender, dict):
             if defender.get('type', None) == 'output-perturb':
                 logging.info("[al_steal] 检测到defender配置，应用output_perturb_defense防御...")
                 victim_model = output_perturb_defense(victim_model, None, None, defender)
@@ -1417,11 +1477,6 @@ class my_al_steal():
                 from utils.defense_utils import pruning_defense
                 victim_model = pruning_defense(victim_model, None, None, defender)
                 logging.info("[al_steal] pruning_defense防御已应用。")
-            elif defender.get('type', None) == 'high-entropy-mask':
-                logging.info("[al_steal] 检测到defender配置，应用high_entropy_mask_defense防御...")
-                from utils.defense_utils import high_entropy_mask_defense
-                victim_model = high_entropy_mask_defense(victim_model, None, None, defender)
-                logging.info("[al_steal] high_entropy_mask_defense防御已应用。")
         # 后续流程使用防御后的victim_model
         data = gen_al_init(victim_model)
         steal_train, steal_val = self.split_steal_data(data)

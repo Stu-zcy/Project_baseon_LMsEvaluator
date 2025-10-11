@@ -5,7 +5,7 @@ from transformers import BertTokenizer, BertConfig, BertForSequenceClassificatio
 
 from attack.MeaeQ.utils.config import *
 from attack.MeaeQ.utils.tools import *
-from attack.MeaeQ.models.victim_models import BFSC, RFSC, XFSC
+from attack.MeaeQ.models.victim_models import BFSC, RFSC, XFSC, GPT2FSC
 
 # args = ArgParser().get_parser()
 rate_label = 0.0
@@ -29,6 +29,8 @@ class my_gen_query():
             self.victim_model = RFSC(self.args)
         elif self.args.victim_model_version == 'xlnet_base':
             self.victim_model = XFSC(self.args)
+        elif self.args.victim_model_version in ['gpt2_small', 'gpt2_medium']:
+            self.victim_model = GPT2FSC(self.args)
         if torch.cuda.is_available():
             logging.info("CUDA")
             # print("CUDA")
@@ -36,12 +38,19 @@ class my_gen_query():
                 # models = nn.DataParallel(models)
                 self.victim_model = torch.nn.DataParallel(self.victim_model, device_ids=self.device_ids)
             self.victim_model.to(self.device)
-        checkpoint = torch.load(
-            os.path.join(self.args.saved_model_path, (self.args.task_name + self.args.victim_model_checkpoint)),
-            map_location=self.device, weights_only=True)
-        self.victim_model.load_state_dict(checkpoint)
-        # victim_model.load_state_dict({k.replace('module.', ''): v for k, v in checkpoint.items()})
-        self.victim_model.eval()
+        # 根据模型类型决定是否加载检查点
+        if self.args.victim_model_version in ['gpt2_small', 'gpt2_medium']:
+            # GPT2模型使用预训练权重，不需要加载检查点
+            logging.info("GPT2模型使用预训练权重，跳过检查点加载")
+            self.victim_model.eval()
+        else:
+            # BERT、RoBERTa、XLNet模型加载检查点
+            checkpoint = torch.load(
+                os.path.join(self.args.saved_model_path, (self.args.task_name + self.args.victim_model_checkpoint)),
+                map_location=self.device, weights_only=True)
+            self.victim_model.load_state_dict(checkpoint)
+            # victim_model.load_state_dict({k.replace('module.', ''): v for k, v in checkpoint.items()})
+            self.victim_model.eval()
 
         if self.args.victim_model_version == 'bert_base_uncased':
             self.tokenizer = BertTokenizer.from_pretrained(self.args.victim_bert_vocab_path,
@@ -50,6 +59,14 @@ class my_gen_query():
             self.tokenizer = RobertaTokenizer.from_pretrained(self.args.victim_roberta_vocab_path)
         elif self.args.victim_model_version == 'xlnet_base':
             self.tokenizer = XLNetTokenizer.from_pretrained(self.args.victim_xlnet_vocab_path)
+        elif self.args.victim_model_version == 'gpt2_small':
+            from transformers import GPT2Tokenizer
+            self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+        elif self.args.victim_model_version == 'gpt2_medium':
+            from transformers import GPT2Tokenizer
+            self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
+            self.tokenizer.pad_token = self.tokenizer.eos_token
 
         if my_args is not None:
             self.args = my_args
