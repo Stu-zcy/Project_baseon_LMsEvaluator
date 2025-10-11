@@ -179,10 +179,19 @@ class LoadSingleSentenceClassificationDataset:
 
         """
         self.tokenizer = tokenizer
-        self.vocab = build_vocab(vocab_path)
-        self.PAD_IDX = pad_index
-        self.SEP_IDX = self.vocab['[SEP]']
-        self.CLS_IDX = self.vocab['[CLS]']
+        # 检查是否是GPT2模型（通过vocab_path判断）
+        if vocab_path and 'gpt2' in vocab_path.lower():
+            # 对于GPT2模型，使用tokenizer的词汇表
+            self.vocab = None  # GPT2不需要外部词汇表
+            self.PAD_IDX = pad_index
+            self.SEP_IDX = None  # GPT2没有SEP token
+            self.CLS_IDX = None  # GPT2没有CLS token
+        else:
+            # 对于BERT等模型，使用外部词汇表
+            self.vocab = build_vocab(vocab_path)
+            self.PAD_IDX = pad_index
+            self.SEP_IDX = self.vocab['[SEP]']
+            self.CLS_IDX = self.vocab['[CLS]']
         # self.UNK_IDX = '[UNK]'
 
         self.batch_size = batch_size
@@ -208,15 +217,19 @@ class LoadSingleSentenceClassificationDataset:
             line = raw.rstrip("\n").split(self.split_sep)
             s, l = line[0], line[1]
             sequences.append((s, l))
-            # tmp = [self.CLS_IDX]
-            # temp2 = self.tokenizer(s)
-            # for token in temp2:
-            #     temp = self.vocab[token]
-            #     tmp += [self.vocab[token]]
-            tmp = [self.CLS_IDX] + [self.vocab[token] for token in self.tokenizer(s)]
-            if len(tmp) > self.max_position_embeddings - 1:
-                tmp = tmp[:self.max_position_embeddings - 1]  # BERT预训练模型只取前512个字符
-            tmp += [self.SEP_IDX]
+            # 根据模型类型处理tokenization
+            if self.vocab is None:  # GPT2模型
+                # GPT2直接使用tokenizer的token IDs
+                token_ids = self.tokenizer(s)
+                if len(token_ids) > self.max_position_embeddings:
+                    token_ids = token_ids[:self.max_position_embeddings]
+                tmp = token_ids
+            else:  # BERT等模型
+                # BERT模型使用词汇表转换
+                tmp = [self.CLS_IDX] + [self.vocab[token] for token in self.tokenizer(s)]
+                if len(tmp) > self.max_position_embeddings - 1:
+                    tmp = tmp[:self.max_position_embeddings - 1]  # BERT预训练模型只取前512个字符
+                tmp += [self.SEP_IDX]
             tensor_ = torch.tensor(tmp, dtype=torch.long)
             l = torch.tensor(int(l), dtype=torch.long)
             max_len = max(max_len, tensor_.size(0))
@@ -300,14 +313,30 @@ class LoadPairSentenceClassificationDataset(Temp):
         for raw in tqdm(raw_iter, ncols=80):
             line = raw.rstrip("\n").split(self.split_sep)
             s1, s2, l = line[0], line[1], line[2]
-            token1 = [self.vocab[token] for token in self.tokenizer(s1)]
-            token2 = [self.vocab[token] for token in self.tokenizer(s2)]
-            tmp = [self.CLS_IDX] + token1 + [self.SEP_IDX] + token2
+            # 根据模型类型处理tokenization
+            if self.vocab is None:  # GPT2模型
+                # GPT2直接使用tokenizer的token IDs
+                token1 = self.tokenizer(s1)
+                token2 = self.tokenizer(s2)
+                tmp = token1 + token2  # GPT2不需要CLS和SEP token
+            else:  # BERT等模型
+                # BERT模型使用词汇表转换
+                token1 = [self.vocab[token] for token in self.tokenizer(s1)]
+                token2 = [self.vocab[token] for token in self.tokenizer(s2)]
+                tmp = [self.CLS_IDX] + token1 + [self.SEP_IDX] + token2
             if len(tmp) > self.max_position_embeddings - 1:
                 tmp = tmp[:self.max_position_embeddings - 1]  # BERT预训练模型只取前512个字符
-            tmp += [self.SEP_IDX]
-            seg1 = [0] * (len(token1) + 2)  # 2 表示[CLS]和中间的[SEP]这两个字符
-            seg2 = [1] * (len(tmp) - len(seg1))
+            if self.vocab is not None:  # 只有BERT等模型需要SEP token
+                tmp += [self.SEP_IDX]
+            # 根据模型类型处理segment IDs
+            if self.vocab is None:  # GPT2模型
+                # GPT2不需要segment IDs
+                seg1 = [0] * len(tmp)
+                seg2 = [0] * 0  # 空列表
+            else:  # BERT等模型
+                # BERT模型需要segment IDs
+                seg1 = [0] * (len(token1) + 2)  # 2 表示[CLS]和中间的[SEP]这两个字符
+                seg2 = [1] * (len(tmp) - len(seg1))
             segs = torch.tensor(seg1 + seg2, dtype=torch.long)
             tensor_ = torch.tensor(tmp, dtype=torch.long)
             l = torch.tensor(int(l), dtype=torch.long)

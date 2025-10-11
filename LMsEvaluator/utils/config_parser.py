@@ -130,7 +130,7 @@ def check_base_config(config_parser):
     taskConfig_config_list = [
         'task',
         'dataset',
-        'num_labels'
+        'num_labels',
         'dataset_type',
         'split_sep',
         'normal_training',

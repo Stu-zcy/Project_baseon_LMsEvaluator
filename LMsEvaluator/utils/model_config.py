@@ -155,6 +155,8 @@ class ModelTaskForSingleSentenceClassification(ModelConfig):
         self.max_sen_len = None
         self.num_labels = num_labels
         self.epochs = config_parser['task_config']['epochs'] if (config_parser is not None) else 10
+        # 添加模型类型信息
+        self.model = config_parser['LM_config']['model'] if (config_parser is not None) else 'bert_base_uncased'
         self.model_val_per_epoch = 2
         self.log_level = logging.INFO
         self.log_init(log_file_name='single', log_level=self.log_level)
