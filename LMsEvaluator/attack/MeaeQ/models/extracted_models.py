@@ -127,15 +127,26 @@ class GPT2PC(nn.Module):
         elif args.steal_model_version == 'gpt2_medium':
             name = 'gpt2-medium'
         self.tokenizer = GPT2Tokenizer.from_pretrained(name)
+        self.tokenizer.pad_token = self.tokenizer.eos_token
         config = GPT2Config.from_pretrained(
             name,
             num_labels=args.num_labels,
             output_hidden_states=True
         )
+        # 确保max_position_embeddings足够大
+        if config.max_position_embeddings < 1024:
+            config.max_position_embeddings = 1024
         self.gpt2 = GPT2ForSequenceClassification.from_pretrained(name, config=config)
-        self.gpt2.config.pad_token_id = self.tokenizer.eos_token_id
+        self.gpt2.config.pad_token_id = self.tokenizer.pad_token_id
+        print(f"GPT2PC config max_position_embeddings: {self.gpt2.config.max_position_embeddings}")
 
     def forward(self, input_ids, token_type_ids, attention_mask, train_labels=None):
+        # 确保序列长度不超过模型的最大位置嵌入
+        max_length = self.gpt2.config.max_position_embeddings
+        if input_ids.size(1) > max_length:
+            input_ids = input_ids[:, :max_length]
+            attention_mask = attention_mask[:, :max_length]
+        
         if train_labels is None:
             with torch.no_grad():
                 output = self.gpt2(input_ids=input_ids, attention_mask=attention_mask)

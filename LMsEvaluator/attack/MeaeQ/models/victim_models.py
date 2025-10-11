@@ -3,6 +3,7 @@ import torch.nn as nn
 from transformers import BertTokenizer, BertConfig, BertForSequenceClassification, BertModel
 from transformers import RobertaTokenizer, RobertaConfig, RobertaForSequenceClassification, RobertaModel
 from transformers import XLNetTokenizer, XLNetConfig, XLNetForSequenceClassification, XLNetModel
+from transformers import GPT2Tokenizer, GPT2Config, GPT2ForSequenceClassification
 
 
 class BFSC(nn.Module):
@@ -65,3 +66,62 @@ class XFSC(nn.Module):
                            attention_mask=attention_mask,
                            labels=train_labels)
         return output
+
+
+class GPT2FSC(nn.Module):
+    def __init__(self, args):
+        super(GPT2FSC, self).__init__()
+        # 根据模型版本选择GPT2模型
+        if args.victim_model_version == 'gpt2_small':
+            model_name = 'gpt2'
+        elif args.victim_model_version == 'gpt2_medium':
+            model_name = 'gpt2-medium'
+        else:
+            model_name = 'gpt2'  # 默认使用gpt2
+            
+        # 加载配置
+        config = GPT2Config.from_pretrained(model_name, num_labels=args.num_labels)
+        # 确保max_position_embeddings足够大
+        if config.max_position_embeddings < 1024:
+            config.max_position_embeddings = 1024
+        self.gpt2 = GPT2ForSequenceClassification.from_pretrained(model_name, config=config)
+        # 设置pad_token
+        self.gpt2.config.pad_token_id = self.gpt2.config.eos_token_id
+        print(f"GPT2FSC config max_position_embeddings: {self.gpt2.config.max_position_embeddings}")
+
+    def forward(self, input_ids, token_type_ids, attention_mask, train_labels):
+        # GPT2不需要token_type_ids，所以忽略它
+        # 确保序列长度不超过模型的最大位置嵌入
+        max_length = self.gpt2.config.max_position_embeddings
+        if input_ids.size(1) > max_length:
+            input_ids = input_ids[:, :max_length]
+            attention_mask = attention_mask[:, :max_length]
+        
+        
+        try:
+            outputs = self.gpt2(input_ids=input_ids,
+                               attention_mask=attention_mask,
+                               labels=train_labels)
+        except Exception as e:
+            print(f"GPT2FSC error: {e}")
+            print(f"Input details: input_ids={input_ids}, attention_mask={attention_mask}")
+            raise e
+        
+        # GPT2ForSequenceClassification返回元组，需要转换为对象格式
+        if isinstance(outputs, tuple):
+            # 创建一个简单的对象来包装输出
+            class OutputWrapper:
+                def __init__(self, logits, loss=None):
+                    self.logits = logits
+                    self.loss = loss
+                    # 添加其他属性以兼容防御函数
+                    self.hidden_states = None
+                    self.attentions = None
+            
+            # 如果提供了labels，outputs[0]是loss，outputs[1]是logits
+            if train_labels is not None:
+                return OutputWrapper(outputs[1], outputs[0])
+            else:
+                return OutputWrapper(outputs[0])
+        else:
+            return outputs
