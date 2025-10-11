@@ -19,9 +19,8 @@ class TaskForSingleSentenceClassification(BaseTask):
     def __init__(self, initTime, dataset_dir, model_dir,  dataset_type=".txt", use_gpu=True, split_sep='_!_',
                  config_parser=None, username='default'):
         self.config = ModelTaskForSingleSentenceClassification(
-            initTime, dataset_dir, model_dir, dataset_type,
-            use_gpu, split_sep, config_parser, 
-            username=username
+            dataset_dir, model_dir, dataset_type,
+            use_gpu, split_sep, config_parser
         )
         self.model = None
         self.data_loader = None
@@ -151,7 +150,20 @@ class TaskForSingleSentenceClassification(BaseTask):
 
     def load_model(self, model_save_path=None):
         '''默认读取为预训练后模型，默认路径"/cache/modelOutput/task4sst_model.pt"'''
-        model = BertForSentenceClassification(self.config, self.config.pretrained_model_dir)
+        # 根据配置选择模型类型
+        if hasattr(self.config, 'model') and self.config.model == 'gpt2':
+            # 使用GPT2模型
+            from transformers import GPT2ForSequenceClassification, GPT2Config, GPT2Tokenizer
+            config = GPT2Config.from_pretrained(self.config.pretrained_model_dir, num_labels=self.config.num_labels)
+            model = GPT2ForSequenceClassification.from_pretrained(self.config.pretrained_model_dir, config=config)
+            
+            # 设置GPT2的pad_token_id
+            tokenizer = GPT2Tokenizer.from_pretrained(self.config.pretrained_model_dir)
+            tokenizer.pad_token = tokenizer.eos_token
+            model.config.pad_token_id = tokenizer.pad_token_id
+        else:
+            # 默认使用BERT模型
+            model = BertForSentenceClassification(self.config, self.config.pretrained_model_dir)
 
         if model_save_path is None:
             model_save_path = os.path.join(self.config.model_save_dir, 'task4sst_model.pt')
@@ -169,9 +181,17 @@ class TaskForSingleSentenceClassification(BaseTask):
         self.load_model()
         model = self.model.to(self.config.device)
         if self.data_loader is None or self.test_iter is None:
+            # 根据模型类型选择tokenizer
+            if hasattr(self.config, 'model') and self.config.model == 'gpt2':
+                from transformers import GPT2Tokenizer
+                tokenizer = GPT2Tokenizer.from_pretrained(self.config.pretrained_model_dir)
+                tokenizer.pad_token = tokenizer.eos_token
+            else:
+                from transformers import BertTokenizer
+                tokenizer = BertTokenizer.from_pretrained(self.config.pretrained_model_dir)
+            
             data_loader = LoadSingleSentenceClassificationDataset(vocab_path=self.config.vocab_path,
-                                                                  tokenizer=BertTokenizer.from_pretrained(
-                                                                      self.config.pretrained_model_dir).tokenize,
+                                                                  tokenizer=tokenizer.tokenize,
                                                                   batch_size=self.config.batch_size,
                                                                   max_sen_len=self.config.max_sen_len,
                                                                   split_sep=self.config.split_sep,
@@ -209,7 +229,12 @@ class TaskForSingleSentenceClassification(BaseTask):
             for idx, (x, y) in enumerate(pbar):
                 x, y = x.to(device), y.to(device)
                 padding_mask = (x == PAD_IDX).transpose(0, 1)
-                logits = model(x, attention_mask=padding_mask)
+                output = model(x, attention_mask=padding_mask)
+                # 处理不同模型的输出格式
+                if hasattr(output, 'logits'):
+                    logits = output.logits
+                else:
+                    logits = output
                 acc_sum += (logits.argmax(1) == y).float().sum().item()
                 n += len(y)
                 pbar.set_description(f"Batch[{idx}/{len_iter}]")
@@ -224,7 +249,14 @@ class TaskForSingleSentenceClassification(BaseTask):
             logging.info("没有攻击被执行。")
             logging.info("=" * 50)
         else:
-            tokenizer = BertTokenizer.from_pretrained(self.config.pretrained_model_dir)
+            # 根据模型类型选择tokenizer
+            if hasattr(self.config, 'model') and self.config.model == 'gpt2':
+                from transformers import GPT2Tokenizer
+                tokenizer = GPT2Tokenizer.from_pretrained(self.config.pretrained_model_dir)
+                tokenizer.pad_token = tokenizer.eos_token
+            else:
+                from transformers import BertTokenizer
+                tokenizer = BertTokenizer.from_pretrained(self.config.pretrained_model_dir)
             self.load_model()
             for index in range(len(self.config.config_parser['attack_list'])):
                 attack_config = self.config.config_parser['attack_list'][index]['attack_args']
