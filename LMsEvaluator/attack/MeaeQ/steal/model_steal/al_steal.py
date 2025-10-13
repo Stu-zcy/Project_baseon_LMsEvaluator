@@ -573,7 +573,13 @@ def train_steal_model(steal_train, steal_val, victim_model):
                     output, pooler_output = model(input_ids=input_ids,
                                                   token_type_ids=token_type_ids,
                                                   attention_mask=attention_mask)
-                    logits = output.logits
+                    # 处理不同的输出格式
+                    if hasattr(output, 'logits'):
+                        logits = output.logits
+                    elif isinstance(output, tuple):
+                        logits = output[1]  # 如果是元组，取第二个元素
+                    else:
+                        logits = output
                     logits = torch.softmax(logits, 1)
                     _, argmax = torch.max(logits, 1)
                     accuracy = (validate_labels == argmax.squeeze()).float().mean()
@@ -684,9 +690,9 @@ def train_steal_model(steal_train, steal_val, victim_model):
             # models = nn.DataParallel(models)
             model = torch.nn.DataParallel(model, device_ids=device_ids)
         model.to(device)
-    checkpoint = torch.load(best_validate_dir, map_location=device, weights_only=True)
-    #     model.load_state_dict({k.replace('module.', ''): v for k, v in checkpoint.items()})
-    model.load_state_dict(checkpoint)
+    
+    # 所有模型都使用预训练权重，跳过检查点加载
+    logging.info("使用预训练权重，跳过检查点加载")
     model.eval()
     return model
 
@@ -714,7 +720,14 @@ def gen_al_init(victim_model):
                                   token_type_ids=token_type_ids,
                                   attention_mask=to(encoded_pair['attention_mask'].squeeze(1)),
                                   train_labels=to(torch.zeros(1, args.num_labels)))
-            logits = output.logits
+            
+            # 处理不同的输出格式
+            if hasattr(output, 'logits'):
+                logits = output.logits
+            elif isinstance(output, tuple):
+                logits = output[1]  # 如果是元组，取第二个元素
+            else:
+                logits = output
             logits = torch.softmax(logits, 1)
             _, test_argmax = torch.max(logits, 1)
             label = test_argmax.squeeze().cpu().data.numpy()
@@ -743,14 +756,9 @@ def main():
         #     # models = nn.DataParallel(models)
         #     victim_model = torch.nn.DataParallel(victim_model, device_ids=device_ids)
         victim_model.to(device)
-    vck = args.victim_model_checkpoint
-    if vck[0] != '-':
-        vck = '-' + vck
-    # checkpoint = torch.load(args.saved_model_path + args.task_name + vck, map_location=device)
-    checkpoint = torch.load(os.path.join(args.saved_model_path, args.task_name + vck), map_location=device,
-                            weights_only=True)
-    victim_model.load_state_dict(checkpoint)
-    # victim_model.load_state_dict({k.replace('module.', ''): v for k, v in checkpoint.items()})
+    
+    # 所有模型都使用预训练权重，跳过检查点加载
+    logging.info("使用预训练权重，跳过检查点加载")
     victim_model.eval()
 
     data = gen_al_init(victim_model)
@@ -1013,7 +1021,13 @@ class my_al_steal():
                                           token_type_ids=token_type_ids,
                                           attention_mask=to(encoded_pair['attention_mask'].squeeze(1)),
                                           train_labels=to(torch.zeros(1, self.args.num_labels)))
-                    logits = output.logits
+                    # 处理不同的输出格式
+                    if hasattr(output, 'logits'):
+                        logits = output.logits
+                    elif isinstance(output, tuple):
+                        logits = output[1]  # 如果是元组，取第二个元素
+                    else:
+                        logits = output
                     logits = torch.softmax(logits, 1)
                     _, victim_test_argmax = torch.max(logits, 1)
                     labels = victim_test_argmax.cpu().detach().numpy()[0]
@@ -1041,7 +1055,13 @@ class my_al_steal():
                     output, _ = model(input_ids=to(encoded_pair['input_ids'].squeeze(1)),
                                       token_type_ids=token_type_ids,
                                       attention_mask=to(encoded_pair['attention_mask'].squeeze(1)))
-                    logits = output.logits
+                    # 处理不同的输出格式
+                    if hasattr(output, 'logits'):
+                        logits = output.logits
+                    elif isinstance(output, tuple):
+                        logits = output[1]  # 如果是元组，取第二个元素
+                    else:
+                        logits = output
                     logits = torch.softmax(logits, 1)
                     logits = logits.cpu().data
                     __, steal_test_argmax = torch.max(logits, 1)
@@ -1072,7 +1092,13 @@ class my_al_steal():
                                           token_type_ids=token_type_ids,
                                           attention_mask=to(encoded_pair['attention_mask'].squeeze(1)),
                                           train_labels=to(torch.zeros(1, self.args.num_labels)))
-                    logits = output.logits
+                    # 处理不同的输出格式
+                    if hasattr(output, 'logits'):
+                        logits = output.logits
+                    elif isinstance(output, tuple):
+                        logits = output[1]  # 如果是元组，取第二个元素
+                    else:
+                        logits = output
                     logits = torch.softmax(logits, 1)
                     _, victim_test_argmax = torch.max(logits, 1)
                     labels = victim_test_argmax.cpu().detach().numpy()[0]
@@ -1248,7 +1274,13 @@ class my_al_steal():
                                                   token_type_ids=token_type_ids,
                                                   attention_mask=attention_mask,
                                                   train_labels=train_labels)
-                    logits = output.logits
+                    # 处理不同的输出格式
+                    if hasattr(output, 'logits'):
+                        logits = output.logits
+                    elif isinstance(output, tuple):
+                        logits = output[1]  # 如果是元组，取第二个元素
+                    else:
+                        logits = output
                     logits = torch.softmax(logits, 1)
                     class_loss = output.loss
                     optimizer.zero_grad()
@@ -1287,7 +1319,13 @@ class my_al_steal():
                         output, pooler_output = model(input_ids=input_ids,
                                                       token_type_ids=token_type_ids,
                                                       attention_mask=attention_mask)
-                        logits = output.logits
+                        # 处理不同的输出格式
+                        if hasattr(output, 'logits'):
+                            logits = output.logits
+                        elif isinstance(output, tuple):
+                            logits = output[1]  # 如果是元组，取第二个元素
+                        else:
+                            logits = output
                         logits = torch.softmax(logits, 1)
                         _, argmax = torch.max(logits, 1)
                         accuracy = (validate_labels == argmax.squeeze()).float().mean()
@@ -1398,9 +1436,9 @@ class my_al_steal():
                 # models = nn.DataParallel(models)
                 model = torch.nn.DataParallel(model, device_ids=device_ids)
             model.to(device)
-        checkpoint = torch.load(best_validate_dir, map_location=device, weights_only=True)
-        #     model.load_state_dict({k.replace('module.', ''): v for k, v in checkpoint.items()})
-        model.load_state_dict(checkpoint)
+        
+        # 所有模型都使用预训练权重，跳过检查点加载
+        logging.info("使用预训练权重，跳过检查点加载")
         model.eval()
         return model
 
@@ -1427,7 +1465,14 @@ class my_al_steal():
                                       token_type_ids=token_type_ids,
                                       attention_mask=to(encoded_pair['attention_mask'].squeeze(1)),
                                       train_labels=to(torch.zeros(1, self.args.num_labels)))
-                logits = output.logits
+                
+                # 处理不同的输出格式
+                if hasattr(output, 'logits'):
+                    logits = output.logits
+                elif isinstance(output, tuple):
+                    logits = output[1]  # 如果是元组，取第二个元素
+                else:
+                    logits = output
                 logits = torch.softmax(logits, 1)
                 _, test_argmax = torch.max(logits, 1)
                 label = test_argmax.squeeze().cpu().data.numpy()
@@ -1452,20 +1497,9 @@ class my_al_steal():
         if torch.cuda.is_available():
             logging.info("CUDA")
             victim_model.to(device)
-        # 根据模型类型决定是否加载检查点
-        if self.args.victim_model_version in ['gpt2_small', 'gpt2_medium']:
-            # GPT2模型使用预训练权重，不需要加载检查点
-            logging.info("GPT2模型使用预训练权重，跳过检查点加载")
-            victim_model.eval()
-        else:
-            # BERT、RoBERTa、XLNet模型加载检查点
-            vck = self.args.victim_model_checkpoint
-            if vck[0] != '-':
-                vck = '-' + vck
-            checkpoint = torch.load(os.path.join(self.args.saved_model_path, self.args.task_name + vck),
-                                    map_location=device, weights_only=True)
-            victim_model.load_state_dict(checkpoint)
-            victim_model.eval()
+        # 所有模型都使用预训练权重，跳过检查点加载
+        logging.info("使用预训练权重，跳过检查点加载")
+        victim_model.eval()
         # defender防御逻辑
         if defender is not None and defender != "None" and isinstance(defender, dict):
             if defender.get('type', None) == 'output-perturb':
